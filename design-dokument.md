@@ -93,6 +93,42 @@ moment při čtení spisu.
 - **Zoufalé karty:** silné karty hratelné jen s 3+ zraněními. Nejzdemolovanější hráč
   není mrtvá váha, ale tikající komediální bomba.
 
+### 4.5 Protivníci
+
+**Zásada: protivníci nemají vlastní tahy.** V 30minutové party hře je tah
+nepřítele mrtvý čas — konfrontace je a zůstane jeden hod s viditelnými pravidly.
+Jednání a paměť získávají protivníci dvěma vrstvami:
+
+**Místní protivníci (vrstva uzlu).** Protivník je součást karty uzlu se
+statblockem: afinity + **tvrdost** — co navíc stojí selhání právě u něj
+(farmář = další zranění, šerif = +Žár, rivalové = −bedna). Jednorázová
+překážka bez HP a bez kol.
+
+**Pronásledovatel + stopa ŽÁR (vrstva runu).** Každý run má jednoho
+perzistentního protivníka, který nikdy nestojí v uzlu — jede za týmem. Na
+okraji spisu je viditelná stopa **Žár (0–10)**, jak moc po týmu jde zákon:
+
+- **+1** za každé selhání, **+1** za zahranou hlučnou kartu (flag `hlucna`,
+  typicky Násilí), **+2** za vybrané výsledky uzlů (přestřelka, mrtvola).
+- **Žár 4:** zásah — jedna ze dvou cest v příští volbě je Zátah, a tým to vidí.
+- **Žár 7:** léčka — vloží se mimořádný uzel s pronásledovatelem osobně.
+- **Žár 10:** konec úprku — okamžitá finální konfrontace kdekoli; přežití
+  → Žár klesá na 6, ale protokol tým vede jako „ozbrojenou a nebezpečnou skupinu".
+
+Pronásledovatel se **losuje na začátku runu, je viditelný od první minuty
+a ruší jeden tag** (federální agent Malone je neúplatný, šerifa Brodyho násilí
+přitahuje…) — čtvrtina balíčku je proti finále oslabená, každý run se hraje
+jinak. To je vedle komunitních karet druhý pilíř znovuhratelnosti.
+
+Tagová textura, která z toho plyne: **Násilí** = síla za Žár, **Úplatek** =
+jistota za zdroje, **Lest** = variance, **Útěk** = bezpečí za bedny.
+
+Vypravěčský háček: pronásledovatel je kolega poldy od psacího stroje — protokol
+cituje jeho hlášení a oba byrokrati se v spisu tiše nesnášejí.
+
+Záměrně NE: UGC protivníci (nesou balanc hry), perzistence pronásledovatele
+napříč runy (scope + patent WB na nemesis systém), soubojový systém s HP.
+
 ## 5. Komunitní karty & asynchronní multiplayer
 
 - Po smrti týmu se spis zavře, ale jimi vytvořené karty propadají do globální
@@ -134,6 +170,9 @@ moment při čtení spisu.
 - Mechanika „podplácení poldy" důkazy nalezenými během runu (nápad do v2: přepsat
   odstavec protokolu).
 - Název: „Baffalo" opraveno na **Buffalo**.
+- **Tři měřidla (zranění + bedny + Žár):** pro party hru na hraně kognitivní
+  zátěže. Pokud playtest ukáže, že je toho moc, první kandidát na škrt jsou
+  bedny (roli „prohry týmu" může převzít Žár), ne Žár.
 - **Jazyková/tržní strategie:** obsah vzniká a testuje se česky (rizikovější
   jazyk pro AI humor), ale primární Steam trh je anglický. Rozhodnout, zda platí
   „česky ověřit → anglicky vydat", a kdy do plánu zařadit překlad a test

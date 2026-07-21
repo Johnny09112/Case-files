@@ -6,6 +6,8 @@
 #   tag:      nasili | lest | uplatek | utek   (prokleté karty: tag žádny)
 #   sila:     1–3 (prokleté karty: 0)
 #   podminka: jen u typu zoufala, např. "3+ zranění"
+#   hlucna:   true|false (volitelné, výchozí false) — zahrání = +1 Žár;
+#             typicky karty Násilí
 #   text:     max ~140 znaků, česky, dobová stylizace 1930
 #   poznamka: volitelné, pro designéry — do hry se nedostane
 # Cílový počet pro MVP: 32 základních (8 na tag), 8 prokletých, 4 zoufalé.
@@ -18,6 +20,15 @@ karty:
     sila: 2
     text: "Nabídneš protistraně domácí tlačenku z rodinné zabijačky. Loňské."
     poznamka: "Ukázková karta — definuje tón. Smazat, až bude plná sada."
+
+  - id: dedeckova-brokovnice
+    nazev: Dědečkova brokovnice
+    typ: zakladni
+    tag: nasili
+    sila: 3
+    hlucna: true
+    text: "Argument ráže dvanáct. Rez mu na věcnosti neubírá."
+    poznamka: "Ukázka hlučné karty — síla za Žár."
 
   - id: krec
     nazev: Křeč

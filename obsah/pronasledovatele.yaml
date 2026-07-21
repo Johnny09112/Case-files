@@ -1,0 +1,38 @@
+# Pronásledovatelé — perzistentní protivník runu. Losuje se 1 na začátku,
+# je viditelný od první minuty, NIKDY nestojí v běžném uzlu — jedná výhradně
+# přes prahy Žáru (4 = Zátah v volbě cesty, 7 = léčka, 10 = konfrontace).
+# Žádná perzistence napříč runy. Žádné UGC pronásledovatele.
+# Schéma (nová pole nepřidávat bez úpravy tohoto komentáře):
+#   id:         kebab-case, unikátní
+#   nazev:      jméno s titulem
+#   ruseny_tag: tag, který proti němu nefunguje nebo je potrestán
+#   pravidlo:   přesné znění efektu rušeného tagu (viditelné hráčům)
+#   lecka:      mini-uzel pro práh Žár 7 (uvod + afinity)
+#   konfrontace: mini-uzel pro práh Žár 10 (uvod + afinity)
+#   flavor:     1 věta pro protokol — polda ho zná osobně
+# Cílový počet pro MVP: 2.
+
+pronasledovatele:
+  - id: agent-malone
+    nazev: Federální agent Malone
+    ruseny_tag: uplatek
+    pravidlo: "Karty Úplatek mají proti Maloneovým uzlům (Zátah, Léčka, Konfrontace) sílu 0. Je neúplatný."
+    lecka:
+      uvod: "Malone obsadil most u Poughkeepsie. Stojí u závory a v ruce drží vaši fotografii."
+      afinity: {nasili: 0, lest: 2, uplatek: -2, utek: 0}
+    konfrontace:
+      uvod: "Kolona federálních vozů vás sevřela na silnici. Malone vystupuje a bez spěchu si nasazuje brýle."
+      afinity: {nasili: 0, lest: 0, uplatek: -2, utek: -2}
+    flavor: "Vyšetřovatel poznamenává, že agent Malone nepije, nekouří a nebere. Nikdo na okrsku nechápe, co tu tedy dělá."
+
+  - id: serif-brody
+    nazev: Okresní šerif Brody
+    ruseny_tag: nasili
+    pravidlo: "Každá hlučná karta přidává +2 Žár místo +1. Násilí Brodyho přitahuje."
+    lecka:
+      uvod: "Brody s partou nadšených občanů přehradil silnici valníkem. Nasadil služební úsměv."
+      afinity: {nasili: -2, lest: 0, uplatek: 2, utek: 0}
+    konfrontace:
+      uvod: "Brodyho muži vás zahnali k zavřenému mostu. Šerif si sundává klobouk, což nikdy nevěstí nic dobrého."
+      afinity: {nasili: -2, lest: 0, uplatek: 0, utek: 2}
+    flavor: "Vyšetřovatel uvádí, že šerif Brody řeší okresní záležitosti tradičně: nejprve střelbou, poté dotazy."

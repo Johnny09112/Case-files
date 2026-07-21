@@ -37,9 +37,18 @@ dobrovolně další run." Pokud tohle neplatí, žádná další vrstva to nezac
 - **Hod postavy:** d6 + síla karty + afinita − počet zranění postavy (max −3).
   - **8+** … úspěch
   - **5–7** … úspěch za cenu (zranění nebo poznámka do spisu)
-  - **≤4** … selhání + zranění + ztráta nákladu
-- **Náklad:** tým veze 6 beden. Každé selhání = −1 bedna. 0 beden = run končí
-  (razítko NEVYŘEŠENO).
+  - **≤4** … selhání + zranění + tvrdost uzlu
+- **Tvrdost uzlu:** co navíc stojí selhání u tohoto protivníka: `bedna`
+  (−1 bedna), `zar` (+2 Žár), `zraneni` (druhé zranění).
+- **Náklad:** tým veze 6 beden. 0 beden = run končí (razítko NEVYŘEŠENO).
+- **Žár (0–10):** týmová stopa pozornosti zákona, viditelná na okraji spisu.
+  **+1** za každé selhání, **+1** za zahranou hlučnou kartu (`hlucna`), **+2**
+  za vybrané výsledky uzlů. Prahy: **4** = do příští volby cesty přibude Zátah
+  (viditelně), **7** = vložený uzel léčky pronásledovatele, **10** = okamžitá
+  finální konfrontace; přežití → Žár klesá na 6.
+- **Pronásledovatel:** losuje se 1 na začátku runu, viditelný od začátku, ruší
+  jeden tag (viz `obsah/pronasledovatele.yaml`). Nemá vlastní tahy — jedná
+  výhradně přes prahy Žáru.
 - **Kolaps postavy:** 4. zranění = postava vyřazena (dál jen „leží v autě" a
   generuje poznámky v protokolu). Všichni vyřazeni = konec runu.
 - **Zranění** = zápis do spisu (krmí AI prompt) + od 2. zranění líže hráč
@@ -55,6 +64,7 @@ dobrovolně další run." Pokud tohle neplatí, žádná další vrstva to nezac
 | Prokleté karty | 8 | Křeč, Ztráta důstojnosti… |
 | Zoufalé karty | 4 | hratelné jen s 3+ zraněními |
 | Tajné cíle | 8 | vázané na obsah protokolu, bodované na konci |
+| Pronásledovatelé | 2 | pravidlová karta: rušený tag + léčka + konfrontace |
 | Fallback šablony protokolu | ~20 | pro výpadek API |
 
 ### Záměrně MIMO rozsah v0.1
@@ -77,7 +87,8 @@ krátký dotazník + pozorování.
    nejsilnější signál, že hra generuje historky.
 
 **Co ladit:** prahy hodů (8+/5–7/≤4), tempo přibývání zranění (snowball má být
-citelný od ~3. uzlu), délka a tón protokolů, poměr cache-hitů (logovat od začátku).
+citelný od ~3. uzlu), tempo Žáru (první práh má padnout kolem 3.–4. uzlu),
+délka a tón protokolů, poměr cache-hitů (logovat od začátku).
 
 ---
 

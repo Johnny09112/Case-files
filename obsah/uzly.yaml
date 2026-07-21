@@ -4,6 +4,8 @@
 #   nazev:   krátký název zastávky
 #   uvod:    1–2 věty situace — jde poldovi/AI jako kulisa, hráčům se čte nahlas
 #   afinity: nasili/lest/uplatek/utek, hodnoty -2 | 0 | +2, viditelné hráčům
+#   tvrdost: bedna | zar | zraneni — co navíc stojí selhání u protivníka
+#            tohoto uzlu (viz resoluční systém v prototyp-mvp.md)
 # Cílový počet pro MVP: 7 typů × 2 varianty = 14 uzlů (run = 6 uzlů, volba ze 2).
 
 uzly:
@@ -11,3 +13,4 @@ uzly:
     nazev: Brod u farmy
     uvod: "Vůz uvízl v řece. Na břehu stojí farmář s vidlemi a nemá dobrý den."
     afinity: {nasili: -2, lest: 0, uplatek: 2, utek: 0}
+    tvrdost: zraneni

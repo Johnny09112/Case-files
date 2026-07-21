@@ -17,8 +17,9 @@ poznámky z playtestů. Sem nepatří: zdrojový kód, buildy, assety.
   balancování, product placement).
 - `prototyp-mvp.md` — definice prvního hratelného prototypu (fáze 0–2), resoluční
   systém s konkrétními čísly, metriky úspěchu playtestů.
-- `obsah/*.yaml` — herní obsah (karty, uzly, tajné cíle) ve strojově čitelném
-  formátu. Jediný zdroj pravdy pro obsah; prototyp ho bude načítat přímo. Schéma
+- `obsah/*.yaml` — herní obsah (karty, uzly, tajné cíle, pronásledovatelé) ve
+  strojově čitelném formátu. Jediný zdroj pravdy pro obsah; prototyp ho bude
+  načítat přímo. Schéma
   je popsané v komentáři na začátku každého souboru — dodržuj ho, nová pole
   nepřidávej bez úpravy komentáře.
 - `prompty/protokol.md` — kanonické znění promptu pro generování protokolu,
