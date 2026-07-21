@@ -1,0 +1,13 @@
+# Tajné osobní cíle — lízne si každý hráč na začátku runu, odhalují se na konci.
+# Schéma (nová pole nepřidávat bez úpravy tohoto komentáře):
+#   id:      kebab-case, unikátní
+#   text:    co musí stát v protokolu (zobrazí se hráči jako jeho tajný cíl)
+#   overeni: jak se na konci pozná splnění (pro poldu/hru, hráčům se nečte)
+#   body:    1–3 podle obtížnosti
+# Cílový počet pro MVP: 8.
+
+cile:
+  - id: mozek-operace
+    text: "Polda tě v protokolu označí za mozek celé operace."
+    overeni: "Protokol obsahuje formulaci připisující ti plán nebo velení."
+    body: 3
