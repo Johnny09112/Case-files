@@ -18,7 +18,9 @@ Go/No-Go je dvoustupňové (simulační brána → lidská brána) — detail v
 | Ověřit konzistenci designu po přidání mechaniky Žár | game-designer / consistency-check | **hotovo** — D1+D2 schváleny uživatelem 2026-07-22, re-check konzistence beze nálezu |
 | Zapracovat schválené změny (Žár per uzel, prahy vs. afinity, prokleté od 2. zranění, sémantika Zátahu, čísla jen v prototypu) | game-designer | **hotovo 2026-07-22** — zapracováno a commitnuto (viz [[rozhodnuti]] D1, D2) |
 | Rozšířit schéma `obsah/cile.yaml` o mechanicky ověřitelné cíle (pro simulátor) | content-generator + technical-developer | **hotovo 2026-07-22** — D3 schváleno, schéma rozšířeno (`overeni_typ`, `podminka`), 2 vzorové mechanické cíle |
-| Naplnit sady obsahu (32 zákl. / 8 prokl. / 4 zoufalé karty, 14 uzlů, 8 cílů, ~20 fallback) | content-generator | **probíhá** — kritická cesta k simulaci; hotovo: pronásledovatelé 2/2, cíle 3/8 |
+| Naplnit sady obsahu (32 zákl. / 8 prokl. / 4 zoufalé karty, 14 uzlů, 8 cílů, ~20 fallback) | content-generator | **návrh hotov 2026-07-22, NEZAPSÁN** — review (design-critic + humor-tester) našlo 3 blokující designové díry; game-designer připravuje rozhodovací balík pro uživatele |
+| Vyřešit blokující nálezy kritiky obsahu: B1 tagová textura mechanicky vs. vypravěčsky, D1 Násilí/motor Žáru, D2+D3 kolabovaný a vynechávající hráč, B3 karty slibující bednové transakce | game-designer → uživatel | **probíhá** — blokuje zápis obsahu i simulaci |
+| Prompt protokolu v0.1→v0.2 (priorita výsledku mechaniky nad textem karty, stav „bez hodu") + regresní baterie `prompty/protokol-testy.yaml` | protocol-humor-tester | navrženo 2026-07-22 — čeká schválení uživatelem (spolu s balíkem obsahu) |
 | Vyladit prompt protokolu + založit regresní baterii | protocol-humor-tester | čeká (mimo kritickou cestu stavby, běží paralelně) |
 | Simulace runů pro balanc (prahy, snowball, bedny) | playtest-facilitator | čeká na obsah (pravidla schválena 2026-07-22) |
 | Pro engine: formalizovat razítko DORUČENO (dojezd do NY) — metrika `doruceno` v `cile.yaml` na něm stojí | technical-developer | poznámka z kontroly konzistence 2026-07-22 |
