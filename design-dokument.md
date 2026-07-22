@@ -117,8 +117,8 @@ okraji spisu je viditelná stopa **Žár (0–10)**, jak moc po týmu jde zákon
   typicky Násilí) a za vybrané výsledky uzlů (přestřelka, mrtvola). Konkrétní
   přírůstky i hodnoty prahů žijí v prototypu ([prototyp-mvp.md](prototyp-mvp.md)) —
   design drží jen strukturu (viz §8).
-- **Práh Zátahu:** jedna ze dvou nabízených cest v příští volbě se **nahradí**
-  Zátahem (nepřidává se třetí cesta), a tým to vidí.
+- **Práh Zátahu:** příští volba cesty vede přes **Zátah** (nahradí obě nabízené
+  cesty) — tým to vidí předem a beztrestně se mu vyhnout nejde.
 - **Práh léčky:** vloží se mimořádný uzel s pronásledovatelem osobně.
 - **Práh konfrontace:** konec úprku — okamžitá finální konfrontace kdekoli;
   přežití Žár srazí, ale protokol tým dál vede jako „ozbrojenou a nebezpečnou

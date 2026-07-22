@@ -21,24 +21,18 @@ Go/No-Go je dvoustupňové (simulační brána → lidská brána) — detail v
 | Naplnit sady obsahu (32 zákl. / 8 prokl. / 4 zoufalé karty, 14+1 uzlů, 8 cílů) | content-generator | **hotovo 2026-07-22** — zapsáno po review kolečku (kritik + humor-tester + game-designer) a schválení D4–D6 |
 | Prompt protokolu v0.2 + regresní baterie `prompty/protokol-testy.yaml` (4 case) | protocol-humor-tester | **hotovo 2026-07-22** — vč. nového pole „bedny ztracené tímto hodem" ve formátu vstupu |
 | Simulace runů pro balanc (1. běh, 216k runů) | playtest-facilitator | **hotovo 2026-07-22** — brána **NEPROŠLA** (krit. 1: kompetentní hra 90–98 % DORUČENO), náprava jasná; report [[../technika/simulacni-brana-2026-07-22|technika/simulacni-brana-2026-07-22.md]] |
-| **Iterace čísel dle simulace** (páky 1–7: sémantika 5–7, dostupnost +2 tagu, konfrontační kolotoč, Zátah, Útěk rider, obetni-beranek) + přesimulovat | game-designer + playtest-facilitator | **čeká na rozhodnutí uživatele** — blokuje stavbu prototypu |
-| Doplnit do MVP mezery odhalené simulací: velikost ruky, kdo volí u 5–7, tvrdosti léčky/konfrontace | game-designer | otevřeno 2026-07-22 |
+| Iterace čísel dle simulace (D7–D9: 5–7 = zranění, ruka 5, konfrontace → Žár 3, Zátah obě cesty, Útěk rider volba vlastníka, obetni-beranek ≤2, tvrdosti léčky/konfrontace) | project-manager | **hotovo 2026-07-22** — zapracováno, viz [[rozhodnuti]] |
+| **Přesimulovat (2. běh brány)** proti zafixovaným kritériím | playtest-facilitator | **probíhá** — rozhoduje o stavbě prototypu |
 | Fallback šablony protokolu (~20) | content-generator + protocol-humor-tester | čeká (potřeba až pro prototyp, ne pro simulaci) |
 | Revize pronásledovatelů: léčky/konfrontace obou tlačí k Lesti (afinity), po zavedení riderů projít znovu | game-designer | nález kritika 2026-07-22 |
 | Pro engine (technical-developer): (a) formalizovat razítko DORUČENO — metrika `doruceno` na něm stojí; (b) strukturovaný vstup protokolu nese pole „bedny ztracené tímto hodem"; (c) ověřit proveditelnost „hlasu z auta" v hot-seat UI; (d) nové metriky cílů `ztracene_bedny_vlastni`, `max_sila_karty` v event logu | technical-developer | poznámky z 2026-07-22 |
 
 ## Otevřené otázky (čekají na uživatele)
 
-*(D1–D6 schváleny a zapracovány 2026-07-22 — viz [[rozhodnuti]].)*
+*(D1–D9 schváleny a zapracovány 2026-07-22 — viz [[rozhodnuti]].)*
 
-- **D7 — Sémantika výsledku 5–7** (největší páka simulace): reálné zranění
-  (změřeno → 72,5 % DORUČENO, zdravé), nebo volba vlastníka „zranění vs. −1 bedna"
-  (nezměřeno)? Dnes nedourčeno („zranění nebo poznámka" bez určení, kdo volí).
-- **D8 — Balíček dalších pák simulace** (2–7 v reportu brány): dostupnost +2 tagu
-  / konfrontační kolotoč / Zátah / Útěk rider / obetni-beranek / škálování party.
-- **D9 — Měřitelná kritéria simulační brány** (návrh: DORUČENO 45–70 % u 4p,
-  snowball od uzlu 3, první práh Žáru uzel 3–4, žádná strategie >85 %, žádný cíl
-  <5 %/>95 %) — mění sdílené pravidlo v `prototyp-mvp.md`.
+- Škálování obtížnosti počtem hráčů (páka 7) — odloženo, rozhodne se z dat
+  2. běhu simulace / lidské brány.
 - LLM poskytovatel nerozhodnut (drž volání abstrahované).
 - Jazyková strategie CZ→EN (kdy zařadit překlad a test anglických protokolů).
 

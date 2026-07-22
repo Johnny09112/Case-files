@@ -9,6 +9,25 @@ ukazatel na archiv.*
 
 ## 2026-07-22
 
+- **D7 schváleno — výsledek 5–7 = reálné zranění** (+ poznámka do spisu), žádná
+  „poznámka zdarma". *Důvod:* simulační brána (216k runů) ukázala kompetentní hru
+  90–98 % DORUČENO; citlivostní analýza změřila, že tato jediná změna ji sráží na
+  72,5 % — směrem ke zdravému pásmu. Nejsilnější páka za nejmenší pravidlo.
+- **D8 schváleno — balíček pák simulace (probráno bod po bodu):**
+  (2) ruka definována = 5 karet, dolízání po uzlu, prahy hodu se nezpřísňují;
+  (3) přežití konfrontace → Žár klesá na **3** (proti kolotoči finále 1,5–2,6×/run);
+  (4) Zátah při prahu **nahrazuje obě cesty** (dřív beztrestně obejitelný, hrál se
+  0,22×/run); (5) rider Útěku: při selhání **volí vlastník** zranění vs. −1 bedna
+  (Útěk byl dominantní odtok beden a mono-Útěk past); (6) `obetni-beranek` na
+  max sílu ≤2 s výjimkou zoufalých/vynucených karet (byl ~1 % = mrtvý);
+  (7) škálování počtem hráčů se zatím NEřeší (kognitivní zátěž, rozhodne se z dat
+  po přesimulování); tvrdosti mini-uzlů pronásledovatelů: léčka `zar`,
+  konfrontace `zraneni`. *Zdroj čísel:* `technika/simulacni-brana-2026-07-22.md`.
+- **D9 schváleno — měřitelná kritéria simulační brány** zafixována
+  v `prototyp-mvp.md` (referenční 4p run: DORUČENO 45–70 % u realistické
+  i kompetentní hry, snowball od uzlu 3, první práh Žáru uzel 3–4, žádná strategie
+  >85 %, žádný cíl <5 %/>95 %). *Důvod:* slovní kritérium nešlo objektivně
+  vyhodnotit; příští běhy se měří proti číslům.
 - **D4 schváleno — tagová textura mechanicky: „ridery tagů".** Násilí = nejvyšší
   síly, vše hlučné (+1 Žár); Úplatek = při selhání smíš odhodit 1 bednu a povýšit
   na „úspěch za cenu"; Útěk = selhání nezraní, tým ztratí bednu; Lest = bez rideru,

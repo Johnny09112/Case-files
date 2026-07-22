@@ -21,7 +21,10 @@
 #                                           a riderů vlastníka (crate_lost s atribucí postavy)
 #                  tag_prvni_karty        — tag první zahrané karty vlastníka (card_played)
 #                  pocet_tag.<tag>        — kolik karet daného tagu vlastník zahrál
-#                  max_sila_karty         — nejvyšší síla karty zahrané vlastníkem (card_played)
+#                  max_sila_karty         — nejvyšší síla karty zahrané vlastníkem
+#                                           DOBROVOLNĚ (card_played; nepočítají se
+#                                           zoufalé karty ani karty vynucené
+#                                           prokletou, např. Zbrklostí)
 #                  zar_prah               — nejvyšší dosažený práh Žáru (heat_threshold);
 #                                           hodnoty prahů dle prototyp-mvp.md, sem nehardcodovat
 #                Zápis: `metrika operátor hodnota`, spojení přes `a`/`nebo`
@@ -74,9 +77,9 @@ cile:
 
   - id: obetni-beranek
     text: "Ať z protokolu vyjde, že tě do toho ostatní jen zatáhli — tys nic velkého neproved."
-    overeni: "Vlastník nezahrál během runu jedinou kartu se silou vyšší než 1."
+    overeni: "Vlastník dobrovolně nezahrál kartu se silou vyšší než 2 (zoufalé a vynucené se nepočítají)."
     overeni_typ: mechanicky
-    podminka: "max_sila_karty <= 1"
+    podminka: "max_sila_karty <= 2"
     body: 2
 
   - id: prsty-ve-vsem

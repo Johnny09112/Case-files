@@ -24,10 +24,16 @@ papírové fáze je v historii v patičce; k papíru se lze vrátit, až budou h
   `protocol-humor-tester` nad promptem `prompty/protokol.md`, ne až u stolu.
 
 **Go/No-Go (dvoustupňové):**
-1. *Simulační brána* — resoluční matematika a tempo sedí (viz výše).
+1. *Simulační brána* — měřitelná kritéria (fixována 2026-07-22, referenční
+   4hráčový run; brána = PROŠLA, když platí všechna):
+   - DORUČENO při realistické (cíle-driven) i kompetentní hře **45–70 %**;
+   - snowball: přírůstek zranění per uzel roste od **3. uzlu**;
+   - první práh Žáru padá medián **uzel 3–4**;
+   - žádná rozumná strategie nemá DORUČENO **>85 %**;
+   - žádný mechanický cíl není splňován **<5 % ani >95 %**.
 2. *Lidská brána* (po prototypu, solo/remote/async dle Fáze 2) — hráči se hádají
    o karty, čtou protokol nahlas se smíchem, dají si dobrovolně další run. Bez
-   tohoto žádná další vrstva hru nezachrání.
+   tohoto žádná další vrstva hru nezachrání. Simulace tohle neprokáže.
 
 ## Fáze 1 — Digitální prototyp v0.1 (odhad 2–4 týdny)
 
@@ -45,10 +51,13 @@ papírové fáze je v historii v patičce; k papíru se lze vrátit, až budou h
 ### Resoluční systém (výchozí čísla, ladit playtestem)
 
 - **Karta:** tag (Násilí / Lest / Úplatek / Útěk) + síla 1–3.
+- **Ruka:** 5 karet; po každém uzlu si hráč dolízne zpět na 5.
 - **Uzel:** afinity k tagům (−2 / 0 / +2), viditelné hráčům předem.
 - **Hod postavy:** d6 + síla karty + afinita − počet zranění postavy (max −3).
   - **8+** … úspěch
-  - **5–7** … úspěch za cenu (zranění nebo poznámka do spisu)
+  - **5–7** … úspěch za cenu — **reálné zranění** (+ poznámka do spisu).
+    Žádná „poznámka zdarma": cena musí bolet, jinak je hra bez tření
+    (změřeno simulací 2026-07-22).
   - **≤4** … selhání + zranění + tvrdost uzlu
 - **Tagová textura (ridery)** — mechanická realizace textury z design dokumentu
   §4.5; každý tag řeší selhání jinak:
@@ -57,8 +66,8 @@ papírové fáze je v historii v patičce; k papíru se lze vrátit, až budou h
   - **Úplatek — jistota za zdroje:** skončil-li hod selháním (≤4), smí hráč
     **odhodit 1 týmovou bednu a povýšit výsledek na „úspěch za cenu" (5–7)**.
     Dobrovolné; platí se, jen když to zachrání.
-  - **Útěk — bezpečí za bedny:** selhání (≤4) s kartou Útěk **nezpůsobí zranění —
-    tým místo něj ztratí 1 bednu** (nemá-li tým už žádnou, zranění proběhne
+  - **Útěk — bezpečí za bedny:** při selhání (≤4) s kartou Útěk **volí vlastník**:
+    utrpí zranění, NEBO tým ztratí 1 bednu (nemá-li tým už žádnou, zranění proběhne
     normálně). Tvrdost uzlu se uplatní i tak.
   - **Lest — nekrytá variance:** žádný rider. Lest neplatí Žár ani bedny, ale
     nemá žádnou ochranu — selhání dopadá plnou vahou.
@@ -71,9 +80,10 @@ papírové fáze je v historii v patičce; k papíru se lze vrátit, až budou h
   **+1 za každou zahranou hlučnou kartu** (`hlucna`, per karta), **+2** za vybrané
   výsledky uzlů. Pozn.: tvrdost `zar` (+2, viz výše) se přičítá **za každé
   selhání** — to je záměrně per hod, na rozdíl od základního +1 za uzel. Prahy:
-  **4** = jedna ze dvou nabízených cest v příští volbě se **nahradí** Zátahem
-  (viditelně, nepřidává se třetí cesta), **7** = vložený uzel léčky
-  pronásledovatele, **10** = okamžitá finální konfrontace; přežití → Žár klesá na 6.
+  **4** = příští volba cesty vede přes **Zátah — nahradí obě nabízené cesty**
+  (tým to vidí předem; beztrestně obejít nejde), **7** = vložený uzel léčky
+  pronásledovatele, **10** = okamžitá finální konfrontace; přežití → **Žár klesá
+  na 3** (finále se nesmí recyklovat každé dva uzly — změřeno simulací).
 - **Pronásledovatel:** losuje se 1 na začátku runu, viditelný od začátku, ruší
   jeden tag (viz `obsah/pronasledovatele.yaml`). Nemá vlastní tahy — jedná
   výhradně přes prahy Žáru.
@@ -88,10 +98,10 @@ papírové fáze je v historii v patičce; k papíru se lze vrátit, až budou h
   zdemolovaný hráč s nimi hraje naplno, ne jako mrzák.
 - **Priorita prokletých karet:** zákaz tagu má přednost před vynucením
   (např. „Zbrklost" = zahraj nejvyšší sílu **mezi povolenými** kartami).
-- **Zátah (práh Žáru):** speciální **vkládaný** uzel — nahradí jednu ze dvou
-  nabízených cest; není součástí běžné nabídky 14 uzlů. Obsahově jeden generický
-  Zátah-uzel v `obsah/uzly.yaml` (označen jako speciální), flavor dobarví
-  pronásledovatel přes AI kulisy.
+- **Zátah (práh Žáru):** speciální **vkládaný** uzel — při dosažení prahu vede
+  příští volba cesty přes něj (nahradí obě nabízené cesty); není součástí běžné
+  nabídky 14 uzlů. Obsahově jeden generický Zátah-uzel v `obsah/uzly.yaml`
+  (označen jako speciální), flavor dobarví pronásledovatel přes AI kulisy.
 
 ### Obsah (minimální sada)
 

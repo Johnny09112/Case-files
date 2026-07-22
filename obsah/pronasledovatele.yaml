@@ -8,8 +8,10 @@
 #   nazev:      jméno s titulem
 #   ruseny_tag: tag, který proti němu nefunguje nebo je potrestán
 #   pravidlo:   přesné znění efektu rušeného tagu (viditelné hráčům)
-#   lecka:      mini-uzel pro práh Žár 7 (uvod + afinity)
-#   konfrontace: mini-uzel pro práh Žár 10 (uvod + afinity)
+#   lecka:      mini-uzel pro práh léčky (uvod + afinity + tvrdost; tvrdost
+#               léčky je vždy `zar` — léčka dál topí pod kotlem)
+#   konfrontace: mini-uzel pro práh konfrontace (uvod + afinity + tvrdost;
+#               tvrdost konfrontace je vždy `zraneni` — finále bolí dvojitě)
 #   flavor:     1 věta pro protokol — polda ho zná osobně
 # Cílový počet pro MVP: 2.
 
@@ -21,9 +23,11 @@ pronasledovatele:
     lecka:
       uvod: "Malone obsadil most u Poughkeepsie. Stojí u závory a v ruce drží vaši fotografii."
       afinity: {nasili: 0, lest: 2, uplatek: -2, utek: 0}
+      tvrdost: zar
     konfrontace:
       uvod: "Kolona federálních vozů vás sevřela na silnici. Malone vystupuje a bez spěchu si nasazuje brýle."
       afinity: {nasili: 0, lest: 0, uplatek: -2, utek: -2}
+      tvrdost: zraneni
     flavor: "Vyšetřovatel poznamenává, že agent Malone nepije, nekouří a nebere. Nikdo na okrsku nechápe, co tu tedy dělá."
 
   - id: serif-brody
@@ -33,7 +37,9 @@ pronasledovatele:
     lecka:
       uvod: "Brody s partou nadšených občanů přehradil silnici valníkem. Nasadil služební úsměv."
       afinity: {nasili: -2, lest: 0, uplatek: 2, utek: 0}
+      tvrdost: zar
     konfrontace:
       uvod: "Brodyho muži vás zahnali k zavřenému mostu. Šerif si sundává klobouk, což nikdy nevěstí nic dobrého."
       afinity: {nasili: -2, lest: 0, uplatek: 0, utek: 2}
+      tvrdost: zraneni
     flavor: "Vyšetřovatel uvádí, že šerif Brody řeší okresní záležitosti tradičně: nejprve střelbou, poté dotazy."
