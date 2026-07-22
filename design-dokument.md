@@ -87,7 +87,9 @@ smysl a zraněním emocionální váhu.
 Každý hráč si na začátku lízne tajný cíl vázaný na obsah protokolu („v protokolu
 musí stát, že jsem utekl první", „musím být 3× zraněn", „polda mě označí za mozek
 operace"). Dává důvod hrát „špatnou" kartu schválně a vytváří závěrečný reveal
-moment při čtení spisu.
+moment při čtení spisu. Cíle jsou převážně **mechanicky ověřitelné** (hráč má
+jasnou páku, jak je plnit, a simulace je umí bodovat); čistě textové cíle jen
+tam, kde nesou reveal.
 
 ### 4.4 Trvalé následky (snowballing chaos)
 - Zranění a poznámky zůstávají do konce runu a vstupují do každého dalšího promptu.
@@ -127,8 +129,10 @@ a ruší jeden tag** (federální agent Malone je neúplatný, šerifa Brodyho n
 přitahuje…) — čtvrtina balíčku je proti finále oslabená, každý run se hraje
 jinak. To je vedle komunitních karet druhý pilíř znovuhratelnosti.
 
-Tagová textura, která z toho plyne: **Násilí** = síla za Žár, **Úplatek** =
-jistota za zdroje, **Lest** = variance, **Útěk** = bezpečí za bedny.
+Tagová textura: **Násilí** = síla za Žár, **Úplatek** = jistota za zdroje,
+**Lest** = variance, **Útěk** = bezpečí za bedny. Není to jen příchuť — každý
+tag má **mechanický rider**, který texturu vynucuje (konkrétní pravidla
+v [prototyp-mvp.md](prototyp-mvp.md), sekce Tagová textura).
 
 Vypravěčský háček: pronásledovatel je kolega poldy od psacího stroje — protokol
 cituje jeho hlášení a oba byrokrati se v spisu tiše nesnášejí.

@@ -1,16 +1,113 @@
 # Uzly (zastávky na trase Buffalo → New York).
 # Schéma (nová pole nepřidávat bez úpravy tohoto komentáře):
-#   id:      kebab-case, unikátní
-#   nazev:   krátký název zastávky
-#   uvod:    1–2 věty situace — jde poldovi/AI jako kulisa, hráčům se čte nahlas
-#   afinity: nasili/lest/uplatek/utek, hodnoty -2 | 0 | +2, viditelné hráčům
-#   tvrdost: bedna | zar | zraneni — co navíc stojí selhání u protivníka
-#            tohoto uzlu (viz resoluční systém v prototyp-mvp.md)
-# Cílový počet pro MVP: 7 typů × 2 varianty = 14 uzlů (run = 6 uzlů, volba ze 2).
+#   id:        kebab-case, unikátní
+#   nazev:     krátký název zastávky
+#   uvod:      1–2 věty situace — jde poldovi/AI jako kulisa, hráčům se čte nahlas
+#   afinity:   nasili/lest/uplatek/utek, hodnoty -2 | 0 | +2, viditelné hráčům
+#   tvrdost:   bedna | zar | zraneni — co navíc stojí selhání u protivníka
+#              tohoto uzlu (viz resoluční systém v prototyp-mvp.md)
+#   specialni: (volitelné) zatah — speciální VKLÁDANÝ uzel. Při prahu Žáru
+#              nahradí jednu ze dvou nabízených cest; nezařazuje se do běžné
+#              nabídky 14 uzlů. Flavor dobarví pronásledovatel přes AI kulisy.
+# Cílový počet pro MVP: 7 typů × 2 varianty = 14 uzlů (run = 6 uzlů, volba ze 2)
+# + 1 speciální Zátah-uzel (specialni: zatah), vkládaný při prahu Žáru.
 
 uzly:
+  # --- T1 Farmář ---
   - id: farmar-brod
     nazev: Brod u farmy
     uvod: "Vůz uvízl v řece. Na břehu stojí farmář s vidlemi a nemá dobrý den."
     afinity: {nasili: -2, lest: 0, uplatek: 2, utek: 0}
     tvrdost: zraneni
+
+  - id: farmar-stodola
+    nazev: Stodola u Batavie
+    uvod: "Statkář vás za pár dolarů nechá přenocovat ve stodole. Jeho psi ale hlídají líp než on a náklad si měří pohledem."
+    afinity: {nasili: 0, lest: 2, uplatek: 0, utek: -2}
+    tvrdost: bedna
+
+  # --- T2 Venkovský strážník ---
+  - id: deputy-mytnice
+    nazev: Bouda za Rochesterem
+    uvod: "U boudy stojí zástupce šerifa a natahuje ruku po 'silničním poplatku'. Zdejší tváře zná všechny, na výmluvy nevěř."
+    afinity: {nasili: 0, lest: -2, uplatek: 2, utek: 0}
+    tvrdost: zar
+
+  - id: deputy-hlidka
+    nazev: Silniční hlídka
+    uvod: "Postarší strážník přehradil cestu vozem a leští si odznak. Rychlý není, o to raděj sahá po revolveru."
+    afinity: {nasili: -2, lest: 0, uplatek: 0, utek: 2}
+    tvrdost: zar
+
+  # --- T3 Přechod přes řeku ---
+  - id: most-hlidka
+    nazev: Most přes Hudson
+    uvod: "Na mostě je závora a jediný znuděný mýtný s foukací lampou. Utéct není kam, ale na chlapa o samotě stačí zvednout hlas."
+    afinity: {nasili: 2, lest: 0, uplatek: 0, utek: -2}
+    tvrdost: bedna
+
+  - id: privoz-celnik
+    nazev: Přívoz s celníkem
+    uvod: "Převozník vás vezme na druhý břeh, jenže celník na palubě čichá ke každé bedně a přehmat pozná na dálku."
+    afinity: {nasili: 0, lest: -2, uplatek: 2, utek: 0}
+    tvrdost: zraneni
+
+  # --- T4 Rivalský gang ---
+  - id: rival-prepad
+    nazev: Přepadení rivalů
+    uvod: "Konkurenční parta z Albany zablokovala cestu vozy napříč silnicí. Chtějí náklad a na obehrané triky mají čich."
+    afinity: {nasili: 2, lest: -2, uplatek: 0, utek: 0}
+    tvrdost: zraneni
+
+  - id: rival-parley
+    nazev: Jednání s gangem
+    uvod: "Bootleggerský boss vás zve k jednání nad sklenkou. Úsměv vlídný, za zády tři chlapi — otočit se k nim zády se nevyplácí."
+    afinity: {nasili: 0, lest: 0, uplatek: 2, utek: -2}
+    tvrdost: bedna
+
+  # --- T5 Úředník ---
+  - id: urednik-vaha
+    nazev: Vážní stanice
+    uvod: "U váhy sedí drobný úředník s knírkem a hromadou předpisů. Úplatek brát nesmí, ale zvýšený hlas s ním zamává."
+    afinity: {nasili: 2, lest: 0, uplatek: -2, utek: 0}
+    tvrdost: bedna
+
+  - id: urednik-razitko
+    nazev: Chybějící razítko
+    uvod: "Na celnici chybí jediné razítko a úředník je až úzkostlivě poctivý — sledují ho shora. Papír tu zmůže víc než dolar."
+    afinity: {nasili: 0, lest: 2, uplatek: -2, utek: 0}
+    tvrdost: zar
+
+  # --- T6 Městská policie ---
+  - id: mesto-houkacky
+    nazev: Houkačky v Albany
+    uvod: "Ulicemi houkají hlídkové vozy ze všech stran — velká policejní akce. V davu se ztratíš snáz než v přestřelce."
+    afinity: {nasili: -2, lest: 0, uplatek: 0, utek: 2}
+    tvrdost: zar
+
+  - id: mesto-ulicka
+    nazev: Slepá ulička
+    uvod: "Dvojice městských policistů vás zahnala do slepé uličky. Znají tu každý kanál, proskočit se nedá — leda splynout."
+    afinity: {nasili: 0, lest: 2, uplatek: 0, utek: -2}
+    tvrdost: zraneni
+
+  # --- T7 Nádraží / překladiště ---
+  - id: nadrazi-vypravci
+    nazev: Seřaďovací nádraží
+    uvod: "Na seřaďovacím nádraží chce výpravčí nákladní list, který nemáte. Chlap jako hora, co zná každý trik zpaměti — ale hrubému slovu ustoupí."
+    afinity: {nasili: 2, lest: -2, uplatek: 0, utek: 0}
+    tvrdost: bedna
+
+  - id: nadrazi-noc
+    nazev: Noční překladiště
+    uvod: "V noci se protáhnete kolem hlídače s lucernou k odstavenému vagonu. Ve tmě mezi vagony se dobře mizí, jen podplatit se noční hlídač bojí."
+    afinity: {nasili: 0, lest: 0, uplatek: -2, utek: 2}
+    tvrdost: zraneni
+
+  # --- SPECIÁLNÍ: Zátah (vkládaný při prahu Žáru, nahradí jednu z cest) ---
+  - id: zatah
+    nazev: Zátah
+    uvod: "Silnici přehradily hlídkové vozy a všude bliká policejní světlo. Tudy se neprojede — buď zmizíš, nebo tě sepíšou."
+    afinity: {nasili: -2, lest: 0, uplatek: 0, utek: 2}
+    tvrdost: zar
+    specialni: zatah

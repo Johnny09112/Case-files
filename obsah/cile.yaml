@@ -13,14 +13,17 @@
 #   podminka:    (jen u overeni_typ: mechanicky; jinak vynech) strojově čitelná
 #                podmínka nad metrikami odvozenými z událostního logu, vyhodnocená
 #                pro postavu vlastníka na konci runu. Ukotvení metrik v §2.2:
-#                  zraneni          — počet zranění vlastníka (injury_added)
-#                  kolaps           — vlastník padl, true/false (character_down)
-#                  doruceno         — run skončil DORUČENO, true/false (run_ended)
-#                  ztracene_bedny   — počet ztracených beden (crate_lost)
-#                  tag_prvni_karty  — tag první zahrané karty vlastníka (card_played)
-#                  pocet_tag.<tag>  — kolik karet daného tagu vlastník zahrál
-#                  zar_prah         — nejvyšší dosažený práh Žáru (heat_threshold);
-#                                     hodnoty prahů dle prototyp-mvp.md, sem nehardcodovat
+#                  zraneni                — počet zranění vlastníka (injury_added)
+#                  kolaps                 — vlastník padl, true/false (character_down)
+#                  doruceno               — run skončil DORUČENO, true/false (run_ended)
+#                  ztracene_bedny         — počet ztracených beden (crate_lost)
+#                  ztracene_bedny_vlastni — počet beden ztracených v důsledku hodů
+#                                           a riderů vlastníka (crate_lost s atribucí postavy)
+#                  tag_prvni_karty        — tag první zahrané karty vlastníka (card_played)
+#                  pocet_tag.<tag>        — kolik karet daného tagu vlastník zahrál
+#                  max_sila_karty         — nejvyšší síla karty zahrané vlastníkem (card_played)
+#                  zar_prah               — nejvyšší dosažený práh Žáru (heat_threshold);
+#                                           hodnoty prahů dle prototyp-mvp.md, sem nehardcodovat
 #                Zápis: `metrika operátor hodnota`, spojení přes `a`/`nebo`
 #                (např. "zraneni >= 3 a doruceno"). Přesnou sadu predikátů uzavře
 #                engine; sem patří jen podmínky ověřitelné z logu výše.
@@ -47,3 +50,38 @@ cile:
     overeni_typ: mechanicky
     podminka: "zraneni >= 3 a doruceno"
     body: 2
+
+  - id: cisty-stit
+    text: "V protokolu ať nepadne jediná zmínka, že jsi někoho udeřil."
+    overeni: "Vlastník nezahrál během runu žádnou kartu s tagem Násilí."
+    overeni_typ: mechanicky
+    podminka: "pocet_tag.nasili == 0"
+    body: 2
+
+  - id: kupecke-slovo
+    text: "Kupecké slovo platí: co ti svěřili, dovezeš. Ani jedna bedna nesmí padnout tvou rukou."
+    overeni: "Run skončil DORUČENO a vlastníkovými hody ani ridery se neztratila žádná bedna."
+    overeni_typ: mechanicky
+    podminka: "ztracene_bedny_vlastni == 0 a doruceno"
+    body: 2
+
+  - id: frajer-v-klidu
+    text: "Ať to vypadá, žes celou cestu prostál v klidu — ani škrábnutí, ať se dělo cokoli."
+    overeni: "Vlastník dokončil run bez jediného zranění a náklad dorazil."
+    overeni_typ: mechanicky
+    podminka: "zraneni == 0 a doruceno"
+    body: 3
+
+  - id: obetni-beranek
+    text: "Ať z protokolu vyjde, že tě do toho ostatní jen zatáhli — tys nic velkého neproved."
+    overeni: "Vlastník nezahrál během runu jedinou kartu se silou vyšší než 1."
+    overeni_typ: mechanicky
+    podminka: "max_sila_karty <= 1"
+    body: 2
+
+  - id: prsty-ve-vsem
+    text: "Ať protokol ukáže, že jsi měl prsty ve všem — pěst, lest, úplatek i útěk."
+    overeni: "Vlastník zahrál během runu aspoň jednu kartu od každého ze čtyř tagů."
+    overeni_typ: mechanicky
+    podminka: "pocet_tag.nasili >= 1 a pocet_tag.lest >= 1 a pocet_tag.uplatek >= 1 a pocet_tag.utek >= 1"
+    body: 3

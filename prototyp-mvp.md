@@ -50,6 +50,18 @@ papírové fáze je v historii v patičce; k papíru se lze vrátit, až budou h
   - **8+** … úspěch
   - **5–7** … úspěch za cenu (zranění nebo poznámka do spisu)
   - **≤4** … selhání + zranění + tvrdost uzlu
+- **Tagová textura (ridery)** — mechanická realizace textury z design dokumentu
+  §4.5; každý tag řeší selhání jinak:
+  - **Násilí — síla za Žár:** karty Násilí mají nejvyšší síly v sadě a **všechny
+    jsou hlučné** (`hlucna`, +1 Žár za zahrání). Žádná jiná úleva.
+  - **Úplatek — jistota za zdroje:** skončil-li hod selháním (≤4), smí hráč
+    **odhodit 1 týmovou bednu a povýšit výsledek na „úspěch za cenu" (5–7)**.
+    Dobrovolné; platí se, jen když to zachrání.
+  - **Útěk — bezpečí za bedny:** selhání (≤4) s kartou Útěk **nezpůsobí zranění —
+    tým místo něj ztratí 1 bednu** (nemá-li tým už žádnou, zranění proběhne
+    normálně). Tvrdost uzlu se uplatní i tak.
+  - **Lest — nekrytá variance:** žádný rider. Lest neplatí Žár ani bedny, ale
+    nemá žádnou ochranu — selhání dopadá plnou vahou.
 - **Tvrdost uzlu:** co navíc stojí selhání u tohoto protivníka: `bedna`
   (−1 bedna), `zar` (+2 Žár), `zraneni` (druhé zranění).
 - **Náklad:** tým veze 6 beden. 0 beden = run končí (razítko NEVYŘEŠENO).
@@ -67,19 +79,30 @@ papírové fáze je v historii v patičce; k papíru se lze vrátit, až budou h
   výhradně přes prahy Žáru.
 - **Kolaps postavy:** 4. zranění = postava vyřazena (dál jen „leží v autě" a
   generuje poznámky v protokolu). Všichni vyřazeni = konec runu.
+  **Hlas z auta:** vyřazený hráč v každém dalším uzlu jednou binárně volí —
+  buď dá jednomu spoluhráči **+1 k hodu**, nebo mu **lízne prokletou kartu**.
+  (Drobné rozhodnutí drží hráče ve hře a krmí protokol.)
 - **Zranění** = zápis do spisu (krmí AI prompt) + od 2. zranění líže hráč
   prokleté karty do ruky.
+- **Zoufalé karty ignorují postih za zranění** (hod = d6 + síla + afinita) —
+  zdemolovaný hráč s nimi hraje naplno, ne jako mrzák.
+- **Priorita prokletých karet:** zákaz tagu má přednost před vynucením
+  (např. „Zbrklost" = zahraj nejvyšší sílu **mezi povolenými** kartami).
+- **Zátah (práh Žáru):** speciální **vkládaný** uzel — nahradí jednu ze dvou
+  nabízených cest; není součástí běžné nabídky 14 uzlů. Obsahově jeden generický
+  Zátah-uzel v `obsah/uzly.yaml` (označen jako speciální), flavor dobarví
+  pronásledovatel přes AI kulisy.
 
 ### Obsah (minimální sada)
 
 | Co | Počet | Poznámka |
 |---|---|---|
 | Postavy | 4 | jen jméno + portrét-placeholder + 1 věta flavoru |
-| Šablony uzlů | 7 typů × 2 varianty = 14 | run = 6 uzlů, vždy volba ze 2 |
+| Šablony uzlů | 7 typů × 2 varianty = 14 (+1 speciální Zátah) | run = 6 uzlů, vždy volba ze 2 |
 | Základní karty | 32 (8 na tag) | síly 1–3, česky |
 | Prokleté karty | 8 | Křeč, Ztráta důstojnosti… |
 | Zoufalé karty | 4 | hratelné jen s 3+ zraněními |
-| Tajné cíle | 8 | vázané na obsah protokolu, bodované na konci |
+| Tajné cíle | 8 | bodované na konci; převážně mechanicky ověřitelné (simulační brána), textové jen kde nese reveal |
 | Pronásledovatelé | 2 | pravidlová karta: rušený tag + léčka + konfrontace |
 | Fallback šablony protokolu | ~20 | pro výpadek API |
 

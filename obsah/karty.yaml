@@ -13,14 +13,9 @@
 # Cílový počet pro MVP: 32 základních (8 na tag), 8 prokletých, 4 zoufalé.
 
 karty:
-  - id: zkazena-tlacenka
-    nazev: Zkažená tlačenka
-    typ: zakladni
-    tag: lest
-    sila: 2
-    text: "Nabídneš protistraně domácí tlačenku z rodinné zabijačky. Loňské."
-    poznamka: "Ukázková karta — definuje tón. Smazat, až bude plná sada."
-
+  # ============================================================
+  # ZÁKLADNÍ — NÁSILÍ (8; síla za Žár, všechny hlučné)
+  # ============================================================
   - id: dedeckova-brokovnice
     nazev: Dědečkova brokovnice
     typ: zakladni
@@ -30,6 +25,243 @@ karty:
     text: "Argument ráže dvanáct. Rez mu na věcnosti neubírá."
     poznamka: "Ukázka hlučné karty — síla za Žár."
 
+  - id: salva-do-stropu
+    nazev: Salva do stropu
+    typ: zakladni
+    tag: nasili
+    sila: 3
+    hlucna: true
+    text: "Vyprázdníš zásobník do stropu putyky. Omítka prší, ale respekt stoupá."
+
+  - id: pytel-cementu
+    nazev: Pytel cementu
+    typ: zakladni
+    tag: nasili
+    sila: 3
+    hlucna: true
+    text: "Ukážeš pytel cementu a řekneš, komu z něj ušiješ boty. Do řeky je to kousek."
+
+  - id: flaska-pres-palici
+    nazev: Flaška přes palici
+    typ: zakladni
+    tag: nasili
+    sila: 2
+    hlucna: true
+    text: "Rozbiješ mu o hlavu láhev pašovaného ginu. Ginu je věčná škoda."
+
+  - id: mosazny-boxer
+    nazev: Mosazný boxer
+    typ: zakladni
+    tag: nasili
+    sila: 2
+    hlucna: true
+    text: "Navlékneš na klouby mosaz. Zdvořilost tím obvykle končí."
+
+  - id: sekacek-na-led
+    nazev: Sekáček na led
+    typ: zakladni
+    tag: nasili
+    sila: 2
+    hlucna: true
+    text: "Rozvážíš led. Dnes výjimečně i mezi žebra."
+
+  - id: hasak
+    nazev: Hasák
+    typ: zakladni
+    tag: nasili
+    sila: 1
+    hlucna: true
+    text: "Těžký, studený a vždycky po ruce. Instalatér by ho postrádal."
+
+  - id: klika-od-vozu
+    nazev: Klika od vozu
+    typ: zakladni
+    tag: nasili
+    sila: 1
+    hlucna: true
+    text: "Startovací klika nastartuje i debatu, když dojdou slova."
+
+  # ============================================================
+  # ZÁKLADNÍ — LEST (8; nekrytá variance, bez rideru)
+  # ============================================================
+  - id: zkazena-tlacenka
+    nazev: Zkažená tlačenka
+    typ: zakladni
+    tag: lest
+    sila: 2
+    text: "Nabídneš protistraně domácí tlačenku z rodinné zabijačky. Loňské."
+
+  - id: knezsky-kolarek
+    nazev: Kněžský kolárek
+    typ: zakladni
+    tag: lest
+    sila: 2
+    text: "V kolárku spustíš kázání o neřesti pití. Hlídka zahanbeně sklopí zrak a mává tě dál."
+
+  - id: konve-na-mleko
+    nazev: Konve na mléko
+    typ: zakladni
+    tag: lest
+    sila: 2
+    text: "Náklad rozliješ do konví na mléko. Mlékaři nikdo nečichá."
+
+  - id: pohrebni-vuz
+    nazev: Pohřební vůz
+    typ: zakladni
+    tag: lest
+    sila: 3
+    text: "Bedny složíš do rakve. Nad rakví hlídka smekne a mávne dál."
+
+  - id: falesna-kontrola
+    nazev: Falešná kontrola
+    typ: zakladni
+    tag: lest
+    sila: 3
+    text: "Sám sebe prohlásíš za celní dohled a náklad si přísně zkontroluješ."
+
+  - id: zpev-opilce
+    nazev: Zpěv opilce
+    typ: zakladni
+    tag: lest
+    sila: 1
+    text: "Spustíš tak žalostnou opileckou, že tě pustí dál jen z lítosti."
+
+  - id: svatebni-dar
+    nazev: Svatební dar
+    typ: zakladni
+    tag: lest
+    sila: 1
+    text: "Trváš, že si na nevěstu musí připít i hlídka. Po třetím přípitku už nekontrolují vůbec nic."
+
+  - id: bratr-od-pily
+    nazev: Bratr od pily
+    typ: zakladni
+    tag: lest
+    sila: 1
+    text: "Tvrdíš, že za zády máš bratra od cirkulárky. Nemáš, ale zní to zle."
+
+  # ============================================================
+  # ZÁKLADNÍ — ÚPLATEK (8; jistota za zdroje)
+  # ============================================================
+  - id: doutnik-a-mlceni
+    nazev: Doutník a mlčení
+    typ: zakladni
+    tag: uplatek
+    sila: 1
+    text: "Nabídneš doutník, jaký si strážník za plat nekoupí. Kouř zahalí i paměť."
+
+  - id: flaska-pro-serifa
+    nazev: Láhev pro šerifa
+    typ: zakladni
+    tag: uplatek
+    sila: 1
+    text: "Láhev pravé kanadské žitné. I zákon má po ránu žízeň."
+
+  - id: drobne-na-pivo
+    nazev: Drobné na pivo
+    typ: zakladni
+    tag: uplatek
+    sila: 1
+    text: "Vtiskneš hlídce pár dolarů 'na pivo'. Za tolik piv se dá i oslepnout."
+
+  - id: bankovka-do-dlane
+    nazev: Bankovka do dlaně
+    typ: zakladni
+    tag: uplatek
+    sila: 2
+    text: "Přeložená bankovka změní modrou uniformu ve slepou."
+
+  - id: obalka-pro-starostu
+    nazev: Obálka pro starostu
+    typ: zakladni
+    tag: uplatek
+    sila: 2
+    text: "Obálka bez adresáta. Starosta si adresu doplní sám."
+
+  - id: zlate-hodinky
+    nazev: Zlaté hodinky
+    typ: zakladni
+    tag: uplatek
+    sila: 2
+    text: "Hodinky po tchánovi. Tchán se nedozví, kam se poděly."
+
+  - id: bedna-na-ochutnavku
+    nazev: Bedna na ochutnávku
+    typ: zakladni
+    tag: uplatek
+    sila: 3
+    text: "Věnuješ jednu bednu 'na ochutnávku'. Náklad je lehčí, hlídka vlídnější."
+
+  - id: vyplata-dopredu
+    nazev: Výplata dopředu
+    typ: zakladni
+    tag: uplatek
+    sila: 3
+    text: "Zaplatíš hlídce měsíc dopředu. Pořád levnější než advokát."
+
+  # ============================================================
+  # ZÁKLADNÍ — ÚTĚK (8; bezpečí za bedny)
+  # ============================================================
+  - id: bocni-ulicka
+    nazev: Boční ulička
+    typ: zakladni
+    tag: utek
+    sila: 1
+    text: "Zmizíš do uličky mezi domy. Šířka vozu je jen doporučení."
+
+  - id: seno-na-korbe
+    nazev: Seno na korbě
+    typ: zakladni
+    tag: utek
+    sila: 1
+    text: "Zalezeš pod seno na korbě. Kýchnout znamená prohrát."
+
+  - id: zadni-vratka
+    nazev: Zadní vrátka
+    typ: zakladni
+    tag: utek
+    sila: 1
+    text: "Vyklouzneš zadem, zatímco přední dveře ještě drží slovo."
+
+  - id: plyn-na-podlahu
+    nazev: Plyn na podlahu
+    typ: zakladni
+    tag: utek
+    sila: 2
+    hlucna: true
+    text: "Sešlápneš plyn až k podlaze. Motor zavyje a vůz vystřelí — když to nevyjde, bedny lítají silnicí."
+
+  - id: zkratka-pres-pole
+    nazev: Zkratka přes pole
+    typ: zakladni
+    tag: utek
+    sila: 2
+    text: "Sjedeš z cesty rovnou do kukuřice. Vůz to přežije, blatníky ne."
+
+  - id: sklep-u-strejdy
+    nazev: Sklep u strejdy
+    typ: zakladni
+    tag: utek
+    sila: 2
+    text: "Schováš se do sklepa u strejdy. Strejda má naštěstí i zásoby."
+
+  - id: clun-po-kanale
+    nazev: Člun po kanále
+    typ: zakladni
+    tag: utek
+    sila: 3
+    text: "Přeložíš bedny na loďku po starém kanálu. Pomalu, zato bez silnic a hlídek."
+
+  - id: skok-do-reky
+    nazev: Skok do řeky
+    typ: zakladni
+    tag: utek
+    sila: 3
+    text: "Necháš vůz vozem a bereš to vplavmo. Náklad zůstane na břehu."
+
+  # ============================================================
+  # PROKLETÉ (8; tag žádný, síla 0)
+  # ============================================================
   - id: krec
     nazev: Křeč
     typ: prokleta
@@ -37,6 +269,58 @@ karty:
     sila: 0
     text: "Ruka ti ztuhla na pažbě. Tento uzel nesmíš hrát kartu Násilí."
 
+  - id: roztresene-ruce
+    nazev: Roztřesené ruce
+    typ: prokleta
+    tag:
+    sila: 0
+    text: "Prsty ti tancují, na jemnou práci zapomeň. Tento uzel nesmíš hrát kartu Lest."
+
+  - id: prazdne-kapsy
+    nazev: Prázdné kapsy
+    typ: prokleta
+    tag:
+    sila: 0
+    text: "Vysypeš kapsy a najdeš jen chmýří. Tento uzel nesmíš hrát kartu Úplatek."
+
+  - id: podvrtnuty-kotnik
+    nazev: Podvrtnutý kotník
+    typ: prokleta
+    tag:
+    sila: 0
+    text: "Kotník oteklý jak bochník. Tento uzel nesmíš hrát kartu Útěk."
+
+  - id: kocovina
+    nazev: Kocovina
+    typ: prokleta
+    tag:
+    sila: 0
+    text: "Včerejší pančovaná se hlásí o slovo. K tomuto hodu připočti -2."
+
+  - id: ztrata-dustojnosti
+    nazev: Ztráta důstojnosti
+    typ: prokleta
+    tag:
+    sila: 0
+    text: "Padneš do bláta před celou hlídkou. Selže-li tým v tomto uzlu, Žár stoupne o +1 navíc (celkem +2)."
+
+  - id: nutkani-ochutnat
+    nazev: Nutkání ochutnat
+    typ: prokleta
+    tag:
+    sila: 0
+    text: "Neodoláš vlastnímu nákladu a přihneš si. K tomuto hodu připočti -2 a počítá se jako hlučná (+1 Žár)."
+
+  - id: zbrklost
+    nazev: Zbrklost
+    typ: prokleta
+    tag:
+    sila: 0
+    text: "Netrpělivost tě žene dopředu. Tento uzel musíš zahrát kartu s nejvyšší silou, jakou máš v ruce."
+
+  # ============================================================
+  # ZOUFALÉ (4; hratelné jen s 3+ zraněními, ignorují postih za zranění)
+  # ============================================================
   - id: posledni-cigareta
     nazev: Poslední cigareta
     typ: zoufala
@@ -44,3 +328,28 @@ karty:
     sila: 3
     podminka: "3+ zranění"
     text: "Už nemáš co ztratit. Zapálíš si a jdeš. Nikdo nestřílí na mrtvého muže."
+
+  - id: rudo-pred-ocima
+    nazev: Rudo před očima
+    typ: zoufala
+    tag: nasili
+    sila: 3
+    podminka: "3+ zranění"
+    hlucna: true
+    text: "Rudo před očima. Popadneš vidle, flašku, cokoli, a jdeš do všech naráz."
+
+  - id: posledni-lez
+    nazev: Poslední lež
+    typ: zoufala
+    tag: lest
+    sila: 3
+    podminka: "3+ zranění"
+    text: "Historku vyprávíš tak zoufalou, že ti uvěří — nikdo by si takovou nevymyslel."
+
+  - id: vsechno-na-stul
+    nazev: Všechno na stůl
+    typ: zoufala
+    tag: uplatek
+    sila: 3
+    podminka: "3+ zranění"
+    text: "Vysypeš na stůl všechno, co máš. Když padneš, ať to aspoň naposledy koupíš."

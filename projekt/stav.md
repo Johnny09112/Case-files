@@ -18,12 +18,12 @@ Go/No-Go je dvoustupňové (simulační brána → lidská brána) — detail v
 | Ověřit konzistenci designu po přidání mechaniky Žár | game-designer / consistency-check | **hotovo** — D1+D2 schváleny uživatelem 2026-07-22, re-check konzistence beze nálezu |
 | Zapracovat schválené změny (Žár per uzel, prahy vs. afinity, prokleté od 2. zranění, sémantika Zátahu, čísla jen v prototypu) | game-designer | **hotovo 2026-07-22** — zapracováno a commitnuto (viz [[rozhodnuti]] D1, D2) |
 | Rozšířit schéma `obsah/cile.yaml` o mechanicky ověřitelné cíle (pro simulátor) | content-generator + technical-developer | **hotovo 2026-07-22** — D3 schváleno, schéma rozšířeno (`overeni_typ`, `podminka`), 2 vzorové mechanické cíle |
-| Naplnit sady obsahu (32 zákl. / 8 prokl. / 4 zoufalé karty, 14 uzlů, 8 cílů, ~20 fallback) | content-generator | **návrh hotov 2026-07-22, NEZAPSÁN** — review (design-critic + humor-tester) našlo 3 blokující designové díry; game-designer připravuje rozhodovací balík pro uživatele |
-| Vyřešit blokující nálezy kritiky obsahu: B1 tagová textura mechanicky vs. vypravěčsky, D1 Násilí/motor Žáru, D2+D3 kolabovaný a vynechávající hráč, B3 karty slibující bednové transakce | game-designer → uživatel | **probíhá** — blokuje zápis obsahu i simulaci |
-| Prompt protokolu v0.1→v0.2 (priorita výsledku mechaniky nad textem karty, stav „bez hodu") + regresní baterie `prompty/protokol-testy.yaml` | protocol-humor-tester | navrženo 2026-07-22 — čeká schválení uživatelem (spolu s balíkem obsahu) |
-| Vyladit prompt protokolu + založit regresní baterii | protocol-humor-tester | čeká (mimo kritickou cestu stavby, běží paralelně) |
-| Simulace runů pro balanc (prahy, snowball, bedny) | playtest-facilitator | čeká na obsah (pravidla schválena 2026-07-22) |
-| Pro engine: formalizovat razítko DORUČENO (dojezd do NY) — metrika `doruceno` v `cile.yaml` na něm stojí | technical-developer | poznámka z kontroly konzistence 2026-07-22 |
+| Naplnit sady obsahu (32 zákl. / 8 prokl. / 4 zoufalé karty, 14+1 uzlů, 8 cílů) | content-generator | **hotovo 2026-07-22** — zapsáno po review kolečku (kritik + humor-tester + game-designer) a schválení D4–D6 |
+| Prompt protokolu v0.2 + regresní baterie `prompty/protokol-testy.yaml` (4 case) | protocol-humor-tester | **hotovo 2026-07-22** — vč. nového pole „bedny ztracené tímto hodem" ve formátu vstupu |
+| **Simulace runů pro balanc** (prahy, snowball, ekonomika beden — nově 3 kanály ztrát: tvrdost, rider Úplatku, rider Útěku; tempo Žáru; dominantní strategie; bodovatelnost cílů) | playtest-facilitator | **další na řadě** — obsah i pravidla kompletní |
+| Fallback šablony protokolu (~20) | content-generator + protocol-humor-tester | čeká (potřeba až pro prototyp, ne pro simulaci) |
+| Revize pronásledovatelů: léčky/konfrontace obou tlačí k Lesti (afinity), po zavedení riderů projít znovu | game-designer | nález kritika 2026-07-22 |
+| Pro engine (technical-developer): (a) formalizovat razítko DORUČENO — metrika `doruceno` na něm stojí; (b) strukturovaný vstup protokolu nese pole „bedny ztracené tímto hodem"; (c) ověřit proveditelnost „hlasu z auta" v hot-seat UI; (d) nové metriky cílů `ztracene_bedny_vlastni`, `max_sila_karty` v event logu | technical-developer | poznámky z 2026-07-22 |
 
 ## Otevřené otázky (čekají na uživatele)
 

@@ -9,6 +9,29 @@ ukazatel na archiv.*
 
 ## 2026-07-22
 
+- **D4 schváleno — tagová textura mechanicky: „ridery tagů".** Násilí = nejvyšší
+  síly, vše hlučné (+1 Žár); Úplatek = při selhání smíš odhodit 1 bednu a povýšit
+  na „úspěch za cenu"; Útěk = selhání nezraní, tým ztratí bednu; Lest = bez rideru,
+  nekrytá variance. *Důvod:* audit design-critica ukázal, že textura §4.5 se
+  v mechanice nerealizovala — tagy byly zaměnitelné, volba karty lookup, Lest
+  fakticky dominovala a Násilí (motor Žáru) bylo čistě nejhorší. Ridery zavěšují
+  texturu na existující měřidla (Žár/bedny/zranění), žádný nový subsystém,
+  simulovatelné. Řeší zároveň nálezy B1, B2, B3, D1 a část D5 auditu.
+- **D5 schváleno — doprovodná pravidla a úpravy obsahu (balík game-designera).**
+  (a) Nutkání ochutnat = modifikátor hodu místo „zrušení hodu" (sólo + fabrikace
+  protokolu). (b) Cíl `do-posledniho-dechu` stažen (odměna za sebe-vyřazení);
+  kolabovaný hráč dostává „hlas z auta" (+1 spoluhráči, nebo mu lízni prokletou).
+  (c) Textové cíle `obetni-beranek` a `frajer-v-klidu` převedeny na mechanické
+  proxy; `kupecke-slovo` personalizováno. (d) +1 generický Zátah-uzel (speciální,
+  vkládaný), `mesto-zatah` přejmenován kvůli kolizi. (e) Zoufalé karty ignorují
+  postih za zranění. (f) Priorita prokletých: zákaz tagu > vynucení. (g) Kosmetika
+  K1–K4 (2 Lest karty jiný vtip, ujasnění Ztráty důstojnosti, zkrácení úvodu).
+  *Pozn.:* proveditelnost „hlasu z auta" v hot-seat UI ověří technical-developer.
+- **D6 schváleno — prompt protokolu v0.2 + regresní baterie.** Rule 2 posílena:
+  počet beden a zranění se bere výhradně z výsledku mechaniky, nikdy z textu
+  karty (humor-tester prokázal riziko fabrikace u „hladkých" karet). Zakládá se
+  `prompty/protokol-testy.yaml` se 4 odhalenými případy jako regresní baterie.
+  Stav „bez hodu" není potřeba (Nutkání ochutnat předěláno na modifikátor).
 - **D1 schváleno — Žár: základní +1 per uzel, ne per hod.** Selhání v uzlu přidává
   +1 Žár max 1× za uzel (aspoň jedno selhání = +1); hlučné karty +1 per karta
   a výsledkové +2 beze změny; tvrdost `zar` (+2) zůstává záměrně per selhání.

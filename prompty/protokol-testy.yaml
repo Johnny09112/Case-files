@@ -1,0 +1,113 @@
+# Regresní baterie protokolů — protocol-humor-tester.
+# Rostoucí sada testovacích vstupů pro prompt v prompty/protokol.md.
+# Každý vstup, který dřív odhalil problém, sem patří — ať se regrese chytí příště.
+#
+# Jak se používá: na `vstup` se aplikuje aktuální systémový prompt z protokol.md
+# (produkční model třídy Haiku, klidně víc výstupů na vstup) a výstup se ověří
+# proti `ocekavani`. Změna/změkčení/zamlčení výsledku mechaniky = KRITICKÉ,
+# ne stylistická drobnost.
+#
+# Schéma:
+#   id:        kebab-case, unikátní
+#   popis:     co case testuje a proč je rizikový
+#   vstup:     PŘESNĚ ve formátu vstupu z protokol.md (UZEL / OSOBY / KARTY /
+#              VÝSLEDEK MECHANIKY). Fixní snapshot — NEodkazuje živě na obsah/*.yaml,
+#              protože texty karet/uzlů se mohou při finálním zápisu drobně lišit.
+#   ocekavani:
+#     musi:    seznam vlastností, které protokol MUSÍ splnit
+#     nesmi:   seznam vlastností, které protokol NESMÍ obsahovat
+#   zdroj:     odkud pochází vstupní data (snapshot znění)
+#
+# Pozn.: karty a uzly nejsou v obsah/*.yaml v době vzniku (jen 4 ukázkové karty),
+# proto jsou znění vzata z návrhu obsahu MVP (2026-07-22). Po finálním zápisu
+# obsahu tyto snapshoty zkontrolovat a případně sladit s obsah/karty.yaml +
+# obsah/uzly.yaml.
+
+testy:
+  - id: pohrebni-vuz-uspech
+    popis: >
+      Lest 3 na uzlu s lest+2, čistý úspěch. Karta je tematicky „hladká" (hlídka
+      smekne a mávne dál) — riziko, že model dodá dramatičnost nebo následky,
+      které mechanika nedala. Baseline: úspěch beze ztrát a beze zranění.
+    zdroj: "návrh obsahu MVP 2026-07-22 (pohrebni-vuz, most-hlidka)"
+    vstup: |
+      UZEL: Most přes Hudson — Na mostě je závora a znuděný mýtný s foukací lampou. Na vodě ani na mostě není kam utéct.
+      OSOBY: Novák: bez záznamu
+      KARTY: Novák hraje „Pohřební vůz" (lest, síla 3): Bedny složíš do rakve. Nad rakví hlídka smekne a mávne dál.
+      VÝSLEDEK MECHANIKY: Novák: úspěch; bedny ztracené tímto hodem: 0; náklad: 6 beden
+    ocekavani:
+      musi:
+        - "zapsat, že podezřelý Novák uzel zdolal / prošel bez potíží"
+        - "3–5 vět, suchý úřední tón, třetí osoba, osoba jménem a „podezřelý“"
+      nesmi:
+        - "tvrdit ztrátu jakékoli bedny (bedny ztracené tímto hodem = 0, náklad zůstává 6)"
+        - "tvrdit jakékoli zranění podezřelého"
+        - "vtipkovat explicitně, emoji, hovorovost, anachronismus"
+
+  - id: knezsky-kolarek-za-cenu-zraneni
+    popis: >
+      Lest 2, úspěch ZA CENU se zapsaným zraněním. Nejhorší dřívější případ:
+      slabší model vypustil zranění („vyvázl bez potíží") = zamlčení výsledku,
+      KRITICKÉ. „Hladká" Lest karta má sklon svádět k tomuto při párování
+      s „úspěchem za cenu". Kontrola: zranění NESMÍ zmizet ani se změkčit.
+    zdroj: "návrh obsahu MVP 2026-07-22 (knezsky-kolarek, privoz-celnik)"
+    vstup: |
+      UZEL: Přívoz s celníkem — Převozník vás vezme na druhý břeh, jenže celník na palubě čichá ke každé bedně. Kdo tu začne pošťuchování, plave.
+      OSOBY: Kovář: bez záznamu
+      KARTY: Kovář hraje „Kněžský kolárek" (lest, síla 2): Nasadíš kněžský kolárek. Faráře nikdo neprohledává, ani když se potí.
+      VÝSLEDEK MECHANIKY: Kovář: úspěch za cenu (Kovář utrpěl zranění — rozseknuté obočí od celníkova lokte); bedny ztracené tímto hodem: 0; náklad: 6 beden
+    ocekavani:
+      musi:
+        - "zapsat zranění podezřelého Kováře (rozseknuté obočí)"
+        - "zapsat, že uzel byl zdolán (za cenu), náklad zůstává 6"
+      nesmi:
+        - "vynechat, změkčit či popřít zranění (např. „bez potíží“, „bez zranění“, „vyvázl v pořádku“)"
+        - "tvrdit ztrátu jakékoli bedny"
+        - "vtipkovat explicitně, emoji, hovorovost, anachronismus"
+
+  - id: bedna-na-ochutnavku-uspech-beze-ztrat
+    popis: >
+      Úplatek 3, úspěch. KLÍČOVÝ adversariální case rule 2: text karty tvrdí
+      fyzickou ztrátu bedny („Věnuješ jednu bednu… Náklad je lehčí"), ale
+      mechanika při úspěchu náklad nemění (bedny ztracené tímto hodem: 0).
+      Model buď napíše číslo nekonzistentní s fikcí (křeč), nebo náklad reálně
+      sníží (KRITICKÉ). Kontrola: počet beden sedí na výsledek, ne na text karty.
+      POZOR: sedí na aktuální mechaniku (žádný per-karta rider „stojí 1 bednu").
+      Pokud design později přidá takový rider, přepiš tento snapshot i ocekavani.
+    zdroj: "návrh obsahu MVP 2026-07-22 (bedna-na-ochutnavku, deputy-mytnice)"
+    vstup: |
+      UZEL: Bouda za Rochesterem — U boudy stojí zástupce šerifa a natahuje ruku po 'silničním poplatku'. Zdejší tváře zná všechny, na výmluvy nevěř.
+      OSOBY: Rychtář: bez záznamu
+      KARTY: Rychtář hraje „Bedna na ochutnávku" (uplatek, síla 3): Věnuješ jednu bednu 'na ochutnávku'. Náklad je lehčí, hlídka vlídnější.
+      VÝSLEDEK MECHANIKY: Rychtář: úspěch; bedny ztracené tímto hodem: 0; náklad: 6 beden
+    ocekavani:
+      musi:
+        - "zapsat úspěch (hlídka uplacena / usmířena, podezřelý prošel)"
+        - "počet beden odpovídá výsledku mechaniky — náklad zůstává 6"
+      nesmi:
+        - "tvrdit, že ubyla / se ztratila bedna nebo že je náklad lehčí (text karty NEsmí přebít mechaniku)"
+        - "uvést jiný počet beden než 6"
+        - "tvrdit jakékoli zranění podezřelého"
+        - "vtipkovat explicitně, emoji, hovorovost, anachronismus"
+
+  - id: utek-rider-selhani-bedna-misto-zraneni
+    popis: >
+      Rider Útěku: selhání (≤4) s kartou Útěk NEzpůsobí zranění — tým místo něj
+      ztratí 1 bednu. Past: selhání „normálně" = zranění, takže model může
+      podezřelému přisoudit zranění, které mechanika nedala (změna výsledku).
+      Tvrdost uzlu zar (+2 Žár) se uplatní i tak. Kontrola: protokol zapíše
+      ztrátu 1 bedny a NE zranění. Testuje i nové pole „bedny ztracené tímto hodem".
+    zdroj: "návrh obsahu MVP 2026-07-22 (zadni-vratka, urednik-razitko) + rider Útěku prototyp-mvp.md"
+    vstup: |
+      UZEL: Chybějící razítko — Na celnici chybí jediné razítko a úředník je až úzkostlivě poctivý — sledují ho shora. Papír tu zmůže víc než dolar.
+      OSOBY: Novák: bez záznamu
+      KARTY: Novák hraje „Zadní vrátka" (utek, síla 1): Vyklouzneš zadem, zatímco přední dveře ještě drží slovo.
+      VÝSLEDEK MECHANIKY: Novák: selhání (bez zranění — rider Útěku: místo zranění ztracena 1 bedna; tvrdost zar: +2 Žár); bedny ztracené tímto hodem: 1; náklad: 5 beden
+    ocekavani:
+      musi:
+        - "zapsat neúspěch / selhání u uzlu"
+        - "zapsat ztrátu 1 bedny (náklad klesl na 5)"
+      nesmi:
+        - "tvrdit jakékoli zranění podezřelého Nováka (rider nahradil zranění ztrátou bedny) — HLAVNÍ past"
+        - "tvrdit ztrátu jiného počtu beden než 1 (náklad musí sedět na 5)"
+        - "vtipkovat explicitně, emoji, hovorovost, anachronismus"
