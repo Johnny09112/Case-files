@@ -30,3 +30,15 @@ Go/No-Go je dvoustupňové (simulační brána → lidská brána) — detail v
 
 - Podplácení poldy důkazy z runu (nápad do v2).
 - Lajky a statistiky karet (v2).
+
+## Až vznikne kódový repozitář (plugin / tooling)
+
+- Zvážit **zabalení týmu agentů + skillu `consistency-check` do pluginu**, ať se
+  sdílí mezi tímto design repem a kódovým repem (GitHub repo může být i zdroj
+  marketplace). Až se agenti ustálí — teď je předčasné.
+- Nainstalovat tam plugin **Superpowers** (oficiální marketplace) pro inženýrskou
+  disciplínu (clarify→design→plan→code→verify, TDD). Dělba: Superpowers vlastní
+  *inženýrskou* disciplínu, naši agenti *herně-designovou* — ne dvě metodiky na
+  jeden úkol.
+- Do tohoto design repa Superpowers **NEinstalovat** (kód-skilly by ležely ladem
+  a překrývaly by naši disciplínu).
