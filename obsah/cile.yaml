@@ -1,13 +1,49 @@
 # Tajné osobní cíle — lízne si každý hráč na začátku runu, odhalují se na konci.
 # Schéma (nová pole nepřidávat bez úpravy tohoto komentáře):
-#   id:      kebab-case, unikátní
-#   text:    co musí stát v protokolu (zobrazí se hráči jako jeho tajný cíl)
-#   overeni: jak se na konci pozná splnění (pro poldu/hru, hráčům se nečte)
-#   body:    1–3 podle obtížnosti
+#   id:          kebab-case, unikátní
+#   text:        co musí stát v protokolu (zobrazí se hráči jako jeho tajný cíl)
+#   overeni:     lidský popis, jak se na konci pozná splnění (pro poldu/hru, hráčům
+#                se nečte). VŽDY přítomen — u textových cílů je to jediné ověření.
+#   overeni_typ: mechanicky | textovy — POVINNÉ, řídí, kdo cíl umí obodovat:
+#      mechanicky = simulátor cíl obodovat z událostního logu enginu (viz
+#                   technika/architektura.md §2.2, §3). MUSÍ mít pole `podminka`.
+#      textovy    = splnění pozná až člověk z obsahu protokolu (např. jak tě polda
+#                   pojmenuje). Simulátor takový cíl z metrik VYNECHÁ (nemá ho jak
+#                   ověřit) — pole `podminka` nemá.
+#   podminka:    (jen u overeni_typ: mechanicky; jinak vynech) strojově čitelná
+#                podmínka nad metrikami odvozenými z událostního logu, vyhodnocená
+#                pro postavu vlastníka na konci runu. Ukotvení metrik v §2.2:
+#                  zraneni          — počet zranění vlastníka (injury_added)
+#                  kolaps           — vlastník padl, true/false (character_down)
+#                  doruceno         — run skončil DORUČENO, true/false (run_ended)
+#                  ztracene_bedny   — počet ztracených beden (crate_lost)
+#                  tag_prvni_karty  — tag první zahrané karty vlastníka (card_played)
+#                  pocet_tag.<tag>  — kolik karet daného tagu vlastník zahrál
+#                  zar_prah         — nejvyšší dosažený práh Žáru (heat_threshold);
+#                                     hodnoty prahů dle prototyp-mvp.md, sem nehardcodovat
+#                Zápis: `metrika operátor hodnota`, spojení přes `a`/`nebo`
+#                (např. "zraneni >= 3 a doruceno"). Přesnou sadu predikátů uzavře
+#                engine; sem patří jen podmínky ověřitelné z logu výše.
+#   body:        1–3 podle obtížnosti
 # Cílový počet pro MVP: 8.
 
 cile:
   - id: mozek-operace
     text: "Polda tě v protokolu označí za mozek celé operace."
     overeni: "Protokol obsahuje formulaci připisující ti plán nebo velení."
+    overeni_typ: textovy
     body: 3
+
+  - id: nohy-na-ramena
+    text: "Ať se v protokolu píše, žes při první šlamastyce vzal do zaječích."
+    overeni: "Vlastníkova první zahraná karta má tag útěk."
+    overeni_typ: mechanicky
+    podminka: "tag_prvni_karty == utek"
+    body: 1
+
+  - id: samou-modrinu
+    text: "Do New Yorku dorazíš samá modřina, ale bednu nepustíš."
+    overeni: "Vlastník utržil aspoň 3 zranění a run skončil DORUČENO."
+    overeni_typ: mechanicky
+    podminka: "zraneni >= 3 a doruceno"
+    body: 2

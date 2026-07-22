@@ -76,7 +76,10 @@ smysl a zraněním emocionální váhu.
 ### 4.2 Viditelná pravidla (mechanika rozhoduje, AI vypráví)
 - Karty mají přiznaný **tag** (Násilí / Lest / Úplatek / Útěk) a **sílu**.
 - Uzel má viditelné afinity („farmář s vidlemi: Násilí −2, Úplatek +2").
-- Výsledek = hod + síla karty + afinita − postihy za zranění, proti prahu uzlu.
+- Výsledek = hod + síla karty + afinita − postihy za zranění, proti **globálním
+  prahům úspěchu** (stejným pro všechny uzly — konkrétní čísla viz
+  [prototyp-mvp.md](prototyp-mvp.md)). Obtížnost konkrétního uzlu nedělá měnící se
+  práh, ale jeho afinity a tvrdost.
 - AI **nikdy nerozhoduje o výsledku** — jen ho převypráví. (Zároveň nákladová
   optimalizace: krátké prompty, cachovatelné výstupy.)
 
@@ -88,8 +91,8 @@ moment při čtení spisu.
 
 ### 4.4 Trvalé následky (snowballing chaos)
 - Zranění a poznámky zůstávají do konce runu a vstupují do každého dalšího promptu.
-- Zraněný hráč dostává **prokleté karty** (Křeč, Ztráta důstojnosti…) — ruka se
-  ke konci hry kazí.
+- **Od 2. zranění** hráč lízá **prokleté karty** (Křeč, Ztráta důstojnosti…) —
+  ruka se ke konci hry kazí.
 - **Zoufalé karty:** silné karty hratelné jen s 3+ zraněními. Nejzdemolovanější hráč
   není mrtvá váha, ale tikající komediální bomba.
 
@@ -108,12 +111,16 @@ překážka bez HP a bez kol.
 perzistentního protivníka, který nikdy nestojí v uzlu — jede za týmem. Na
 okraji spisu je viditelná stopa **Žár (0–10)**, jak moc po týmu jde zákon:
 
-- **+1** za každé selhání, **+1** za zahranou hlučnou kartu (flag `hlucna`,
-  typicky Násilí), **+2** za vybrané výsledky uzlů (přestřelka, mrtvola).
-- **Žár 4:** zásah — jedna ze dvou cest v příští volbě je Zátah, a tým to vidí.
-- **Žár 7:** léčka — vloží se mimořádný uzel s pronásledovatelem osobně.
-- **Žár 10:** konec úprku — okamžitá finální konfrontace kdekoli; přežití
-  → Žár klesá na 6, ale protokol tým vede jako „ozbrojenou a nebezpečnou skupinu".
+- **Žár roste** za neúspěchy v uzlu, za zahrané hlučné karty (flag `hlucna`,
+  typicky Násilí) a za vybrané výsledky uzlů (přestřelka, mrtvola). Konkrétní
+  přírůstky i hodnoty prahů žijí v prototypu ([prototyp-mvp.md](prototyp-mvp.md)) —
+  design drží jen strukturu (viz §8).
+- **Práh Zátahu:** jedna ze dvou nabízených cest v příští volbě se **nahradí**
+  Zátahem (nepřidává se třetí cesta), a tým to vidí.
+- **Práh léčky:** vloží se mimořádný uzel s pronásledovatelem osobně.
+- **Práh konfrontace:** konec úprku — okamžitá finální konfrontace kdekoli;
+  přežití Žár srazí, ale protokol tým dál vede jako „ozbrojenou a nebezpečnou
+  skupinu".
 
 Pronásledovatel se **losuje na začátku runu, je viditelný od první minuty
 a ruší jeden tag** (federální agent Malone je neúplatný, šerifa Brodyho násilí

@@ -9,6 +9,27 @@ ukazatel na archiv.*
 
 ## 2026-07-22
 
+- **D1 schváleno — Žár: základní +1 per uzel, ne per hod.** Selhání v uzlu přidává
+  +1 Žár max 1× za uzel (aspoň jedno selhání = +1); hlučné karty +1 per karta
+  a výsledkové +2 beze změny; tvrdost `zar` (+2) zůstává záměrně per selhání.
+  *Důvod:* per hod škáluje tempo Žáru s počtem hráčů (solo max +1/uzel, 4 hráči
+  až +4/uzel) — práh 10 by u 4 hráčů padal téměř každý run. Per uzel dává první
+  práh ~3.–4. uzel nezávisle na velikosti party.
+- **D2 schváleno — sjednocení designu a prototypu (4 nálezy konzistence).**
+  (1) Prahy úspěchu jsou globální (8+/5–7/≤4 v prototypu), obtížnost uzlu dělají
+  afinity + tvrdost — design už nemluví o „prahu uzlu". (2) Prokleté karty se
+  lížou **od 2. zranění** (potvrzeno, design zpřesněn). (3) Zátah při prvním prahu
+  Žáru **nahrazuje** jednu ze dvou cest, nepřidává třetí — jinak by ho hráči vždy
+  obešli; klíčové i pro simulátor (`route_offered`). (4) Čísla Žáru vyškrtnuta
+  z design dokumentu — drží jen strukturu, hodnoty žijí v prototypu (dle §8).
+  Stejně odhardcodovány prahy Žáru z komentářů `obsah/cile.yaml`
+  a `obsah/pronasledovatele.yaml`.
+- **D3 schváleno — schéma tajných cílů: `overeni_typ` + `podminka`.** Cíle se dělí
+  na `mechanicky` (simulátor je boduje z událostního logu přes strojově čitelnou
+  `podminka` nad metrikami z architektury §2.2) a `textovy` (pozná jen člověk
+  z obsahu protokolu; simulátor je z metrik vynechá s poznámkou v reportu).
+  *Důvod:* `overeni` byla volná próza — simulační brána by neuměla bodovat cíle,
+  ač s tím architektura počítá. Přidány první 2 mechanické cíle jako vzor.
 - **Rozvrstvení modelů agentů.** `project-manager` → **Fable** (orchestrace,
   dlouhohorizontová multi-agent práce, 1M kontext). Ostatní → **Opus 4.8**
   (design, obsah, humor, ekonomika, technika, facilitátor playtestů). Levné

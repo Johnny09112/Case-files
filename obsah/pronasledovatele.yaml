@@ -1,6 +1,7 @@
 # Pronásledovatelé — perzistentní protivník runu. Losuje se 1 na začátku,
 # je viditelný od první minuty, NIKDY nestojí v běžném uzlu — jedná výhradně
-# přes prahy Žáru (4 = Zátah v volbě cesty, 7 = léčka, 10 = konfrontace).
+# přes prahy Žáru (Zátah ve volbě cesty → léčka → konfrontace; hodnoty prahů
+# dle prototyp-mvp.md, sem nehardcodovat).
 # Žádná perzistence napříč runy. Žádné UGC pronásledovatele.
 # Schéma (nová pole nepřidávat bez úpravy tohoto komentáře):
 #   id:         kebab-case, unikátní

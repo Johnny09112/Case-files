@@ -54,10 +54,14 @@ papírové fáze je v historii v patičce; k papíru se lze vrátit, až budou h
   (−1 bedna), `zar` (+2 Žár), `zraneni` (druhé zranění).
 - **Náklad:** tým veze 6 beden. 0 beden = run končí (razítko NEVYŘEŠENO).
 - **Žár (0–10):** týmová stopa pozornosti zákona, viditelná na okraji spisu.
-  **+1** za každé selhání, **+1** za zahranou hlučnou kartu (`hlucna`), **+2**
-  za vybrané výsledky uzlů. Prahy: **4** = do příští volby cesty přibude Zátah
-  (viditelně), **7** = vložený uzel léčky pronásledovatele, **10** = okamžitá
-  finální konfrontace; přežití → Žár klesá na 6.
+  **+1 za uzel, v němž tým aspoň jednou selhal** (počítá se **max 1× za uzel**,
+  nezávisle na počtu hodů/hráčů — práh nemá škálovat s velikostí party),
+  **+1 za každou zahranou hlučnou kartu** (`hlucna`, per karta), **+2** za vybrané
+  výsledky uzlů. Pozn.: tvrdost `zar` (+2, viz výše) se přičítá **za každé
+  selhání** — to je záměrně per hod, na rozdíl od základního +1 za uzel. Prahy:
+  **4** = jedna ze dvou nabízených cest v příští volbě se **nahradí** Zátahem
+  (viditelně, nepřidává se třetí cesta), **7** = vložený uzel léčky
+  pronásledovatele, **10** = okamžitá finální konfrontace; přežití → Žár klesá na 6.
 - **Pronásledovatel:** losuje se 1 na začátku runu, viditelný od začátku, ruší
   jeden tag (viz `obsah/pronasledovatele.yaml`). Nemá vlastní tahy — jedná
   výhradně přes prahy Žáru.
