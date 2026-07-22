@@ -28,7 +28,7 @@ engine + simulátor → hot-seat UI → LLM). Lidská brána zůstává otevřen
 | Přesimulovat (3. běh brány) | playtest-facilitator | **hotovo 2026-07-22** — NEPROŠLA těsně: jádro OK (55/65 % v pásmu, snowball tvar OK), padaly jen cíle cisty-stit/frajer a marginálně tempo Žáru |
 | Zapracovat páky G/H/Ž (D11: cisty-stit + doruceno, frajer → kolaps==false, práh Zátahu 4→5) | project-manager | **hotovo 2026-07-22** |
 | Přesimulovat (4. běh brány) | playtest-facilitator | **hotovo 2026-07-22 — PROŠLA s výhradami**; brána vyhlášena za splněnou, viz [[rozhodnuti]] a report |
-| Založit kódový repozitář | project-manager | **hotovo 2026-07-22** — `C:\Projekty\dukazni-material-prototyp` (název dle architektury §6), design repo pinováno jako submodule `content/`, CLAUDE.md s principy. GitHub remote zatím chybí (není `gh` CLI) — čeká na založení uživatelem |
+| Založit kódový repozitář | project-manager | **hotovo 2026-07-22** — `C:\Projekty\dukazni-material-prototyp`, submodule `content/`, CLAUDE.md s principy; remote `git@github.com:Johnny09112/dukazni-material-prototyp.git`, pushnuto |
 | **Prototyp fáze 1: engine + simulátor + testy** (headless, dle architektura §2.2/§3/§6) | stavba v kódovém repu | **probíhá 2026-07-22** — akceptace: testy zelené, sim potvrdí čísla brány (výhrada č. 1) |
 | Prototyp fáze 2–3: hot-seat UI (psací stroj, fallbacky) → LLM adaptér | kódový repo | čeká na fázi 1 |
 | Setup kódového repa: nainstalovat pluginy Superpowers (inženýrská disciplína), frontend-design (až UI — nakrmit estetikou z design dokumentu), security-guidance | uživatel (claude CLI v kódovém repu) | dle backlogu níže — až bude repo na GitHubu |
