@@ -7,15 +7,27 @@ dobrovolně další run." Pokud tohle neplatí, žádná další vrstva to nezac
 
 ---
 
-## Fáze 0 — Papírový playtest (1 večer, před jakýmkoli kódem)
+## Fáze 0 — Simulace a digitální validace (papírový playtest přeskočen)
 
-- Karty ručně na papíře / kartičkách, mapa na papíře, kostka d6.
-- Jeden člověk dělá poldu: hází mechaniku podle pravidel níže a výsledek nechá
-  zdramatizovat LLM v druhém okně (Claude/GPT) — prompt: „Suchý policejní protokol,
-  3–5 vět, česky, výsledek: …".
-- 3–4 hráči, 2 kompletní runy.
-- **Go/No-Go:** pokud stůl nebaví ani s živým člověkem jako poldou, zpět k designu.
-  Zároveň první test kvality českého AI humoru — největší produktové riziko.
+**Rozhodnutí 2026-07-22:** papírový playtest se přeskakuje — nejsou lokální hráči
+v dojezdu, jde se rovnou na prototyp. Pojistku, kterou měl papír (de-risk designu
+před kódem), nahrazuje simulace + první digitální/remote sezení. Původní znění
+papírové fáze je v historii v patičce; k papíru se lze vrátit, až budou hráči.
+
+- **Simulace runů** (agent `playtest-facilitator`) — odehrává runy proti resolučnímu
+  systému a hledá balanční a tempové problémy (prahy, snowball od ~3. uzlu,
+  ekonomika beden, mrtvé volby, dominantní strategie) dřív, než se čísla zabetonují
+  do prototypu.
+- **Hranice poctivosti:** simulace ověří matematiku a tempo, NE zábavnost, hádku
+  ani smích nad protokolem — to čeká na lidskou bránu.
+- **Kvalita českého AI humoru** (největší riziko) se testuje agentem
+  `protocol-humor-tester` nad promptem `prompty/protokol.md`, ne až u stolu.
+
+**Go/No-Go (dvoustupňové):**
+1. *Simulační brána* — resoluční matematika a tempo sedí (viz výše).
+2. *Lidská brána* (po prototypu, solo/remote/async dle Fáze 2) — hráči se hádají
+   o karty, čtou protokol nahlas se smíchem, dají si dobrovolně další run. Bez
+   tohoto žádná další vrstva hru nezachrání.
 
 ## Fáze 1 — Digitální prototyp v0.1 (odhad 2–4 týdny)
 
@@ -91,5 +103,12 @@ citelný od ~3. uzlu), tempo Žáru (první práh má padnout kolem 3.–4. uzlu
 délka a tón protokolů, poměr cache-hitů (logovat od začátku).
 
 ---
+
+*Historie: Fáze 0 byla původně **papírový playtest** (1 večer, před jakýmkoli kódem):
+karty na kartičkách, mapa na papíře, d6, jeden člověk dělá poldu a výsledek nechá
+zdramatizovat LLM v druhém okně, 3–4 hráči, 2 runy; Go/No-Go „pokud stůl nebaví ani
+s živým člověkem jako poldou, zpět k designu". Přeskočeno 2026-07-22 — nejsou lokální
+hráči v dojezdu; nahrazeno simulací + digitálním/remote testem (viz aktuální Fáze 0).
+K papíru se lze vrátit, až budou hráči.*
 
 *Souvisí: [design-dokument.md](design-dokument.md).*
