@@ -28,6 +28,25 @@ ukazatel na archiv.*
   „všechno Násilí hlučné" zůstává. *Vedlejší nález pro lidskou bránu:* „zbitý,
   ale doručil" je default zážitek (kolaps ~96 % runů) — drama vs. frustrace
   rozhodne první lidské sezení. Následuje 4. běh brány.
+- **D12 schváleno — zoufalé karty jako loot za zranění (loot-injury) + buff hlasu
+  z auta zůstává +1.** První měření reálným enginem (výhrada č. 1 brány) odhalilo
+  díru specifikace: MVP nedefinoval přístup k zoufalým; modelovaný „stálý sdílený
+  pool" byl hlavní zdroj hry bez tření (greedy 88–98 % DORUČENO). Změřeny varianty
+  (pool / pool-once / dealt / loot-node / loot-injury × buff): loot-injury (návrh
+  uživatele) je číselné dvojče dealt (~74–76 % exploit-bot), ale karta přichází
+  v dramatickém momentu a v digitálu má nulovou tempo-cenu. Pravidlo: po uzlu se
+  zraněním a 2+ celkem lízneš osobní zoufalou (max 1, jednorázová). Buff 0 by
+  padl do pásma, ale umrtvil by volbu hlasu z auta — zamítnuto. Zbylé ~body nad
+  pásmem doladí tvrdosti/Žár nad daty z prototypu. *Nový backlog: jemné doladění
+  obtížnosti po zavedení loot-injury.*
+- **D13 schváleno (obsah) — postavy 4/4 a fallback šablony 22.** Pevná čtveřice
+  Bartoš/Kowalski/Mazur/Fontana (fixní jména = předpoklad přenositelné cache
+  protokolů; vědomě 4 muži — rodové tvary šablon). Šablony parametrické,
+  `podminka` hlídá, co smí text tvrdit. Test s dosazenými čísly: 3 rozbité shody
+  opraveny; schválený patch: apozice „v místě zvaném" → úřední label „v úseku
+  vedeném jako {uzel}" (skřípala na uzlech pojmenovaných dějem), hlas z auta bez
+  implikace smrti, `{jmeno}` = příjmení (kontrakt pro engine — AI protokoly
+  i fallbacky pak drží stejný registr).
 - **D10 schváleno — prahy hodu 7+/5–6/≤4 (páka F) + frajer-v-klidu ≤1 zranění.**
   2. běh brány (240k runů) ukázal overcorrection D7: kompetentní hra spadla na
   18–25 % DORUČENO, kolaps v 99 % runů, snowball front-loaded, cíl frajer 0,1 %.

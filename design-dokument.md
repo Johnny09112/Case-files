@@ -95,8 +95,10 @@ tam, kde nesou reveal.
 - Zranění a poznámky zůstávají do konce runu a vstupují do každého dalšího promptu.
 - **Od 2. zranění** hráč lízá **prokleté karty** (Křeč, Ztráta důstojnosti…) —
   ruka se ke konci hry kazí.
-- **Zoufalé karty:** silné karty hratelné jen s 3+ zraněními. Nejzdemolovanější hráč
-  není mrtvá váha, ale tikající komediální bomba.
+- **Zoufalé karty:** silné karty hratelné jen s 3+ zraněními; **přicházejí
+  s utrpením** — hráč je líže jako osobní loot za zranění (pravidlo
+  v [prototyp-mvp.md](prototyp-mvp.md)). Nejzdemolovanější hráč není mrtvá
+  váha, ale tikající komediální bomba.
 
 ### 4.5 Protivníci
 

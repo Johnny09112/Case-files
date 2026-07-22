@@ -96,8 +96,13 @@ papírové fáze je v historii v patičce; k papíru se lze vrátit, až budou h
   (Drobné rozhodnutí drží hráče ve hře a krmí protokol.)
 - **Zranění** = zápis do spisu (krmí AI prompt) + od 2. zranění líže hráč
   prokleté karty do ruky.
-- **Zoufalé karty ignorují postih za zranění** (hod = d6 + síla + afinita) —
-  zdemolovaný hráč s nimi hraje naplno, ne jako mrzák.
+- **Zoufalé karty — „zoufalství přichází s utrpením" (loot-injury):** po uzlu,
+  ve kterém hráč utrpěl aspoň 1 zranění a má celkem 2+, si **lízne osobní
+  zoufalou kartu** (max 1 v držení; po zahrání odchází ze hry). Hratelná až
+  s 3+ zraněními a **ignoruje postih za zranění** (hod = d6 + síla + afinita) —
+  zdemolovaný hráč s ní hraje naplno, ne jako mrzák. *Pozn.: přístup „stálý
+  sdílený pool" zamítnut — měřením prokázán jako hlavní zdroj hry bez tření
+  (88–98 % DORUČENO).*
 - **Priorita prokletých karet:** zákaz tagu má přednost před vynucením
   (např. „Zbrklost" = zahraj nejvyšší sílu **mezi povolenými** kartami).
 - **Zátah (práh Žáru):** speciální **vkládaný** uzel — při dosažení prahu vede

@@ -29,8 +29,11 @@ engine + simulátor → hot-seat UI → LLM). Lidská brána zůstává otevřen
 | Zapracovat páky G/H/Ž (D11: cisty-stit + doruceno, frajer → kolaps==false, práh Zátahu 4→5) | project-manager | **hotovo 2026-07-22** |
 | Přesimulovat (4. běh brány) | playtest-facilitator | **hotovo 2026-07-22 — PROŠLA s výhradami**; brána vyhlášena za splněnou, viz [[rozhodnuti]] a report |
 | Založit kódový repozitář | project-manager | **hotovo 2026-07-22** — `C:\Projekty\dukazni-material-prototyp`, submodule `content/`, CLAUDE.md s principy; remote `git@github.com:Johnny09112/dukazni-material-prototyp.git`, pushnuto |
-| **Prototyp fáze 1: engine + simulátor + testy** (headless, dle architektura §2.2/§3/§6) | stavba v kódovém repu | **probíhá 2026-07-22** — akceptace: testy zelené, sim potvrdí čísla brány (výhrada č. 1) |
-| Prototyp fáze 2–3: hot-seat UI (psací stroj, fallbacky) → LLM adaptér | kódový repo | čeká na fázi 1 |
+| Prototyp fáze 1: engine + simulátor + testy | kódový repo | **hotovo 2026-07-22** — 95 testů, golden runy, invarianty; první měření odhalilo díru spec. zoufalých → D12 |
+| D12: přístup k zoufalým kartám (loot-injury, návrh uživatele) + D13: postavy a fallback šablony | project-manager + agenti | **hotovo 2026-07-22** — viz [[rozhodnuti]]; engine překlápí default, šablony dostávají schválený patch apozice |
+| Prototyp fáze 2: hot-seat UI (psací stroj, „Jsem Jan" cíle, fallbacky jako primární obsah) | kódový repo | **další na řadě** |
+| Prototyp fáze 3: LLM adaptér (provider nerozhodnut) | kódový repo | čeká na fázi 2 |
+| Jemné doladění obtížnosti po loot-injury (exploit-bot ~74–76 % vs. pásmo 45–70; ladit tvrdosti/Žár, ne resoluční práh) | game-designer + playtest-facilitator | otevřeno — až nad daty z prototypu / dalšího simu |
 | Setup kódového repa: nainstalovat pluginy Superpowers (inženýrská disciplína), frontend-design (až UI — nakrmit estetikou z design dokumentu), security-guidance | uživatel (claude CLI v kódovém repu) | dle backlogu níže — až bude repo na GitHubu |
 | První měření instrumentovaného enginu: potvrdit win-rate (kompetentní ≤70 %) a hlídat obetni-beranek (94,8 % těsně pod stropem) | playtest-facilitator + technical-developer | výhrady 4. běhu |
 | Fallback šablony protokolu (~20) | content-generator + protocol-humor-tester | čeká (potřeba až pro prototyp, ne pro simulaci) |

@@ -12,8 +12,9 @@
 #               zraneni: ano | ne     — utrpěl podezřelý tímto hodem zranění?
 #               bedna:   ano | ne     — ztratil tým tímto hodem aspoň 1 bednu?
 #   text:     hotový protokol, 3–5 vět. Placeholdery (engine formátuje shodu):
-#               {jmeno}   — jméno podezřelého (šablona ho drží v 1. pádě)
-#               {uzel}    — název uzlu (1. pád, v apozici "v místě zvaném {uzel}")
+#               {jmeno}   — příjmení podezřelého (engine dosazuje příjmení, 1. pád)
+#               {uzel}    — název uzlu (1. pád, úřední label "v úseku vedeném jako {uzel}"
+#                          / "v bodě hlášeném jako {uzel}"; label sedí i na uzly pojmenované dějem)
 #               {karta}   — název karty, vždy v „uvozovkách", 1. pád
 #               {bedny}   — bedny ztracené TÍMTO hodem, fráze "jedna bedna" / "dvě bedny"
 #               {naklad}  — zůstatek nákladu, fráze "N beden"
@@ -26,79 +27,79 @@ sablony:
   - id: fb-uspech-1
     pasmo: uspech
     podminka: {zraneni: ne, bedna: ne}
-    text: "V místě zvaném {uzel} zvolil podezřelý {jmeno} postup „{karta}". Postup se z jeho hlediska osvědčil, hlídka nezasáhla a náklad prošel bez úhony. Zranění žádné, ztráta žádná. Stav nákladu: {naklad}. (Zdejší strážník má zjevně jiné starosti než já.)"
+    text: "V úseku vedeném jako {uzel} zvolil podezřelý {jmeno} postup „{karta}". Postup se z jeho hlediska osvědčil, hlídka nezasáhla a náklad prošel bez úhony. Zranění žádné, ztráta žádná. Stav nákladu: {naklad}. (Zdejší strážník má zjevně jiné starosti než já.)"
 
   - id: fb-uspech-2
     pasmo: uspech
     podminka: {zraneni: ne, bedna: ne}
-    text: "Podezřelý {jmeno} předložil na stanovišti {uzel} „{karta}" a věc tím pro sebe uzavřel příznivě. Nikdo nebyl zraněn, náklad zůstal nedotčen. Stav nákladu: {naklad}. Případ v tomto bodě bez dalšího."
+    text: "Podezřelý {jmeno} předložil v bodě hlášeném jako {uzel} „{karta}" a věc tím pro sebe uzavřel příznivě. Nikdo nebyl zraněn, náklad zůstal nedotčen. Stav nákladu: {naklad}. Případ v tomto bodě bez dalšího."
 
   - id: fb-uspech-3
     pasmo: uspech
     podminka: {zraneni: ne, bedna: ne}
-    text: "Dle zjištění použil podezřelý {jmeno} v lokalitě {uzel} postup „{karta}", a to úspěšně. Zásah orgánů se nekonal, ztráty na nákladu ani na zdraví žádné. Stav nákladu: {naklad}. (Poznamenávám bez nadšení.)"
+    text: "Dle zjištění použil podezřelý {jmeno} v úseku vedeném jako {uzel} postup „{karta}", a to úspěšně. Zásah orgánů se nekonal, ztráty na nákladu ani na zdraví žádné. Stav nákladu: {naklad}. (Poznamenávám bez nadšení.)"
 
   - id: fb-uspech-4
     pasmo: uspech
     podminka: {zraneni: ne, bedna: ne}
-    text: "Podezřelý {jmeno} prošel místem zvaným {uzel} bez potíží; ve spisu vedeno jako „{karta}". Náklad zůstal celý, osoba bez újmy. Stav nákladu: {naklad}. Věc odložena do příště."
+    text: "Podezřelý {jmeno} prošel úsekem vedeným jako {uzel} bez potíží; ve spisu vedeno jako „{karta}". Náklad zůstal celý, osoba bez újmy. Stav nákladu: {naklad}. Věc odložena do příště."
 
   # ---------- ÚSPĚCH ZA CENU — vždy zranění ----------
   - id: fb-zacenu-1
     pasmo: za_cenu
     podminka: {zraneni: ano, bedna: ne}
-    text: "Podezřelý {jmeno} v místě zvaném {uzel} vsadil na „{karta}". Věc prošla, nikoli však zadarmo — podezřelý si odnesl zranění, dle listu {zraneni}. Náklad zůstal celý, stav nákladu: {naklad}. Do spisu zaneseno; pokračoval, byť pomaleji."
+    text: "Podezřelý {jmeno} v úseku vedeném jako {uzel} vsadil na „{karta}". Věc prošla, nikoli však zadarmo — podezřelý si odnesl zranění, dle listu {zraneni}. Náklad zůstal celý, stav nákladu: {naklad}. Do spisu zaneseno; pokračoval, byť pomaleji."
 
   - id: fb-zacenu-2
     pasmo: za_cenu
     podminka: {zraneni: ano, bedna: ne}
-    text: "Na stanovišti {uzel} použil podezřelý {jmeno} postup „{karta}". Cíle dosáhl, cenu však zaplatil na vlastním těle — zranění dle listu: {zraneni}. Ztráty na nákladu žádné, stav nákladu: {naklad}. (Kdo chce pašovat, ať počítá s modřinami.)"
+    text: "V bodě hlášeném jako {uzel} použil podezřelý {jmeno} postup „{karta}". Cíle dosáhl, cenu však zaplatil na vlastním těle — zranění dle listu: {zraneni}. Ztráty na nákladu žádné, stav nákladu: {naklad}. (Kdo chce pašovat, ať počítá s modřinami.)"
 
   - id: fb-zacenu-3
     pasmo: za_cenu
     podminka: {zraneni: ano, bedna: ne}
-    text: "Dle protokolu podezřelý {jmeno} prosadil v lokalitě {uzel} svůj záměr „{karta}". Odešel s tím, zato poznamenán na těle — {zraneni}. Náklad nedotčen, stav nákladu: {naklad}. Zranění zapsáno do zdravotního listu podezřelého."
+    text: "Dle protokolu podezřelý {jmeno} prosadil v úseku vedeném jako {uzel} svůj záměr „{karta}". Odešel s tím, zato poznamenán na těle — {zraneni}. Náklad nedotčen, stav nákladu: {naklad}. Zranění zapsáno do zdravotního listu podezřelého."
 
   - id: fb-zacenu-4
     pasmo: za_cenu
     podminka: {zraneni: ano, bedna: ano}
-    text: "Podezřelý {jmeno} na stanovišti {uzel} vytáhl „{karta}". Aby věc obrátil ve svůj prospěch, obětoval část nákladu — z vozu odepsáno: {bedny}. Přesto neodešel bez úhony, zranění dle listu: {zraneni}. Stav nákladu: {naklad}. (Draze koupené, leč koupené.)"
+    text: "Podezřelý {jmeno} v bodě hlášeném jako {uzel} vytáhl „{karta}". Aby věc obrátil ve svůj prospěch, obětoval část nákladu — z vozu odepsáno: {bedny}. Přesto neodešel bez úhony, zranění dle listu: {zraneni}. Stav nákladu: {naklad}. (Draze koupené, leč koupené.)"
 
   - id: fb-zacenu-5
     pasmo: za_cenu
     podminka: {zraneni: ano, bedna: ano}
-    text: "V místě zvaném {uzel} zvolil podezřelý {jmeno} postup „{karta}". Situaci zachránil až tím, že se části nákladu vzdal — odepsáno: {bedny}. Vyvázl, byť poznamenán — {zraneni}. Stav nákladu: {naklad}. Zaznamenáno bez komentáře."
+    text: "V úseku vedeném jako {uzel} zvolil podezřelý {jmeno} postup „{karta}". Situaci zachránil až tím, že se části nákladu vzdal — odepsáno: {bedny}. Vyvázl, byť poznamenán — {zraneni}. Stav nákladu: {naklad}. Zaznamenáno bez komentáře."
 
   # ---------- SELHÁNÍ ----------
   - id: fb-selhani-1
     pasmo: selhani
     podminka: {zraneni: ano, bedna: ne}
-    text: "Pokus podezřelého {jmeno} o „{karta}" v místě zvaném {uzel} ztroskotal. Věc se obrátila proti němu a podezřelý utrpěl zranění — {zraneni}. Náklad se tentokrát podařilo udržet, stav nákladu: {naklad}. Do spisu poznamenávám neúspěch."
+    text: "Podezřelý {jmeno} v úseku vedeném jako {uzel} ztroskotal s pokusem o „{karta}". Věc se obrátila proti němu a podezřelý utrpěl zranění — {zraneni}. Náklad se tentokrát podařilo udržet, stav nákladu: {naklad}. Do spisu poznamenávám neúspěch."
 
   - id: fb-selhani-2
     pasmo: selhani
     podminka: {zraneni: ano, bedna: ne}
-    text: "Na stanovišti {uzel} se podezřelý {jmeno} pokusil o „{karta}" a pohořel. Odnesl si zranění, dle listu {zraneni}. Náklad však zůstal na voze, stav nákladu: {naklad}. (Štěstí v neštěstí, chtělo by se říci.)"
+    text: "V bodě hlášeném jako {uzel} se podezřelý {jmeno} pokusil o „{karta}" a pohořel. Odnesl si zranění, dle listu {zraneni}. Náklad však zůstal na voze, stav nákladu: {naklad}. (Štěstí v neštěstí, chtělo by se říci.)"
 
   - id: fb-selhani-3
     pasmo: selhani
     podminka: {zraneni: ne, bedna: ano}
-    text: "Podezřelý {jmeno} se v lokalitě {uzel} pokusil o „{karta}", což nevyšlo. Aby zachránil kůži, ponechal osudu část nákladu — na místě zůstalo: {bedny}. Sám vyvázl bez zranění. Stav nákladu: {naklad}."
+    text: "Podezřelý {jmeno} se v úseku vedeném jako {uzel} pokusil o „{karta}", což nevyšlo. Aby zachránil kůži, ponechal osudu část nákladu — na místě zůstalo: {bedny}. Sám vyvázl bez zranění. Stav nákladu: {naklad}."
 
   - id: fb-selhani-4
     pasmo: selhani
     podminka: {zraneni: ne, bedna: ano}
-    text: "Únik podezřelého {jmeno} v místě zvaném {uzel} pod hlavičkou „{karta}" se nezdařil dle plánu. Zdravou kůži vykoupil nákladem — z vozu se poroučelo: {bedny}. Zranění tentokrát žádné. Stav nákladu: {naklad}. (Bedny mlčí, na rozdíl od zraněných.)"
+    text: "Podezřelý {jmeno} se v bodě hlášeném jako {uzel} pokusil o únik pod hlavičkou „{karta}", což se nezdařilo dle plánu. Zdravou kůži vykoupil nákladem — z vozu se poroučelo: {bedny}. Zranění tentokrát žádné. Stav nákladu: {naklad}. (Bedny mlčí, na rozdíl od zraněných.)"
 
   - id: fb-selhani-5
     pasmo: selhani
     podminka: {zraneni: ano, bedna: ano}
-    text: "Pokus podezřelého {jmeno} o „{karta}" na stanovišti {uzel} selhal na celé čáře. Podezřelý utrpěl zranění — {zraneni} — a k tomu z nákladu ubylo: {bedny}. Stav nákladu: {naklad}. Neúspěch zapsán se vší vážností."
+    text: "Podezřelý {jmeno} se v úseku vedeném jako {uzel} pokusil o „{karta}" a selhal na celé čáře. Utrpěl zranění — {zraneni} — a k tomu z nákladu ubylo: {bedny}. Stav nákladu: {naklad}. Neúspěch zapsán se vší vážností."
 
   - id: fb-selhani-6
     pasmo: selhani
     podminka: {zraneni: ano, bedna: ano}
-    text: "V místě zvaném {uzel} podezřelý {jmeno} sáhl po „{karta}" a dopadl zle. Kromě zranění (dle listu {zraneni}) přišel tým i o část nákladu — odepsáno: {bedny}. Stav nákladu: {naklad}. (Den, na který se bude vzpomínat nerado.)"
+    text: "V bodě hlášeném jako {uzel} podezřelý {jmeno} sáhl po „{karta}" a dopadl zle. Kromě zranění (dle listu {zraneni}) přišel tým i o část nákladu — odepsáno: {bedny}. Stav nákladu: {naklad}. (Den, na který se bude vzpomínat nerado.)"
 
   # ---------- SPECIÁLNÍ SITUACE ----------
   - id: fb-zatah-1
@@ -107,19 +108,19 @@ sablony:
 
   - id: fb-lecka-1
     pasmo: lecka
-    text: "V místě zvaném {uzel} na podezřelé čekala nastražená léčka; pronásledovatel zjevně znal jejich úmysly předem. Situace se rázem vyostřila. Podrobnosti hodu níže. (Buď někdo mluvil, nebo mají pašeráctví psáno ve tváři.)"
+    text: "V úseku vedeném jako {uzel} na podezřelé čekala nastražená léčka; pronásledovatel zjevně znal jejich úmysly předem. Situace se rázem vyostřila. Podrobnosti hodu níže. (Buď někdo mluvil, nebo mají pašeráctví psáno ve tváři.)"
 
   - id: fb-konfrontace-1
     pasmo: konfrontace
-    text: "Pozornost zákona dostoupila vrcholu a v místě zvaném {uzel} došlo k přímé konfrontaci s pronásledovatelem. O dalším osudu nákladu i podezřelých rozhodl jediný střet. Výsledek zaznamenán níže, bez příkras."
+    text: "Pozornost zákona dostoupila vrcholu a v bodě hlášeném jako {uzel} došlo k přímé konfrontaci s pronásledovatelem. O dalším osudu nákladu i podezřelých rozhodl jediný střet. Výsledek zaznamenán níže, bez příkras."
 
   - id: fb-kolaps-1
     pasmo: kolaps
-    text: "Podezřelý {jmeno} utrpěl v místě zvaném {uzel} zranění, které jej vyřadilo — dále veden jako nezpůsobilý pokračovat a přepravován v korbě vlastního vozu. Výslech na místě nebyl možný. Ostatní podezřelí pokračovali bez něj. (Jednoho ubylo, práce zůstalo stejně.)"
+    text: "Podezřelý {jmeno} utrpěl v úseku vedeném jako {uzel} zranění, které jej vyřadilo — dále veden jako nezpůsobilý pokračovat a přepravován v korbě vlastního vozu. Výslech na místě nebyl možný. Ostatní podezřelí pokračovali bez něj. (Jednoho ubylo, práce zůstalo stejně.)"
 
   - id: fb-hlas-z-auta-1
     pasmo: hlas_z_auta
-    text: "Ačkoli podezřelý {jmeno} ležel vyřazen v korbě, do dění přesto zasáhl — z auta zazněla rada, či snad kletba, mířená na spolujezdce. Vliv na výsledek vzat na vědomí. (Umírající rady bývají překvapivě hlasité.)"
+    text: "Ačkoli podezřelý {jmeno} ležel vyřazen v korbě, do dění přesto zasáhl — z auta zazněla rada, či snad kletba, mířená na spolujezdce. Vliv na výsledek vzat na vědomí. (Rady z korby bývají překvapivě hlasité.)"
 
   - id: fb-finale-doruceno-1
     pasmo: finale_doruceno
