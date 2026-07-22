@@ -4,6 +4,7 @@ description: Marketér a stratég atraktivity pro hru Důkazní materiál 1930 �
 tools: Read, Grep, Glob, Write, Edit, Agent, WebSearch, WebFetch
 skills: deep-research, artifact-design, anthropic-skills:pptx, anthropic-skills:canvas-design, anthropic-skills:consolidate-memory
 memory: project
+model: opus
 effort: high
 color: pink
 ---

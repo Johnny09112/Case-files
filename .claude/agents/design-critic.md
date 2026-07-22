@@ -4,6 +4,7 @@ description: Nemilosrdný profesionální kritik herního designu pro hru Důkaz
 tools: Read, Grep, Glob, Agent, WebSearch, WebFetch
 skills: deep-research, consistency-check, anthropic-skills:consolidate-memory
 memory: project
+model: opus
 effort: high
 color: red
 ---

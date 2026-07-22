@@ -4,6 +4,7 @@ description: Projektový manažer a orchestrátor týmu agentů pro hru Důkazn�
 tools: Read, Grep, Glob, Write, Edit, Agent, SendMessage, WebSearch, WebFetch
 skills: consistency-check, deep-research, anthropic-skills:consolidate-memory
 memory: project
+model: fable
 effort: high
 color: blue
 ---

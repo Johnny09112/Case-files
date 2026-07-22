@@ -4,6 +4,7 @@ description: Facilitátor a QA playtestů pro hru Důkazní materiál 1930. Pap�
 tools: Read, Grep, Glob, Write, Edit, Bash, Agent, WebSearch, WebFetch
 skills: dataviz, deep-research, anthropic-skills:consolidate-memory
 memory: project
+model: opus
 effort: high
 ---
 

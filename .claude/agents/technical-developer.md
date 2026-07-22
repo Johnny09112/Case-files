@@ -4,6 +4,7 @@ description: Technický vývojář a architekt pro hru Důkazní materiál 1930 
 tools: Read, Grep, Glob, Write, Edit, Agent, WebSearch, WebFetch
 skills: claude-api, deep-research, anthropic-skills:mcp-builder, anthropic-skills:consolidate-memory
 memory: project
+model: opus
 effort: high
 color: orange
 ---

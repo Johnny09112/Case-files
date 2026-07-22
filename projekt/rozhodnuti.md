@@ -9,6 +9,14 @@ ukazatel na archiv.*
 
 ## 2026-07-22
 
+- **Rozvrstvení modelů agentů.** `project-manager` → **Fable** (orchestrace,
+  dlouhohorizontová multi-agent práce, 1M kontext). Ostatní → **Opus 4.8**
+  (design, obsah, humor, ekonomika, technika, facilitátor playtestů). Levné
+  mechanické běhy (simulace) lze v případě potřeby stáhnout na Sonnet 5.
+  *Důvod:* „vše na Fable" (děděno ze session) je nejdražší konfigurace; Opus 4.8
+  dá ~90 % kvality za půlku ceny, Fable jen tam, kde je orchestrace jeho silou.
+  *Pozn.:* `playtest-facilitator` dán na Opus kvůli poctivé interpretaci
+  simulací; těžké simulační běhy jdou později zlevnit na Sonnet.
 - **Technická architektura prototypu v0.1 přijata (7 ADR)** —
   `technika/architektura.md`. Klíčové: Vite + vanilla JS bez TypeScriptu (JSDoc
   + `@ts-check`), headless deterministický engine se seedovaným RNG (UI i

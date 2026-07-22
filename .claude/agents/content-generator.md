@@ -4,6 +4,7 @@ description: Generátor herního obsahu pro hru Důkazní materiál 1930 — kar
 tools: Read, Grep, Glob, Write, Edit, Agent, WebSearch, WebFetch
 skills: deep-research, anthropic-skills:consolidate-memory
 memory: project
+model: opus
 effort: high
 color: green
 ---

@@ -4,6 +4,7 @@ description: Herní designér pro hru Důkazní materiál 1930 — navrhuje a la
 tools: Read, Grep, Glob, Write, Edit, Agent, WebSearch, WebFetch
 skills: deep-research, consistency-check, anthropic-skills:consolidate-memory
 memory: project
+model: opus
 effort: high
 color: purple
 ---
