@@ -28,7 +28,10 @@ engine + simulátor → hot-seat UI → LLM). Lidská brána zůstává otevřen
 | Přesimulovat (3. běh brány) | playtest-facilitator | **hotovo 2026-07-22** — NEPROŠLA těsně: jádro OK (55/65 % v pásmu, snowball tvar OK), padaly jen cíle cisty-stit/frajer a marginálně tempo Žáru |
 | Zapracovat páky G/H/Ž (D11: cisty-stit + doruceno, frajer → kolaps==false, práh Zátahu 4→5) | project-manager | **hotovo 2026-07-22** |
 | Přesimulovat (4. běh brány) | playtest-facilitator | **hotovo 2026-07-22 — PROŠLA s výhradami**; brána vyhlášena za splněnou, viz [[rozhodnuti]] a report |
-| **Založit kódový repozitář a postavit prototyp** (engine + simulátor → hot-seat UI → LLM; instrumentace dle architektura §2.2 vč. doplňků pro cíle) | technical-developer (kód mimo tento repo) | **další na řadě** — čeká na pokyn uživatele (nový repozitář) |
+| Založit kódový repozitář | project-manager | **hotovo 2026-07-22** — `C:\Projekty\dukazni-material-prototyp` (název dle architektury §6), design repo pinováno jako submodule `content/`, CLAUDE.md s principy. GitHub remote zatím chybí (není `gh` CLI) — čeká na založení uživatelem |
+| **Prototyp fáze 1: engine + simulátor + testy** (headless, dle architektura §2.2/§3/§6) | stavba v kódovém repu | **probíhá 2026-07-22** — akceptace: testy zelené, sim potvrdí čísla brány (výhrada č. 1) |
+| Prototyp fáze 2–3: hot-seat UI (psací stroj, fallbacky) → LLM adaptér | kódový repo | čeká na fázi 1 |
+| Setup kódového repa: nainstalovat pluginy Superpowers (inženýrská disciplína), frontend-design (až UI — nakrmit estetikou z design dokumentu), security-guidance | uživatel (claude CLI v kódovém repu) | dle backlogu níže — až bude repo na GitHubu |
 | První měření instrumentovaného enginu: potvrdit win-rate (kompetentní ≤70 %) a hlídat obetni-beranek (94,8 % těsně pod stropem) | playtest-facilitator + technical-developer | výhrady 4. běhu |
 | Fallback šablony protokolu (~20) | content-generator + protocol-humor-tester | čeká (potřeba až pro prototyp, ne pro simulaci) |
 | Revize pronásledovatelů: léčky/konfrontace obou tlačí k Lesti (afinity), po zavedení riderů projít znovu | game-designer | nález kritika 2026-07-22 |
