@@ -29,11 +29,12 @@ designéra a remote/async sezení. Každou spáruj se signálem z šablony playt
   DEFAULT zážitek, ne edge-case. Sim neví, jestli je to zamýšlený dramatický sníh nebo
   trest. Ptát se po 1. sezení: frustrovalo vyřazení, nebo krmilo historky? (Váže se na
   cíl „samou-modřinu" a mechaniku hlasu z auta.)
-- **Kanárek frajer-v-klidu:** cíl „prostál v klidu, max škrábnutí" je při 4p injury
-  ekonomice mechanicky skoro nemožný (1,8 % i po zmírnění na ≤1; ≤2 = 3,6 %). To není
-  jen tuning cíle — je to důkaz, že **zranění jsou při 4p skoro univerzální**. Otázka na
-  lidi: je hra, kde se každý nutně zřídí, čitelná jako drsná komedie, nebo jako nefér?
-  (Souvisí přímo s kolapsem výše — stejný kořen.)
+- **Kanárek frajer-v-klidu:** cíl byl při injury metrice mechanicky skoro nemožný (1,8 %).
+  D11 (páka H) ho **přerámoval na `kolaps == false a doruceno`** → 4. běh 34,0 %, v pásmu.
+  ALE původní nález platí dál jako otázka na lidi: **zranění jsou při 4p skoro univerzální**
+  (per-postava kolaps ~70 %, run-kolaps 96,3 %). Přerámování cíl zachránilo mechanicky,
+  neodpovědělo ale, jestli je hra, kde se každý nutně zřídí, čitelná jako drsná komedie,
+  nebo jako nefér. (Souvisí přímo s kolapsem výše — stejný kořen.)
 
 Otevřené číselné páky, které se po lidské zpětné vazbě můžou hnout, jsou v
 [[sim-gate-findings]].

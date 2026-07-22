@@ -9,6 +9,15 @@ ukazatel na archiv.*
 
 ## 2026-07-22
 
+- **Simulační brána vyhlášena za SPLNĚNOU (4. běh, po D7–D11).** Všech 5
+  zafixovaných kritérií prošlo: win-rate 63,8/70,1 % (pásmo 45–70, kompetentní
+  na stropu — ověří první měření enginu), snowball od uzlu 3 s vrcholem v uzlu 4,
+  první práh Žáru medián uzel 3, žádná strategie >85 %, všech 7 mechanických
+  cílů v pásmu 5–95 %. Stavba prototypu odblokována (engine+simulátor → UI →
+  LLM). Do `architektura.md` §2.2 doplněna instrumentace pro bodování cílů
+  (atribuce `crate_lost`, flag `dobrovolna` u `card_played`, pole
+  `bedny_ztracene_timto_hodem` v `node_resolved`). Výhrady a hypotézy pro
+  lidskou bránu v `technika/simulacni-brana-2026-07-22.md`.
 - **D11 schváleno — finální kalibrace po 3. běhu brány (páky G/H/Ž).**
   3. běh: jádro vyřešené (win-rate 55/65 % v pásmu, snowball správný tvar, žádná
   dominance), padala jen 2 lokální kritéria. (G) `cisty-stit` + podmínka

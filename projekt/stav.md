@@ -5,9 +5,10 @@ Poslední aktualizace: 2026-07-22.*
 
 ## Aktuální fáze
 
-Papír přeskočen (viz [[rozhodnuti]]). Běží **simulace + příprava prototypu**.
-Go/No-Go je dvoustupňové (simulační brána → lidská brána) — detail v
-[[../prototyp-mvp|prototyp-mvp.md]] a `CLAUDE.md`.
+**Simulační brána SPLNĚNA 2026-07-22** (4 běhy, D7–D11, kritéria zafixovaná).
+Resoluční čísla kalibrovaná, obsah kompletní, **stavba prototypu odblokovaná**
+(samostatný kódový repozitář; pořadí dle [[../technika/architektura|architektury]] §5:
+engine + simulátor → hot-seat UI → LLM). Lidská brána zůstává otevřená.
 
 ## Backlog
 
@@ -26,7 +27,9 @@ Go/No-Go je dvoustupňové (simulační brána → lidská brána) — detail v
 | Zapracovat páku F (prahy 7+/5–6/≤4) + frajer ≤1 zranění (D10) | project-manager | **hotovo 2026-07-22** |
 | Přesimulovat (3. běh brány) | playtest-facilitator | **hotovo 2026-07-22** — NEPROŠLA těsně: jádro OK (55/65 % v pásmu, snowball tvar OK), padaly jen cíle cisty-stit/frajer a marginálně tempo Žáru |
 | Zapracovat páky G/H/Ž (D11: cisty-stit + doruceno, frajer → kolaps==false, práh Zátahu 4→5) | project-manager | **hotovo 2026-07-22** |
-| **Přesimulovat (4. běh brány)** — očekává se PROŠLA | playtest-facilitator | **probíhá** — rozhoduje o stavbě prototypu |
+| Přesimulovat (4. běh brány) | playtest-facilitator | **hotovo 2026-07-22 — PROŠLA s výhradami**; brána vyhlášena za splněnou, viz [[rozhodnuti]] a report |
+| **Založit kódový repozitář a postavit prototyp** (engine + simulátor → hot-seat UI → LLM; instrumentace dle architektura §2.2 vč. doplňků pro cíle) | technical-developer (kód mimo tento repo) | **další na řadě** — čeká na pokyn uživatele (nový repozitář) |
+| První měření instrumentovaného enginu: potvrdit win-rate (kompetentní ≤70 %) a hlídat obetni-beranek (94,8 % těsně pod stropem) | playtest-facilitator + technical-developer | výhrady 4. běhu |
 | Fallback šablony protokolu (~20) | content-generator + protocol-humor-tester | čeká (potřeba až pro prototyp, ne pro simulaci) |
 | Revize pronásledovatelů: léčky/konfrontace obou tlačí k Lesti (afinity), po zavedení riderů projít znovu | game-designer | nález kritika 2026-07-22 |
 | Pro engine (technical-developer): (a) formalizovat razítko DORUČENO — metrika `doruceno` na něm stojí; (b) strukturovaný vstup protokolu nese pole „bedny ztracené tímto hodem"; (c) ověřit proveditelnost „hlasu z auta" v hot-seat UI; (d) nové metriky cílů `ztracene_bedny_vlastni`, `max_sila_karty` v event logu | technical-developer | poznámky z 2026-07-22 |

@@ -1,6 +1,6 @@
 ---
 name: sim-gate-findings
-description: Verdikt simulační brány + prokázaná balanční čísla. 1./2./3. běh (3. = po D10, 240k).
+description: Verdikt simulační brány + prokázaná balanční čísla. 1.–4. běh (4. = po D11, PROŠLA s výhradami).
 metadata:
   type: project
 ---
@@ -10,6 +10,45 @@ metadata:
 Simulátor ve scratchpadu (Node, seedovaný RNG). Věrná pravidla z prototyp-mvp.md +
 obsah/*.yaml. Vyhodnocováno proti zafixovaným kritériím brány (Fáze 0, referenční 4p run).
 Scratchpad je per-session — simulátor se rekonstruuje z tohoto souboru + [[sim-model-assumptions]].
+
+**Věrnost rekonstrukce (4. běh):** čerstvě přestavěný simulátor NENÍ bit-identický s instancí
+3. běhu. Kotva věrnosti = **run-kolaps 96,3 % cíle / 98,7 % greedy (4. běh) vs. 95,7 % / 97,5 %
+(3. běh)** → jádrová injury/kolaps ekonomika a tvar snowballu jsou věrné. Rozcházejí se ale
+absolutní % některých cílů (prsty 89 vs 50, kupecke 67 vs 48,5) a win-rate běží ~5–6 b. tepleji
+(závislé na goal-play biasu a definici cautious). **Závěr:** pásmová příslušnost robustní,
+konkrétní číslo cíle/win-rate brát jako orientační → arbitrem je instrumentovaný prototyp.
+
+## 4. BĚH (2026-07-22, po D11, 240 000 runů) — PROŠLA (s výhradami)
+
+D11: (G) cisty-stit `pocet_tag.nasili == 0 a doruceno`; (H) frajer-v-klidu přerámován na
+`kolaps == false a doruceno`; (Ž) 1. práh Žáru 4→5 (prahy 5/7/10). Resoluce beze změny od 3. běhu.
+
+**Diferenciální nález (nejsilnější, invariantní k rekonstrukci):** stejný simulátor, jen práh
+Žáru 4→5, posune medián 1. prahu z **uzlu 2 → uzlu 3** (cíle i greedy 4p). To byl přesně účel
+páky Ž a potvrzuje se čistě. cautious 4→5 (uzel 4→5).
+
+### Verdikt per kritérium (4p referenční)
+- **Krit. 1 win-rate 45–70 % ✓ (s výhradou):** cíle (realistická) **63,8 %** v pásmu; greedy
+  (kompetentní) **70,1 %** = na stropu / marginálně přes (rekonstrukce teplá; 3. běh měl greedy
+  64,7 % v pásmu, resoluce se nezměnila → pravá hodnota ~65). cautious 39,7 %.
+- **Krit. 2 snowball od uzlu 3 ✓:** cíle přírůstek zranění/uzel 1,75 / 2,04 / **2,44 / 2,50** /
+  2,25 / 1,80 (uzly 1–6). Vrchol uzel 4, roste od uzlu 3. Tvar drží z 3. běhu.
+- **Krit. 3 1. práh Žáru medián uzel 3–4 ✓:** medián **uzel 3** (cíle i greedy). D11 páka Ž
+  splnila účel (z uzlu 2 ve 3. běhu). OPRAVENO.
+- **Krit. 4 žádná strategie >85 % ✓:** max **73,9 % (greedy/2p)**; spam < greedy všude, žádná
+  degenerativní cesta. Robustně.
+- **Krit. 5 každý cíl 5–95 % ✓:** nohy 78,6 / modrinu 54,9 / **cisty 59,4 (páka G opravila
+  z 96,3)** / kupecke 67,2 / **frajer 34,0 (páka H opravila z 1,8)** / beranek 94,8 (těsně pod
+  stropem — hlídat) / prsty 89,0. mozek = textový (vynechán). VŠECH 7 v pásmu. OPRAVENO.
+
+### Výhrady k předání
+1. greedy 4p na stropu pásma (rekonstrukce teplá) — **první měření instrumentovaného prototypu
+   musí win-rate potvrdit**; kdyby reálně >70, páka = mírně přitvrdit (nejlevněji tvrdost uzlů/Žár).
+2. beranek 94,8 % těsně pod 95 — po jakékoli další změně čísel může vylézt nad strop; hlídat.
+3. Kolaps zůstává default zážitek (96,3 % runů, per-postava ~70 %) — mechanicky OK (win-rate
+   zdravá, hlas z auta doveze), ale je to hlavní otázka pro lidskou bránu, ne balanční blok.
+
+## 3. BĚH (2026-07-22, po D10, 240 000 runů) — NEPROŠLA TĚSNĚ (2 lokální kalibrace)
 
 ## 3. BĚH (2026-07-22, po D10, 240 000 runů) — NEPROŠLA TĚSNĚ (2 lokální kalibrace)
 

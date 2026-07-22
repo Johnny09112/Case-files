@@ -1,4 +1,26 @@
-# Simulační brána — 1. běh (2026-07-22)
+# Simulační brána (2026-07-22) — VÝSLEDEK: PROŠLA s výhradami po 4 bězích
+
+> **Finální stav (4. běh, po D7–D11):** všech 5 zafixovaných kritérií splněno.
+> Realistická hra 63,8 % / kompetentní 70,1 % DORUČENO (pásmo 45–70; kompetentní
+> na stropu — rekonstrukce simulátoru běžela ~5 b. tepleji, 3. běh měl 64,7 %);
+> snowball roste od 3. uzlu s vrcholem v uzlu 4; první práh Žáru medián uzel 3;
+> žádná strategie >85 % (max 73,9 %); všech 7 mechanických cílů v pásmu 5–95 %.
+> Kalibrační cesta: 1. běh „bez tření" (96 %) → D7–D9 → 2. běh přestřeleno
+> (18–25 %) → D10 (prahy 7+/5–6/≤4) → 3. běh jádro OK → D11 (cíle + práh
+> Zátahu 5) → 4. běh PROŠLA. Detaily běhů v paměti playtest-facilitatora.
+>
+> **Výhrady (nesou se do stavby):** (1) win-rate potvrdit prvním měřením
+> instrumentovaného enginu (kdyby kompetentní >70 %, ladit tvrdosti/Žár, ne
+> resoluční práh); (2) `obetni-beranek` 94,8 % — těsně pod stropem, hlídat;
+> (3) kolaps je default zážitek (~96 % runů, per postava ~70 %) — „zbitý, ale
+> doručil": drama vs. frustrace rozhodne lidská brána.
+>
+> **Lidská brána (stupeň 2) zůstává otevřená** — hádka o karty, smích nad
+> protokolem, dobrovolný další run; hypotézy v paměti playtest-facilitatora.
+
+---
+
+## Archiv: 1. běh (2026-07-22)
 
 *Vyhodnocení 1. stupně Go/No-Go (playtest-facilitator). 216 000 runů
 (3 počty hráčů × 9 strategií × 2 pronásledovatelé × 2 větve hlasu z auta,

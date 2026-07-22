@@ -109,13 +109,17 @@ hráči v dojezdu. Jde se rovnou na digitální prototyp; papírovou pojistku na
 simulace + první digitální/remote sezení (viz agent `playtest-facilitator` a
 Fáze 0 v `prototyp-mvp.md`). K papíru se lze vrátit, až budou hráči.
 
-Nové Go/No-Go je **dvoustupňové**:
-1. **Simulační brána** (před/během stavby prototypu) — resoluční matematika a tempo
-   sedí: hra se nesejde triviálně brzy ani není bez tření, snowball je citelný od
-   ~3. uzlu, ekonomika beden vytváří napětí, neexistuje nudně dominantní strategie.
-2. **Lidská brána** (po prototypu, solo/remote/async) — původní kritérium zábavnosti
-   platí dál, jen se měří digitálně: hráči se hádají o karty, čtou protokol nahlas
-   se smíchem, dají si dobrovolně další run. Simulace tohle NEprokáže.
+Go/No-Go je **dvoustupňové**:
+1. **Simulační brána — SPLNĚNA 2026-07-22** (4 běhy simulace, rozhodnutí D7–D11;
+   měřitelná kritéria zafixována v `prototyp-mvp.md`, výsledek a výhrady
+   v `technika/simulacni-brana-2026-07-22.md`). Resoluční čísla jsou kalibrovaná;
+   **stavba prototypu je odblokovaná** (pořadí dle `technika/architektura.md` §5:
+   engine + simulátor → hot-seat UI → LLM). První měření instrumentovaného
+   enginu musí win-rate potvrdit (výhrada č. 1 reportu).
+2. **Lidská brána — OTEVŘENÁ** (po prototypu, solo/remote/async) — hráči se hádají
+   o karty, čtou protokol nahlas se smíchem, dají si dobrovolně další run.
+   Simulace tohle NEprokáže; hypotézy (vč. „kolaps jako default zážitek")
+   v paměti `playtest-facilitator`.
 
 Po dokončení fáze aktualizuj tuto sekci a zapiš výsledek Go/No-Go s datem —
 zastaralá sekce navádí špatně.

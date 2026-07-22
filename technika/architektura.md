@@ -82,14 +82,14 @@ je v enginu zakázán).
 |---|---|---|
 | `run_started` | seed, verze obsahu, verze pravidel, pronásledovatel | reprodukce runu |
 | `route_offered` / `route_chosen` | nabídnuté uzly, volba, byl-li Zátah | detekce dominantní strategie |
-| `card_played` | postava, karta (id, tag, síla, hlučná) | distribuce tagů na strategii |
+| `card_played` | postava, karta (id, tag, síla, hlučná), **`dobrovolna: bool`** (false = vynucená prokletou nebo zoufalá — nepočítá se do metriky `max_sila_karty` cíle obetni-beranek) | distribuce tagů na strategii; bodování cílů |
 | `check_resolved` | postava, hod, síla, afinita, postih zranění, součet, pásmo (úspěch / za cenu / selhání), aplikovaná tvrdost | prahy hodů, snowball |
 | `injury_added` / `cursed_drawn` / `character_down` | postava, počet zranění | distribuce zranění po uzlech |
-| `crate_lost` | důvod, zbývá beden | ekonomika beden |
+| `crate_lost` | důvod (`hod_selhani` / `rider_uplatek` / `rider_utek` / `tvrdost_uzlu`), **atribuce postavy** (čí hod/rider bednu shodil — nutné pro metriku `ztracene_bedny_vlastni` cíle kupecke-slovo), zbývá beden | ekonomika beden; bodování cílů |
 | `heat_changed` | delta, důvod (selhání/hlučná/uzel), nová hodnota | tempo Žáru |
-| `heat_threshold` | práh (4/7/10), nodeIndex | **kdy padají prahy Žáru** (cíl: 1. práh ~3.–4. uzel) |
+| `heat_threshold` | práh (hodnoty dle `prototyp-mvp.md`, nehardcodovat), nodeIndex | **kdy padají prahy Žáru** (cíl: 1. práh ~3.–4. uzel) |
 | `ambush_inserted` / `confrontation_started` | pronásledovatel | četnost léček/konfrontací |
-| `node_resolved` | kompletní strukturovaný výsledek uzlu (vstup pro protokol) | — |
+| `node_resolved` | kompletní strukturovaný výsledek uzlu (vstup pro protokol), vč. pole **`bedny_ztracene_timto_hodem`** per hod (0–2; formát vstupu protokolu v0.2 ho vyžaduje — jinak protokol neumí zapsat rider Útěku) | — |
 | `run_ended` | výsledek (DORUČENO/NEVYŘEŠENO), příčina, počet uzlů, skóre cílů | délka runu, příčiny konce |
 
 **Pravidla jako data + čistá funkce (ADR-003):** všechna resoluční čísla
