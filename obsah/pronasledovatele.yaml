@@ -26,6 +26,9 @@ pronasledovatele:
       tvrdost: zar
     konfrontace:
       uvod: "Kolona federálních vozů vás sevřela na silnici. Malone vystupuje a bez spěchu si nasazuje brýle."
+      # Vědomá výjimka z konvence „právě jeden +2 a jeden −2": jediný uzel hry
+      # bez +2. Finále na max. Žáru proti fedovi je záměrně nejtvrdší moment
+      # (potvrzeno revizí game-designera 2026-07-22) — neopravovat.
       afinity: {nasili: 0, lest: 0, uplatek: -2, utek: -2}
       tvrdost: zraneni
     flavor: "Vyšetřovatel poznamenává, že agent Malone nepije, nekouří a nebere. Nikdo na okrsku nechápe, co tu tedy dělá."
