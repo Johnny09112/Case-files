@@ -31,8 +31,9 @@ engine + simulátor → hot-seat UI → LLM). Lidská brána zůstává otevřen
 | Založit kódový repozitář | project-manager | **hotovo 2026-07-22** — `C:\Projekty\dukazni-material-prototyp`, submodule `content/`, CLAUDE.md s principy; remote `git@github.com:Johnny09112/dukazni-material-prototyp.git`, pushnuto |
 | Prototyp fáze 1: engine + simulátor + testy | kódový repo | **hotovo 2026-07-22** — 95 testů, golden runy, invarianty; první měření odhalilo díru spec. zoufalých → D12 |
 | D12: přístup k zoufalým kartám (loot-injury, návrh uživatele) + D13: postavy a fallback šablony | project-manager + agenti | **hotovo 2026-07-22** — viz [[rozhodnuti]]; engine překlápí default, šablony dostávají schválený patch apozice |
-| Prototyp fáze 2: hot-seat UI (psací stroj, „Jsem Jan" cíle, fallbacky jako primární obsah) | kódový repo | **probíhá 2026-07-22** |
-| Prototyp fáze 3: LLM adaptér (provider nerozhodnut) | kódový repo | čeká na fázi 2 |
+| Prototyp fáze 2: hot-seat UI (psací stroj, „Jsem X" cíle, fallbacky jako primární obsah) | kódový repo | **hotovo 2026-07-22** — 127 testů, celý run klikatelný, ověřeno stavitelem i PM v prohlížeči (`npm run dev`); sépiový úřední vzhled, rozpis hodů, export logu JSONL |
+| Prototyp fáze 3: LLM adaptér (provider NEROZHODNUT — otevřená otázka) | kódový repo | **další na řadě** — cache→provider→timeout→fallback dle ADR-004/007; fallback větev už stojí |
+| První lidské sezení (lidská brána): solo/remote run přes `npm run dev`, vyhodnotit metriky + hypotézy (kolaps jako default, tři měřidla) | uživatel + playtest-facilitator | **odblokováno fází 2** — šablona playtestů připravena |
 | Jemné doladění obtížnosti po loot-injury (exploit-bot ~74–76 % vs. pásmo 45–70; ladit tvrdosti/Žár, ne resoluční práh) | game-designer + playtest-facilitator | otevřeno — až nad daty z prototypu / dalšího simu |
 | Setup kódového repa: nainstalovat pluginy Superpowers (inženýrská disciplína), frontend-design (až UI — nakrmit estetikou z design dokumentu), security-guidance | uživatel (claude CLI v kódovém repu) | dle backlogu níže — až bude repo na GitHubu |
 | První měření instrumentovaného enginu: potvrdit win-rate (kompetentní ≤70 %) a hlídat obetni-beranek (94,8 % těsně pod stropem) | playtest-facilitator + technical-developer | výhrady 4. běhu |
