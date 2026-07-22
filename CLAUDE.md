@@ -94,11 +94,13 @@ Vrstvená paměť, aby projekt neztrácel kontext mezi sezeními:
 3. **Privátní paměť agentů** (`memory: project`) — **jen kalibrace role** (tón,
    co už kritik vytkl…), ne projektová fakta. Cokoli, co má vědět jiný agent nebo
    příští session, patří do sdílených souborů výše, ne do privátní paměti.
-4. **Paměť hlavní session** (Claude Code) — uživatelské preference a meta; drž
-   v ní minimum projektových faktů, ta žijí v repu.
+4. **Osobní vault** (`~/.claude/vault/`, off-git, cross-project) — uživatelské
+   preference, styl práce a znovupoužitelné postupy napříč projekty. Sem NEpatří
+   projektová/týmová fakta (ta žijí v gitu výše). Načítá se přes `~/.claude/CLAUDE.md`.
 
 Práce začíná přečtením `projekt/stav.md` (+ relevantních zdrojů) a končí zápisem
 změn stavu/rozhodnutí. Zdroj pravdy je vždy soubor v gitu, ne generovaná stránka.
+Invarianty projektové paměti (integrita, bezpečnost, scope) jsou v `projekt/policies.md`.
 
 ## Aktuální fáze
 
