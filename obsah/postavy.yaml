@@ -1,0 +1,25 @@
+# Postavy — pevná čtveřice pašeráků (hráčské figurky). Strojově čitelný zdroj pravdy.
+# Fixní jména jsou záměr: globální cache protokolů je přenositelná jen při stálé sadě jmen.
+# Schéma (nová pole nepřidávat bez úpravy tohoto komentáře):
+#   id:     kebab-case, unikátní napříč všemi soubory v obsah/
+#   jmeno:  celé jméno (křestní + příjmení). Protokol osoby oslovuje příjmením
+#           v 1. pádě ("podezřelý {jmeno}") — příjmení volena tak, aby to sedělo.
+#   flavor: 1 věta, suchý dobový tón (1930), situační humor. Portrét = placeholder.
+# Cílový počet pro MVP: 4 postavy.
+
+postavy:
+  - id: bartos
+    jmeno: Vincenc Bartoš
+    flavor: "Pohřební zřízenec z Buffala; přišel na to, že prázdná rakev unese víc než nebožtík, a od té doby pohřbívá jen výjimečně."
+
+  - id: kowalski
+    jmeno: Frank Kowalski
+    flavor: "Nakládal čluny na Erijském jezeře, dokud nezjistil, že vykládat cizí je výnosnější než nakládat vlastní."
+
+  - id: mazur
+    jmeno: Rudolf Mazur
+    flavor: "Účetní partičky; vede dvojí knihy — v jedněch chybí bedny, ve druhých chybí on."
+
+  - id: fontana
+    jmeno: Cesare Fontana
+    flavor: "Provozuje v Buffalu 'čajovnu' o osmi stolech; čaj v ní zatím nikdo neobjednal."
