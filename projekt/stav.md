@@ -42,3 +42,11 @@ Go/No-Go je dvoustupňové (simulační brána → lidská brána) — detail v
   jeden úkol.
 - Do tohoto design repa Superpowers **NEinstalovat** (kód-skilly by ležely ladem
   a překrývaly by naši disciplínu).
+- **frontend-design** — použít v kódovém repu při stavbě UI prototypu (obrazovka
+  psacího stroje, pohled na stůl); nakrmit ho estetikou z design dokumentu
+  (Papers Please, sépiová 16barevná paleta), ať nevznikne generický vzhled.
+- **security-guidance** — reálná hodnota v kódovém repu (API klíče, Supabase/SQL,
+  edge funkce, vrstva LLM volání, obrana proti prompt injection u UGC); tam mu
+  přidat `claude-security-guidance.md`. V tomto design repu jen prohlíží markdown
+  za cenu LLM volání → zvážit vypnutí (`ENABLE_CODE_SECURITY_REVIEW=0`) zde.
+- **skill-creator** je fázově neutrální, on-demand (vznikl jím `consistency-check`).
