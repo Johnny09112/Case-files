@@ -1,6 +1,6 @@
 ---
 name: sim-gate-findings
-description: Verdikt simulační brány + prokázaná balanční čísla. 1. běh (216k) i 2. běh (240k, po D7-D9).
+description: Verdikt simulační brány + prokázaná balanční čísla. 1./2./3. běh (3. = po D10, 240k).
 metadata:
   type: project
 ---
@@ -9,62 +9,59 @@ metadata:
 
 Simulátor ve scratchpadu (Node, seedovaný RNG). Věrná pravidla z prototyp-mvp.md +
 obsah/*.yaml. Vyhodnocováno proti zafixovaným kritériím brány (Fáze 0, referenční 4p run).
+Scratchpad je per-session — simulátor se rekonstruuje z tohoto souboru + [[sim-model-assumptions]].
 
-## 2. BĚH (2026-07-22, po D7–D9, 240 000 runů) — NEPROŠLA (overcorrection)
+## 3. BĚH (2026-07-22, po D10, 240 000 runů) — NEPROŠLA TĚSNĚ (2 lokální kalibrace)
 
-Matice: 3 počty hráčů (1/2/4) × 10 strategií × 2 pronásledovatelé × 2 větve hlasu, à 2000.
+D10: prahy **7+ úspěch / 5–6 úspěch za cenu (reálné zranění) / ≤4 selhání** (páka F);
+frajer-v-klidu zmírněn na `zraneni <= 1 a doruceno`. Matice 3 počty × 10 strategií × 2
+pronásledovatelé × 2 hlasy à 2000.
 
-**Celkový verdikt: NEPROŠLA.** D7 (5–7 = reálné zranění na KAŽDÉM hodu) v kombinaci
-s tím, že každý hráč hází každý uzel, hru **překlopil z „moc snadné" do „moc těžké"**.
+**Jádro je vyřešené (krit. 1, 2, 4 PROŠLA). Padají jen dvě lokální věci: krit. 3
+(Žár o uzel horký) marginálně a krit. 5 (dva cíle mimo pásmo).** Nejde o rozbitou
+matematiku jako v 1./2. běhu — jde o doladění.
 
-**Why:** P(5–7) je 33–50 % na typický hod; se 4 hráči × ~9 setkání/run (6 uzlů +
-Zátah + léčka + konfrontace, které teď padnou skoro každý run) se zranění lavinovitě
-kupí → 99 % runů má kolaps, kompetentní hra vyhrává jen ~25 %.
+### Verdikt per kritérium
+- **Krit. 1 DORUČENO 45–70 % ✓** — cíle (realistická) **55,1 %**, greedy (kompetentní)
+  **64,7 %**, cautious 63,2 % (4p). Sweep predikce (62/49) SEDÍ; plná sim u cíle o ~6 b.
+  optimističtější (kompetentnější model než sweep aproximace).
+- **Krit. 2 snowball roste od uzlu 3 ✓** — cíle přírůstek zranění/uzel:
+  1,71 / 2,04 / **2,31 / 2,37** / 2,29 / 1,75 (uzly 1–6). Vrchol uzel 4, citelně vyšší
+  než uzly 1–2. Pokles na uzlu 5–6 je artefakt kolapsu (dochází živá těla), ne chladnutí.
+  Tvarově MNOHEM lepší než 2. běh (tam cliff: vrchol uzel 3, pak ~0).
+- **Krit. 3 první práh Žáru medián uzel 3–4 ✗ (marginálně)** — cíle i greedy **medián
+  uzel 2** (0-idx 1), cautious uzel 4 ✓. Žár běží o uzel horko pod agresivní/realistickou
+  hrou kvůli stackování hlučných karet přes 4 hráče. Lever: kdyby 1. práh = 5, medián → uzel 3.
+- **Krit. 4 žádná strategie >85 % ✓** — max **2p/cautious 68,2 %**. Žádná spam strategie
+  nedominuje (spam < greedy všude) → žádná degenerativní cesta. Robustně splněno.
+- **Krit. 5 žádný cíl <5 % ani >95 % ✗** — **frajer-v-klidu 1,8 %** (<5, i po D10 zmírnění)
+  a **cisty-stit 96,3 %** (>95). Ostatní v pásmu: nohy 77,6 / beranek 94,4 / modrinu 49 /
+  kupecke 48,5 / prsty 50,2. mozek = textový (vynechán).
 
-**How to apply:** doporučená náprava má kalibrované číslo (viz páka F níže) — přesimuluj
-po volbě páky, než se zafixuje. Verdikt brány zůstává NEPROŠLA do nápravy.
+### Kalibrační páky do 3. běhu (poslat game-designerovi)
+- **Páka G (cisty-stit ceiling):** podmínka `pocet_tag.nasili == 0 a doruceno` → **52,5 %**
+  (z 96,3 %). Čistý fix >95 % — cíl „nikoho jsem neuhodil" má smysl jen když i dojedeš.
+- **Páka H (frajer floor):** zmírnění nestačí — `<=1` = 1,8 %, `<=2` = **3,6 %** (POŘÁD <5),
+  `<=3` = 19,1 %. Injury ekonomika 4p dělá „prostál v klidu" skoro nemožným. `<=3` projde,
+  ale rozbíjí téma („frajer" se 3 zraněními není v klidu). Doporučení: **přerámovat cíl**
+  na ne-zranění metriku (např. „nezahrál jsi hlučnou kartu" / „nezkolaboval jsi"), ne
+  jen posouvat práh. frajer je mechanický kanárek širšího nálezu níže.
+- **Páka Ž (krit. 3):** 1. práh Žáru 4→5 posune medián na uzel 3 (do pásma), ALE mění
+  timing Zátahu (vázán na práh 4). Alternativa: srazit Žár z hlučných (např. +1 jen za
+  nasili sílu 3). Volba je na designu — číslo je připravené.
 
-### Prokázaná čísla 2. běhu (jen matematika/tempo, NE zábavnost)
-- DORUČENO 4p: greedy 25,3 %, cautious 25,4 %, cíle-driven (realistická) 18,6 %.
-  Pásmo brány 45–70 %. → **krit. 1 padá, tentokrát zdola.** Ani nejsnadnější buňka
-  (2p greedy 34,5 %) nedosáhne 45 %. Žádná strategie nikde není nad 35 %.
-- **Snowball je příliš rychlý / front-loaded.** Přírůstek zranění per uzel (4p cíle):
-  2,6 / 4,3 / **5,5 (vrchol uzel 3)** / 2,5 / 0,8 / 0,3 — po uzlu 3 padá, protože hráči
-  už kolabují. Design chtěl zhoršení „citelné OD 3. uzlu" (postupné 3→4→5→6), tady je
-  vrchol už uzel 3 a pak smrt. → krit. 2 nesplněno v duchu.
-- **První práh Žáru padá medián uzel 2** (reachRate 99 %), cíl 3–4. → krit. 3 padá.
-  Žár běží moc horko: se 4 hráči selže uzel v ~80 % → +1 Žár skoro pořád.
-- Kolaps v **99 % runů** (4p), prům. ~10 hráčo-uzlů stráveno vyřazeně. Nový problém
-  přímo z D7 — přesně riziko, na které úkol upozorňoval.
-- Cíle: beranek **70 %** (D9 max síla ≤2 opravilo mrtvý cíl z 1. běhu ✓), stit 77 %,
-  prsty 81 %, nohy 79 %, modrinu 22 %, kupecke 9 %. **frajer (0 zranění + doručeno)
-  = 0,1 %** → padá pod floor 5 % (bez zranění dojet je teď nemožné). mozek = textový,
-  simulátor vynechává. → krit. 5 padá kvůli frajerovi.
-- Kritérium „žádná strategie >85 %" formálně PROŠLO (max 34,5 %), ale triviálně/špatným
-  směrem (vše moc těžké).
-- **Rider Útěku (D8) = reálná volba, ne mrtvá:** mono-Útěk 4p rozumná volba 6,1 % >
-  vždy-bedna 4,4 % (spálí 3,66 bedny/run) > vždy-zranění 3,9 % (prohloubí kolaps).
-  Volba vlastníka smysluplně mění osud. Útěk zůstává jako mono past (max 6 %).
-- Kanály ztráty beden (4p cíle): úplatek-dobrovolný 0,83 ≈ útěk-rider 0,82 ≈
-  tvrdost-bedna 0,94 — po zracionálnění úplatku vyrovnanější než v 1. běhu.
-- Tempo konfrontací: **kolotoč se ZMÍRNIL** — konf 0,97×/run (1. běh 1,5–2,6×), protože
-  přežití teď sráží Žár na 3 (bylo 6). Ale konf pořád padá skoro každý run, protože Žár
-  je celkově moc horký (fix funguje, ale zdroj Žáru je nezkrocený).
-- Zátah **1,24×/run** (1. běh 0,22×) — D8 „nahradí obě cesty" funguje, teď je nevyhnutelný.
+### Kolaps & „zbitý, ale doručil" (JEN ZMĚŘENO, viz [[pending-human-hypotheses]])
+- Kolaps v **95,7 % runů** (cíle 4p), 97,5 % greedy. Přes to je win-rate zdravá (55–65 %)
+  → hlas z auta doveze náklad. **Kolaps je default, ne edge-case.**
+- Průměr **~6 hráčo-uzlů stráveno vyřazeně** (cíle avgDown 5,98; greedy 6,16) — cca 20 %
+  hráčo-uzlo-času leží někdo v autě. To je centrální otázka pro lidskou bránu: dramatické, nebo mlýn?
 
-### Kalibrovaná páka (sweep 4p greedy/cíle, poslat game-designerovi)
-Sweep přes konfigurace ukázal jasného vítěze:
-- **Páka F — snížit práh plného úspěchu z 8+ na 7+** (pásmo 7+ úspěch / 5–6 zranění /
-  ≤4 selhání): greedy 4p **62,2 %**, cíle **49,3 %**, greedy 2p 64,3 % — VŠE v pásmu
-  45–70 %. Zachovává ducha D7 (5–6 pořád bolí zraněním), jen ubere jeden bod, aby plný
-  úspěch nebyl vzácný. **Nejčistší jednoznaková náprava.**
-- Páka C (posun celého pásma −1: 7+/4−6/≤3): cíle 62,8 %, greedy 74,2 % — greedy mírně
-  nad pásmem.
-- Páka B (návrat 5–7 = poznámka zdarma): greedy 98,5 %/cíle 93,3 % — potvrzuje 1. běh
-  (moc snadné). D7 byl správný směr, jen moc silný.
-- Chladnější Žár (prahy 5,8,11) sám o sobě NEpomáhá (29 %) — zabíjí syrové zranění, ne Žár.
-- POZOR: i pod pákou F zůstává kolaps ~99 %. Vysoká, ale win-rate je zdravá →
-  „zbitý, ale doručil" může být zamýšlený sníh; potřebuje lidský read (viz [[pending-human-hypotheses]]).
+## 2. BĚH (2026-07-22, po D7–D9, 240k) — NEPROŠLA (overcorrection, moc těžké)
+D7 (5–7 = reálné zranění na každém hodu) × 4 hráči × ~9 setkání → kolaps 99 %, kompetentní
+hra ~25 % DORUČENO. Sweep našel páku F (7+/5–6/≤4): greedy 62/cíle 49 % — schváleno jako D10.
+Snowball tehdy cliff (vrchol uzel 3, pak smrt). frajer 0,1 %. Beranek 70 % (D9 opravilo z ~1 %).
+Rider Útěku (D8) = reálná volba (mono-Útěk 6,1 % > vždy-bedna 4,4 %). Detaily v git historii.
+
 
 ## 1. BĚH (2026-07-22, před D7–D9, 216k runů) — NEPROŠLA (moc snadné)
 Kompetentní hra 96–98 % DORUČENO, realistická 84–90 % (pásmo 45–70). Nejsilnější páka =

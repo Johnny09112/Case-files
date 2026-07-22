@@ -81,8 +81,9 @@ papírové fáze je v historii v patičce; k papíru se lze vrátit, až budou h
   **+1 za každou zahranou hlučnou kartu** (`hlucna`, per karta), **+2** za vybrané
   výsledky uzlů. Pozn.: tvrdost `zar` (+2, viz výše) se přičítá **za každé
   selhání** — to je záměrně per hod, na rozdíl od základního +1 za uzel. Prahy:
-  **4** = příští volba cesty vede přes **Zátah — nahradí obě nabízené cesty**
-  (tým to vidí předem; beztrestně obejít nejde), **7** = vložený uzel léčky
+  **5** = příští volba cesty vede přes **Zátah — nahradí obě nabízené cesty**
+  (tým to vidí předem; beztrestně obejít nejde; práh zvednut ze 4 po 3. běhu
+  simulace — první práh má padat uzel 3–4, ne 2), **7** = vložený uzel léčky
   pronásledovatele, **10** = okamžitá finální konfrontace; přežití → **Žár klesá
   na 3** (finále se nesmí recyklovat každé dva uzly — změřeno simulací).
 - **Pronásledovatel:** losuje se 1 na začátku runu, viditelný od začátku, ruší

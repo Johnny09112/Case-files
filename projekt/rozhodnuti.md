@@ -9,6 +9,16 @@ ukazatel na archiv.*
 
 ## 2026-07-22
 
+- **D11 schváleno — finální kalibrace po 3. běhu brány (páky G/H/Ž).**
+  3. běh: jádro vyřešené (win-rate 55/65 % v pásmu, snowball správný tvar, žádná
+  dominance), padala jen 2 lokální kritéria. (G) `cisty-stit` + podmínka
+  `doruceno` (96,3 % → změřeno 52,5 %). (H) `frajer-v-klidu` přerámován ze
+  zranění na `kolaps == false a doruceno` — zranění jsou při 4p univerzální,
+  žádný práh zranění nefungoval (0,1–3,6 %). (Ž) první práh Žáru (Zátah) zvednut
+  ze 4 na 5 — medián prvního prahu padal uzel 2, kritérium chce 3–4; textura
+  „všechno Násilí hlučné" zůstává. *Vedlejší nález pro lidskou bránu:* „zbitý,
+  ale doručil" je default zážitek (kolaps ~96 % runů) — drama vs. frustrace
+  rozhodne první lidské sezení. Následuje 4. běh brány.
 - **D10 schváleno — prahy hodu 7+/5–6/≤4 (páka F) + frajer-v-klidu ≤1 zranění.**
   2. běh brány (240k runů) ukázal overcorrection D7: kompetentní hra spadla na
   18–25 % DORUČENO, kolaps v 99 % runů, snowball front-loaded, cíl frajer 0,1 %.

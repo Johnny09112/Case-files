@@ -55,10 +55,10 @@ cile:
     body: 2
 
   - id: cisty-stit
-    text: "V protokolu ať nepadne jediná zmínka, že jsi někoho udeřil."
-    overeni: "Vlastník nezahrál během runu žádnou kartu s tagem Násilí."
+    text: "V protokolu ať nepadne jediná zmínka, že jsi někoho udeřil — a zboží dojede."
+    overeni: "Vlastník nezahrál žádnou kartu s tagem Násilí a run skončil DORUČENO."
     overeni_typ: mechanicky
-    podminka: "pocet_tag.nasili == 0"
+    podminka: "pocet_tag.nasili == 0 a doruceno"
     body: 2
 
   - id: kupecke-slovo
@@ -69,10 +69,10 @@ cile:
     body: 2
 
   - id: frajer-v-klidu
-    text: "Ať to vypadá, žes celou cestu prostál v klidu — nanejvýš škrábnutí, ať se dělo cokoli."
-    overeni: "Vlastník dokončil run s nejvýše jedním zraněním a náklad dorazil."
+    text: "Ať protokol ukáže, žes celou cestu prostál na vlastních nohou — ať se dělo cokoli."
+    overeni: "Vlastník během runu nezkolaboval a náklad dorazil."
     overeni_typ: mechanicky
-    podminka: "zraneni <= 1 a doruceno"
+    podminka: "kolaps == false a doruceno"
     body: 3
 
   - id: obetni-beranek

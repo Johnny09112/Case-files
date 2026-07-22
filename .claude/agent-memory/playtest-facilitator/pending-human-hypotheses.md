@@ -23,10 +23,17 @@ designéra a remote/async sezení. Každou spáruj se signálem z šablony playt
   (design §8 otázka; sim to necítí.)
 - Baví i to, jaká je obtížnost po nápravě čísel? (1. běh: skoro vždy vyhraje; 2. běh:
   skoro vždy prohraje. Je tření ze snowballu/Žáru „napínavé" nebo jen „hluk"? — jen lidi.)
-- **Je „zbitý, ale doručil" napínavé, nebo jen frustrující?** I po nápravě (páka F) drží
-  simulace kolaps ~99 % runů — skoro vždy někdo padne a jede „hlas z auta". Sim neví,
-  jestli je to zamýšlený dramatický sníh nebo trest. Ptát se po 1. sezení: frustrovalo
-  vyřazení, nebo krmilo historky? (Váže se na cíl „samou-modřinu" a mechaniku hlasu z auta.)
+- **Je „zbitý, ale doručil" napínavé, nebo jen frustrující?** I po D10 (3. běh) drží
+  simulace kolaps **~95,7 % runů** (cíle 4p) a ~6 hráčo-uzlů stráveného vyřazení (~20 %
+  hráčo-uzlo-času leží někdo v autě). Win-rate je přitom zdravá (55–65 %) → kolaps je
+  DEFAULT zážitek, ne edge-case. Sim neví, jestli je to zamýšlený dramatický sníh nebo
+  trest. Ptát se po 1. sezení: frustrovalo vyřazení, nebo krmilo historky? (Váže se na
+  cíl „samou-modřinu" a mechaniku hlasu z auta.)
+- **Kanárek frajer-v-klidu:** cíl „prostál v klidu, max škrábnutí" je při 4p injury
+  ekonomice mechanicky skoro nemožný (1,8 % i po zmírnění na ≤1; ≤2 = 3,6 %). To není
+  jen tuning cíle — je to důkaz, že **zranění jsou při 4p skoro univerzální**. Otázka na
+  lidi: je hra, kde se každý nutně zřídí, čitelná jako drsná komedie, nebo jako nefér?
+  (Souvisí přímo s kolapsem výše — stejný kořen.)
 
 Otevřené číselné páky, které se po lidské zpětné vazbě můžou hnout, jsou v
 [[sim-gate-findings]].
