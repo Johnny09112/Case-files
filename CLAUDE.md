@@ -73,16 +73,47 @@ Křížové odkazy v patičkách zachovávej.
   **anglicky**. Herní obsah (karty, protokoly) česky.
 - Datumy zapisuj absolutně (2026-07-22), ne relativně.
 - Škrtnuté nápady nemaž — přesuň do historie v patičce s důvodem škrtnutí.
-- Repozitář je verzovaný gitem: commituj po každé ucelené změně, zprávy česky,
-  první řádek = co se změnilo a proč.
+- Repozitář je verzovaný gitem: **po dokončení ucelené práce Claude vždy sám
+  commitne a pushne** (bez čekání na pokyn). „Kdy" určuje Claude — jakmile jsou
+  soubory v konzistentním stavu (žádné rozeditované půlky). Zprávy česky, první
+  řádek = co se změnilo a proč; commituj v logických celcích. Nikdy necommituj
+  rozbitý stav ani tajemství. Push jde až po nastavení remote (zatím není).
 - LLM poskytovatel **zatím nerozhodnut** — v návrzích drž volání abstrahované
   (levný model třídy Haiku, jedno volání na uzel, strukturovaný vstup, logovat
   vše, globální cache).
 
+## Paměť a kontext (jak se drží dlouhodobě)
+
+Vrstvená paměť, aby projekt neztrácel kontext mezi sezeními:
+
+1. **Doménová pravda** — `design-dokument.md`, `prototyp-mvp.md`,
+   `prompty/protokol.md`, `obsah/*.yaml`, `playtesty/*`. Autoritativní, ruční, git.
+2. **Procesní paměť** — `projekt/stav.md` (živý stav, roadmapa, backlog, otevřené
+   otázky) a `projekt/rozhodnuti.md` (datovaný, append-only log rozhodnutí a proč).
+   `project-manager` je udržuje. `projekt/README.md` je rozcestník (i Obsidian home).
+3. **Privátní paměť agentů** (`memory: project`) — **jen kalibrace role** (tón,
+   co už kritik vytkl…), ne projektová fakta. Cokoli, co má vědět jiný agent nebo
+   příští session, patří do sdílených souborů výše, ne do privátní paměti.
+4. **Paměť hlavní session** (Claude Code) — uživatelské preference a meta; drž
+   v ní minimum projektových faktů, ta žijí v repu.
+
+Práce začíná přečtením `projekt/stav.md` (+ relevantních zdrojů) a končí zápisem
+změn stavu/rozhodnutí. Zdroj pravdy je vždy soubor v gitu, ne generovaná stránka.
+
 ## Aktuální fáze
 
-Fáze 0 dle `prototyp-mvp.md`: papírový playtest před jakýmkoli kódem.
-Go/No-Go: pokud stůl nebaví ani s člověkem jako poldou, zpět k designu.
+**Papírový playtest (Fáze 0) přeskočen — rozhodnutí 2026-07-22:** nejsou lokální
+hráči v dojezdu. Jde se rovnou na digitální prototyp; papírovou pojistku nahrazuje
+simulace + první digitální/remote sezení (viz agent `playtest-facilitator` a
+Fáze 0 v `prototyp-mvp.md`). K papíru se lze vrátit, až budou hráči.
+
+Nové Go/No-Go je **dvoustupňové**:
+1. **Simulační brána** (před/během stavby prototypu) — resoluční matematika a tempo
+   sedí: hra se nesejde triviálně brzy ani není bez tření, snowball je citelný od
+   ~3. uzlu, ekonomika beden vytváří napětí, neexistuje nudně dominantní strategie.
+2. **Lidská brána** (po prototypu, solo/remote/async) — původní kritérium zábavnosti
+   platí dál, jen se měří digitálně: hráči se hádají o karty, čtou protokol nahlas
+   se smíchem, dají si dobrovolně další run. Simulace tohle NEprokáže.
 
 Po dokončení fáze aktualizuj tuto sekci a zapiš výsledek Go/No-Go s datem —
 zastaralá sekce navádí špatně.
