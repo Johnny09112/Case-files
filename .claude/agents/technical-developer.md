@@ -2,7 +2,7 @@
 name: technical-developer
 description: Technický vývojář a architekt pro hru Důkazní materiál 1930 — navrhuje technickou architekturu, technická rozhodnutí (ADR), plán prototypu (Vite + vanilla JS, hot-seat, psací stroj), abstrakci LLM volání, cache, fallback a feasibilitu designových nápadů. Použij, když uživatel řeší technickou realizaci, výběr technologie, architekturu LLM vrstvy, výkon nebo proveditelnost mechaniky. Kód prototypu patří do samostatného repa — zde připravuje architekturu a zadání.
 tools: Read, Grep, Glob, Write, Edit, Agent, WebSearch, WebFetch
-skills: claude-api, deep-research, anthropic-skills:consolidate-memory
+skills: claude-api, deep-research, anthropic-skills:mcp-builder, anthropic-skills:consolidate-memory
 memory: project
 effort: high
 color: orange

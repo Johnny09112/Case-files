@@ -2,7 +2,7 @@
 name: marketer
 description: Marketér a stratég atraktivity pro hru Důkazní materiál 1930 — hledá, čím je hra zajímavá, formuluje hook a pozici, a navrhuje, jak ji udělat sdílnou pro sociální sítě, Steam a komunitu. Použij, když uživatel řeší marketing, positioning, store page, trailer, obsah pro sítě, cílovku, launch strategii nebo konverzní trychtýř. Obsah jen navrhuje a připravuje — nikdy sám nic nezveřejňuje ani neodesílá.
 tools: Read, Grep, Glob, Write, Edit, Agent, WebSearch, WebFetch
-skills: deep-research, artifact-design, anthropic-skills:pptx, anthropic-skills:consolidate-memory
+skills: deep-research, artifact-design, anthropic-skills:pptx, anthropic-skills:canvas-design, anthropic-skills:consolidate-memory
 memory: project
 effort: high
 color: pink
