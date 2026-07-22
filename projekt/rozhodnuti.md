@@ -9,6 +9,16 @@ ukazatel na archiv.*
 
 ## 2026-07-22
 
+- **Technická architektura prototypu v0.1 přijata (7 ADR)** —
+  `technika/architektura.md`. Klíčové: Vite + vanilla JS bez TypeScriptu (JSDoc
+  + `@ts-check`), headless deterministický engine se seedovaným RNG (UI i
+  simulátor jsou dva klienti téhož API), resoluční pravidla jako data + čistá
+  funkce (kvůli probíhající revizi čísel po auditu), provider-agnostic LLM
+  adaptér (cache → 10 s timeout → fallback, logovat vše), obsah mezi repy přes
+  git submodule + dev override `CONTENT_DIR`, server/Tauri/Steam odloženy mimo
+  v0.1, dvouvrstvé klíčování cache protokolů (exaktní aktivní, hrubý stínově
+  měřený). Pořadí stavby: engine+simulátor → hot-seat UI s fallbacky → LLM.
+  *Důvod a detaily v jednotlivých ADR.*
 - **Repozitář na GitHubu.** Nastaven remote `origin`
   (`git@github.com:Johnny09112/Case-files.git`), výchozí větev přejmenována
   z `master` na `main`, historie pushnuta. Push je od teď aktivní součástí
