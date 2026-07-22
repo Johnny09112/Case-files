@@ -9,6 +9,18 @@ ukazatel na archiv.*
 
 ## 2026-07-22
 
+- **D10 schváleno — prahy hodu 7+/5–6/≤4 (páka F) + frajer-v-klidu ≤1 zranění.**
+  2. běh brány (240k runů) ukázal overcorrection D7: kompetentní hra spadla na
+  18–25 % DORUČENO, kolaps v 99 % runů, snowball front-loaded, cíl frajer 0,1 %.
+  Kalibrační sweep našel páku F (snížení prahu plného úspěchu z 8+ na 7+):
+  kompetentní 62 %, realistická 49 % — obě v pásmu brány 45–70 %, duch D7
+  zachován (5–6 dál zraňuje). `frajer-v-klidu` zmírněn na ≤1 zranění. Potvrzeno
+  z 2. běhu: Zátah nevyhnutelný (1,24×/run), konfrontační kolotoč vyřešen
+  (0,97×/run), volba rideru Útěku je živá, obetni-beranek opraven (70 %).
+  Hardcodované prahy odstraněny i z šablony playtestů, architektury a definic
+  agentů (zdroj pravdy jen prototyp-mvp.md). Následuje 3. běh brány.
+  *Otevřená hypotéza pro lidskou bránu:* častý kolaps („zbitý, ale doručil") —
+  drama, nebo frustrace? Simulace to nerozhodne.
 - **D7 schváleno — výsledek 5–7 = reálné zranění** (+ poznámka do spisu), žádná
   „poznámka zdarma". *Důvod:* simulační brána (216k runů) ukázala kompetentní hru
   90–98 % DORUČENO; citlivostní analýza změřila, že tato jediná změna ji sráží na

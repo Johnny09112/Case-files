@@ -21,8 +21,12 @@ designéra a remote/async sezení. Každou spáruj se signálem z šablony playt
 - Převyprávějí hráči konkrétní momenty? (nejsilnější signál historek — nezměřitelné simem.)
 - Je „tři měřidla" (zranění/bedny/Žár) na hraně kognitivní zátěže u živého stolu?
   (design §8 otázka; sim to necítí.)
-- Baví i to, že kompetentní hra teď skoro vždy vyhraje? (i po nápravě čísel: je tření
-  ze snowballu/Žáru „napínavé" nebo jen „hluk"? — jen lidi.)
+- Baví i to, jaká je obtížnost po nápravě čísel? (1. běh: skoro vždy vyhraje; 2. běh:
+  skoro vždy prohraje. Je tření ze snowballu/Žáru „napínavé" nebo jen „hluk"? — jen lidi.)
+- **Je „zbitý, ale doručil" napínavé, nebo jen frustrující?** I po nápravě (páka F) drží
+  simulace kolaps ~99 % runů — skoro vždy někdo padne a jede „hlas z auta". Sim neví,
+  jestli je to zamýšlený dramatický sníh nebo trest. Ptát se po 1. sezení: frustrovalo
+  vyřazení, nebo krmilo historky? (Váže se na cíl „samou-modřinu" a mechaniku hlasu z auta.)
 
 Otevřené číselné páky, které se po lidské zpětné vazbě můžou hnout, jsou v
 [[sim-gate-findings]].

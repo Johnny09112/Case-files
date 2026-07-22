@@ -54,17 +54,18 @@ papírové fáze je v historii v patičce; k papíru se lze vrátit, až budou h
 - **Ruka:** 5 karet; po každém uzlu si hráč dolízne zpět na 5.
 - **Uzel:** afinity k tagům (−2 / 0 / +2), viditelné hráčům předem.
 - **Hod postavy:** d6 + síla karty + afinita − počet zranění postavy (max −3).
-  - **8+** … úspěch
-  - **5–7** … úspěch za cenu — **reálné zranění** (+ poznámka do spisu).
+  - **7+** … úspěch
+  - **5–6** … úspěch za cenu — **reálné zranění** (+ poznámka do spisu).
     Žádná „poznámka zdarma": cena musí bolet, jinak je hra bez tření
-    (změřeno simulací 2026-07-22).
+    (změřeno simulací 2026-07-22; práh úspěchu snížen z 8+ na 7+ po 2. běhu —
+    při 8+ byla hra naopak přestřelená, 18–25 % DORUČENO).
   - **≤4** … selhání + zranění + tvrdost uzlu
 - **Tagová textura (ridery)** — mechanická realizace textury z design dokumentu
   §4.5; každý tag řeší selhání jinak:
   - **Násilí — síla za Žár:** karty Násilí mají nejvyšší síly v sadě a **všechny
     jsou hlučné** (`hlucna`, +1 Žár za zahrání). Žádná jiná úleva.
   - **Úplatek — jistota za zdroje:** skončil-li hod selháním (≤4), smí hráč
-    **odhodit 1 týmovou bednu a povýšit výsledek na „úspěch za cenu" (5–7)**.
+    **odhodit 1 týmovou bednu a povýšit výsledek na „úspěch za cenu" (5–6)**.
     Dobrovolné; platí se, jen když to zachrání.
   - **Útěk — bezpečí za bedny:** při selhání (≤4) s kartou Útěk **volí vlastník**:
     utrpí zranění, NEBO tým ztratí 1 bednu (nemá-li tým už žádnou, zranění proběhne
@@ -135,7 +136,7 @@ krátký dotazník + pozorování.
 5. Hráči po hře **převyprávějí konkrétní momenty** („jak Pepa s vidlemi…") —
    nejsilnější signál, že hra generuje historky.
 
-**Co ladit:** prahy hodů (8+/5–7/≤4), tempo přibývání zranění (snowball má být
+**Co ladit:** prahy hodů (aktuálně 7+/5–6/≤4), tempo přibývání zranění (snowball má být
 citelný od ~3. uzlu), tempo Žáru (první práh má padnout kolem 3.–4. uzlu),
 délka a tón protokolů, poměr cache-hitů (logovat od začátku).
 

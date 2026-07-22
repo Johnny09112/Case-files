@@ -93,8 +93,9 @@ je v enginu zakázán).
 | `run_ended` | výsledek (DORUČENO/NEVYŘEŠENO), příčina, počet uzlů, skóre cílů | délka runu, příčiny konce |
 
 **Pravidla jako data + čistá funkce (ADR-003):** všechna resoluční čísla
-(prahy 8+/5–7/≤4, přírůstky Žáru, prahy 4/7/10, 6 beden, kolaps při 4. zranění,
-sazba „Žár per hod vs. per uzel") žijí v jednom konfiguračním objektu `rules`;
+(prahy hodu, přírůstky a prahy Žáru, počet beden, práh kolapsu, sazba „Žár per
+hod vs. per uzel" — aktuální hodnoty vždy v `prototyp-mvp.md`, sem
+nehardcodovat) žijí v jednom konfiguračním objektu `rules`;
 vyhodnocení je čistá funkce `resolve(state, action, rules, rng)`. Až audit čísla
 změní, mění se jeden objekt — a simulátor umí pustit tutéž dávku runů proti
 několika variantám `rules` a porovnat je.
@@ -250,7 +251,7 @@ dukazni-material-prototyp/
 
 **Testovací strategie (Vitest — nativní k Vite, běží v Node):**
 
-- *Unit testy enginu:* `resolve()` přes všechna pásma (8+/5–7/≤4), afinity,
+- *Unit testy enginu:* `resolve()` přes všechna pásma prahů (dle `rules`), afinity,
   postihy zranění, všechny tři tvrdosti, přírůstky a prahy Žáru, rušený tag
   pronásledovatele, kolaps postavy, konec beden.
 - *Regresní testy resoluce (golden runs):* fixní seed + skriptovaná sekvence

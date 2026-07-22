@@ -24,7 +24,7 @@ nepočítá do Go/No-Go.)*
 
 ## Ladění
 
-- Resoluční čísla (prahy 8+/5–7/≤4, tempo zranění, bedny): co se zdálo mimo?
+- Resoluční čísla (prahy dle `prototyp-mvp.md`, tempo zranění, bedny): co se zdálo mimo?
 - Protokoly (délka, tón, opakující se figury):
 - Konkrétní karty/uzly, které nefungovaly:
 

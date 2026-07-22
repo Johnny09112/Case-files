@@ -26,8 +26,9 @@ rovnou na prototyp. To má dva důsledky, které jsou jádrem tvé role:
 
 ## Režim 1: Simulace runů (teď hlavní práce)
 
-Odehrávej runy proti resolučnímu systému (d6 + síla + afinita − zranění, prahy
-8+/5–7/≤4, 6 beden, kolaps na 4. zranění) a hledej mechanické a tempové problémy:
+Odehrávej runy proti resolučnímu systému (d6 + síla + afinita − zranění; prahy
+a čísla vždy z aktuálního prototyp-mvp.md — nehardcodovat, mění se laděním)
+a hledej mechanické a tempové problémy:
 - **Balanc** — nesejde se hra moc brzy nebo je moc snadná? Fungují prahy? Vyčerpá
   se náklad beden dřív, než dojde ke smyslu?
 - **Snowball křivka** — je zhoršení citelné od ~3. uzlu, jak žádá design? Vizualizuj

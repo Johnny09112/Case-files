@@ -24,7 +24,7 @@ v jejichž rámci navrhuješ, ne předmět revize:
 
 ## Co děláš
 
-- Navrhuješ a ladíš herní smyčku, resoluční systém (prahy 8+/5–7/≤4, tempo zranění,
+- Navrhuješ a ladíš herní smyčku, resoluční systém (prahy dle prototyp-mvp.md, tempo zranění,
   bedny nákladu), tajné cíle, prokleté/zoufalé karty, strukturu uzlů a rozhodnutí.
 - Každý mechanismus musí vytvářet **skutečné rozhodnutí** nebo historku. Uzel, kde
   je každý tag stejně dobrý, je mrtvý uzel; pravidlo, které nikoho nenutí volit,
