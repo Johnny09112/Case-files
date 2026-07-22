@@ -9,6 +9,10 @@ ukazatel na archiv.*
 
 ## 2026-07-22
 
+- **Repozitář na GitHubu.** Nastaven remote `origin`
+  (`git@github.com:Johnny09112/Case-files.git`), výchozí větev přejmenována
+  z `master` na `main`, historie pushnuta. Push je od teď aktivní součástí
+  konvence po dokončení práce.
 - **Commit + push automaticky po dokončení práce.** Claude commituje a pushuje sám,
   bez čekání na pokyn, jakmile je ucelená práce v konzistentním stavu; „kdy" určuje
   Claude. Řešeno jako konvence v `CLAUDE.md`, ne slepý git hook — ten by neuměl

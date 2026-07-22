@@ -77,7 +77,7 @@ Křížové odkazy v patičkách zachovávej.
   commitne a pushne** (bez čekání na pokyn). „Kdy" určuje Claude — jakmile jsou
   soubory v konzistentním stavu (žádné rozeditované půlky). Zprávy česky, první
   řádek = co se změnilo a proč; commituj v logických celcích. Nikdy necommituj
-  rozbitý stav ani tajemství. Push jde až po nastavení remote (zatím není).
+  rozbitý stav ani tajemství. Remote `origin` je nastaven (GitHub, větev `main`).
 - LLM poskytovatel **zatím nerozhodnut** — v návrzích drž volání abstrahované
   (levný model třídy Haiku, jedno volání na uzel, strukturovaný vstup, logovat
   vše, globální cache).
