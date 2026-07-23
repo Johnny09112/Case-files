@@ -73,14 +73,18 @@ engine + simulátor → hot-seat UI → LLM). Lidská brána zůstává otevřen
   metrikami), prompt protokolu v0.3 + v3 regresní baterie (top riziko:
   GANGSTER auto-fail s vysokým útokem svádí k zápisu úspěchu), prověrka
   obsahu kritikem + **D20a: Malone nuluje hodnotu RUN-WIDE** (rozhodnutí
-  uživatele). **Zbývá:** (1) opravy obsahu dle prověrky (Malone run-wide,
-  GANGSTER strojová mapa per typ, trim hodnoty, vyrovnání postihových
-  poolů, telegraf konzistence) — běží; (2) **přestavba enginu v kódovém
-  repu** + v3 simulátor a diagnostický run-1 — vše odblokováno, doporučena
-  čerstvá session nad kódovým repem; (3) fallback šablony přepsat na v3
-  pásma (fáze 2 UI); (4) konzultace operations-economics: prompt v0.3 má
-  ~40 % delší systémový prompt a bohatší per-call vstup — ověřit rozpočet
-  Haiku.
+  uživatele). **DESIGN REPO JE v3-KOMPLETNÍ (2026-07-23, D14–D20)** —
+  opravy obsahu po prověrce hotové a commitnuté (Malone i Brody run-wide,
+  GANGSTER strojová mapa v stitky.yaml, hodnota trim + záložní staty,
+  pooly vyrovnané, kotvy 19/53/4, telegrafy na plném invariantu).
+  **Další kroky (doporučeno: nová session nad kódovým repem):**
+  (1) přestavba enginu na slotovou resoluci dle architektura §2.2 v3 +
+  ADR-008 + obsah/*.yaml v3; (2) v3 simulátor + diagnostický run-1 →
+  fixace K1 pásma → kalibrace dle pořadí Fáze 0; (3) fallback šablony
+  přepsat na v3 pásma (fáze 2 UI); (4) konzultace operations-economics
+  k promptu v0.3 (delší per-call vstup — rozpočet Haiku); (5) sim
+  watchlist: improvizace jako univerzální flex, GANGSTER hustota,
+  ruka_minus u 4p, player-count práh cíle muj-den.
 
 *(D1–D9 schváleny a zapracovány 2026-07-22 — viz [[rozhodnuti]].)*
 
