@@ -9,6 +9,19 @@ ukazatel na archiv.*
 
 ## 2026-07-23
 
+- **D17 schváleno — finální commit model (oprava nepochopení; ruší poolový commit
+  z revize).** Tým commituje po telegrafu **přesně 4 karty** (= počet slotů;
+  1p volí 4, 2p po 2, 3p 2+1+1 s rotujícím držitelem mapy, 4p po 1) a po
+  odhalení textu se VŠECHNY rozdělí do slotů — nic se nevrací, jádro hry je
+  **„rozděl co nejméně špatně"**; nevyhnutelně špatná volba u některého slotu
+  je záměrná komedie, ne chyba. **Gamble** = záchrana po odhalení: 1× za
+  situaci tým vybere ČÍ ruka a lízne z ní NÁHODNĚ (1/3); vytažená karta se
+  povinně použije náhradou za commitnutou (ta se odhazuje). Důsledky: pasažér
+  neexistuje z definice, stakeless commit neexistuje, trivializace poolu
+  odpadá. Sim priority: vyrovnání velikostí rukou mezi počty hráčů, EV gamble,
+  frekvence „nevyhnutelně špatného slotu" (koření, ne norma). **Pivot v3
+  uživatelem schválen** („zbytek schvaluji") — po zapracování D17 se v3 klopí
+  do kanonu (design-dokument + prototyp-mvp současně + consistency-check).
 - **D16 schváleno — rozsah MVP v3 a škálování počtu hráčů (po kritice návrhu).**
   (1) **Kreditová ekonomika ZŮSTÁVÁ v MVP** (uživatel přehlasoval doporučení
   kritika oddělit ji do 2. přírůstku) — podmíněno opravami: aritmetika příjmů
