@@ -9,6 +9,20 @@ ukazatel na archiv.*
 
 ## 2026-07-23
 
+- **D16 schváleno — rozsah MVP v3 a škálování počtu hráčů (po kritice návrhu).**
+  (1) **Kreditová ekonomika ZŮSTÁVÁ v MVP** (uživatel přehlasoval doporučení
+  kritika oddělit ji do 2. přírůstku) — podmíněno opravami: aritmetika příjmů
+  konzistentní, free-cleanse složením nesmí být levnější než léčení, dostupnost
+  motelu nesmí odporovat pravidlu „motel nesmí být vzácný". (2) **Tajné cíle
+  ZŮSTÁVAJÍ v MVP** (uživatel přehlasoval pevné doporučení kritika odložit) —
+  přijaté riziko: druhý skrytý systém přes skryté prahy; vysvětlující vrstva
+  (B1) je musí pokrývat také. (3) **Škálování 1–4p: srovnat páku i hádku** —
+  víc hráčů nesmí znamenat horší informaci ani tenčí hádku o přiřazení; přesná
+  čísla rukou/commitů doladí simulace. Craft-opravy kritiky (vysvětlující
+  vrstva jako first-class položka MVP, oprava free-cleanse, ikony viditelnosti
+  slotů + telegraf proti-srsti, gamble u 3p bez povinné daně, anotace delty
+  Žáru) zadány designérovi bez dalšího schvalování. *Kontext: audit v paměti
+  design-critica, návrh projekt/navrh-v3.md.*
 - **D15 schváleno — mantinely v3 (slotová resoluce): TOP 3 rozhodnutí + learnabilita
   prahů.** (1) Commit: **naslepo dle telegrafu** (stejný režim pro všechny počty
   hráčů), **tým přiřazuje karty do slotů volně** (vlastník karty musí souhlasit —
