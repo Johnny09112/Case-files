@@ -57,6 +57,13 @@ engine + simulátor → hot-seat UI → LLM). Lidská brána zůstává otevřen
   textu → týmové rozdělení rolí → volitelný slot za utracení druhé věci →
   pásma). PM doporučení k v2: věc se utrácí (loot doplňuje), pásma místo
   procent, text situací = autorský obsah (AI jen dramatizuje výsledek).
+  **2026-07-23 rozšířeno o připomínky uživatele** (profily místo pevných jmen,
+  multi-svět/DLC, 300+100 karet, gamble draw, komediální/informační postihy,
+  mapa StS se společnými kredity) — PM + balanční posudek
+  v [[../technika/balanc-posudek-v3-2026-07-23|technika/balanc-posudek-v3]];
+  TOP 3 rozhodnutí před simulací: commit mechanika, taxonomie postihů,
+  sémantika prémiových karet (+ learnability prahů). Vizuál/UX současného
+  prototypu je jen testovací — finální UX se ladí dodatečně.
   Rozhodnutí o pivotu = design dokument v3.
 
 *(D1–D9 schváleny a zapracovány 2026-07-22 — viz [[rozhodnuti]].)*
