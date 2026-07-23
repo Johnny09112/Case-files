@@ -9,6 +9,20 @@ ukazatel na archiv.*
 
 ## 2026-07-23
 
+- **D18 schváleno — UX vize v3 (interakční model závazný, grafika otevřená).**
+  Pohled očima vyšetřovatele: střed ~60 % = papír ve stroji (jen texty; strana
+  na uzel + úvod + závěr s razítkem), klávesnice pod hranou obrazovky. Veškerá
+  interakce v **zápisníku vyšetřovatele** (pop-up zespoda, ruční písmo): vlevo
+  profil hráče (jméno z profilu reálného hráče — i na okraji spisu), kondice,
+  postihy, bedny, polaroid lokace; vpravo telegraf + 4 lístky zabavených věcí
+  (výběr = štítek EVIDENCE, prémiové s hvězdičkou). Hot-seat = barevné záložky
+  se jmény (max 10 znaků); přiřazování = lístky × nedoplněná pole; online =
+  hlasování 20 s/pole, poslední bez hlasování. Složka EVIDENCE animací založí
+  lístky, stroj cvaká výsledek; loot lístky do zápisníku (grafika loot momentu
+  otevřená). Mapa = otrhaný papír zespoda, křížek volby, dramatický nápis
+  lokace na černé; šerif na trati = Žár. Meta-progrese konsolidována do §5
+  design dokumentu (statistiky profilu, odemykání prémiových, custom skladač,
+  odemykání světů).
 - **D17 schváleno — finální commit model (oprava nepochopení; ruší poolový commit
   z revize).** Tým commituje po telegrafu **přesně 4 karty** (= počet slotů;
   1p volí 4, 2p po 2, 3p 2+1+1 s rotujícím držitelem mapy, 4p po 1) a po

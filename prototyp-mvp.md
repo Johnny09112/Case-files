@@ -46,8 +46,12 @@ se testuje agentem `protocol-humor-tester` nad promptem `prompty/protokol.md`.
   nikdy nejdou do promptu** — LLM píše s placeholdery, jména se dosazují lokálně
   po vygenerování. Timeout 10 s → **fallback šablona** (hra nikdy nečeká na síť).
   Logovat vše.
-- Grafika: placeholder (text + rámečky + papír). Jediný povinný efekt: **psací
-  stroj vyklepává protokol postupně**.
+- Grafika: placeholder (text + rámečky + papír), ale **interakční model dle
+  design §1 (D18) je závazný už v MVP**: psací stroj = výstup (jedna strana
+  protokolu na uzel, pohled očima vyšetřovatele), **zápisník** = veškerý vstup
+  (volby lístků, inventář, listování hráči záložkami, přiřazování lístků do
+  polí), mapa vyjíždí zespoda. V placeholderu = panely/modály se stejnou
+  strukturou. Jediný povinný efekt: **psací stroj vyklepává protokol postupně**.
 
 ### Resoluční systém v3 (výchozí čísla — VŠE „ladit simulací")
 
