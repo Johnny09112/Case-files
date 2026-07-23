@@ -7,28 +7,217 @@
 # proti `ocekavani`. Změna/změkčení/zamlčení výsledku mechaniky = KRITICKÉ,
 # ne stylistická drobnost.
 #
+# ŘEZ v3 (2026-07-23): vstup je ve formátu v3 z protokol.md (SITUACE / ROZDĚLENÍ /
+# VÝSLEDEK MECHANIKY / NÁSLEDKY). Staré v2 casy (UZEL/OSOBY/KARTY) jsou dole
+# v sekci ARCHIV a na prompt v0.3+ se NEaplikují.
+#
 # Schéma:
 #   id:        kebab-case, unikátní
 #   popis:     co case testuje a proč je rizikový
-#   vstup:     PŘESNĚ ve formátu vstupu z protokol.md (UZEL / OSOBY / KARTY /
-#              VÝSLEDEK MECHANIKY). Fixní snapshot — NEodkazuje živě na obsah/*.yaml,
-#              protože texty karet/uzlů se mohou při finálním zápisu drobně lišit.
+#   vstup:     PŘESNĚ ve formátu vstupu z protokol.md. Fixní snapshot —
+#              NEodkazuje živě na obsah/*.yaml (znění se může drobně lišit).
 #   ocekavani:
 #     musi:    seznam vlastností, které protokol MUSÍ splnit
 #     nesmi:   seznam vlastností, které protokol NESMÍ obsahovat
 #   zdroj:     odkud pochází vstupní data (snapshot znění)
-#
-# Pozn.: karty a uzly nejsou v obsah/*.yaml v době vzniku (jen 4 ukázkové karty),
-# proto jsou znění vzata z návrhu obsahu MVP (2026-07-22). Po finálním zápisu
-# obsahu tyto snapshoty zkontrolovat a případně sladit s obsah/karty.yaml +
-# obsah/uzly.yaml.
 
 testy:
-  - id: pohrebni-vuz-uspech
+  # ---------- v3 ----------
+  - id: banan-utok-selhal
     popis: >
-      Lest 3 na uzlu s lest+2, čistý úspěch. Karta je tematicky „hladká" (hlídka
-      smekne a mávne dál) — riziko, že model dodá dramatičnost nebo následky,
-      které mechanika nedala. Baseline: úspěch beze ztrát a beze zranění.
+      Rule 4 + jádro rule 3. Banánový kanón (improvizace 4, útok 2) commitnut do
+      útočné role „Kdyby vyváděl" (práh 3) → selhání. Text věci láká rozehrát ho
+      jako zbraň; model to SMÍ komicky rozehrát (leštěný banán jako pistole), ale
+      výsledek slotu zůstává selhání. Past: model povýší komickou fikci na úspěch,
+      nebo naopak komiku zamlčí. Zároveň selhání „Zapřáhnout" (Zlaté hodinky,
+      nástroj 1). Pásmo 2/4 S NÁSLEDKY → 1 lehký postih, žádná ztráta beden.
+    zdroj: "obsah/situace.yaml farmar-brod + veci.yaml (2026-07-23)"
+    vstup: |
+      SITUACE: Farmář v brodě (npc) — Kola zapadla doprostřed brodu a na břehu čeká farmář s vidlemi.
+      ROZDĚLENÍ:
+        Zaplatit za vytažení [viditelná]: podezřelý A — „Balík bankovek"
+        Nezvednout hlas [viditelná]: podezřelý B — „Otrlený výraz"
+        Zapřáhnout a táhnout [viditelná]: podezřelý C — „Zlaté hodinky"
+        Kdyby začal vyvádět [skrytá]: podezřelý D — „Banánový kanón"
+      VÝSLEDEK MECHANIKY: pásmo S NÁSLEDKY 2/4
+        Zaplatit za vytažení: zásah (práh 3; „Balík bankovek" mělo hodnota 5)
+        Nezvednout hlas: zásah (práh 2; „Otrlený výraz" mělo obrana 4)
+        Zapřáhnout a táhnout: selhání (práh 3; „Zlaté hodinky" mělo nástroj 1)
+        Kdyby začal vyvádět: selhání (práh 3; „Banánový kanón" mělo útok 2)
+      NÁSLEDKY:
+        postihy: podezřelý D — „Naražené rameno" (lehký, do kapes sahá pomaleji)
+        složení: —
+        kredity: 0; konto 8
+        Žár: 0 — beze změny; šerif beze změny
+        bedny: 0; náklad 6
+        loot: —
+    ocekavani:
+      musi:
+        - "zapsat, že slot „Zapřáhnout" i slot „Kdyby vyváděl" (banán) SELHALY"
+        - "zapsat postih podezřelého D (naražené rameno) jako fikci"
+        - "placeholdery „podezřelý A/B/C/D", 3–5 vět, suchý úřední tón, 3. osoba"
+      nesmi:
+        - "tvrdit, že banán / útočná role uspěl(a) — komická fikce NEMĚNÍ výsledek slotu (KRITICKÉ)"
+        - "tvrdit ztrátu jakékoli bedny (náklad zůstává 6) ani pohyb Žáru/šerifa"
+        - "vymyslet vlastní jméno podezřelého místo placeholderu"
+        - "vtipkovat explicitně, emoji, hovorovost, anachronismus"
+
+  - id: brokovnice-auto-fail-viditelna
+    popis: >
+      GANGSTER auto-fail ve viditelné roli NPC. Dědečkova brokovnice (útok 5)
+      v roli „Postavit se jim" (útok, viditelná, npc) → selhání BEZ ohledu na
+      staty (šerif/rival zbraň uvidí). Nejzáludnější past: model vidí útok 5 ≥
+      práh a napíše zásah — to je změna výsledku. Zároveň banán ve skryté útočné
+      roli také selhal (útok 2). Pásmo PRŮŠVIH ≤1/4 → těžký postih, ztráta beden,
+      pohyb Žáru (i z hlučnosti GANGSTER).
+    zdroj: "obsah/situace.yaml rival-prepad + veci.yaml + stitky.yaml GANGSTER (2026-07-23)"
+    vstup: |
+      SITUACE: Přepadení rivalů (npc) — Napříč silnicí stály vozy rivalů a chlapi si plivali do dlaní.
+      ROZDĚLENÍ:
+        Postavit se jim [viditelná]: podezřelý A — „Dědečkova brokovnice"
+        Ustát nápor [viditelná]: podezřelý B — „Zpěv opilce"
+        Vyklouznout stranou [viditelná]: podezřelý C — „Páčidlo"
+        Tasit včas a první [skrytá]: podezřelý D — „Banánový kanón"
+      VÝSLEDEK MECHANIKY: pásmo PRŮŠVIH 0/4
+        Postavit se jim: selhání (práh 3; „Dědečkova brokovnice" mělo útok 5; důvod: zbraň na očích u NPC)
+        Ustát nápor: selhání (práh 3; „Zpěv opilce" mělo obrana 2)
+        Vyklouznout stranou: selhání (práh 3; „Páčidlo" mělo improvizace 1)
+        Tasit včas a první: selhání (práh 3; „Banánový kanón" mělo útok 2)
+      NÁSLEDKY:
+        postihy: podezřelý A — „Zlomené žebro" (těžký, sahá po míň věcech, drží do vyléčení)
+        složení: —
+        kredity: 0; konto 8
+        Žár: +2 — PRŮŠVIH a tasená brokovnice (GANGSTER, hlučné); šerif postoupil o dvě pole blíž
+        bedny: ztraceno 1 (PRŮŠVIH); náklad 5
+        loot: —
+    ocekavani:
+      musi:
+        - "zapsat, že role „Postavit se jim" (brokovnice) SELHALA — smí uvést, že zbraň byla na očích"
+        - "zapsat těžký postih podezřelého A, ztrátu 1 bedny (náklad 5) a pohyb šerifa/Žáru s důvodem"
+      nesmi:
+        - "tvrdit, že brokovnice / útočná role uspěla kvůli vysokému útoku (KRITICKÉ — auto-fail se nemění)"
+        - "tvrdit jiný počet ztracených beden než 1, nebo že se Žár/šerif nehnul"
+        - "vymyslet vlastní jméno podezřelého místo placeholderu"
+        - "vtipkovat explicitně, emoji, hovorovost, anachronismus"
+
+  - id: hladky-pruchod-loot-brokovnice-v-lokaci
+    popis: >
+      Baseline 4/4 HLADCE+LOOT bez postihů. Zároveň kontrast k brokovnici-auto-fail:
+      TÁŽ Dědečkova brokovnice ve skryté roli v LOKACI projde (eso_v_lokaci —
+      nikdo ji nevidí). Riziko: model dodá dramatičnost/následky, které nepadly,
+      nebo naopak zapíše brokovnici jako selhání ze setrvačnosti. Musí zmínit loot
+      a +2 kredity, nic navíc.
+    zdroj: "obsah/situace.yaml farmar-stodola + veci.yaml + stitky.yaml (2026-07-23)"
+    vstup: |
+      SITUACE: Statkářova stodola (lokace) — Ve stodole to páchne senem a psi u vrat nespí; statkář obchází s lucernou.
+      ROZDĚLENÍ:
+        Utišit psy [viditelná]: podezřelý A — „Falešný odznak"
+        Zaklínit vrata [viditelná]: podezřelý B — „Starý kompas"
+        Schovat bednu do sena [viditelná]: podezřelý C — „Svářečka"
+        Nedýchat, když jde kolem [skrytá]: podezřelý D — „Dědečkova brokovnice"
+      VÝSLEDEK MECHANIKY: pásmo HLADCE+LOOT 4/4
+        Utišit psy: zásah (práh 3; „Falešný odznak" mělo improvizace 5)
+        Zaklínit vrata: zásah (kombi práh 2; „Starý kompas" mělo nástroj 3 i improvizace 3)
+        Schovat bednu do sena: zásah (práh 3; „Svářečka" mělo nástroj 5)
+        Nedýchat, když jde kolem: zásah (práh 2; „Dědečkova brokovnice" mělo obrana 2; zbraň v lokaci nikoho neplaší)
+      NÁSLEDKY:
+        postihy: žádné
+        složení: —
+        kredity: +2 (HLADCE+LOOT); konto 10
+        Žár: 0 — beze změny; šerif beze změny
+        bedny: 0; náklad 6
+        loot: „Petrolejová lampa"
+    ocekavani:
+      musi:
+        - "zapsat hladký průchod všech čtyř rolí bez potíží"
+        - "zmínit loot (líznutá věc navíc) a přírůstek kreditů (+2)"
+      nesmi:
+        - "tvrdit jakýkoli postih, ztrátu bedny, zranění ani pohyb Žáru/šerifa (nic z toho nepadlo)"
+        - "zapsat brokovnici jako selhání — ve skryté roli v lokaci prošla"
+        - "vymyslet vlastní jméno podezřelého místo placeholderu"
+        - "vtipkovat explicitně, emoji, hovorovost, anachronismus"
+
+  - id: slozeni-lezi-v-aute
+    popis: >
+      Složení (3. postih → osoba „leží v autě"). Nahrazuje v2 case hlas-z-auta.
+      Podezřelý C dostane 3. postih a je složen. Past: model buď složení zamlčí,
+      nebo naopak nechá složeného aktivně jednat nad rámec „leží v autě". Musí
+      zapsat, že C je vyřazen a leží v autě; nesmí mu přisoudit další akci ve slotech.
+    zdroj: "obsah/situace.yaml mesto-ulicka + postihy.yaml + prototyp-mvp.md §složení (2026-07-23)"
+    vstup: |
+      SITUACE: Slepá ulička (npc) — Ulička končila zdí a dva strážníci ji zatarasili.
+      ROZDĚLENÍ:
+        Držet nervy [viditelná]: podezřelý A — „Otrlený výraz"
+        Zamluvit to [viditelná]: podezřelý B — „Falešný odznak"
+        Zastrašit gestem [viditelná]: podezřelý C — „Zpěv opilce"
+        Najít skulinu [skrytá]: podezřelý D — „Perlový náhrdelník"
+      VÝSLEDEK MECHANIKY: pásmo S NÁSLEDKY 2/4
+        Držet nervy: zásah (práh 3; „Otrlený výraz" mělo obrana 4)
+        Zamluvit to: zásah (práh 3; „Falešný odznak" mělo improvizace 5)
+        Zastrašit gestem: selhání (práh 3; „Zpěv opilce" mělo útok 0)
+        Najít skulinu: selhání (práh 2; „Perlový náhrdelník" mělo nástroj 0)
+      NÁSLEDKY:
+        postihy: podezřelý C — „Mlha v hlavě" (lehký, těžko pozná, kdo ho sleduje)
+        složení: podezřelý C leží v autě (3. postih)
+        kredity: 0; konto 8
+        Žár: 0 — beze změny; šerif beze změny
+        bedny: 0; náklad 6
+        loot: —
+    ocekavani:
+      musi:
+        - "zapsat, že podezřelý C je vyřazen a leží v autě (složen)"
+        - "zapsat, že sloty „Zastrašit gestem" a „Najít skulinu" selhaly"
+      nesmi:
+        - "nechat složeného podezřelého C dále aktivně jednat ve slotech nebo situaci"
+        - "složení zamlčet, nebo naopak tvrdit ztrátu bedny/zranění/Žár, které nepadly"
+        - "vymyslet vlastní jméno podezřelého místo placeholderu"
+        - "vtipkovat explicitně, emoji, hovorovost, anachronismus"
+
+  - id: fikce-veci-vs-mechanika
+    popis: >
+      Adversariální rule 3: text věci naznačuje hladký úspěch, ale slot selhal.
+      Kněžský kolárek (text „faráře nikdo neprohledává") v roli „Dorazit razítko"
+      (nástroj, práh 3) — kolárek má nástroj 0 → selhání. Model má sklon narativně
+      povýšit fikci věci na úspěch. Kontrola: protokol drží selhání dle mechaniky.
+    zdroj: "obsah/situace.yaml urednik-razitko + veci.yaml knezsky-kolarek (2026-07-23)"
+    vstup: |
+      SITUACE: Chybějící razítko (npc) — Za přepážkou přebíral úředník listiny a mračil se na prázdné políčko; sledují ho shora.
+      ROZDĚLENÍ:
+        Věrohodný list [viditelná]: podezřelý A — „Falešný odznak"
+        Dorazit razítko [viditelná]: podezřelý B — „Kněžský kolárek"
+        Něco navíc [viditelná]: podezřelý C — „Balík bankovek"
+        Ani nemrknout [skrytá]: podezřelý D — „Otrlený výraz"
+      VÝSLEDEK MECHANIKY: pásmo HLADCE 3/4
+        Věrohodný list: zásah (práh 3; „Falešný odznak" mělo improvizace 5)
+        Dorazit razítko: selhání (práh 3; „Kněžský kolárek" mělo nástroj 0)
+        Něco navíc: zásah (práh 2; „Balík bankovek" mělo hodnota 5)
+        Ani nemrknout: zásah (práh 3; „Otrlený výraz" mělo obrana 4)
+      NÁSLEDKY:
+        postihy: žádné
+        složení: —
+        kredity: +1 (HLADCE); konto 9
+        Žár: 0 — beze změny; šerif beze změny
+        bedny: 0; náklad 6
+        loot: —
+    ocekavani:
+      musi:
+        - "zapsat, že role „Dorazit razítko" (kněžský kolárek) SELHALA — přes fikci o nedotknutelném faráři"
+        - "zapsat celkově zdolanou situaci (3/4) a +1 kredit; náklad zůstává 6"
+      nesmi:
+        - "tvrdit, že kolárek / razítková role uspěla, protože „faráře nikdo neprohledává" (KRITICKÉ)"
+        - "tvrdit postih, ztrátu bedny, zranění ani pohyb Žáru, které nepadly"
+        - "vymyslet vlastní jméno podezřelého místo placeholderu"
+        - "vtipkovat explicitně, emoji, hovorovost, anachronismus"
+
+# =====================================================================
+# ARCHIV — v2 řez (UZEL/OSOBY/KARTY, hody + zranění + bedny).
+# NEaplikovat na prompt v0.3+ — formát vstupu se změnil při pivotu na v3.
+# Ponecháno pro historii regresí; principy (rule 2, žádné změkčení výsledku)
+# migrovaly do v3 casů výše.
+# =====================================================================
+archiv_v2:
+  - id: pohrebni-vuz-uspech
+    popis: "[v2] Lest 3, čistý úspěch; riziko dodané dramatičnosti / následků."
     zdroj: "návrh obsahu MVP 2026-07-22 (pohrebni-vuz, most-hlidka)"
     vstup: |
       UZEL: Most přes Hudson — Na mostě je závora a znuděný mýtný s foukací lampou. Na vodě ani na mostě není kam utéct.
@@ -38,18 +227,11 @@ testy:
     ocekavani:
       musi:
         - "zapsat, že podezřelý Novák uzel zdolal / prošel bez potíží"
-        - "3–5 vět, suchý úřední tón, třetí osoba, osoba jménem a „podezřelý“"
       nesmi:
-        - "tvrdit ztrátu jakékoli bedny (bedny ztracené tímto hodem = 0, náklad zůstává 6)"
-        - "tvrdit jakékoli zranění podezřelého"
-        - "vtipkovat explicitně, emoji, hovorovost, anachronismus"
+        - "tvrdit ztrátu jakékoli bedny nebo zranění"
 
   - id: knezsky-kolarek-za-cenu-zraneni
-    popis: >
-      Lest 2, úspěch ZA CENU se zapsaným zraněním. Nejhorší dřívější případ:
-      slabší model vypustil zranění („vyvázl bez potíží") = zamlčení výsledku,
-      KRITICKÉ. „Hladká" Lest karta má sklon svádět k tomuto při párování
-      s „úspěchem za cenu". Kontrola: zranění NESMÍ zmizet ani se změkčit.
+    popis: "[v2] Lest 2, úspěch ZA CENU se zraněním; nejhorší dřívější případ = vypuštěné zranění."
     zdroj: "návrh obsahu MVP 2026-07-22 (knezsky-kolarek, privoz-celnik)"
     vstup: |
       UZEL: Přívoz s celníkem — Převozník vás vezme na druhý břeh, jenže celník na palubě čichá ke každé bedně. Kdo tu začne pošťuchování, plave.
@@ -59,21 +241,11 @@ testy:
     ocekavani:
       musi:
         - "zapsat zranění podezřelého Kováře (rozseknuté obočí)"
-        - "zapsat, že uzel byl zdolán (za cenu), náklad zůstává 6"
       nesmi:
-        - "vynechat, změkčit či popřít zranění (např. „bez potíží“, „bez zranění“, „vyvázl v pořádku“)"
-        - "tvrdit ztrátu jakékoli bedny"
-        - "vtipkovat explicitně, emoji, hovorovost, anachronismus"
+        - "vynechat, změkčit či popřít zranění"
 
   - id: bedna-na-ochutnavku-uspech-beze-ztrat
-    popis: >
-      Úplatek 3, úspěch. KLÍČOVÝ adversariální case rule 2: text karty tvrdí
-      fyzickou ztrátu bedny („Věnuješ jednu bednu… Náklad je lehčí"), ale
-      mechanika při úspěchu náklad nemění (bedny ztracené tímto hodem: 0).
-      Model buď napíše číslo nekonzistentní s fikcí (křeč), nebo náklad reálně
-      sníží (KRITICKÉ). Kontrola: počet beden sedí na výsledek, ne na text karty.
-      POZOR: sedí na aktuální mechaniku (žádný per-karta rider „stojí 1 bednu").
-      Pokud design později přidá takový rider, přepiš tento snapshot i ocekavani.
+    popis: "[v2] Úplatek 3, úspěch; adversariální rule 2 — text karty tvrdí ztrátu bedny, mechanika nemění náklad."
     zdroj: "návrh obsahu MVP 2026-07-22 (bedna-na-ochutnavku, deputy-mytnice)"
     vstup: |
       UZEL: Bouda za Rochesterem — U boudy stojí zástupce šerifa a natahuje ruku po 'silničním poplatku'. Zdejší tváře zná všechny, na výmluvy nevěř.
@@ -82,22 +254,13 @@ testy:
       VÝSLEDEK MECHANIKY: Rychtář: úspěch; bedny ztracené tímto hodem: 0; náklad: 6 beden
     ocekavani:
       musi:
-        - "zapsat úspěch (hlídka uplacena / usmířena, podezřelý prošel)"
         - "počet beden odpovídá výsledku mechaniky — náklad zůstává 6"
       nesmi:
-        - "tvrdit, že ubyla / se ztratila bedna nebo že je náklad lehčí (text karty NEsmí přebít mechaniku)"
-        - "uvést jiný počet beden než 6"
-        - "tvrdit jakékoli zranění podezřelého"
-        - "vtipkovat explicitně, emoji, hovorovost, anachronismus"
+        - "tvrdit, že ubyla bedna nebo že je náklad lehčí (text karty NEsmí přebít mechaniku)"
 
   - id: utek-rider-selhani-bedna-misto-zraneni
-    popis: >
-      Rider Útěku: selhání (≤4) s kartou Útěk NEzpůsobí zranění — tým místo něj
-      ztratí 1 bednu. Past: selhání „normálně" = zranění, takže model může
-      podezřelému přisoudit zranění, které mechanika nedala (změna výsledku).
-      Tvrdost uzlu zar (+2 Žár) se uplatní i tak. Kontrola: protokol zapíše
-      ztrátu 1 bedny a NE zranění. Testuje i nové pole „bedny ztracené tímto hodem".
-    zdroj: "návrh obsahu MVP 2026-07-22 (zadni-vratka, urednik-razitko) + rider Útěku prototyp-mvp.md"
+    popis: "[v2] Rider Útěku: selhání ztratí 1 bednu místo zranění; past na přisouzené zranění."
+    zdroj: "návrh obsahu MVP 2026-07-22 (zadni-vratka, urednik-razitko) + rider Útěku"
     vstup: |
       UZEL: Chybějící razítko — Na celnici chybí jediné razítko a úředník je až úzkostlivě poctivý — sledují ho shora. Papír tu zmůže víc než dolar.
       OSOBY: Novák: bez záznamu
@@ -105,9 +268,6 @@ testy:
       VÝSLEDEK MECHANIKY: Novák: selhání (bez zranění — rider Útěku: místo zranění ztracena 1 bedna; tvrdost zar: +2 Žár); bedny ztracené tímto hodem: 1; náklad: 5 beden
     ocekavani:
       musi:
-        - "zapsat neúspěch / selhání u uzlu"
         - "zapsat ztrátu 1 bedny (náklad klesl na 5)"
       nesmi:
-        - "tvrdit jakékoli zranění podezřelého Nováka (rider nahradil zranění ztrátou bedny) — HLAVNÍ past"
-        - "tvrdit ztrátu jiného počtu beden než 1 (náklad musí sedět na 5)"
-        - "vtipkovat explicitně, emoji, hovorovost, anachronismus"
+        - "tvrdit jakékoli zranění podezřelého Nováka (rider nahradil zranění ztrátou bedny)"
