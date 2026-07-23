@@ -12,18 +12,25 @@
 stitky:
   - id: GANGSTER
     nazev: Gangster
-    # Parametry (engine implementuje chování; zde jen hodnoty):
-    #   selze_ve_viditelne_roli_npc: věc přiřazená do slotu {typ situace = npc,
-    #       viditelnost = viditelna} automaticky NEPROJDE bez ohledu na staty
-    #       (šerif zbraň uvidí). Slot s `stitek_citlivy: GANGSTER` toto ruší.
-    #   eso_ve_skryte_roli: ve slotu viditelnost = skryta se štítek IGNORUJE
-    #       (věc se hodnotí normálně dle statu slotu; zbraň je vítaná).
-    #   eso_v_lokaci: v situaci typ = lokace pravidlo o viditelné roli NEPLATÍ
-    #       (není tam nikdo, kdo by zbraň zpozoroval).
-    #   hlucnost_zar: kolik Žáru přidá věc s tímto štítkem přiřazená do slotu.
-    #       SWEEP PARAMETR tempa Žáru (viz prototyp-mvp.md §Žár).
+    # Parametry (engine implementuje chování; TOTO je strojový ZDROJ PRAVDY —
+    # próza telegrafů a komentáře v pronasledovatele.yaml jen vysvětlují, nerozhodují).
+    #   chovani_dle_typu: pro každý typ situace určuje chování GANGSTER věci ve slotu.
+    #     Hodnoty (enum):
+    #       viditelna_role_selze = ve slotu viditelnost=viditelna věc AUTO-FAIL bez
+    #           ohledu na staty; ve slotu viditelnost=skryta se štítek IGNORUJE a
+    #           věc se hodnotí normálně dle statu (zbraň je eso).
+    #       vzdy_pass = štítek se ignoruje bez ohledu na viditelnost slotu (nikdo
+    #           zbraň neřeší; hodnotí se normálně dle statu).
+    #     Slotová výjimka `stitek_citlivy: GANGSTER` (viz situace.yaml) přebíjí toto
+    #     chování pro daný slot (např. eso i ve viditelné roli).
+    #   hlucnost_zar: kolik Žáru přidá GANGSTER věc přiřazená do slotu. SWEEP tempa
+    #     Žáru (prototyp-mvp.md §Žár). Pronásledovatel Brody tuto hodnotu run-wide
+    #     ZDVOJNÁSOBUJE (viz pronasledovatele.yaml).
     parametry:
-      selze_ve_viditelne_roli_npc: true
-      eso_ve_skryte_roli: true
-      eso_v_lokaci: true
+      chovani_dle_typu:
+        npc:         viditelna_role_selze
+        lecka:       viditelna_role_selze
+        lokace:      vzdy_pass
+        zatah:       vzdy_pass
+        konfrontace: vzdy_pass
       hlucnost_zar: 1

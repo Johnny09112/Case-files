@@ -30,7 +30,7 @@
 
 veci:
   # ============================================================
-  # ÚTOK-dominantní (8; z toho 5 GANGSTER — zbraně)
+  # ÚTOK-dominantní (9; z toho 5 GANGSTER — zbraně; 4 non-GANGSTER pro viditelné útok-sloty)
   # ============================================================
   - id: dedeckova-brokovnice
     nazev: Dědečkova brokovnice
@@ -94,8 +94,16 @@ veci:
     premiova: false
     text: "Ukážeš pytel a řekneš, komu z něj ušiješ boty. Do řeky je to jen kousek."
 
+  - id: reznicky-hak
+    nazev: Řeznický hák
+    staty: { utok: 4, obrana: 1, hodnota: 1, improvizace: 1, nastroj: 2 }
+    svet: sdilena
+    premiova: false
+    text: "Zahnutý hák z jatek. Zavěsíš na něj půlku vepře — nebo chlapa, co se moc vyptává."
+    poznamka: "Reprofil z hodnota supply (D3 kritika): non-GANGSTER útok do viditelných útok-slotů."
+
   # ============================================================
-  # OBRANA-dominantní (7; klid, tuhost, krytí)
+  # OBRANA-dominantní (8; klid, tuhost, krytí)
   # ============================================================
   - id: plechova-vesta
     nazev: Plechová vesta
@@ -147,36 +155,37 @@ veci:
     premiova: false
     text: "Těžký zimník s deseti kapsami. Vydrží déšť, nůž i noc pod mostem."
 
+  - id: kozena-zastera
+    nazev: Kožená zástěra
+    staty: { utok: 1, obrana: 4, hodnota: 0, improvizace: 1, nastroj: 2 }
+    svet: sdilena
+    premiova: false
+    text: "Tlustá kožená zástěra od kováře. Jiskry, nůž i zlý pohled po ní sklouznou."
+    poznamka: "Reprofil z hodnota supply (D3 kritika): posiluje deficitní obranu."
+
   # ============================================================
-  # HODNOTA-dominantní (8; bohatství na úplatky)
+  # HODNOTA-dominantní (6; bohatství na úplatky; h5 specialisté hodinky/prsten/bankovky mají záložní stat 2)
   # ============================================================
   - id: zlate-hodinky
     nazev: Zlaté hodinky
-    staty: { utok: 0, obrana: 1, hodnota: 5, improvizace: 0, nastroj: 1 }
+    staty: { utok: 0, obrana: 1, hodnota: 5, improvizace: 2, nastroj: 1 }
     svet: sdilena
     premiova: false
-    text: "Hodinky po tchánovi. Skvělé všimné, mizerný nástroj — čas jimi změříš, dveře nevypáčíš."
+    text: "Hodinky po tchánovi. Skvělé všimné a leskem se dá i oslnit — jen dveře jimi nevypáčíš."
 
   - id: konselov-prsten
     nazev: Konšelův prsten
-    staty: { utok: 0, obrana: 1, hodnota: 5, improvizace: 1, nastroj: 0 }
+    staty: { utok: 0, obrana: 2, hodnota: 5, improvizace: 1, nastroj: 0 }
     svet: sdilena
     premiova: false
-    text: "Těžký pečetní prsten. Jak ho položíš na stůl, hlídka se hned líp poslouchá."
+    text: "Těžký pečetní prsten. Jak ho položíš na stůl, hlídka zkrotne — a ty s ním držíš tvář jak konšel."
 
   - id: balik-bankovek
     nazev: Balík bankovek
-    staty: { utok: 0, obrana: 0, hodnota: 5, improvizace: 1, nastroj: 0 }
+    staty: { utok: 0, obrana: 2, hodnota: 5, improvizace: 1, nastroj: 0 }
     svet: sdilena
     premiova: false
-    text: "Svazek dolarů převázaný gumičkou. Řeči netřeba, čísla mluví sama."
-
-  - id: perlovy-nahrdelnik
-    nazev: Perlový náhrdelník
-    staty: { utok: 0, obrana: 1, hodnota: 4, improvizace: 2, nastroj: 0 }
-    svet: sdilena
-    premiova: false
-    text: "Pravé perly po nebožce tetě. Teta by chápala — jde přece o rodinu."
+    text: "Svazek dolarů tlustý jak cihla. Čísla mluví sama — a v náprsní kapse zastaví i kudlu."
 
   - id: bedna-kanadske
     nazev: Bedna kanadské
@@ -184,13 +193,6 @@ veci:
     svet: sdilena
     premiova: false
     text: "Bedna pravé žitné z druhé strany jezera. Nejlepší úplatek je ten, co se pije."
-
-  - id: zlaty-zub
-    nazev: Zlatý zub
-    staty: { utok: 0, obrana: 1, hodnota: 3, improvizace: 2, nastroj: 0 }
-    svet: sdilena
-    premiova: false
-    text: "Vylomený zlatý zub v kapsičce. Nevoní, ale zlato je zlato i po zubaři."
 
   - id: rodinne-stribro
     nazev: Rodinné stříbro

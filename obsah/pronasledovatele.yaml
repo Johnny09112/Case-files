@@ -7,10 +7,12 @@
 # Schéma (nová pole nepřidávat bez úpravy komentáře):
 #   id:     kebab-case, unikátní napříč obsah/
 #   nazev:  jméno s titulem
-#   rusi:   co proti němu nefunguje / je potrestáno:
+#   rusi:   co proti němu nefunguje / je potrestáno. ROZSAH = RUN-WIDE (D20a):
+#           pravidlo platí po CELÝ run, dokud je pronásledovatel aktivní — ne jen
+#           v jeho léčce/konfrontaci. Je viditelné hráčům OD STARTU (proto se
+#           telegrafy běžných situací kvůli němu nemění — hráč pravidlo zná).
 #             typ:     stat | stitek
-#             cil:     který stat (utok/obrana/hodnota/improvizace/nastroj)
-#                      nebo štítek (GANGSTER)
+#             cil:     stat (utok/obrana/hodnota/improvizace/nastroj) nebo štítek (GANGSTER)
 #             pravidlo: přesné znění efektu, viditelné hráčům
 #   flavor: 1 věta pro protokol — polda ho zná osobně
 #   lecka:       slotová situace pro práh léčky (typ lecka)
@@ -18,10 +20,10 @@
 #                nejtvrdší pásma-postihy. Přežití srazí Žár (viz prototyp-mvp.md).
 # lecka/konfrontace mají STEJNÉ schéma slotů jako obsah/situace.yaml (telegraf +
 # QA invariant, text se 4 {VEC}, 4 sloty s kotvou 2–4, pasmove_vysledky). Žijí
-# ZDE (vázané na pronásledovatele), ne v poolu 14 uzlů. POZNÁMKA k typům: typ
-# konfrontace NENÍ npc → tvrdé pravidlo GANGSTER "selže ve viditelné roli" tam
-# NEPLATÍ (finálová přestřelka — zbraň konečně mluví); typ lecka se řídí
-# viditelností slotů jako npc.
+# ZDE (vázané na pronásledovatele), ne v poolu 14 uzlů.
+# GANGSTER per typ situace (lecka = jako npc: viditelná role selže / skrytá eso;
+# konfrontace = vzdy_pass: zbraň projde) je STROJOVĚ v obsah/stitky.yaml
+# (chovani_dle_typu) — to je zdroj pravdy; zde jen připomínka v próze telegrafů.
 # Cílový počet pro MVP: 2.
 
 pronasledovatele:
@@ -30,12 +32,12 @@ pronasledovatele:
     rusi:
       typ: stat
       cil: hodnota
-      pravidlo: "Malone je neúplatný: v jeho léčce i konfrontaci se u všech věcí počítá stat hodnota jako 0. Úplatky na něj neplatí."
+      pravidlo: "Malone je neúplatný a hráči to vědí od startu: dokud je Malone aktivní pronásledovatel, počítá se stat HODNOTA u všech věcí jako 0 ve VŠECH hodnota-slotech CELÉHO runu (ne jen v jeho léčce a konfrontaci). Úplatky na něj ani na nikoho po trase neplatí."
     flavor: "Vyšetřovatel poznamenává, že agent Malone nepije, nekouří a nebere. Nikdo na okrsku nechápe, co tu tedy dělá."
     lecka:
       typ: lecka
       svet: 1930
-      telegraf: "Malone obsadil most u Poughkeepsie a v ruce drží vaši fotografii. Peníze na něj neplatí — chce to zapřít totožnost a pevné nervy, tři role; jedna skrytá čeká na nejhorší. Zbraň projde leda potají."
+      telegraf: "Malone obsadil most u Poughkeepsie a drží vaši fotografii. Tři viditelné role chtějí zapřít totožnost, pevné nervy a objet ho stranou; jedna skrytá čeká na nejhorší. Peníze na něj neplatí — a zbraň projde leda potají."
       text: >
         U závory stál Malone a porovnával tváře s fotografií. {kdo} zapřel totožnost
         pomocí {VEC}, {kdo} nedal na sobě znát strach za {VEC} a {kdo} navedl vůz kolem
@@ -47,12 +49,12 @@ pronasledovatele:
         - { role: "Kdyby sáhl po zbrani", stat: utok,      kotva: 3, viditelnost: skryta }
       pasmove_vysledky:
         hladce_loot: { loot: karta }
-        s_nasledky:  { postih_lehky: [mlha-v-hlave, prilis-na-rane, roztresene-ruce] }
+        s_nasledky:  { postih_lehky: [mlha-v-hlave, prilis-na-rane, nervy-v-hajzlu] }
         prusvih:     { postih_tezky: [rozdrcena-noha] }
     konfrontace:
       typ: konfrontace
       svet: 1930
-      telegraf: "Kolona federálních vozů vás sevřela na silnici a Malone si bez spěchu nasazuje brýle. Konec úhybů — tři role o síle a nervech, jak se probít ven; jedna skrytá kryje záda. Tady zbraň konečně mluví."
+      telegraf: "Kolona federálních vozů vás sevřela a Malone si bez spěchu nasazuje brýle. Tři viditelné role jsou o průraz silou, ustát salvu a strhnout vůz do pole; jedna skrytá kryje záda. Tady zbraň konečně mluví — na očích i potají."
       text: >
         Federální vozy zatarasily silnici z obou stran a Malone vystoupil. {kdo} se
         pokusil probít ven s {VEC}, {kdo} ustál první salvu za {VEC} a {kdo} strhl vůz
@@ -65,19 +67,19 @@ pronasledovatele:
       pasmove_vysledky:
         hladce_loot: { loot: karta }
         s_nasledky:  { postih_lehky: [narazene-rameno, zvoneni-v-usich, utrzena-kapsa] }
-        prusvih:     { postih_tezky: [zlomene-zebro, otras-mozku] }
+        prusvih:     { postih_tezky: [ochrnuta-ruka, otras-mozku] }
 
   - id: serif-brody
     nazev: Okresní šerif Brody
     rusi:
       typ: stitek
       cil: GANGSTER
-      pravidlo: "Násilí Brodyho přitahuje: každá věc se štítkem GANGSTER přidává v jeho léčce i konfrontaci +2 Žár místo +1."
+      pravidlo: "Násilí Brodyho přitahuje a hráči to vědí od startu: dokud je Brody aktivní pronásledovatel, přidává každá věc se štítkem GANGSTER +2 Žár místo +1 v CELÉM runu (run-wide, ne jen v jeho léčce a konfrontaci)."
     flavor: "Vyšetřovatel uvádí, že šerif Brody řeší okresní záležitosti tradičně: nejprve střelbou, poté dotazy."
     lecka:
       typ: lecka
       svet: 1930
-      telegraf: "Brody s partou nadšených občanů přehradil silnici valníkem a nasadil služební úsměv. Chce to uklidnit dav a přimazat správné dlaně — tři role; jedna skrytá pro nejhorší. Zbraň projde jen potají a stojí dvojnásob pozornosti."
+      telegraf: "Brody s partou nadšených občanů přehradil silnici valníkem a nasadil služební úsměv. Tři viditelné role chtějí uklidnit dav, přimazat dlaň a kamennou tvář; jedna skrytá pro nejhorší. Zbraň projde jen potají — a u Brodyho přitáhne dvojnásob pozornosti."
       text: >
         Brody stál před valníkem obklopen zvědavci a culil se. {kdo} uklidňoval dav
         pomocí {VEC}, {kdo} přimazal šerifovi dlaň {VEC} a {kdo} držel kamennou tvář
@@ -89,12 +91,12 @@ pronasledovatele:
         - { role: "Kdyby padl výstřel", stat: utok,      kotva: 3, viditelnost: skryta }
       pasmove_vysledky:
         hladce_loot: { loot: karta }
-        s_nasledky:  { postih_lehky: [drobna-pokuta, narazene-rameno, zvoneni-v-usich] }
+        s_nasledky:  { postih_lehky: [drobna-pokuta, vysypana-bedna, utrzena-kapsa] }
         prusvih:     { postih_tezky: [zlomene-zebro] }
     konfrontace:
       typ: konfrontace
       svet: 1930
-      telegraf: "Brodyho muži vás zahnali k zavřenému mostu a šerif si sundává klobouk, což nikdy nevěstí nic dobrého. Tři role o průrazu, úniku a kličkování; jedna skrytá vydrží nápor. Tady zbraň mluví, ale u Brodyho dvojnásob přitáhne olovo."
+      telegraf: "Brodyho muži vás zahnali k zavřenému mostu a šerif si sundává klobouk. Tři viditelné role jsou o průraz silou, najít kudy ujet a kličkovat; jedna skrytá vydrží nápor. Tady zbraň mluví, ale u Brodyho každý výstřel přitáhne olovo dvojnásob."
       text: >
         Most byl zavřený a Brodyho muži se hrnuli zezadu. {kdo} se probíjel vpřed
         s {VEC}, {kdo} hledal, kudy ujet, pomocí {VEC} a {kdo} kličkoval mezi vozy
@@ -106,5 +108,5 @@ pronasledovatele:
         - { role: "Vydržet nápor",   stat: obrana,      kotva: 3, viditelnost: skryta }
       pasmove_vysledky:
         hladce_loot: { loot: karta }
-        s_nasledky:  { postih_lehky: [narazene-rameno, zvoneni-v-usich, prilis-na-rane] }
+        s_nasledky:  { postih_lehky: [narazene-rameno, zvoneni-v-usich, nervy-v-hajzlu] }
         prusvih:     { postih_tezky: [zlomene-zebro, otras-mozku] }

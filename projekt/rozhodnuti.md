@@ -9,6 +9,18 @@ ukazatel na archiv.*
 
 ## 2026-07-23
 
+- **D20 schváleno — pronásledovatelé run-wide + opravy obsahu dle prověrky.**
+  (a) **Malone nuluje hodnotu RUN-WIDE** (rozhodnutí uživatele) — dokud je
+  aktivním pronásledovatelem, všechny hodnota-sloty čtou hodnotu věci jako 0;
+  původní znění bylo no-op (jeho uzly hodnota-slot nemají). (b) **Brody
+  run-wide analogicky** (GANGSTER +2 Žár celý run) — PM přijetí: odpovídá
+  design §4.9 („reaguje na hlučnost dvojnásob") i v2 precedentu; uživatel má
+  veto. (c) Opravy dle auditu: GANGSTER chování per typ situace strojově
+  v stitky.yaml (npc/lecka = viditelná role selže; lokace/zatah/konfrontace =
+  pass), hodnota supply trim 8→6 + záložní staty u h5 specialistů, postihové
+  pooly vyrovnány (zlomene-zebro 10→5, žádný postih >7 poolů), kotvy 19×2 /
+  53×3 / 4×4, všech 19 telegrafů sjednoceno na plný QA invariant (trend všech
+  viditelných statů + počet skrytých + zbraň-verdikt). Vše zvalidováno js-yaml.
 - **D19 schváleno — kritéria v3 brány, finalizace schémat a model lízání.**
   (a) **Náklad i Žár zůstávají obě fail-conditions v MVP** — diagnostika 1. běhu
   (rozpad příčin proher bedny-0 vs. konfrontace) rozhodne o případné konsolidaci
