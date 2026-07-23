@@ -61,10 +61,12 @@ engine + simulátor → hot-seat UI → LLM). Lidská brána zůstává otevřen
   multi-svět/DLC, 300+100 karet, gamble draw, komediální/informační postihy,
   mapa StS se společnými kredity) — PM + balanční posudek
   v [[../technika/balanc-posudek-v3-2026-07-23|technika/balanc-posudek-v3]];
-  TOP 3 rozhodnutí před simulací: commit mechanika, taxonomie postihů,
-  sémantika prémiových karet (+ learnability prahů). Vizuál/UX současného
-  prototypu je jen testovací — finální UX se ladí dodatečně.
-  Rozhodnutí o pivotu = design dokument v3.
+  **TOP 3 rozhodnutí + learnabilita prahů UZAVŘENY 2026-07-23 jako D15**
+  (commit naslepo / tým přiřazuje / 1 stat s výjimkami; taxonomie postihů
+  70/30 s capem 2 + eskalace; prémiové = meta + specializace; prahy kotva ± šum).
+  Vizuál/UX současného prototypu je jen testovací — finální UX se ladí
+  dodatečně. **Probíhá: game-designer píše návrh design dokumentu v3** —
+  jeho schválením se stvrdí pivot.
 
 *(D1–D9 schváleny a zapracovány 2026-07-22 — viz [[rozhodnuti]].)*
 

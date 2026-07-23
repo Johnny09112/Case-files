@@ -7,6 +7,24 @@ rozhodnutí přehodnotí, přidej nový záznam, který na starý odkazuje.*
 aktuální a předchozí fázi) do `projekt/archiv/rozhodnuti-archiv.md` a nahoře nech
 ukazatel na archiv.*
 
+## 2026-07-23
+
+- **D15 schváleno — mantinely v3 (slotová resoluce): TOP 3 rozhodnutí + learnabilita
+  prahů.** (1) Commit: **naslepo dle telegrafu** (stejný režim pro všechny počty
+  hráčů), **tým přiřazuje karty do slotů volně** (vlastník karty musí souhlasit —
+  drží vlastnictví postavy i jednotnou hru 1–4p), prahy klíčují na **1 stat
+  s výjimkami** u speciálních slotů. (2) Postihy: **plná taxonomie**
+  informační/zámkové/ztrátové (ztrátové střídmě), **dva tiery ~70/30** (lehké
+  dočasné samy vyprší; těžké trvalé do vyléčení v motelu), **cap 2 aktivní na
+  hráče + eskalace** (třetí = postava „složená" kolo–dvě, pak očištěná).
+  (3) Prémiové karty: **meta-progrese** (odemykání do sbírky pro příští runy;
+  in-run jen výjimečně truhla/event 1–2×), **specializace + výrazný efekt místo
+  vyšší síly** (mění varianci, ne průměr — žádný power creep). Prahy jsou
+  **kotva ± šum** (typ situace má naučitelný trend, instance ±1 — mistrovství
+  roste, memorizace nefunguje, win-rate pásmo brány zůstává smysluplné).
+  *Kontext: balanční posudek `technika/balanc-posudek-v3-2026-07-23.md`.
+  Samotný pivot na v3 se stvrzuje až schválením design dokumentu v3.*
+
 ## 2026-07-22
 
 - **Simulační brána vyhlášena za SPLNĚNOU (4. běh, po D7–D11).** Všech 5
