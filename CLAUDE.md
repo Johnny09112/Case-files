@@ -37,9 +37,10 @@ Křížové odkazy v patičkách zachovávej.
 1. **Kritický design partner** — zpochybňuj nápady, hlídej scope creep (v MVP je
    sekce „Záměrně MIMO rozsah" — braň ji), upozorňuj na rizika. Nesouhlas je
    cennější než přitakávání.
-2. **Generátor obsahu** — karty, šablony uzlů, tajné cíle, prokleté/zoufalé karty,
-   fallback šablony protokolů. Vždy česky, vždy s tagem a silou dle resolučního
-   systému v `prototyp-mvp.md` (tag Násilí/Lest/Úplatek/Útěk, síla 1–3).
+2. **Generátor obsahu** — věci (karty s 5 staty: útok/obrana/hodnota/improvizace/
+   nástroj), situace (telegraf + text se 4 sloty + skryté prahy kotva ± šum),
+   postihy (informační/zámkové/ztrátové, 2 tiery), tajné cíle, fallback šablony
+   protokolů. Vždy česky, vždy dle resolučního systému v3 v `prototyp-mvp.md`.
 3. **Testér AI humoru** — největší produktové riziko je kvalita českého humoru
    protokolů. Při ladění promptů: suchý policejní zápis, 3–5 vět, česky, humor
    plyne z kontrastu úřední řeči a absurdní situace — ne z vtipkování.
@@ -64,8 +65,9 @@ Křížové odkazy v patičkách zachovávej.
 - **Humor:** suchý, situační, plyne z kontrastu úřední řeči a absurdity. Nikdy
   na účet etnika, pohlaví ani dětí — tohle je zároveň baseline budoucí moderace
   UGC karet.
-- **Limity:** text karty max ~140 znaků, název karty max 3 slova, úvod uzlu
-  1–2 věty. Protokol 3–5 vět dle `prompty/protokol.md`.
+- **Limity:** text věci max ~140 znaků, název max 3 slova, telegraf situace
+  1–2 věty, text situace se 4 mezerami max ~5 vět. Protokol 3–5 vět dle
+  `prompty/protokol.md`.
 
 ## Konvence
 
@@ -109,17 +111,25 @@ hráči v dojezdu. Jde se rovnou na digitální prototyp; papírovou pojistku na
 simulace + první digitální/remote sezení (viz agent `playtest-facilitator` a
 Fáze 0 v `prototyp-mvp.md`). K papíru se lze vrátit, až budou hráči.
 
+**PIVOT v3 (2026-07-23, rozhodnutí D14–D17):** kostková resoluce nahrazena
+**slotovou** — commit věcí naslepo dle telegrafu, „rozděl 4 karty do 4 slotů co
+nejméně špatně", skryté prahy odhalované po vyhodnocení, postihy místo zranění,
+StS mapa s křížkujícím šerifem, kreditová ekonomika. Kanon = design-dokument v3
++ prototyp-mvp v3 (v2 vč. splněné brány D7–D11 je uzavřená kapitola v patičkách
+a `technika/simulacni-brana-2026-07-22.md`).
+
 Go/No-Go je **dvoustupňové**:
-1. **Simulační brána — SPLNĚNA 2026-07-22** (4 běhy simulace, rozhodnutí D7–D11;
-   měřitelná kritéria zafixována v `prototyp-mvp.md`, výsledek a výhrady
-   v `technika/simulacni-brana-2026-07-22.md`). Resoluční čísla jsou kalibrovaná;
-   **stavba prototypu je odblokovaná** (pořadí dle `technika/architektura.md` §5:
-   engine + simulátor → hot-seat UI → LLM). První měření instrumentovaného
-   enginu musí win-rate potvrdit (výhrada č. 1 reportu).
-2. **Lidská brána — OTEVŘENÁ** (po prototypu, solo/remote/async) — hráči se hádají
-   o karty, čtou protokol nahlas se smíchem, dají si dobrovolně další run.
-   Simulace tohle NEprokáže; hypotézy (vč. „kolaps jako default zážitek")
-   v paměti `playtest-facilitator`.
+1. **v3 simulační brána — OTEVŘENÁ:** kritéria teprve definuje
+   `playtest-facilitator` nad slotovým modelem (kandidátní osy v `prototyp-mvp.md`
+   Fáze 0); pak kalibrace čísel simulací a přestavba enginu v kódovém repu
+   (engine z v2 je na kostkovou resoluci — čeká přestavba).
+2. **Lidská brána — OTEVŘENÁ:** hádka o rozdělení, smích nad protokolem,
+   dobrovolný další run + **čitelnost** (metrika 6 — nález playtestu 2026-07-22:
+   hra musí vysvětlovat „proč se to stalo").
+
+**Pozor:** `obsah/*.yaml` je zatím **v2 legacy** (karty s tagy, uzly s afinitami) —
+obsahová pipeline v3 (věci s 5 staty, situace se sloty, postihy) je v backlogu;
+do té doby obsah needitovat, jen číst jako referenci tónu.
 
 Po dokončení fáze aktualizuj tuto sekci a zapiš výsledek Go/No-Go s datem —
 zastaralá sekce navádí špatně.

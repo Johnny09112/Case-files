@@ -1,3 +1,11 @@
+> **PŘEKLOPENO DO KANONU 2026-07-23** — tento soubor je **archiv procesu** pivotu
+> na v3 (návrh → kritika → revize D16 → oprava commit modelu D17). **Zdroj pravdy
+> je [`design-dokument.md`](../design-dokument.md) + [`prototyp-mvp.md`](../prototyp-mvp.md).**
+> Obsah níže se dál neudržuje; slouží k dohledání, *proč* se v3 rozhodlo tak, jak
+> se rozhodlo.
+
+---
+
 # DŮKAZNÍ MATERIÁL 1930 — NÁVRH design dokumentu v3
 **Pracovní dokument (ke schválení).** Po schválení nahradí `design-dokument.md`
 jako v3. Zapracovává pivot na **slotovou resoluci** (rozhodnutí D14/D15,

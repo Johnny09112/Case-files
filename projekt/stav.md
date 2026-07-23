@@ -65,13 +65,14 @@ engine + simulátor → hot-seat UI → LLM). Lidská brána zůstává otevřen
   (commit naslepo / tým přiřazuje / 1 stat s výjimkami; taxonomie postihů
   70/30 s capem 2 + eskalace; prémiové = meta + specializace; prahy kotva ± šum).
   Vizuál/UX současného prototypu je jen testovací — finální UX se ladí
-  dodatečně. Návrh v3 prošel kritikou (B1–B4 opraveny) a ověřovacím kolem;
-  D16 (ekonomika i tajné cíle v MVP, škálování srovnat) a **D17 (finální
-  commit model: přesně 4 karty = 4 sloty, „rozděl co nejméně špatně",
-  gamble 1/3 z cizí ruky s povinným použitím). PIVOT SCHVÁLEN uživatelem.
-  Probíhá: zapracování D17 do navrh-v3.md → překlopení do kanonu**
-  (design-dokument + prototyp-mvp současně, consistency-check, pak v3
-  simulace a přestavba enginu).
+  dodatečně. **PIVOT DOKONÁN 2026-07-23:** v3 překlopeno do kanonu
+  (design-dokument v3 + prototyp-mvp v3 současně, navrh-v3.md archivován,
+  consistency-check beze nálezu, CLAUDE.md aktualizováno). Další kroky:
+  (1) playtest-facilitator definuje kritéria v3 simulační brány,
+  (2) obsahová pipeline v3 (věci s 5 staty ~40, situace 14+1, postihy ~14 —
+  obsah/*.yaml je v2 legacy), (3) přestavba enginu v kódovém repu na
+  slotovou resoluci, (4) prompt protokolu v3 (vstup = pásmo + rozdělení
+  slotů + postihy, jména placeholderem).
 
 *(D1–D9 schváleny a zapracovány 2026-07-22 — viz [[rozhodnuti]].)*
 

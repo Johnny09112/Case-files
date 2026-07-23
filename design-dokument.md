@@ -1,198 +1,301 @@
 # DŮKAZNÍ MATERIÁL 1930 (Case File: 1930)
-**Design dokument v2** — zapracovány změny z produktové diskuse (2026-07-22)
+**Design dokument v3** — slotová resoluce (pivot 2026-07-23, rozhodnutí D14–D17).
+Jediný zdroj pravdy pro vizi hry. Konkrétní čísla žijí v
+[prototyp-mvp.md](prototyp-mvp.md) — zde jen struktura.
 
 ---
 
 ## Elevator Pitch
 
-Zkorumpovaný polda sedí u psacího stroje a sepisuje protokol o čtyřech gangsterech,
-kteří se pokusili převézt náklad chlastu z Buffala do New Yorku. Hráči ten protokol
-píšou svými činy — a čím hůř se jim daří, tím lepší čtení to je.
+Zkorumpovaný polda sedí u psacího stroje a sepisuje protokol o partě pašeráků,
+kteří se pokusili převézt náklad chlastu z Buffala do New Yorku. Jenže hráči
+nehážou kostkou — **cpou věci ze svých kapes do situací**. Šerif chce úplatek,
+most má díru, rival vytáhl bouchačku: telegrafem se dozvíš, co se blíží, vytáhneš
+věci z kufru — a pak teprve stůl uvidí celý text se čtyřmi rolemi a hádá se, **jak
+ty čtyři věci rozdělit co nejméně špatně**. Zlaté hodinky jsou skvělý úplatek a
+mizerná páčidlo; když ti do rvačky zbydou, protokol si to užije. Pistole vyřeší
+konfrontaci a shodí tě u šerifa, protože gangster se zbraní v ruce se neschová.
 
-Kooperativní party hra pro 1–4 hráče (hot-seat / online co-op) s roguelike strukturou,
-trvalými následky a estetikou Papers, Please. Jeden run = 30 minut. Mechanika rozhoduje,
-AI vypráví.
+**Příběhovka s volbou pro 1–4 hráče** (hot-seat / online co-op) s roguelite
+strukturou, trvalými následky a estetikou *Papers, Please*. Nemáš dost dobrých
+věcí na všechno — komedie i tření vznikají z toho, že **někam se špatná volba
+prostě musí dát**. Mechanika rozhodne, AI to sepíše do suchého protokolu — a čím
+hůř dopadneš, tím lepší čtení to je. Rok 1930 je **první „svět"**; další (studená
+válka, kyberpunk…) přijdou jako DLC nad stejným jádrem. Jeden run ≈ 30 minut.
+**Mechanika rozhoduje, AI vypráví.**
 
 ---
 
 ## 1. Vizuál & UX
 
-- **Estetika:** hrubší pixel-art v tónu Papers, Please. Paleta max 16 barev (šedá,
-  hnědá, sepie, černá + krvavě červená pro razítka).
-- **Hlavní obrazovka:** pohled shora na stůl vyšetřovatele — lampička, hrnek, popelník,
-  protokol v psacím stroji, na kterém se v reálném čase vypisuje příběh. Psací stroj
-  vyklepává text postupně → maskuje latenci AI a vytváří společný moment čtení nahlas.
-- **Okraj spisu:** u jmen postav červená razítka a rukou psané poznámky trvalých
-  následků („JAN — probodnut vidlemi", „PEPA — mluví v rýmech").
+Estetika je **finální vize hry**, ne testovací kulisa — MVP běží na placeholderech
+(text + rámečky + papír), ale to není její opuštění, jen odklad výroby assetů.
+
+- **Estetika:** hrubší pixel-art / úřední papír v tónu *Papers, Please*. Paleta
+  max 16 barev (šedá, hnědá, sepie, černá + krvavě červená pro razítka).
+- **Hlavní obrazovka:** stůl vyšetřovatele — lampička, hrnek, popelník, protokol
+  v psacím stroji, který v reálném čase **vyklepává** text. Psací stroj maskuje
+  latenci AI a vyrábí společný moment čtení nahlas. (Jediný povinný efekt prototypu.)
+- **Mapa jako důkaz:** dobová **kreslená mapa Buffalo → New York** ve stylu
+  *Slay the Spire* — větvící se cesta uzlů. **Šerif ji křížkuje**: jak roste Žár,
+  posouvá se po mapě za týmem a odškrtává, kudy prošel. Mapa *je* měřidlo
+  pronásledování — hráč nesleduje číslo, sleduje, jak blízko je klobouk.
+- **Okraj spisu:** u jmen hráčů červená razítka a rukou psané poznámky postihů
+  („KOWALSKI — prkno po hlavě, vidí jen názvy", „BARTOŠ — mluví v rýmech").
 
 ## 2. Distribuce a režimy hry
 
-**Zrušen Jackbox/browser-join režim.** Klasická distribuce: co instalace, to hráč.
+Klasická distribuce: co instalace, to hráč (žádný Jackbox/browser-join).
 
-- **Hot-seat (1 zařízení):** karty jsou **odkryté**, hráči sedí u jednoho stolu/PC.
-  Žádné předávání zařízení kvůli tajnosti — tajné jsou jen osobní cíle (fyzicky:
-  každý si svůj cíl přečte na začátku, např. postupným zobrazením, nebo QR/kód).
-- **Online co-op (Steam):** každý hráč vlastní kopii. Networking přes Steam Datagram
-  Relay (pro hry na Steamu zdarma — žádné vlastní relay servery).
-- **Steam Remote Play Together:** podpora od prvního dne. Host vlastní hru, kamarádi
-  hrají zdarma přes stream → funguje jako demo a konverzní trychtýř.
-- **Časovač je volitelný.** Výchozí režim nechává stůl diskutovat a hádat se — to *je*
-  ta hra. Volitelný timer (např. 45 s) pro rozhodné party.
+- **Hot-seat (1 zařízení):** karty odkryté, hráči sedí u jednoho stolu/PC. Tajné
+  jsou jen osobní cíle (hráč si svůj zobrazí na začátku, ostatní se nedívají).
+- **Online co-op (Steam):** každý hráč vlastní kopii, networking přes Steam
+  Datagram Relay (pro hry na Steamu zdarma).
+- **Steam Remote Play Together:** podpora od prvního dne — host vlastní hru,
+  kamarádi hrají zdarma přes stream (funguje jako demo a konverzní trychtýř).
+- **Časovač je volitelný.** Výchozí režim nechá stůl diskutovat a hádat se — to
+  *je* ta hra.
+- **Sólo režim je plnohodnotný, ale sekundární** — kabinetní varianta, kde jeden
+  mozek řeší celý slate čtyř slotů (blíž puzzle/deckbuilderu), s delší tratí. Dva
+  primární zážitkové pilíře — **hádka o rozdělení** a **čtení protokolu nahlas** —
+  jsou ze své podstaty stolní; cílová zkušenost je **2–4 hráči u stolu**.
 
 ## 3. Game Loop (jeden run ≈ 30 minut)
 
-**6–7 tučných uzlů** na přímočaré mapě Buffalo → New York (historicky autentická
-pašerácká trasa kanadského alkoholu — využít v marketingu).
+Run = **cesta po větvící se mapě** (StS graf) z Buffala do New Yorku. Dojedeš
+s nákladem = razítko **DORUČENO**. Ztratíš náklad nebo tě dožene šerif = razítko
+**NEVYŘEŠENO** a spis (i karty týmu) propadá do důkazního materiálu pro další hráče.
 
-```
-[Buffalo] ─► [Uzel 1] ─► [Uzel 2] ─► ... ─► [New York]
-                 │
-           (Smrt / Kolaps)
-                 │
-                 ▼
-   [Razítko „NEVYŘEŠENO" ➔ karty týmu propadají do globální databáze]
-```
+**Typy míst na mapě** (hráč vidí ikonu předem, jako ve StS):
 
-Průběh uzlu:
+- **NPC interakce** — šerif, farmář, celník, rival. Sociální situace.
+- **Zajímavá lokace / překážka** — most, brod, hlídka, sklad. Část nese **event
+  „1 ze 3"** (náhodná odbočka příběhu) — ne uzel navíc, jen příchuť.
+- **Truhla / loot** — bez resoluce; kredity a/nebo výběr karty.
+- **Motel / úkryt** — bez resoluce; za společné kredity léčení postihů a směna karet.
 
-1. **Volba cesty** — tým vybírá další uzel (vždy 2 možnosti, viditelné tagy rizika).
-2. **Situace** — polda vyklepe úvod (šablona uzlu + AI kulisy).
-3. **Vyložení karet** — každý hráč hraje **1 kartu za svou postavu**, karty jsou
-   odkryté, stůl smí radit, ale rozhoduje vlastník postavy.
-4. **Vyhodnocení mechanikou** — viditelná pravidla (tagy + hod + postihy) určí
-   výsledek. Hráč vždy ví, *proč* uspěl nebo selhal.
-5. **Protokol** — AI dostane hotový výsledek a zdramatizuje ho do suchého policejního
-   zápisu (3–5 vět). Následky se razítkují do spisu.
-6. **Konec runu** — protokol se přečte celý nahlas, odhalí se tajné osobní cíle,
-   bodování, razítko (DORUČENO / NEVYŘEŠENO).
+**Průběh jednoho maso-uzlu:**
+
+1. **Telegraf** — polda vyklepe krátký úvod (co se blíží, ne přesně jak). Sděluje
+   trend (jaké staty situace nejspíš chce) i kolik rolí půjde „proti srsti".
+2. **Commit dle telegrafu** — tým committne **přesně tolik karet, kolik je slotů**
+   (viz §4.3), *než* uvidí celý text.
+3. **Odhalení textu** — teprve teď se ukáže plný text situace se **4 sloty**
+   (rolemi), každý s ikonou viditelnosti (viditelná / skrytá role).
+4. **Rozdělení do slotů** — tým rozdělí **všechny** commitnuté karty do slotů co
+   nejméně špatně; vlastník každé karty souhlasí. Nic se nevrací, nic nebenchuje.
+   Volitelně **gamble-záchrana** (§4.4).
+5. **Vyhodnocení** — každý slot: stat karty vs. skrytý práh. Počet zásahů → pásmo.
+6. **Odhalení prahů + „proč"** — prahy se ukážou, každá netriviální událost dostane
+   krátkou anotaci (§4.11). Hráč vždy ví, proč slot prošel či ne.
+7. **Následky** — pásmo rozdá postihy (§4.7), příjem (§4.8) a pohyb Žáru (§4.9).
+8. **Protokol** — AI dostane hotový výsledek a zdramatizuje ho do suchého
+   policejního zápisu (3–5 vět). Razítko do spisu.
+
+**Konec runu** — protokol se přečte celý nahlas, odhalí se tajné cíle, bodování,
+razítko DORUČENO / NEVYŘEŠENO.
 
 ## 4. Core mechaniky
 
-### 4.1 Vlastnictví postavy
-Každý hráč hraje karty za svou postavu a nese její následky (zranění, prokleté
-karty). Ostatní radí, vlastník rozhoduje. Řeší quarterbacking, dává otevřeným kartám
-smysl a zraněním emocionální váhu.
+### 4.1 Karty = věci s pěti staty
+Karta je **věc**, kterou pašerák nosí u sebe, popsaná pěti staty: **útok, obrana,
+hodnota, improvizace, nástroj**. Věc je dobrá v něčem a mizerná jinde (zlaté
+hodinky = vysoká hodnota, nulový útok) — to vyrábí volbu a komedii. Věci jsou
+assety sdílené napříč světy (až na výjimky s polem světové příslušnosti).
 
-### 4.2 Viditelná pravidla (mechanika rozhoduje, AI vypráví)
-- Karty mají přiznaný **tag** (Násilí / Lest / Úplatek / Útěk) a **sílu**.
-- Uzel má viditelné afinity („farmář s vidlemi: Násilí −2, Úplatek +2").
-- Výsledek = hod + síla karty + afinita − postihy za zranění, proti **globálním
-  prahům úspěchu** (stejným pro všechny uzly — konkrétní čísla viz
-  [prototyp-mvp.md](prototyp-mvp.md)). Obtížnost konkrétního uzlu nedělá měnící se
-  práh, ale jeho afinity a tvrdost.
-- AI **nikdy nerozhoduje o výsledku** — jen ho převypráví. (Zároveň nákladová
-  optimalizace: krátké prompty, cachovatelné výstupy.)
+### 4.2 Štítky a viditelnost rolí
+Nad staty stojí vzácné **štítky** s tvrdým pravidlem, ne jen s číslem — vzor
+**GANGSTER** (zbraně): ve **viditelné** roli NPC situace selže bez ohledu na staty
+(šerif zbraň uvidí), ve skryté roli nebo v lokaci je naopak eso. Aby štítek nebyl
+past, každý slot má při odhalení **ikonu viditelnosti** a telegraf předem
+signalizuje, zda je situace typ, kde „zbraň projde".
 
-### 4.3 Tajné osobní cíle (kooperace s třením)
-Každý hráč si na začátku lízne tajný cíl vázaný na obsah protokolu („v protokolu
-musí stát, že jsem utekl první", „musím být 3× zraněn", „polda mě označí za mozek
-operace"). Dává důvod hrát „špatnou" kartu schválně a vytváří závěrečný reveal
-moment při čtení spisu. Cíle jsou převážně **mechanicky ověřitelné** (hráč má
-jasnou páku, jak je plnit, a simulace je umí bodovat); čistě textové cíle jen
-tam, kde nesou reveal.
+### 4.3 Sloty a commit: „rozděl čtyři věci co nejméně špatně"
+Každá situace má **4 sloty** (stejné texty pro všechny počty hráčů). Tým committne
+**přesně 4 karty** = počet slotů, rozdělené dle počtu hráčů (konkrétní rozdělení
+a velikosti rukou viz [prototyp-mvp.md](prototyp-mvp.md); u tří hráčů rotuje role
+„držitele mapy", žádný stálý velitel). Po odhalení textu se **všechny 4 karty
+rozdělí** do slotů — nic se nevrací, nic nebenchuje. Jádro hry není „vyber
+nejlepší", ale **„rozděl to, co máš, co nejméně špatně"**: u některého slotu se
+špatné volbě občas nevyhneš, a to je záměr — komedie nevyhnutelně špatné volby.
+Tím z podstaty nevzniká pasažér (karta každého hráče se hraje) ani prázdný commit.
 
-### 4.4 Trvalé následky (snowballing chaos)
-- Zranění a poznámky zůstávají do konce runu a vstupují do každého dalšího promptu.
-- **Od 2. zranění** hráč lízá **prokleté karty** (Křeč, Ztráta důstojnosti…) —
-  ruka se ke konci hry kazí.
-- **Zoufalé karty:** silné karty hratelné jen s 3+ zraněními; **přicházejí
-  s utrpením** — hráč je líže jako osobní loot za zranění (pravidlo
-  v [prototyp-mvp.md](prototyp-mvp.md)). Nejzdemolovanější hráč není mrtvá
-  váha, ale tikající komediální bomba.
+### 4.4 Gamble = záchrana po odhalení
+Když se rozdělení jeví jako ztracené, tým smí jednou za situaci **přidat kartu**:
+vybere, čí ruka ji poskytne, ale karta se z ní **líže náhodně** a **povinně
+nahradí** jednu commitnutou (nahrazená se odhazuje). Je to opt-in sázka na náhodu
+u všech počtů hráčů — záchrana neředí komedii, protože není jistá; riziko si hráč
+vybral. Pravděpodobnosti a EV viz [prototyp-mvp.md](prototyp-mvp.md).
 
-### 4.5 Protivníci
+### 4.5 Skryté prahy = kotva ± šum (learnabilita)
+Většina slotů klíčuje na **jeden stat** se **skrytým prahem**, odhaleným až po
+vyhodnocení. Prahy jsou **kotva ± šum**: typ situace má naučitelný trend (NPC
+„všimné" → hodnota; překážka „oprava" → nástroj), ale instance kolem kotvy mírně
+kolísá — **mistrovství roste, memorizace konkrétních čísel nefunguje**. Výjimky
+jsou dvojí: **karetní** (štítky, §4.2) a **slotové** (speciální slot s kombinovaným
+prahem přes dva staty, nebo slot citlivý na štítek). Skrytost je *learnabilita*,
+ne gotcha — po vyhodnocení se prah vždy ukáže (§4.11).
 
-**Zásada: protivníci nemají vlastní tahy.** V 30minutové party hře je tah
-nepřítele mrtvý čas — konfrontace je a zůstane jeden hod s viditelnými pravidly.
-Jednání a paměť získávají protivníci dvěma vrstvami:
+### 4.6 Pásma výsledku
+Výsledek uzlu je **pásmo** podle počtu slotů, které prošly práh (ne procento):
+čistý úspěch, úspěch s následky (postih), a průšvih (těžký postih + ztráta + Žár).
+Nejvyšší pásmo přidává loot. Pásma drží čitelnost u stolu a dávají AI jasné tóny
+protokolu; hranice viz [prototyp-mvp.md](prototyp-mvp.md).
 
-**Místní protivníci (vrstva uzlu).** Protivník je součást karty uzlu se
-statblockem: afinity + **tvrdost** — co navíc stojí selhání právě u něj
-(farmář = další zranění, šerif = +Žár, rivalové = −bedna). Jednorázová
-překážka bez HP a bez kol.
+### 4.7 Postihy (trvalé i dočasné následky)
+Postih je **situační, komediální, vázaný na fikci** následek špatného rozhodnutí —
+netrestá sílu karet číslem, ale **degraduje agency a vyrábí komedii**. Taxonomie:
+- **informační** (nejčastější) — degradují viditelnost („vidíš jen názvy věcí, ne
+  staty", „tohle kolo nevidíš telegraf");
+- **zámkové** — omezují volbu („nesmíš do slotu dát GANGSTER");
+- **ztrátové** (střídmě) — berou zdroje (kredity, kartu z ruky).
 
-**Pronásledovatel + stopa ŽÁR (vrstva runu).** Každý run má jednoho
-perzistentního protivníka, který nikdy nestojí v uzlu — jede za týmem. Na
-okraji spisu je viditelná stopa **Žár (0–10)**, jak moc po týmu jde zákon:
+Postihy mají **dva tiery**: lehké dočasné (samy vyprší) a těžké trvalé (drží do
+vyléčení v motelu, §4.8). Aktivní postihy mají **malý cap na hráče + eskalaci**:
+po jeho překročení je postava kolo–dvě „složená" (leží v autě, generuje poznámky
+do protokolu), pak se vrací. Složení **maže jen lehké postihy** — těžké přetrvávají
+a léčí se dál za kredity, aby složení nikdy nebylo levnější než poctivé léčení.
+Nahrazují v2 systém zranění + prokletých/zoufalých karet.
 
-- **Žár roste** za neúspěchy v uzlu, za zahrané hlučné karty (flag `hlucna`,
-  typicky Násilí) a za vybrané výsledky uzlů (přestřelka, mrtvola). Konkrétní
-  přírůstky i hodnoty prahů žijí v prototypu ([prototyp-mvp.md](prototyp-mvp.md)) —
-  design drží jen strukturu (viz §8).
-- **Práh Zátahu:** příští volba cesty vede přes **Zátah** (nahradí obě nabízené
-  cesty) — tým to vidí předem a beztrestně se mu vyhnout nejde.
-- **Práh léčky:** vloží se mimořádný uzel s pronásledovatelem osobně.
-- **Práh konfrontace:** konec úprku — okamžitá finální konfrontace kdekoli;
-  přežití Žár srazí, ale protokol tým dál vede jako „ozbrojenou a nebezpečnou
-  skupinu".
+### 4.8 Kreditová ekonomika a motel
+Kredity jsou **společné** (skupinové rozhodování, kdo se léčí a na čí kartu se
+sáhne) a **per-run** (nepřecházejí → žádný hoarding). Utrácejí se v motelu za
+**směnu karet** a **léčení těžkých postihů** (léčení je výrazně dražší). Příjem
+z truhel a velmi úspěšných situací. Motel je **větvová odbočka** (tým volí úkryt
+vs. hnát náklad dál) — dostupný, ale za cenu volby. Konkrétní ceny, příjmy a
+rozmístění motelů viz [prototyp-mvp.md](prototyp-mvp.md).
 
-Pronásledovatel se **losuje na začátku runu, je viditelný od první minuty
-a ruší jeden tag** (federální agent Malone je neúplatný, šerifa Brodyho násilí
-přitahuje…) — čtvrtina balíčku je proti finále oslabená, každý run se hraje
-jinak. To je vedle komunitních karet druhý pilíř znovuhratelnosti.
+### 4.9 Žár a pronásledovatel (eskalace na mapě)
+Každý run má jednoho perzistentního pronásledovatele (**Žár**), který nikdy nestojí
+v uzlu — jede za týmem a je **pozicí na značené trati** (křížkující šerif, §1), ne
+odosobněným číslem. Roste za průšvihy, hlučné hraní (zbraně, silně útočné karty) a
+vybrané výsledky; **každý pohyb nese anotaci proč** (§4.11). Prahy trati (viditelné
+předem): **Zátah** (příští uzel nahradí zátah, obě větve přes něj), **léčka**
+(mimořádný uzel s pronásledovatelem osobně), **konfrontace** (okamžitá finální
+situace; přežití Žár srazí). Pronásledovatel se losuje na začátku runu, je viditelný
+od první minuty a **ruší jeden stat/štítek** (federál bere úplatky = hodnotu z hry;
+šerif reaguje na hlučnost dvojnásob) — čtvrtina páky je proti finále oslabená,
+každý run se hraje jinak. Vypravěčský háček: pronásledovatel je kolega poldy od
+stroje, protokol cituje jeho hlášení a oba byrokrati se v spisu tiše nesnášejí.
+Konkrétní hodnoty viz [prototyp-mvp.md](prototyp-mvp.md). **Záměrně NE:** perzistence
+napříč runy (scope + patent WB na nemesis), soubojový systém s HP, tahy nepřítele.
 
-Tagová textura: **Násilí** = síla za Žár, **Úplatek** = jistota za zdroje,
-**Lest** = variance, **Útěk** = bezpečí za bedny. Není to jen příchuť — každý
-tag má **mechanický rider**, který texturu vynucuje (konkrétní pravidla
-v [prototyp-mvp.md](prototyp-mvp.md), sekce Tagová textura).
+### 4.10 Tajné osobní cíle (kooperace s třením)
+Každý hráč si na začátku lízne tajný cíl vázaný na jeho hru a na obsah protokolu
+(„skonči se dvěma postihy a přesto DORUČENO", „ani jednou nedej zbraň do viditelné
+role", „polda tě označí za mozek operace"). Dává skrytý důvod hádat se o **konkrétní
+rozdělení slotu**, zatímco tým optimalizuje globálně, a vytváří závěrečný reveal
+moment. Cíle jsou převážně **mechanicky ověřitelné** (simulace je umí bodovat),
+čistě textové jen tam, kde nesou reveal.
 
-Vypravěčský háček: pronásledovatel je kolega poldy od psacího stroje — protokol
-cituje jeho hlášení a oba byrokrati se v spisu tiše nesnášejí.
+### 4.11 Vysvětlující vrstva „proč se to stalo"
+**Každá netriviální mechanická událost nese při odhalení krátkou anotaci, proč
+nastala** — skryté prahy, vynucení a štítky, pohyby šerifa, postihové řetězce,
+plnění tajných cílů (reveal na konci ukáže, které tahy cíl plnily nebo kazily).
+Není to tutoriál, ale průběžné diegetické „proč" vetkané do spisu a okraje mapy;
+hráč se pravidla učí tím, že vidí jejich dopad. Přímá reakce na nález playtestu,
+že hra svá pravidla nevysvětluje.
 
-Záměrně NE: UGC protivníci (nesou balanc hry), perzistence pronásledovatele
-napříč runy (scope + patent WB na nemesis systém), soubojový systém s HP.
+### 4.12 Vlastnictví postavy
+Hráč vlastní své karty a nese následky (postihy). Ostatní radí a navrhují rozdělení,
+ale **vlastník karty musí souhlasit**. Řeší quarterbacking a dává postihům
+emocionální váhu.
 
-## 5. Komunitní karty & asynchronní multiplayer
+## 5. Profily hráčů a jména
+
+Hráč má **profil s vlastním jménem** a statistikami úspěšnosti, přenosný mezi světy.
+**Jména ale nikdy nejdou do promptu:** LLM píše protokol s placeholdery (Podezřelý
+A/B, 1. pád), jména se dosazují lokálně až po vygenerování. Tím zůstává cache klíč
+přenositelný (globální cache) a prompt injection nemožná (volný text hráče se
+k modelu nedostane). Profil se statistikami je čistě klientský stav mimo AI vrstvu.
+*(Perzistence profilů napříč runy = meta-progrese, mimo první MVP.)*
+
+## 6. Multi-svět a DLC
+
+**1930 (prohibice)** je první svět. Každý další (Cold War Berlin, Cyberpunk Slums…)
+je **DLC nad stejným jádrem** — mění se obsah (situace, věci, štítky, pronásledovatelé,
+flavor), ne pravidla. Karty nesou pole světové příslušnosti (většina sdílená,
+výjimky per svět). **Host Pass:** DLC stačí vlastnit hostovi lobby.
+
+## 7. Komunitní karty & asynchronní multiplayer
 
 - Po smrti týmu se spis zavře, ale jimi vytvořené karty propadají do globální
-  databáze — leží v „důkazním materiálu" na poldově stole pro další hráče.
-- **Mad Libs editor:** hráči nepíšou volný text pro AI (ochrana proti prompt
-  injection), vyplňují šablonu. Tag a síla karty jsou z šablony, ne z AI —
-  **žádné skryté AI balancování**.
-- **Moderace:** automatický filtr obsahu + report tlačítko + proces (povinné i kvůli
-  Steam AI disclosure). Netriviální práce, plánovat explicitně.
-- **Cold start:** před launchem ručně naseedovat stovky „mrtvých týmů" a karet.
-- Lajky a statistiky karet („Vaše karta potopila X týmů") — v2.
+  databáze — leží v důkazním materiálu pro další hráče.
+- **Omezený skladač karet:** hráči nepíšou volný text (ochrana proti prompt
+  injection), skládají kartu z předpřipravených komponent — staty a štítek jsou
+  ze skladače, ne z AI (**žádné skryté AI balancování**). „Custom" věc za úspěšný
+  průchod jde po **verifikaci** (distribuce statů + moderace) do prémiového fondu.
+- **Prémiové karty = meta-progrese:** odemykají se do sbírky pro příští runy, ne
+  jako in-run power spike. Nejsou silnější, jsou specializovanější/swingovější
+  (mění varianci, ne průměr) — žádný power creep proti snowballu obtížnosti.
+- **Moderace:** automatický filtr + report + proces (povinné i kvůli Steam AI
+  disclosure). **Cold start:** před launchem ručně naseedovat stovky karet.
 
-## 6. AI architektura & náklady
+## 8. AI architektura & náklady
 
-- **Jedno LLM volání na uzel** se strukturovaným vstupem (uzel, výsledek mechaniky,
-  stav postav a zranění) → výstup 3–5 vět protokolu. Levný model (třída Haiku).
-- **Globální cache à la Infinite Craft:** stejná karta + typ uzlu + podobný stav →
-  hotový protokol z databáze. LLM se volá jen pro nové kombinace; náklady na hráče
+- **Autorská vrstva (ne AI):** telegraf a text situace s mezerami jsou psané ručně;
+  AI je nepíše a **nerozhoduje o výsledku**.
+- **AI vrstva:** **jedno LLM volání na uzel** dramatizuje hotový výsledek (pásmo +
+  rozdělení karet do slotů + stav postihů) do 3–5 vět suchého protokolu. Levný
+  model (třída Haiku), strukturovaný vstup.
+- **Cache klíč bez jmen** → globální cache à la Infinite Craft; náklady na hráče
   časem klesají.
-- **Fallback šablony** při výpadku API — hra nikdy nesmí čekat na síť.
-- **Tichý fair-use strop:** po X runech denně čistě cachovaný obsah.
-- Logovat všechny výstupy — dlouhodobě možnost doladit malý lokální model (offline
-  režim, API náklad nula).
-- **Steam AI disclosure (Live-Generated):** popsat modely a guardrails na store page.
+- **Fallback šablony** při výpadku / timeoutu — **hra nikdy nečeká na síť**.
+- Logovat všechny výstupy (dlouhodobě možnost malého lokálního modelu).
+- **Steam AI disclosure (Live-Generated):** modely a guardrails na store page.
 
-## 7. Business model
+## 9. Business model
 
-- **9,99 € pay-to-play** (Steam / Itch.io). Žádné předplatné, žádné spotřební tokeny.
-- **4-pack bundle** se slevou (~30 €).
-- **Free demo:** jeden pevný run s předgenerovaným obsahem (nulové API náklady).
-- **DLC prostředí 4–5 €** (Cold War Berlin, Cyberpunk Slums…) s **Host Passem** —
-  DLC stačí vlastnit hostovi lobby.
-- ~~Product placement~~ — škrtnuto.
+- **9,99 € pay-to-play** (Steam / Itch.io), žádné předplatné ani tokeny.
+- **Start = ~3 příběhy/světy** místo jedné trasy; 4-pack bundle se slevou.
+- **Free demo:** jeden pevný sólo run s předgenerovaným obsahem (nulové API náklady).
+- **DLC světy 4–5 €** s **Host Passem** (DLC stačí vlastnit hostovi lobby).
 
-## 8. Otevřené otázky
+## 10. Neporušitelné design principy
 
-- Přesná čísla resolučního systému (viz prototyp — vyladit playtestem).
+- **Mechanika rozhoduje, AI vypráví.** LLM nikdy neurčuje výsledek slotu — dostává
+  hotový výsledek a jen ho dramatizuje.
+- **Hra nikdy nečeká na síť.** Timeout → fallback šablona.
+- **Viditelná pravidla — ve v3 „prahy skryté před, odhalené po" + vysvětlující
+  vrstva.** Prahy jsou před commitem skryté (jinak není co objevovat), ale po
+  vyhodnocení se vždy ukážou a každá netriviální událost nese anotaci „proč se to
+  stalo" (§4.11). Skrytost je learnabilita, ne gotcha.
+- **Vlastnictví postavy.** Tým radí a navrhuje rozdělení, vlastník karty souhlasí.
+- **Žádný volný text hráčů do AI** — jen omezený skladač karet; jména se dosazují
+  post-hoc, nikdy nejdou do promptu.
+
+## 11. Otevřené otázky
+
+- Přesná čísla resolučního systému (viz prototyp — ladit simulací a playtestem).
 - Kvalita českého AI humoru — testovat jako první věc.
-- Mechanika „podplácení poldy" důkazy nalezenými během runu (nápad do v2: přepsat
-  odstavec protokolu).
-- Název: „Baffalo" opraveno na **Buffalo**.
-- **Tři měřidla (zranění + bedny + Žár):** pro party hru na hraně kognitivní
-  zátěže. Pokud playtest ukáže, že je toho moc, první kandidát na škrt jsou
-  bedny (roli „prohry týmu" může převzít Žár), ne Žár.
-- **Jazyková/tržní strategie:** obsah vzniká a testuje se česky (rizikovější
-  jazyk pro AI humor), ale primární Steam trh je anglický. Rozhodnout, zda platí
-  „česky ověřit → anglicky vydat", a kdy do plánu zařadit překlad a test
-  anglických protokolů.
+- **Kognitivní zátěž:** náklad + kredity + Žár + postihy + dva skryté systémy
+  (prahy *i* tajné cíle). Kolik jich party u stolu unese? Odlehčení: Žár = trať,
+  postihy = poznámky na spisu, oba skryté systémy kryje vysvětlující vrstva.
+  Kandidát na škrt zůstává **náklad** (roli „prohry týmu" může převzít Žár).
+- **Jazyková/tržní strategie:** obsah vzniká a testuje se česky (rizikovější jazyk
+  pro AI humor), primární Steam trh je anglický — rozhodnout „česky ověřit →
+  anglicky vydat" a kdy zařadit překlad.
 
 ---
 
-*Historie: v1 = původní koncept (Jackbox režim, tajné karty, AI balancování, product
-placement — vše nahrazeno/škrtnuto na základě kritiky a diskuse 2026-07-22).
-Souvisí: [prototyp-mvp.md](prototyp-mvp.md).*
+*Historie škrtnutých směrů (nenavrhovat znovu):*
+
+- **v1** (2026-07-22) — Jackbox/browser-join režim, tajné karty, AI balancování
+  obtížnosti, product placement. Nahrazeno/škrtnuto po kritice a produktové diskusi.
+- **v2 → v3 (pivot 2026-07-23, D14–D17)** — škrtnuta **kostková resoluce** a vše na
+  ní závislé:
+  - *d6 + tagy (Násilí/Lest/Úplatek/Útěk) + ridery + prahy hodů* → náhoda se
+    přesunula na **vstup** (co ti přijde do ruky, gamble, šum prahů), resoluce je
+    slotová (5 statů vs. skryté prahy). Důvod: víc volby a komedie v mechanice,
+    míň frustrace z výstupního hodu.
+  - *pevná čtveřice postav (Bartoš/Kowalski/Mazur/Fontana)* → **profily hráčů se
+    jmény** (§5); jména se dosazují post-hoc.
+  - *zranění + prokleté + zoufalé karty jako systém* → **postihy** (komediální
+    taxonomie, §4.7) + **gamble** (§4.4).
+  - *tajné cíle vázané jen na obsah protokolu* → cíle vázané na **hru i protokol**,
+    převážně mechanicky ověřitelné (§4.10).
+  Přežívá: estetika §1, psací stroj, Žár + pronásledovatel (přerámováno na mapu),
+  neporušitelné principy, distribuce/online, AI architektura.
+
+*Souvisí: [prototyp-mvp.md](prototyp-mvp.md). Archiv procesu pivotu:
+[projekt/navrh-v3.md](projekt/navrh-v3.md).*

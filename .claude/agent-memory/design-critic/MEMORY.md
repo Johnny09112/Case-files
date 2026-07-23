@@ -1,0 +1,1 @@
+- [v3 audit](v3-audit.md) — nálezy vznesené k navrh-v3.md (2026-07-23), verdikt „vrátit k dopracování", sleduj rozhodnutí
