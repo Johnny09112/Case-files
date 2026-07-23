@@ -44,6 +44,16 @@ engine + simulátor → hot-seat UI → LLM). Lidská brána zůstává otevřen
 
 ## Otevřené otázky (čekají na uživatele)
 
+- **D14 — Pivot resoluce na „slotový" systém (návrh uživatele 2026-07-22/23):**
+  bez kostky; slova s 5 staty přiřazovaná do slotů situací se skrytými prahy
+  (odhalovanými po vyhodnocení); AI vypráví, staty rozhodují. PM posudek: silný
+  směr (input randomness místo output, komedie v mechanice, hádka u stolu), ale
+  3 kolize s principy k vyřešení (AI statování → autorská pipeline s moderací;
+  tvorba karet hráči → omezený skladač, ne volný text; skryté prahy → post-hoc
+  odhalení). **Mikroprototyp k osahání:**
+  `dukazni-material-prototyp/experiments/mikroprototyp-sloty.html` (otevřít
+  přímo v prohlížeči). Rozhodnutí o pivotu = design dokument v3.
+
 *(D1–D9 schváleny a zapracovány 2026-07-22 — viz [[rozhodnuti]].)*
 
 - Škálování obtížnosti počtem hráčů (páka 7) — odloženo, rozhodne se z dat
