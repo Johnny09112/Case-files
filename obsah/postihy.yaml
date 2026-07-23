@@ -1,0 +1,156 @@
+# Postihy — situační, komediální následky špatného rozhodnutí. Nahrazují v2
+# zranění + prokleté/zoufalé karty. Degradují AGENCY, netrestají číslem.
+# Přiřazuje je engine dle pásma situace (viz obsah/situace.yaml `pasmove_vysledky`
+# a globální pásma v prototyp-mvp.md). Cap 2 aktivní/hráče + eskalace "složení"
+# řeší engine — postih o svém capu neví.
+#
+# Schéma (nová pole nepřidávat bez úpravy komentáře):
+#   id:      kebab-case, unikátní napříč obsah/
+#   nazev:   krátký; objeví se jako razítko/poznámka ve spisu
+#   typ:     informacni | zamkovy | ztratovy   (ztrátové střídmě)
+#   tier:    lehky (sám vyprší) | tezky (drží do vyléčení v motelu)
+#   trvani:  u lehky: počet kol (2–3) NEBO "ihned" (jednorázový efekt);
+#            u tezky: vždy "do_vyleceni"
+#   efekt:   STROJOVĚ vyhodnotitelný objekt { druh: <enum>, ...param }. NIKDY próza.
+#   rozsah:  (volitelné) hrac (default) | tym
+#   text:    komediální fikce, dobová, vazba na typ situace, kde vzniká
+#
+# ENUM EFEKTŮ (uzavřená sada; engine implementuje každý druh):
+#   -- informační (degradují viditelnost informace) --
+#   hide_staty      : vlastník vidí názvy věcí ve své ruce, ale ne jejich staty
+#   hide_telegraf   : u příští situace vlastník nevidí telegraf (commit naslepo)
+#   hide_viditelnost: u příští situace vlastník nevidí ikony viditelnosti slotů
+#   -- zámkové (omezují volbu) --
+#   lock_stitek{stitek}          : věc s daným štítkem vlastník nesmí přiřadit
+#                                  do žádného slotu
+#   lock_slot_viditelnost{viditelnost}: žádná z vlastníkových karet nesmí být
+#                                  přiřazena do slotu s touto viditelností
+#   lock_gamble                  : tým nesmí použít gamble-záchranu, dokud postih
+#                                  drží (blokuje ji už jeden postižený hráč)
+#   -- ztrátové (berou zdroje; STŘÍDMĚ) --
+#   ztrata_kreditu{kolik}: z týmového konta se odečte `kolik` kreditů
+#   ztrata_karty{kolik}  : vlastník odhodí `kolik` karet z ruky
+#   ztrata_naklad{kolik} : tým ztratí `kolik` beden
+#   ruka_minus{kolik}    : vlastník má o `kolik` menší ruku, dokud postih drží
+#   POZOR (ztrata_karty, ruka_minus): u 4p jsou ruce malé (3 karty) — tyto efekty
+#   přiděluj STŘÍDMĚ, jinak hrozí prázdná ruka. Sim ohlídá asymetrii počtů hráčů.
+#
+# Cílový počet pro MVP: ~14 (≈10 lehkých / 4 těžké, poměr ~70/30). Každý druh
+# enumu je zastoupen aspoň jednou.
+
+postihy:
+  # ---------- LEHKÉ (10; samy vyprší) ----------
+  - id: prach-do-oci
+    nazev: Prach do očí
+    typ: informacni
+    tier: lehky
+    trvani: 2
+    efekt: { druh: hide_staty }
+    text: "Zvířený prach ti vehnal slzy do očí. Věci v kufru poznáš po názvu, čísla se rozmazávají."
+
+  - id: zvoneni-v-usich
+    nazev: Zvonění v uších
+    typ: informacni
+    tier: lehky
+    trvani: 2
+    efekt: { druh: hide_telegraf }
+    text: "Rána do hlavy ti rozezněla lebku. Příští varování slyšíš jak přes vatu."
+
+  - id: mlha-v-hlave
+    nazev: Mlha v hlavě
+    typ: informacni
+    tier: lehky
+    trvani: 2
+    efekt: { druh: hide_viditelnost }
+    text: "Po ráně máš v hlavě mlhu. Kdo tě sleduje a kdo ne, ti chvíli nedochází."
+
+  - id: nervy-v-hajzlu
+    nazev: Nervy v hajzlu
+    typ: zamkovy
+    tier: lehky
+    trvani: 3
+    efekt: { druh: lock_stitek, stitek: GANGSTER }
+    text: "Ruce se ti klepou tak, že po bouchačce radši nesáhneš — ještě bys ji upustil."
+
+  - id: prilis-na-rane
+    nazev: Příliš na ráně
+    typ: zamkovy
+    tier: lehky
+    trvani: 2
+    efekt: { druh: lock_slot_viditelnost, viditelnost: skryta }
+    text: "Máš na sobě půl okresu. Zalézt do stínu a hrát to skrytě teď nepřipadá v úvahu."
+
+  - id: roztresene-ruce
+    nazev: Roztřesené ruce
+    typ: zamkovy
+    tier: lehky
+    trvani: 2
+    efekt: { druh: lock_gamble }
+    text: "Nervy na dranc. Riskovat naslepo dalším tahem? Radši ne, dokud se ruce neuklidní."
+
+  - id: drobna-pokuta
+    nazev: Drobná pokuta
+    typ: ztratovy
+    tier: lehky
+    trvani: ihned
+    efekt: { druh: ztrata_kreditu, kolik: 1 }
+    rozsah: tym
+    text: "Za rozbitou výlohu se platí na místě. Blok pokut šel hned do oběhu."
+
+  - id: utrzena-kapsa
+    nazev: Utržená kapsa
+    typ: ztratovy
+    tier: lehky
+    trvani: ihned
+    efekt: { druh: ztrata_karty, kolik: 1 }
+    text: "V té tahanici ti někdo prořízl kapsu. Než ses nadál, o věc míň."
+
+  - id: vysypana-bedna
+    nazev: Vysypaná bedna
+    typ: ztratovy
+    tier: lehky
+    trvani: ihned
+    efekt: { druh: ztrata_naklad, kolik: 1 }
+    rozsah: tym
+    text: "Na výmolu se z korby skutálela bedna a roztříštila se v příkopu. Škoda mluvit."
+
+  - id: narazene-rameno
+    nazev: Naražené rameno
+    typ: ztratovy
+    tier: lehky
+    trvani: 2
+    efekt: { druh: ruka_minus, kolik: 1 }
+    text: "Rameno naražené o veřeje. Do kapes saháš pomaleji, o věc míň, než otok splaskne."
+
+  # ---------- TĚŽKÉ (4; drží do vyléčení v motelu) ----------
+  - id: zlomene-zebro
+    nazev: Zlomené žebro
+    typ: ztratovy
+    tier: tezky
+    trvani: do_vyleceni
+    efekt: { druh: ruka_minus, kolik: 1 }
+    text: "Žebro křuplo a každý pohyb bolí. Sáhneš po míň věcech — dokud tě v motelu nedají dokupy."
+
+  - id: otras-mozku
+    nazev: Otřes mozku
+    typ: informacni
+    tier: tezky
+    trvani: do_vyleceni
+    efekt: { druh: hide_staty }
+    text: "Ohlušující rána. Věci držíš v ruce, ale co který kus umí, ti splývá — až do vyléčení."
+
+  - id: ochrnuta-ruka
+    nazev: Ochrnutá ruka
+    typ: zamkovy
+    tier: tezky
+    trvani: do_vyleceni
+    efekt: { druh: lock_stitek, stitek: GANGSTER }
+    text: "Ruka visí jak cizí. Zbraň v ní neudržíš — do vyléčení se pere beze zbraně."
+
+  - id: rozdrcena-noha
+    nazev: Rozdrcená noha
+    typ: zamkovy
+    tier: tezky
+    trvani: do_vyleceni
+    efekt: { druh: lock_slot_viditelnost, viditelnost: skryta }
+    text: "Noha na kaši. Nikam se neplížíš ani nemizíš — všechno teď hraješ natvrdo a na očích."

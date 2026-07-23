@@ -1,0 +1,56 @@
+# Místa bez resoluce — truhla (loot) a motel (úkryt). NEmají 4 sloty ani pásma.
+# Truhla i motel jsou VĚTVOVÉ ODBOČKY na mapě (tým volí zajet vs. hnát náklad dál).
+# Ceny/odměny jsou orientační — LADIT SIMULACÍ (viz prototyp-mvp.md §Kredity, §Motel).
+#
+# Schéma (nová pole nepřidávat bez úpravy komentáře):
+#   id:     kebab-case, unikátní napříč obsah/
+#   typ:    truhla | motel
+#   svet:   1930 (default) | ...
+#   text:   1–2 věty, dobová kulisa, čte se hráčům
+#   -- jen typ truhla --
+#   odmena: tým volí PRÁVĚ JEDNU z nabídnutých; klíče:
+#             kredity_rozsah: [min, max]  (engine losuje v rozsahu 4–6)
+#             vyber_karty:    true        (líznout N a jednu si nechat — N dle enginu)
+#   -- jen typ motel --
+#   sluzby: mapa cena-za-službu (společné kredity):
+#             smena_karty:    cena (odhodíš věc, líznout náhradní)
+#             leceni_tezkeho: cena za vyléčení jednoho těžkého postihu
+#           (léčení je záměrně dražší než směna; složení maže jen lehké postihy —
+#            těžké se léčí VÝHRADNĚ zde, aby složení nebylo levnější než léčení)
+#
+# Cílový počet pro MVP: 2 truhly + 2 motely (varianty do poolu odboček).
+
+mista:
+  # ---------- TRUHLY ----------
+  - id: truhla-preklad
+    typ: truhla
+    svet: 1930
+    text: "Za převrácenou maringotkou leží bedna, kterou tu někdo nechal ve spěchu. Zámek povolil sám."
+    odmena:
+      kredity_rozsah: [4, 6]
+      vyber_karty: true
+
+  - id: truhla-utopenec
+    typ: truhla
+    svet: 1930
+    text: "V rákosí u břehu se houpe naražený člun s nákladem. Majitel už nepřiplave."
+    odmena:
+      kredity_rozsah: [4, 6]
+      vyber_karty: true
+
+  # ---------- MOTELY (větvová odbočka: úkryt vs. hnát dál) ----------
+  - id: motel-u-silnice
+    typ: motel
+    svet: 1930
+    text: "Ospalý motel u silnice s blikajícím nápisem VOLNO. Majitel se na nic neptá a za dolar navíc ani nezvedne hlavu."
+    sluzby:
+      smena_karty: 3
+      leceni_tezkeho: 6
+
+  - id: motel-autodilna
+    typ: motel
+    svet: 1930
+    text: "Za městem stojí autodílna, co po večerech přešívá kradené vozy. Prohlídnou i vás — pokud zaplatíte."
+    sluzby:
+      smena_karty: 3
+      leceni_tezkeho: 6

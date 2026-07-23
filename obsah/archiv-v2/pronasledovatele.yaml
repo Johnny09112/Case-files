@@ -1,0 +1,50 @@
+# [ARCHIV v2 — LEGACY, kostkový model. Mechanika (tagy/afinity) mrtvá, TÓN =
+#  reference. v3 pronásledovatelé jsou v obsah/pronasledovatele.yaml. Viz README.md]
+# Pronásledovatelé — perzistentní protivník runu. Losuje se 1 na začátku,
+# je viditelný od první minuty, NIKDY nestojí v běžném uzlu — jedná výhradně
+# přes prahy Žáru (Zátah ve volbě cesty → léčka → konfrontace; hodnoty prahů
+# dle prototyp-mvp.md, sem nehardcodovat).
+# Žádná perzistence napříč runy. Žádné UGC pronásledovatele.
+# Schéma (nová pole nepřidávat bez úpravy tohoto komentáře):
+#   id:         kebab-case, unikátní
+#   nazev:      jméno s titulem
+#   ruseny_tag: tag, který proti němu nefunguje nebo je potrestán
+#   pravidlo:   přesné znění efektu rušeného tagu (viditelné hráčům)
+#   lecka:      mini-uzel pro práh léčky (uvod + afinity + tvrdost; tvrdost
+#               léčky je vždy `zar` — léčka dál topí pod kotlem)
+#   konfrontace: mini-uzel pro práh konfrontace (uvod + afinity + tvrdost;
+#               tvrdost konfrontace je vždy `zraneni` — finále bolí dvojitě)
+#   flavor:     1 věta pro protokol — polda ho zná osobně
+# Cílový počet pro MVP: 2.
+
+pronasledovatele:
+  - id: agent-malone
+    nazev: Federální agent Malone
+    ruseny_tag: uplatek
+    pravidlo: "Karty Úplatek mají proti Maloneovým uzlům (Zátah, Léčka, Konfrontace) sílu 0. Je neúplatný."
+    lecka:
+      uvod: "Malone obsadil most u Poughkeepsie. Stojí u závory a v ruce drží vaši fotografii."
+      afinity: {nasili: 0, lest: 2, uplatek: -2, utek: 0}
+      tvrdost: zar
+    konfrontace:
+      uvod: "Kolona federálních vozů vás sevřela na silnici. Malone vystupuje a bez spěchu si nasazuje brýle."
+      # Vědomá výjimka z konvence „právě jeden +2 a jeden −2": jediný uzel hry
+      # bez +2. Finále na max. Žáru proti fedovi je záměrně nejtvrdší moment
+      # (potvrzeno revizí game-designera 2026-07-22) — neopravovat.
+      afinity: {nasili: 0, lest: 0, uplatek: -2, utek: -2}
+      tvrdost: zraneni
+    flavor: "Vyšetřovatel poznamenává, že agent Malone nepije, nekouří a nebere. Nikdo na okrsku nechápe, co tu tedy dělá."
+
+  - id: serif-brody
+    nazev: Okresní šerif Brody
+    ruseny_tag: nasili
+    pravidlo: "Každá hlučná karta přidává +2 Žár místo +1. Násilí Brodyho přitahuje."
+    lecka:
+      uvod: "Brody s partou nadšených občanů přehradil silnici valníkem. Nasadil služební úsměv."
+      afinity: {nasili: -2, lest: 0, uplatek: 2, utek: 0}
+      tvrdost: zar
+    konfrontace:
+      uvod: "Brodyho muži vás zahnali k zavřenému mostu. Šerif si sundává klobouk, což nikdy nevěstí nic dobrého."
+      afinity: {nasili: -2, lest: 0, uplatek: 0, utek: 2}
+      tvrdost: zraneni
+    flavor: "Vyšetřovatel uvádí, že šerif Brody řeší okresní záležitosti tradičně: nejprve střelbou, poté dotazy."

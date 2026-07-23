@@ -1,0 +1,340 @@
+# Věci — karty s pěti staty. Strojově čitelný zdroj pravdy, prototyp načítá přímo.
+# Model resoluce v3 (slotový): věc se přiřadí do slotu, engine porovná JEDEN stat
+# slotu se skrytým prahem (kotva ± šum). Viz prototyp-mvp.md §"Resoluční systém v3".
+#
+# Schéma (nová pole nepřidávat bez úpravy tohoto komentáře):
+#   id:        kebab-case, unikátní NAPŘÍČ všemi soubory v obsah/
+#   nazev:     max 3 slova
+#   staty:     mapa přesně 5 statů, každý celé číslo 0–5:
+#                utok / obrana / hodnota / improvizace / nastroj
+#   stitek:    (volitelné) VELKÝMI z registru obsah/stitky.yaml; tvrdé pravidlo,
+#              ne číslo. MVP jediný štítek: GANGSTER.
+#   svet:      sdilena (default) | 1930 | ... — příslušnost; většina věcí sdílená
+#   premiova:  bool, default false. MVP VŽDY false. (post-MVP: prémiové věci =
+#              osobní loadout hráče, bere si ~2 ze své sbírky do startovní ruky —
+#              per hráč, NEŘEDÍ sdílený balík; UI hvězdička.)
+#   text:      max ~140 znaků, česky, dobová stylizace 1930, suchý situační humor
+#   poznamka:  (volitelné) pro designéry, do hry nejde
+#
+# Model lízání (D19c): jeden SDÍLENÝ standardní balík (~40 věcí). Odhozené věci
+# jdou na odhazovací hromádku; při vyčerpání balíku se hromádka zamíchá zpět
+# (reshuffle). Líznutá věc patří tomu, kdo lízal. Custom karty ostatních hráčů
+# nesytí tento balík — jdou do truhel přes globální fond (post-MVP).
+#
+# DISTRIBUCE STATŮ (invariant kvality): každá věc má PROFIL, ne plochý blok —
+# 1–2 dominantní staty (3–5), zbytek nízký (0–2). Součet cca 6–11 (specializace,
+# ne síla; §7 design). Filler věci klidně 5–6. Žádná věc není globálně silná.
+# Pokrytí: ~7–9 dominantních věcí na každý z 5 statů, aby žádný slot neměl mrtvý
+# fond. GANGSTER hustota: 5/40 — SWEEP PARAMETR brány (rozpětí 4–6), lze doladit.
+# Cílový počet pro MVP: ~40.
+
+veci:
+  # ============================================================
+  # ÚTOK-dominantní (8; z toho 5 GANGSTER — zbraně)
+  # ============================================================
+  - id: dedeckova-brokovnice
+    nazev: Dědečkova brokovnice
+    staty: { utok: 5, obrana: 2, hodnota: 1, improvizace: 1, nastroj: 1 }
+    stitek: GANGSTER
+    svet: sdilena
+    premiova: false
+    text: "Argument ráže dvanáct. Rez na věcnosti neubírá — ale šerif ji uvidí dřív než ty jeho."
+
+  - id: ukradeny-samopal
+    nazev: Ukradený samopal
+    staty: { utok: 5, obrana: 1, hodnota: 2, improvizace: 0, nastroj: 0 }
+    stitek: GANGSTER
+    svet: sdilena
+    premiova: false
+    text: "Chrlič olova z velkoměsta. Řeč ukončí spolehlivě, jenže o vás pak mluví celý okres."
+
+  - id: damsky-revolver
+    nazev: Dámský revolver
+    staty: { utok: 3, obrana: 1, hodnota: 2, improvizace: 2, nastroj: 0 }
+    stitek: GANGSTER
+    svet: sdilena
+    premiova: false
+    text: "Perleťová pažba do dlaně dámy. Malý, tichý, a v kabelce ho nikdo nečeká."
+
+  - id: schovana-pistole
+    nazev: Schovaná pistole
+    staty: { utok: 3, obrana: 1, hodnota: 1, improvizace: 3, nastroj: 0 }
+    stitek: GANGSTER
+    svet: sdilena
+    premiova: false
+    text: "Za pasem pod kabátem. Dokud ji nevytáhneš, nikdo netuší, žes ozbrojený."
+    poznamka: "Dvoustatová útok/improvizace — eso ve skryté roli (tasit včas)."
+
+  - id: uriznuta-hlaven
+    nazev: Uříznutá hlaveň
+    staty: { utok: 4, obrana: 1, hodnota: 1, improvizace: 1, nastroj: 0 }
+    stitek: GANGSTER
+    svet: sdilena
+    premiova: false
+    text: "Brokovnice zkrácená pilkou. Nese se pod kabátem a přesvědčuje na dva kroky."
+
+  - id: mosazny-boxer
+    nazev: Mosazný boxer
+    staty: { utok: 4, obrana: 2, hodnota: 0, improvizace: 1, nastroj: 1 }
+    svet: sdilena
+    premiova: false
+    text: "Navlékneš na klouby mosaz. Zdvořilost tím obvykle končí, řeč taky."
+
+  - id: sekacek-na-led
+    nazev: Sekáček na led
+    staty: { utok: 4, obrana: 1, hodnota: 0, improvizace: 2, nastroj: 2 }
+    svet: sdilena
+    premiova: false
+    text: "Rozvážíš led po putykách. Dnes výjimečně i mezi žebra — a otevře i bednu."
+
+  - id: pytel-cementu
+    nazev: Pytel cementu
+    staty: { utok: 3, obrana: 3, hodnota: 1, improvizace: 2, nastroj: 1 }
+    svet: sdilena
+    premiova: false
+    text: "Ukážeš pytel a řekneš, komu z něj ušiješ boty. Do řeky je to jen kousek."
+
+  # ============================================================
+  # OBRANA-dominantní (7; klid, tuhost, krytí)
+  # ============================================================
+  - id: plechova-vesta
+    nazev: Plechová vesta
+    staty: { utok: 1, obrana: 5, hodnota: 0, improvizace: 0, nastroj: 1 }
+    svet: sdilena
+    premiova: false
+    text: "Pod košilí plát kotlového plechu. Těžký jak hřích, ale olovo z něj cinká."
+
+  - id: medvedi-kozich
+    nazev: Medvědí kožich
+    staty: { utok: 1, obrana: 4, hodnota: 1, improvizace: 1, nastroj: 1 }
+    svet: sdilena
+    premiova: false
+    text: "Kožich po pytlákovi. Zahřeje, ránu ztlumí a v šeru vypadáš jak medvěd."
+
+  - id: tlusta-bible
+    nazev: Tlustá bible
+    staty: { utok: 0, obrana: 4, hodnota: 1, improvizace: 3, nastroj: 0 }
+    svet: sdilena
+    premiova: false
+    text: "Rodinná bible tlustá jak cihla. Zastaví kulku i podezření, když z ní začneš citovat."
+    poznamka: "Dvoustatová obrana/improvizace."
+
+  - id: pytel-brambor
+    nazev: Pytel brambor
+    staty: { utok: 1, obrana: 4, hodnota: 0, improvizace: 1, nastroj: 2 }
+    svet: sdilena
+    premiova: false
+    text: "Metrák brambor na korbě. Schová bednu, ztlumí náraz a v nouzi i nasytí."
+
+  - id: kastrol-na-hlave
+    nazev: Kastrol na hlavě
+    staty: { utok: 1, obrana: 4, hodnota: 0, improvizace: 3, nastroj: 0 }
+    svet: sdilena
+    premiova: false
+    text: "Litinový kastrol místo helmy. Vypadáš jak blázen, ale palici ti zachrání."
+
+  - id: otrleny-vyraz
+    nazev: Otrlený výraz
+    staty: { utok: 0, obrana: 4, hodnota: 1, improvizace: 2, nastroj: 0 }
+    svet: sdilena
+    premiova: false
+    text: "Tvář jak z kamene. Ať se děje co chce, ani brva se nehne — a oni znejistí."
+
+  - id: dedkuv-kabat
+    nazev: Dědkův kabát
+    staty: { utok: 1, obrana: 3, hodnota: 1, improvizace: 2, nastroj: 2 }
+    svet: sdilena
+    premiova: false
+    text: "Těžký zimník s deseti kapsami. Vydrží déšť, nůž i noc pod mostem."
+
+  # ============================================================
+  # HODNOTA-dominantní (8; bohatství na úplatky)
+  # ============================================================
+  - id: zlate-hodinky
+    nazev: Zlaté hodinky
+    staty: { utok: 0, obrana: 1, hodnota: 5, improvizace: 0, nastroj: 1 }
+    svet: sdilena
+    premiova: false
+    text: "Hodinky po tchánovi. Skvělé všimné, mizerný nástroj — čas jimi změříš, dveře nevypáčíš."
+
+  - id: konselov-prsten
+    nazev: Konšelův prsten
+    staty: { utok: 0, obrana: 1, hodnota: 5, improvizace: 1, nastroj: 0 }
+    svet: sdilena
+    premiova: false
+    text: "Těžký pečetní prsten. Jak ho položíš na stůl, hlídka se hned líp poslouchá."
+
+  - id: balik-bankovek
+    nazev: Balík bankovek
+    staty: { utok: 0, obrana: 0, hodnota: 5, improvizace: 1, nastroj: 0 }
+    svet: sdilena
+    premiova: false
+    text: "Svazek dolarů převázaný gumičkou. Řeči netřeba, čísla mluví sama."
+
+  - id: perlovy-nahrdelnik
+    nazev: Perlový náhrdelník
+    staty: { utok: 0, obrana: 1, hodnota: 4, improvizace: 2, nastroj: 0 }
+    svet: sdilena
+    premiova: false
+    text: "Pravé perly po nebožce tetě. Teta by chápala — jde přece o rodinu."
+
+  - id: bedna-kanadske
+    nazev: Bedna kanadské
+    staty: { utok: 1, obrana: 1, hodnota: 4, improvizace: 1, nastroj: 1 }
+    svet: sdilena
+    premiova: false
+    text: "Bedna pravé žitné z druhé strany jezera. Nejlepší úplatek je ten, co se pije."
+
+  - id: zlaty-zub
+    nazev: Zlatý zub
+    staty: { utok: 0, obrana: 1, hodnota: 3, improvizace: 2, nastroj: 0 }
+    svet: sdilena
+    premiova: false
+    text: "Vylomený zlatý zub v kapsičce. Nevoní, ale zlato je zlato i po zubaři."
+
+  - id: rodinne-stribro
+    nazev: Rodinné stříbro
+    staty: { utok: 0, obrana: 2, hodnota: 4, improvizace: 1, nastroj: 1 }
+    svet: sdilena
+    premiova: false
+    text: "Příbor po babičce, dvanáct kusů. Nakrmí hlídku dřív, než se sám naobědváš."
+
+  - id: stribrna-placatka
+    nazev: Stříbrná placatka
+    staty: { utok: 0, obrana: 1, hodnota: 3, improvizace: 3, nastroj: 1 }
+    svet: sdilena
+    premiova: false
+    text: "Ryté stříbro plné kanadské žitné. Podplatíš jí, nebo si lízneš pro kuráž — obojí zabere."
+    poznamka: "Hvězdičkový potenciál: dvoustatová, swingová (hodnota+improvizace). MVP premiova:false."
+
+  # ============================================================
+  # IMPROVIZACE-dominantní (8; klam, důvtip, herecké číslo)
+  # ============================================================
+  - id: hovezi-vyvar
+    nazev: Hovězí vývar
+    staty: { utok: 0, obrana: 2, hodnota: 1, improvizace: 4, nastroj: 1 }
+    svet: sdilena
+    premiova: false
+    text: "Termoska mastného vývaru. Zahřeje, zasytí, a chrstnutá do očí i chvíli zdrží."
+
+  - id: bananovy-kanon
+    nazev: Banánový kanón
+    staty: { utok: 2, obrana: 1, hodnota: 0, improvizace: 4, nastroj: 1 }
+    svet: sdilena
+    premiova: false
+    text: "Banán vyleštěný do lesku pistole. V šeru zabírá výborně, ve světle je to ovoce."
+    poznamka: "Bléf: nízký reálný útok, vysoká improvizace. Past pro naivní commit do útoku."
+
+  - id: knezsky-kolarek
+    nazev: Kněžský kolárek
+    staty: { utok: 0, obrana: 2, hodnota: 1, improvizace: 4, nastroj: 0 }
+    svet: sdilena
+    premiova: false
+    text: "Bílý kolárek a vážná tvář. Spustíš kázání o neřesti pití a hlídka zahanbeně sklopí zrak."
+
+  - id: falesny-odznak
+    nazev: Falešný odznak
+    staty: { utok: 1, obrana: 1, hodnota: 1, improvizace: 5, nastroj: 0 }
+    svet: sdilena
+    premiova: false
+    text: "Plechový odznak z pouti. Zamáváš jím zdálky a najednou tu velíš ty."
+
+  - id: konev-na-mleko
+    nazev: Konev na mléko
+    staty: { utok: 0, obrana: 1, hodnota: 1, improvizace: 4, nastroj: 2 }
+    svet: sdilena
+    premiova: false
+    text: "Náklad přeliješ do konví na mléko. K mlékaři nikdo nečichá."
+
+  - id: slzy-na-povel
+    nazev: Slzy na povel
+    staty: { utok: 0, obrana: 2, hodnota: 1, improvizace: 4, nastroj: 0 }
+    svet: sdilena
+    premiova: false
+    text: "Rozbrečíš se, kdy je třeba. Nad plačícím chlapem hlídka rozpačitě couvne."
+
+  - id: gumovy-vacek
+    nazev: Gumový váček
+    staty: { utok: 0, obrana: 1, hodnota: 0, improvizace: 3, nastroj: 2 }
+    svet: sdilena
+    premiova: false
+    text: "Prezervativ z lékárny. Pašerák v něm vozí, co nesmí zmoknout — od doutníku po adresy."
+    poznamka: "Filler (součet 6)."
+
+  - id: zpev-opilce
+    nazev: Zpěv opilce
+    staty: { utok: 0, obrana: 2, hodnota: 0, improvizace: 3, nastroj: 0 }
+    svet: sdilena
+    premiova: false
+    text: "Spustíš tak žalostnou opileckou, že tě pustí dál jen z čirého soucitu."
+    poznamka: "Filler (součet 5)."
+
+  # ============================================================
+  # NÁSTROJ-dominantní (9; nářadí na překážky, část dvojúčelová)
+  # ============================================================
+  - id: pajcr
+    nazev: Páčidlo
+    staty: { utok: 3, obrana: 1, hodnota: 0, improvizace: 1, nastroj: 4 }
+    svet: sdilena
+    premiova: false
+    text: "Kus zahnuté oceli. Otevře bednu, dveře i debatu, když je nejhůř."
+    poznamka: "Dvojúčel útok/nástroj."
+
+  - id: svarecka
+    nazev: Svářečka
+    staty: { utok: 1, obrana: 1, hodnota: 1, improvizace: 1, nastroj: 5 }
+    svet: sdilena
+    premiova: false
+    text: "Karbidová svářečka. Rozžhaví se do běla a spojí, co se rozpadlo — i mříž."
+
+  - id: rezervni-pneu
+    nazev: Rezervní pneumatika
+    staty: { utok: 1, obrana: 2, hodnota: 0, improvizace: 2, nastroj: 4 }
+    svet: sdilena
+    premiova: false
+    text: "Náhradní guma na blatníku. Když praskne v nejhorším, rozhoduje o všem."
+
+  - id: provaz-a-kladka
+    nazev: Provaz a kladka
+    staty: { utok: 0, obrana: 1, hodnota: 0, improvizace: 2, nastroj: 4 }
+    svet: sdilena
+    premiova: false
+    text: "Konopný provaz a rezavá kladka. Vytáhne vůz z bláta i bednu na půdu."
+
+  - id: zednicka-lzice
+    nazev: Zednická lžíce
+    staty: { utok: 2, obrana: 1, hodnota: 0, improvizace: 1, nastroj: 4 }
+    svet: sdilena
+    premiova: false
+    text: "Ocelová lžíce od malty. Vyškrábe spáru, vypáčí okno, v nouzi i řízne."
+
+  - id: kanystr-benzinu
+    nazev: Kanystr benzínu
+    staty: { utok: 1, obrana: 1, hodnota: 1, improvizace: 2, nastroj: 4 }
+    svet: sdilena
+    premiova: false
+    text: "Plechovka záložního benzínu. Dojede se s ní dál — nebo pěkně zahoří."
+
+  - id: lopata
+    nazev: Lopata
+    staty: { utok: 3, obrana: 1, hodnota: 0, improvizace: 1, nastroj: 4 }
+    svet: sdilena
+    premiova: false
+    text: "Poctivá rýčovka. Vykope vůz z příkopu, zahrabe stopy, a přes záda taky sedne."
+    poznamka: "Dvojúčel útok/nástroj."
+
+  - id: petrolejova-lampa
+    nazev: Petrolejová lampa
+    staty: { utok: 0, obrana: 1, hodnota: 0, improvizace: 2, nastroj: 3 }
+    svet: sdilena
+    premiova: false
+    text: "Čadící lampa na olej. Ve tmě ukáže cestu, ve stodole i požár."
+    poznamka: "Filler (součet 6)."
+
+  - id: stary-kompas
+    nazev: Starý kompas
+    staty: { utok: 0, obrana: 1, hodnota: 1, improvizace: 3, nastroj: 3 }
+    svet: sdilena
+    premiova: false
+    text: "Mosazný kompas po námořníkovi. Když se ztratíš v polích, ukáže, kudy z bryndy."
+    poznamka: "Dvoustatová improvizace/nástroj."

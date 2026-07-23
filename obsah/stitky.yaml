@@ -1,0 +1,29 @@
+# Štítky — vzácné značky na věcech s TVRDÝM pravidlem (ne číslem). Nad staty.
+# Registr drží jen PARAMETRY štítku; samotné pravidlo implementuje engine v kódu
+# (D19: žádný obecný rule-DSL v obsahu). Slot může parametr přebít výjimkou
+# `stitek_citlivy` (viz obsah/situace.yaml).
+#
+# Schéma:
+#   id:        VELKÝMI, unikátní; shoduje se s hodnotou pole `stitek` u věcí
+#   nazev:     lidský název
+#   parametry: mapa pojmenovaných přepínačů, které engine čte (viz komentář níže)
+# Cílový počet pro MVP: 1 (GANGSTER).
+
+stitky:
+  - id: GANGSTER
+    nazev: Gangster
+    # Parametry (engine implementuje chování; zde jen hodnoty):
+    #   selze_ve_viditelne_roli_npc: věc přiřazená do slotu {typ situace = npc,
+    #       viditelnost = viditelna} automaticky NEPROJDE bez ohledu na staty
+    #       (šerif zbraň uvidí). Slot s `stitek_citlivy: GANGSTER` toto ruší.
+    #   eso_ve_skryte_roli: ve slotu viditelnost = skryta se štítek IGNORUJE
+    #       (věc se hodnotí normálně dle statu slotu; zbraň je vítaná).
+    #   eso_v_lokaci: v situaci typ = lokace pravidlo o viditelné roli NEPLATÍ
+    #       (není tam nikdo, kdo by zbraň zpozoroval).
+    #   hlucnost_zar: kolik Žáru přidá věc s tímto štítkem přiřazená do slotu.
+    #       SWEEP PARAMETR tempa Žáru (viz prototyp-mvp.md §Žár).
+    parametry:
+      selze_ve_viditelne_roli_npc: true
+      eso_ve_skryte_roli: true
+      eso_v_lokaci: true
+      hlucnost_zar: 1

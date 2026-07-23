@@ -1,0 +1,351 @@
+# Situace — resoluční uzly se 4 sloty. AUTORSKÝ text (AI nepíše, nerozhoduje).
+# Tým committne přesně 4 karty naslepo dle telegrafu, po odhalení textu je rozdělí
+# do 4 slotů co nejméně špatně. Každý slot: 1 stat vs. skrytý práh (kotva ± šum
+# enginu). Viz prototyp-mvp.md §"Resoluční systém v3" a design-dokument §4.
+#
+# Schéma (nová pole nepřidávat bez úpravy komentáře):
+#   id:        kebab-case, unikátní napříč obsah/
+#   typ:       npc | lokace | zatah | lecka | konfrontace
+#              (lecka/konfrontace se autorují u pronásledovatelů, ne zde)
+#   svet:      1930 (default) | ...
+#   telegraf:  1–2 věty PŘED commitem (viz QA invariant níže)
+#   text:      max ~5 vět; obsahuje přesně 4 mezery {VEC} + volně {kdo}.
+#              Mezery {VEC} se plní názvy zahraných věcí V POŘADÍ slotů níže.
+#   sloty:     přesně 4×:
+#     - role:        krátký název role (co se v té mezeře děje)
+#       stat:        1 z 5 statů | [stat, stat] = KOMBI (obě věci? ne — JEDNA věc,
+#                    jejíž OBA uvedené staty musí být ≥ kotva; D19b, střídmě, kotva 2)
+#       kotva:       2–4 (práh 0 zakázán); engine přičte šum ±1 při odhalení
+#       viditelnost: viditelna | skryta   (ikona při odhalení)
+#       stitek_citlivy: (volitelné VÝJIMKA) VELKÝMI — přebíjí parametr štítku pro
+#                    tento slot (např. GANGSTER = eso i ve viditelné roli)
+#   pasmove_vysledky:  situace autoruje JEN postih-pool per pásmo a případný loot.
+#                      Kredity / Žár / ztráta nákladu jsou GLOBÁLNÍ dle pásma
+#                      (prototyp-mvp.md) — situace je NEuvádí (D19, nález D3 kritika).
+#     hladce_loot: { loot: karta }         # 4/4 — obsah lootu (karta = líznutí navíc)
+#     # 3/4 HLADCE: bez postihu, nic se neautoruje
+#     s_nasledky:  { postih_lehky: [<id>, ...] }   # 2/4 — engine vybere 1
+#     prusvih:     { postih_tezky: [<id>, ...] }    # ≤1/4 — engine vybere 1
+#   event:  (volitelné, jen část lokací) 3 flavor odbočky; engine losuje 1 ze 3.
+#           SIM-INERTNÍ — čistá příchuť BEZ mechanického efektu (D19).
+#
+# QA INVARIANT TELEGRAFU (D19): telegraf je PRÓZA = lidský rendering signálu, který
+# engine DERIVUJE ze slotů. Musí věrně sdělit: (1) TREND — které staty situace
+# převážně chce; (2) POČET rolí "proti srsti" — kolik slotů se vymyká trendu / je
+# skrytých; (3) ZBRAŇ projde/neprojde — plyne z typu situace a viditelnosti slotů
+# (npc + viditelná role = GANGSTER selže; skrytá role nebo lokace = projde).
+# NIC VÍC (neprozrazuj kotvy/prahy), NIC MÍŇ. Telegraf_signal se NEautoruje —
+# derivuje ho engine; próza jen musí zůstat věrná (fidelita = sweep knob brány).
+#
+# Cílový počet pro MVP: 7 témat × 2 varianty = 14 + 1 speciální Zátah.
+
+situace:
+  # ============================================================
+  # TÉMA 1 — Farmář
+  # ============================================================
+  - id: farmar-brod
+    typ: npc
+    svet: 1930
+    telegraf: "Vůz trčí v brodě a farmář s vidlemi nemá dobrý den. Chce hlavně zaplatit a klidné slovo — tři role na to; čtvrtou nevytahuj na světlo, zbraň projde leda skrytě, když dojde na nejhorší."
+    text: >
+      Kola zapadla doprostřed brodu a na břehu už čeká farmář s vidlemi. {kdo} mu
+      nabídl {VEC} za vytažení, {kdo} držel hlas mírný pomocí {VEC} a {kdo} zapřáhl
+      koně s {VEC}. Kdyby chlap začal vyvádět, měl {kdo} po ruce {VEC}.
+    sloty:
+      - { role: "Zaplatit za vytažení", stat: hodnota, kotva: 3, viditelnost: viditelna }
+      - { role: "Nezvednout hlas",      stat: obrana,  kotva: 2, viditelnost: viditelna }
+      - { role: "Zapřáhnout a táhnout", stat: nastroj, kotva: 3, viditelnost: viditelna }
+      - { role: "Kdyby začal vyvádět",  stat: utok,    kotva: 3, viditelnost: skryta }
+    pasmove_vysledky:
+      hladce_loot: { loot: karta }
+      s_nasledky:  { postih_lehky: [drobna-pokuta, narazene-rameno, roztresene-ruce] }
+      prusvih:     { postih_tezky: [zlomene-zebro] }
+
+  - id: farmar-stodola
+    typ: lokace
+    svet: 1930
+    telegraf: "Statkář vás za pár dolarů nechá přespat ve stodole, jenže jeho psi hlídají líp než on. Chce to šikovné ruce a důvtip — tři role; jedna skrytá je o pevné nervy. Tady vás nikdo nešpehuje, i zbraň projde."
+    text: >
+      Ve stodole to páchne senem a psi u vrat nespí. {kdo} tišil smečku pomocí
+      {VEC}, {kdo} zaklínil vrata {VEC} a {kdo} zahrabal bednu do sena s {VEC}.
+      Když statkář obcházel s lucernou, {kdo} ani nedýchal za {VEC}.
+    sloty:
+      - { role: "Utišit psy",            stat: improvizace,           kotva: 3, viditelnost: viditelna }
+      - { role: "Zaklínit vrata",        stat: [nastroj, improvizace], kotva: 2, viditelnost: viditelna }
+      - { role: "Schovat bednu do sena", stat: nastroj,               kotva: 3, viditelnost: viditelna }
+      - { role: "Nedýchat, když jde kolem", stat: obrana,             kotva: 2, viditelnost: skryta }
+    event:
+      - "Ve vedlejším stání funí prasata a pod korytem leží zapomenutá bedna cizí kořalky."
+      - "Statkářova dcera vás z okna pozoruje, ale mlčí — zatím."
+      - "Na trámu visí puška po dědovi. Nabitá."
+    pasmove_vysledky:
+      hladce_loot: { loot: karta }
+      s_nasledky:  { postih_lehky: [prach-do-oci, mlha-v-hlave, prilis-na-rane] }
+      prusvih:     { postih_tezky: [rozdrcena-noha] }
+
+  # ============================================================
+  # TÉMA 2 — Venkovský strážník
+  # ============================================================
+  - id: deputy-mytnice
+    typ: npc
+    svet: 1930
+    telegraf: "U boudy za městem natahuje zástupce šerifa ruku po 'silničním poplatku'. Chce peníze a hladké řeči — tři role; jedna skrytá čeká, kdyby došlo na pěsti. Zbraň před ním schovej, na světle neprojde."
+    text: >
+      Zpoza závory vystoupil zástupce šerifa a poklepal na blok pokut. {kdo} mu
+      vtiskl do dlaně {VEC}, {kdo} odvedl řeč stranou pomocí {VEC} a {kdo} u toho
+      držel kamennou tvář za {VEC}. Kdyby přituhlo, čekala pod plachtou {VEC}.
+    sloty:
+      - { role: "Silniční poplatek",  stat: hodnota,     kotva: 3, viditelnost: viditelna }
+      - { role: "Zamluvit to",        stat: improvizace, kotva: 3, viditelnost: viditelna }
+      - { role: "Klidná tvář",        stat: obrana,      kotva: 2, viditelnost: viditelna }
+      - { role: "Kdyby přituhlo",     stat: utok,        kotva: 3, viditelnost: skryta }
+    pasmove_vysledky:
+      hladce_loot: { loot: karta }
+      s_nasledky:  { postih_lehky: [drobna-pokuta, vysypana-bedna, roztresene-ruce] }
+      prusvih:     { postih_tezky: [ochrnuta-ruka] }
+
+  - id: deputy-hlidka
+    typ: npc
+    svet: 1930
+    telegraf: "Postarší strážník přehradil cestu vozem a leští si odznak. Rychlý není, o to raděj sahá po revolveru — chce klid a nenápadnost, tři role; jedna skrytá je pro tvrdé řešení. Zbraň jen potají."
+    text: >
+      Strážník postavil vůz napříč a založil ruce. {kdo} udržel nervy na uzdě za
+      {VEC}, {kdo} mu strčil něco na přilepšenou v podobě {VEC} a {kdo} spravil,
+      co bylo třeba, s {VEC}. Kdyby vytáhl bouchačku první, měl {kdo} po ruce {VEC}.
+    sloty:
+      - { role: "Nedat na sobě znát", stat: obrana,  kotva: 3, viditelnost: viditelna }
+      - { role: "Na přilepšenou",     stat: hodnota, kotva: 2, viditelnost: viditelna }
+      - { role: "Spravit, co třeba",  stat: nastroj, kotva: 3, viditelnost: viditelna }
+      - { role: "Kdyby tasil první",  stat: utok,    kotva: 3, viditelnost: skryta }
+    pasmove_vysledky:
+      hladce_loot: { loot: karta }
+      s_nasledky:  { postih_lehky: [narazene-rameno, zvoneni-v-usich, nervy-v-hajzlu] }
+      prusvih:     { postih_tezky: [zlomene-zebro] }
+
+  # ============================================================
+  # TÉMA 3 — Přechod přes řeku
+  # ============================================================
+  - id: most-prohnila-prkna
+    typ: lokace
+    svet: 1930
+    telegraf: "Most přes řeku vrže prohnilými prkny a přehrazuje ho stará závora. Tři role volají po nářadí a šikovnosti; jedna skrytá se pozná, až bude pozdě couvnout. Tady se zbraně nikdo nelekne."
+    text: >
+      Před vozem se táhl most jak vytlučené zuby. {kdo} zvedal závoru {VEC}, {kdo}
+      zpevňoval prkna {VEC} a {kdo} navedl kola přes díru s {VEC}. A {kdo} se
+      snažil nedat na sobě znát, jak tenký led to je, pomocí {VEC}.
+    sloty:
+      - { role: "Zvednout závoru", stat: nastroj,                kotva: 3, viditelnost: viditelna }
+      - { role: "Zpevnit prkna",   stat: [nastroj, improvizace], kotva: 2, viditelnost: viditelna }
+      - { role: "Projet dírou",    stat: improvizace,            kotva: 3, viditelnost: viditelna }
+      - { role: "Nedat to na sobě", stat: obrana,                kotva: 3, viditelnost: skryta }
+    event:
+      - "Pod mostem chrápe tramp a za doutník ohlídá vůz."
+      - "V polovině mostu leží převrácený vůz konkurence — a plná bedna v příkopu."
+      - "Mýtný má výběrčí knihu a zapisuje každou espézetku. I tu vaši."
+    pasmove_vysledky:
+      hladce_loot: { loot: karta }
+      s_nasledky:  { postih_lehky: [narazene-rameno, vysypana-bedna, drobna-pokuta] }
+      prusvih:     { postih_tezky: [rozdrcena-noha] }
+
+  - id: privoz-celnik
+    typ: npc
+    svet: 1930
+    telegraf: "Převozník vás vezme na druhý břeh, jenže celník na palubě čichá ke každé bedně. Chce to důvtip a peníze do správné dlaně — tři role; jedna skrytá řeší, kdyby čich přeci jen zabral. Zbraň drž z dohledu."
+    text: >
+      Prám se odrazil od břehu a celník obcházel náklad s nosem u plachty. {kdo}
+      mu zamotal hlavu pomocí {VEC}, {kdo} přesunul náklad z očí do {VEC} a {kdo}
+      mu nenápadně přilepšil {VEC}. Kdyby přeci jen čenichal dál, čekala {VEC}.
+    sloty:
+      - { role: "Zamotat hlavu",      stat: improvizace, kotva: 3, viditelnost: viditelna }
+      - { role: "Přesunout z očí",    stat: nastroj,     kotva: 3, viditelnost: viditelna }
+      - { role: "Přilepšit do dlaně", stat: hodnota,     kotva: 2, viditelnost: viditelna }
+      - { role: "Kdyby čenichal dál", stat: utok,        kotva: 3, viditelnost: skryta }
+    pasmove_vysledky:
+      hladce_loot: { loot: karta }
+      s_nasledky:  { postih_lehky: [drobna-pokuta, vysypana-bedna, prach-do-oci] }
+      prusvih:     { postih_tezky: [zlomene-zebro] }
+
+  # ============================================================
+  # TÉMA 4 — Rivalský gang
+  # ============================================================
+  - id: rival-prepad
+    typ: npc
+    svet: 1930
+    telegraf: "Konkurenční parta zablokovala cestu vozy a chce náklad. Půjde do tuhého — tři role jsou o síle a pevných nervech; jedna skrytá patří tomu, kdo tasí včas. Zbraň tu projde, ale jen když ji vytáhneš skrytě a první."
+    text: >
+      Napříč silnicí stály vozy rivalů a chlapi si plivali do dlaní. {kdo} se jim
+      postavil s {VEC}, {kdo} ustál první nápor za {VEC} a {kdo} se pokusil
+      vyklouznout stranou s {VEC}. Než se kdo nadál, měl {kdo} v ruce {VEC}.
+    sloty:
+      - { role: "Postavit se jim",  stat: utok,        kotva: 3, viditelnost: viditelna }
+      - { role: "Ustát nápor",      stat: obrana,      kotva: 3, viditelnost: viditelna }
+      - { role: "Vyklouznout stranou", stat: improvizace, kotva: 3, viditelnost: viditelna }
+      - { role: "Tasit včas a první", stat: utok,       kotva: 3, viditelnost: skryta }
+    pasmove_vysledky:
+      hladce_loot: { loot: karta }
+      s_nasledky:  { postih_lehky: [narazene-rameno, utrzena-kapsa, zvoneni-v-usich] }
+      prusvih:     { postih_tezky: [zlomene-zebro, otras-mozku] }
+
+  - id: rival-parley
+    typ: npc
+    svet: 1930
+    telegraf: "Bootleggerský boss vás zve k jednání nad sklenkou, úsměv vlídný, za zády tři chlapi. Chce to peníze na stůl a chladnou hlavu — tři role; jedna skrytá čeká, kdyby úsměv zmizel. Zbraň na stole neprojde, potají ano."
+    text: >
+      Boss nalil a pokynul k židli, za jeho zády tři stíny. {kdo} položil na stůl
+      {VEC}, {kdo} držel řeč uhlazenou pomocí {VEC} a {kdo} se nedal zastrašit za
+      {VEC}. Kdyby úsměv zmizel, měl {kdo} pod stolem {VEC}.
+    sloty:
+      - { role: "Peníze na stůl",   stat: hodnota,     kotva: 3, viditelnost: viditelna }
+      - { role: "Uhlazená řeč",     stat: improvizace, kotva: 3, viditelnost: viditelna }
+      - { role: "Nedat se zastrašit", stat: obrana,    kotva: 2, viditelnost: viditelna }
+      - { role: "Kdyby úsměv zmizel", stat: utok,      kotva: 3, viditelnost: skryta }
+    pasmove_vysledky:
+      hladce_loot: { loot: karta }
+      s_nasledky:  { postih_lehky: [drobna-pokuta, nervy-v-hajzlu, utrzena-kapsa] }
+      prusvih:     { postih_tezky: [zlomene-zebro] }
+
+  # ============================================================
+  # TÉMA 5 — Úředník / celnice
+  # ============================================================
+  - id: urednik-vaha
+    typ: npc
+    svet: 1930
+    telegraf: "U váhy sedí drobný úředník s knírkem a hromadou předpisů. Úplatek brát nesmí, sledují ho shora — chce to papíry a nervy, tři role; jedna viditelná spolíhá na zvýšený hlas. Zbraň na očích ho jen zděsí, schovej ji."
+    text: >
+      Úředník naklepal razítko a založil si brýle. {kdo} mu podstrčil {VEC}, {kdo}
+      doložil chybějící razítko pomocí {VEC} a {kdo} zvýšil hlas s {VEC}. Celou
+      dobu {kdo} držel kamennou tvář za {VEC}.
+    sloty:
+      - { role: "Podstrčit papíry",  stat: improvizace, kotva: 3, viditelnost: viditelna }
+      - { role: "Doložit razítko",   stat: nastroj,     kotva: 3, viditelnost: viditelna }
+      - { role: "Zvýšit hlas",       stat: utok,        kotva: 3, viditelnost: viditelna }
+      - { role: "Nedat se rozhodit", stat: obrana,      kotva: 2, viditelnost: skryta }
+    pasmove_vysledky:
+      hladce_loot: { loot: karta }
+      s_nasledky:  { postih_lehky: [drobna-pokuta, mlha-v-hlave, roztresene-ruce] }
+      prusvih:     { postih_tezky: [ochrnuta-ruka] }
+
+  - id: urednik-razitko
+    typ: npc
+    svet: 1930
+    telegraf: "Na celnici chybí jediné razítko a úředník je až úzkostlivě poctivý, protože ho sledují shora. Papír tu zmůže víc než dolar — tři role o důvtipu a nářadí; jedna skrytá je o pevné nervy. Zbraň drž z dohledu."
+    text: >
+      Za přepážkou přebíral úředník listiny a mračil se na prázdné políčko. {kdo}
+      mu předložil věrohodný list pomocí {VEC}, {kdo} dorazil chybějící razítko
+      s {VEC} a {kdo} nabídl něco navíc v podobě {VEC}. {kdo} přitom ani nemrkl za {VEC}.
+    sloty:
+      - { role: "Věrohodný list",   stat: improvizace, kotva: 3, viditelnost: viditelna }
+      - { role: "Dorazit razítko",  stat: nastroj,     kotva: 3, viditelnost: viditelna }
+      - { role: "Něco navíc",       stat: hodnota,     kotva: 2, viditelnost: viditelna }
+      - { role: "Ani nemrknout",    stat: obrana,      kotva: 3, viditelnost: skryta }
+    pasmove_vysledky:
+      hladce_loot: { loot: karta }
+      s_nasledky:  { postih_lehky: [drobna-pokuta, prach-do-oci, roztresene-ruce] }
+      prusvih:     { postih_tezky: [rozdrcena-noha] }
+
+  # ============================================================
+  # TÉMA 6 — Městská policie
+  # ============================================================
+  - id: mesto-houkacky
+    typ: lokace
+    svet: 1930
+    telegraf: "Ulicemi houkají hlídkové vozy ze všech stran, velká policejní akce. V davu se ztratíš snáz než v přestřelce — tři role o důvtipu a řízení; jedna skrytá je o klid v návalu. V té tlačenici zbraň nikdo neřeší."
+    text: >
+      Sirény houkaly ze všech ulic a chodník byl k prasknutí. {kdo} splynul s davem
+      pomocí {VEC}, {kdo} zajel do postranní s {VEC} a {kdo} zahodil stopu za {VEC}.
+      V tom náporu {kdo} udržel klid jen díky {VEC}.
+    sloty:
+      - { role: "Splynout s davem",   stat: improvizace, kotva: 3, viditelnost: viditelna }
+      - { role: "Zajet do postranní", stat: nastroj,     kotva: 3, viditelnost: viditelna }
+      - { role: "Zahodit stopu",      stat: improvizace, kotva: 2, viditelnost: viditelna }
+      - { role: "Klid v návalu",      stat: obrana,      kotva: 3, viditelnost: skryta }
+    event:
+      - "Z hlídkového vozu vypadl zapomenutý svazek policejních klíčů."
+      - "Novinář s bleskem vás vyfotil. Snímek zítra vyjde — s vaší espézetkou."
+      - "Podloudník na rohu vám za dolar prodá zadní vchod z bloku."
+    pasmove_vysledky:
+      hladce_loot: { loot: karta }
+      s_nasledky:  { postih_lehky: [mlha-v-hlave, prilis-na-rane, prach-do-oci] }
+      prusvih:     { postih_tezky: [rozdrcena-noha] }
+
+  - id: mesto-ulicka
+    typ: npc
+    svet: 1930
+    telegraf: "Dvojice městských policistů vás zahnala do slepé uličky. Znají tu každý kanál — chce to klid a řeč, dvě role; třetí spoléhá na gesto, čtvrtá skrytá hledá skulinu. Zbraň na očích tu neprojde, potají se skulina najde."
+    text: >
+      Ulička končila zdí a dva strážníci ji zatarasili. {kdo} držel nervy pevně za
+      {VEC}, {kdo} je zkoušel zamluvit pomocí {VEC} a {kdo} zvedl ruku s {VEC}.
+      Zatímco mluvili, {kdo} nahmatal skulinu skrz {VEC}.
+    sloty:
+      - { role: "Držet nervy",     stat: obrana,      kotva: 3, viditelnost: viditelna }
+      - { role: "Zamluvit to",     stat: improvizace, kotva: 3, viditelnost: viditelna }
+      - { role: "Zastrašit gestem", stat: utok,       kotva: 3, viditelnost: viditelna }
+      - { role: "Najít skulinu",   stat: nastroj,     kotva: 2, viditelnost: skryta }
+    pasmove_vysledky:
+      hladce_loot: { loot: karta }
+      s_nasledky:  { postih_lehky: [prilis-na-rane, mlha-v-hlave, utrzena-kapsa] }
+      prusvih:     { postih_tezky: [rozdrcena-noha] }
+
+  # ============================================================
+  # TÉMA 7 — Nádraží / překladiště
+  # ============================================================
+  - id: nadrazi-vypravci
+    typ: npc
+    svet: 1930
+    telegraf: "Na seřaďovacím nádraží chce výpravčí nákladní list, který nemáte. Chlap jako hora, zná každý trik, ale hrubému slovu ustoupí — tři role o síle, nářadí a penězích; jedna skrytá ho zmate papírem. Zbraň na očích neprojde."
+    text: >
+      Výpravčí se rozkročil před vagonem a natáhl ruku po listu, který jste neměli.
+      {kdo} na něj zatlačil hrubě s {VEC}, {kdo} odsunul závoru {VEC} a {kdo} mu
+      podmázl dlaň {VEC}. Mezitím {kdo} podstrčil zmatený papír pomocí {VEC}.
+    sloty:
+      - { role: "Zatlačit hrubě",  stat: utok,        kotva: 3, viditelnost: viditelna }
+      - { role: "Odsunout závoru", stat: nastroj,     kotva: 3, viditelnost: viditelna }
+      - { role: "Podmáznout dlaň", stat: hodnota,     kotva: 2, viditelnost: viditelna }
+      - { role: "Zmást papírem",   stat: improvizace, kotva: 3, viditelnost: skryta }
+    pasmove_vysledky:
+      hladce_loot: { loot: karta }
+      s_nasledky:  { postih_lehky: [narazene-rameno, drobna-pokuta, zvoneni-v-usich] }
+      prusvih:     { postih_tezky: [zlomene-zebro] }
+
+  - id: nadrazi-noc
+    typ: lokace
+    svet: 1930
+    telegraf: "V noci se protahujete kolem hlídače s lucernou k odstavenému vagonu. Ve tmě se dobře mizí — dvě role o důvtipu a nářadí; dvě skryté hlídají klid a záložní řešení. Mezi vagony zbraň nikoho nevyplaší."
+    text: >
+      Mezi odstavenými vagony se míhalo světlo hlídačovy lucerny. {kdo} proklouzl
+      kolem něj pomocí {VEC}, {kdo} páčil dveře vagonu {VEC} a {kdo} ztuhl ve stínu
+      za {VEC}. Kdyby se hlídač probudil, měl {kdo} připravené {VEC}.
+    sloty:
+      - { role: "Proklouznout kolem", stat: improvizace, kotva: 3, viditelnost: viditelna }
+      - { role: "Vypáčit vagon",      stat: nastroj,     kotva: 3, viditelnost: viditelna }
+      - { role: "Ztuhnout ve stínu",  stat: obrana,      kotva: 2, viditelnost: skryta }
+      - { role: "Kdyby se probudil",  stat: utok,        kotva: 3, viditelnost: skryta }
+    event:
+      - "V otevřeném vagonu stojí bedny cizí kořalky bez dozoru."
+      - "Hlídač usnul s lahví v ruce. Klíče od skladu se mu houpou u pasu."
+      - "Po kolejích se blíží noční manipulační lokomotiva. Ještě daleko."
+    pasmove_vysledky:
+      hladce_loot: { loot: karta }
+      s_nasledky:  { postih_lehky: [prach-do-oci, mlha-v-hlave, prilis-na-rane] }
+      prusvih:     { postih_tezky: [rozdrcena-noha] }
+
+  # ============================================================
+  # SPECIÁLNÍ — Zátah (vkládaný při prahu Žáru; nahradí jednu z cest)
+  # ============================================================
+  - id: zatah
+    typ: zatah
+    svet: 1930
+    telegraf: "Silnici přehradily hlídkové vozy a všude bliká policejní světlo. Tudy se neprojede — tři role o důvtipu, řízení a nervech, jak nejrychleji zmizet; jedna viditelná sází na průraz. Zbraň na očích akci jen přiostří."
+    text: >
+      Za zatáčkou stála zátaras z hlídkových vozů a reflektory bily do očí. {kdo}
+      se pokusil prorazit s {VEC}, {kdo} strhl vůz do postranní pomocí {VEC} a {kdo}
+      zmizel v bočních ulicích za {VEC}. U okna přitom {kdo} držel nervy na uzdě s {VEC}.
+    sloty:
+      - { role: "Prorazit blokádu", stat: utok,        kotva: 3, viditelnost: viditelna }
+      - { role: "Strhnout do postranní", stat: nastroj, kotva: 3, viditelnost: viditelna }
+      - { role: "Zmizet v ulicích", stat: improvizace, kotva: 3, viditelnost: viditelna }
+      - { role: "Držet nervy u okna", stat: obrana,    kotva: 3, viditelnost: skryta }
+    pasmove_vysledky:
+      hladce_loot: { loot: karta }
+      s_nasledky:  { postih_lehky: [zvoneni-v-usich, narazene-rameno, prilis-na-rane] }
+      prusvih:     { postih_tezky: [zlomene-zebro, otras-mozku] }
