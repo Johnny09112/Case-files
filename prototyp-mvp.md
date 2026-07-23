@@ -13,23 +13,48 @@ dokud je nezafixuje v3 simulační brána.
 
 ---
 
-## Fáze 0 — v3 simulační brána (kritéria OTEVŘENÁ)
+## Fáze 0 — v3 simulační brána (kritéria ZAFIXOVÁNA, D19)
 
-**Pozor: pivot na slotovou resoluci mění, co simulace vůbec je.** Kritéria v2 brány
-(win-rate pásma pro kostkový model, prahy hodů) na v3 neplatí. **Kritéria v3 brány
-zatím NEJSOU zafixována — definuje je `playtest-facilitator`** nad novým modelem,
-než se čísla zabetonují do prototypu. Teprve pak se běhy měří proti nim.
+**Pozor: pivot na slotovou resoluci mění, co simulace je.** Motor v2 (per-hráč hod →
+zranění) zmizel; snowball v3 je agency-based smyčka (info-postih → horší přiřazení →
+horší pásmo → další postih) + Žár + ubývání beden. Referenční běh = **4p**, ale každé
+kritérium se reportuje **pro všechny počty 1–4p**. Splnění brány **není Go** — jen
+odblokuje stavbu a vstup do lidské brány. Plné odůvodnění a botí detaily drží
+`playtest-facilitator` (paměť `v3-gate-criteria-draft`).
 
-**Kandidátní osy** (co brána nejspíš pohlídá — finální prahy otevřené):
-- **win-rate pásmo DORUČENO** u realistické (cíle-driven) i kompetentní hry (pásmo
-  se určí nově — v2 mělo 45–70 %, přenositelnost na slotový model ověřit);
-- **snowball**: přírůstek postihů/tlaku roste od ~3. uzlu;
-- **první práh Žáru** padá medián uzel 3–4;
-- **žádná dominantní strategie** (rozdělovací heuristika ani stat-monokultura);
-- **frekvence „nevyhnutelně špatného slotu"** je koření, ne norma (odhad ~1 za
-  2–3 situace) — moc často = frustrace, moc zřídka = commit bez tření;
-- **vyrovnání agency mezi počty hráčů** (1–4p srovnatelná obtížnost i „hádka");
-- **EV gamble** neutrální až mírně záporná (bere se jen v zoufalé situaci).
+| # | Metrika | GATE práh | Pozn. |
+|---|---|---|---|
+| **K1** | % DORUČENO (cíle-driven i kompetentní bot) | **45–70 %** | Pásmo **provizorní**; run-1 je diagnostický (syrový baseline + rozpad proher **bedny-0 vs. konfrontace**, D19a), **pásmo se FIXUJE hned po run-1** a dál se ladí proti pevnému cíli. |
+| **K2** | přírůstek postihů/uzel (lehký 1, těžký 2,3) | uzel 3–4 ≥ **1,3×** uzel 1–2 | + korelace info-postih zátěž vs. pásmo (síla smyčky). Hlavní dataviz. |
+| **K3** | medián uzlu 1. překročení prahu Zátah | **∈ {3,4}** | čísla Žáru resetují (per-pásmo PRŮŠVIH + hlučné karty). |
+| **K4a** | max win-rate fixní přiřazovací heuristiky | **≤ 80 %** | |
+| **K4b** | dominance stat-monokultury commitu | žádná; rozpětí statů ≤ ~10 b. | kotvy 2–4 nesmí být předvídatelné. |
+| **K4c** | learnabilita | kompetentní − random **≥ 12 b.** A memorizační − kompetentní **≤ 3 b.** | **GATE svázaná s noise-modelem:** pád nejdřív spustí „oprav šum", pak teprve „zahoď design". Memorizační bot memorizuje **stabilní kotvy per situace-ID**; šum je **per-instance IID uniform ±1**. |
+| **K5** | frekvence vynuceného pásma (oracle na committnutých kartách) | **max ≤1/4 (beznadějné) < 5 %** | Vrstvy „max<4/4: 30–50 %" a „max≤2/4: 10–20 %" = **diagnostika k pozorování**, ne gate. |
+| **K6a** | rozpětí win-rate mezi 1–4p | **≤ 10 b.** | parita obtížnosti. |
+| **K6c** | run-agregovaný pasažér | žádný hráč pod podlahou příspěvku | swing agregovaný přes run, ne per-situace. |
+| **K6b** | konflikt týmové optimum vs. cíl hráče | **diagnostika**, soft floor „zřetelně > 0" | proxy „je se o čem hádat"; sim měří existenci sporu, ne hádku. |
+| **K7** | gamble: take-rate / kdy / EV | ≤ 20 % / ≥ 80 % při odhadu ≤2/4 / EV<0 při ≥3/4 | **EV se měří per počet hráčů** (líz 1/2 pro 1p/2p/4p, 1/3 pro 3p ne-držitele). |
+| **K8** | ekonomika | medián **7–9** kreditů; **<30 %** runů si koupí vše; směna i léčení každé **≥25 %** motelů | test tieru must-heal vs. rideable. |
+| **K9** | mechanické cíle (per držící hráč) | každý **5–95 %** | v3 cíle čekají na **event-log spec technical-developera** (přepis z injury-měn). |
+
+**Předpoklady simu (D19):** commit **naslepo**; **kotvy 2–4** (práh 0 zakázán),
+**šum uniform ±1**; kombinovaný slot = „oba staty ≥ kotva" (střídmě). **Telegraf:
+signál (`trend`, `proti_srsti`, `zbraň_projde`) derivuje engine ze slotů**, próza je
+lidský rendering s QA invariantem věrnosti; **fidelita telegrafu `p` = sweep knob.**
+Sdílený standardní balík ~40 (líz patří lízajícímu); prémiový osobní loadout je
+post-MVP. **Botí strategie:** commit informovaný/naivní/stat-monokultury (+ **commit-fázový
+model pro postih `hide_telegraf`** — bot committne bez trendu); přiřazení
+oracle/kompetentní/greedy/random/cíle-driven/memorizační; info-postih = ε-greedy
+přiřazení (gap informovaný vs. postižený = síla postihu jako −X); ekonomika
+vždy-léčit/vždy-směnit/adaptivní. **Event-log spec vlastní technical-developer**
+(nahradí architektura §2.2; jeden log pro gate-metriky, `podminka` cílů i
+`max_achievable_band` z oracle).
+
+**Pořadí kalibrace (D19):** *smoke-test co-op inverze* (má 4p horší dosažitelnou
+informaci než 1p? → případné přeuspořádání reference) → **kotvy × staty karet** (jádro,
+ref 4p) → **postihy** (nesou ekonomiku) → **Žár** → **ekonomika** → **ruce** (parita
+agency, proti stabilnímu 4p) → **gamble + cíle** (jemné, naposled).
 
 **Hranice poctivosti:** simulace ověří matematiku a tempo, NE zábavnost, hádku ani
 smích — to čeká na lidskou bránu. **Kvalita českého AI humoru** (největší riziko)
@@ -167,7 +192,7 @@ krátký dotazník + pozorování.
 
 **Co ladit:** velikosti rukou (vyrovnání agency 1–4p), kotva ± šum prahů, hranice
 pásem, poměr a trvání postihů, kreditové ceny/příjmy a dostupnost motelu, EV
-gamble (1/3), tempo Žáru (první práh ~3.–4. uzel, snowball od ~3. uzlu), frekvence
+gamble (per počet hráčů), tempo Žáru (první práh ~3.–4. uzel, snowball od ~3. uzlu), frekvence
 nevyhnutelně špatného slotu, **náklad vs. Žár jako fail-condition** (možná
 konsolidace kvůli kognitivní zátěži), délka a tón protokolů, poměr cache-hitů.
 
