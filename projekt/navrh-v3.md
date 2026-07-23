@@ -55,6 +55,14 @@ Jackbox/browser-join** (škrtnuto).
 - **Steam Remote Play Together** od prvního dne (funguje jako demo).
 - **Časovač volitelný** — výchozí režim nechá stůl diskutovat, to *je* ta hra.
 
+**Status sólo režimu (D6).** Sólo je **plnohodnotný, ale sekundární** — je to
+*kabinetní* varianta: jeden mozek řeší celý slate 4 slotů (blíž puzzle/roguelike
+deckbuilderu), s doporučenou **delší tratí** pro hloubku. Dva primární zážitkové
+pilíře hry — **hádka o přiřazení** a **čtení protokolu nahlas** — jsou ze své
+podstaty stolní; sólo je tedy jiný, tišší požitek, ne cílová zkušenost. Cílová
+zkušenost je **2–4 hráči u stolu**. (Free demo z §14 je pevný sólo run.)
+*Zábavnost sóla samostatně ověří lidská brána.*
+
 ## 3. Core loop (jeden run ≈ 30 minut)
 
 Run = **cesta po větvící se mapě** (StS graf, ~7 uzlů) z Buffala do New Yorku.
@@ -78,18 +86,20 @@ Dojedeš s nákladem = **DORUČENO**. Ztratíš náklad nebo tě dožene šerif 
 - **Motel / úkryt** — bez resoluce. Za společné kredity **léčíš postihy** a měníš
   karty.
 
-**Mix na ~7 uzlů: 5 maso / 1 truhla / 1 motel** *(ladit simulací)*. Pravidla mixu:
-maso (NPC+lokace) ≥ 65–70 %, nikdy dva ne-maso uzly po sobě, truhla dřív (uzel
-2–3), motel střed-pozdě (uzel 4–6). Větvení **nesmí** dovolit vyroutovat se kolem
-masa (červená vlajka balancu).
+**Mix páteře ~7 uzlů: 5 maso / 1 truhla; motel jako větvová odbočka** *(ladit
+simulací; detail dostupnosti motelu §7)*. Pravidla mixu: maso (NPC+lokace)
+≥ 65–70 %, nikdy dva ne-maso uzly po sobě, truhla dřív (uzel 2–3), **motelová
+odbočka mid a late** (uzly 3–4 a 5–6, tým volí u větvení). Větvení **nesmí**
+dovolit vyroutovat se kolem masa (červená vlajka balancu).
 
 **Průběh jednoho maso-uzlu** (jádro hry, detail §5):
 
 1. **Telegraf** — polda vyklepe krátký úvod (1–2 věty): co se blíží, ne přesně jak.
-2. **Commit naslepo** — každý hráč vytáhne z ruky věc(i) do slotů (viz §4), *než*
-   uvidí celý text. Sázíš podle telegrafu.
-3. **Odhalení textu** — teprve teď se ukáže plný text situace se **4 sloty** (rolemi).
-4. **Týmové přiřazení** — stůl volně rozdělí zahrané věci do slotů; **vlastník
+2. **Commit naslepo** — každý hráč vytáhne z ruky pár věcí do **společného poolu**
+   (viz §4.3), *než* uvidí celý text. Sázíš podle telegrafu.
+3. **Odhalení textu** — teprve teď se ukáže plný text situace se **4 sloty** (rolemi),
+   každý s ikonou viditelnosti (👁/🕳, §4.2).
+4. **Týmové přiřazení** — stůl vybere z poolu **4 věci do slotů**; **vlastník
    věci musí souhlasit** (drží vlastnictví postavy i jednotnou hru 1–4p).
 5. **Vyhodnocení** — každý slot: stat věci vs. **skrytý práh**. Zásahy → pásmo.
 6. **Odhalení prahů** — po vyhodnocení se prahy ukážou. Hráč vždy ví, proč slot
@@ -124,28 +134,52 @@ Nad staty stojí vzácné **štítky** s tvrdým pravidlem, ne jen s číslem. V
   ohledu na staty (šerif zbraň uvidí). V lokaci/překážce nebo ve skryté roli je
   naopak eso. Nutí volit *kdy* zbraň tasit.
 
-Štítky jsou hlavní nosič „výjimek u speciálních slotů" z D15 (práh běžně klíčuje
-na 1 stat; štítek ho může přebít). Další štítky *(ladit obsahem)*.
+**Štítek nesmí být gotcha (B4).** Aby volba „tasit / netasit" byla informovaná,
+ne past:
+- při odhalení textu má **každý slot ikonu viditelnosti** — 👁 *viditelná role*
+  (kolemjdoucí/NPC ji uvidí) vs. 🕳 *skrytá role* (nikdo nekouká);
+- **telegraf předem signalizuje**, zda je situace typ, kde „zbraň projde" (odlehlá
+  lokace, rvačka) nebo ne (kontrola, dav) — hráč committne GANGSTER se znalostí
+  rizika, ne naslepo do trestu.
 
-### 4.3 Sloty vždy 4, ruce dle počtu hráčů
+Štítky jsou **karetní** nosič výjimek z D15 (práh běžně klíčuje na 1 stat; štítek
+ho může přebít). Doplňují je **slotové výjimky** (§5.2, D3). Další štítky *(ladit obsahem)*.
+
+### 4.3 Sloty vždy 4; commituj do společného poolu, tým přiřadí (škálování 1–4p)
 Každá situace má **4 sloty** — **stejné texty pro všechny počty hráčů** (jednotná
-hra, snadná tvorba obsahu). Liší se jen, kolik věcí kdo naslepo cpe *(všechna
-čísla ladit simulací)*:
+hra, snadná tvorba obsahu). Původní model „commit přesně tolik, kolik je slotů"
+(6/4/3/3) padl na kritice B2: při něm měl **4p horší commit-info než sólista**
+(1 věc ze 3 naslepo vs. 4 ze 6 s volným přiřazením) a **hádka byla tenká na obou
+koncích** (sólo žádná, 4p jen permutace 4 karet do 4 slotů). To invertuje kooperaci
+— hra by byla těžší, čím víc lidí.
 
-| Hráčů | Ruka | Commit naslepo | 4. slot |
-|---|---|---|---|
-| 1 | 6 | volí **4** (jeden mozek, globální optimalizace) | z committnutých |
-| 2 | 4 každý | **2 + 2** | z committnutých |
-| 3 | 3 každý | **1 + 1 + 1** | **gamble-draw slot** (týmová sázka, §4.5) |
-| 4 | 3 každý | **1 + 1 + 1 + 1** | z committnutých |
+**Oprava (D16): commit do společného poolu > 4, tým přiřadí 4 do slotů.** Každý
+hráč naslepo (dle telegrafu) vytáhne pár věcí do **společného poolu**; po odhalení
+textu tým vybere 4 z poolu do slotů (vlastník každé věci musí souhlasit).
+Nepoužité committnuté věci se **vrací do ruky** (žádná ztráta). *(Všechna čísla
+ladit simulací.)*
 
-Ruka > commit, aby byl commit naslepo skutečná volba. **Velitel u 3p zrušen**
-(balanční past): 4. slot je místo něj vždy gamble-draw — z asymetrie počtu vzniká
-týmová sázka, ne pseudo-4. hráč.
+| Hráčů | Ruka | Commit naslepo | Pool | Do 4 slotů | Přebytek (návrat do ruky) |
+|---|---|---|---|---|---|
+| 1 | 6 | **5** | 5 | 4 | 1 |
+| 2 | 4 každý | **3 + 3** | 6 | 4 | 2 |
+| 3 | 4 každý | **2 + 2 + 2** | 6 | 4 | 2 |
+| 4 | 3 každý | **2 + 2 + 2 + 2** | 8 | 4 | 4 |
 
-*Pozn. pro simulaci: 1p optimalizuje 4 sloty jedním mozkem, 4p lokálně a naslepo
-po jedné + koordinuje přiřazením. Který efekt převáží, je klíčová v3 sim proměnná
-— režim informace (všichni naslepo) je sjednocen záměrně, aby se srovnával.*
+Proč to srovnává **páku i hádku** (mandát D16 bod 3):
+- **Commit-info parita:** každý hráč vždy sází výběrem (ruka > commit), ne slepým
+  taháním jediné karty. Nikdo nemá horší informaci než sólista.
+- **Hádka roste s počtem hráčů, ne klesá:** pool > sloty znamená, že se o
+  přiřazení **vybírá** (6 → 4, u 4p 8 → 4). Víc lidí = víc věcí v poolu = bohatší
+  vyjednávání „čí věc do kterého slotu", ne permutační patovka.
+- **3p bez povinné daně (D1):** pool 6 → 4 funguje i u trojice; **gamble-draw už
+  není strukturální 4. slot**, zůstává opt-in všude (§4.5). Velitel zrušen (past).
+
+*Před commitem tým sdílí a probírá telegraf (§5.2) — to je zárodek hádky; skryté
+zůstává jen, kdo co committne. Pozn. pro simulaci: 1p řeší slate jedním mozkem,
+4p osmikartový pool koordinací — který efekt převáží, je klíčová v3 sim proměnná.
+Riziko „benchnutá věc = pasažér" (u 4p se 4 věci nezahrají) se sleduje u lidské
+brány; zmírnění: přebytek se vrací, spotlight slotů rotuje napříč runem.*
 
 ### 4.4 Dolízání
 Na **konci kola** dolízneš zpět na plnou ruku ze standardního balíku svého světa.
@@ -157,14 +191,14 @@ komedii**. Místo ní: jednou lze **líznout náhodnou kartu z balíku** a **pov
 použít** do slotu, který jinak nepokryješ.
 
 Pravidla EV *(ladit simulací)*:
+- **opt-in u všech počtů hráčů** — nikdy povinná daň (oprava D1: dřívější „u 3p
+  vždy gamble" padlo se změnou škálování §4.3);
 - líže se ze **standardního balíku**, kde ~20–30 % karet je pro daný slot **net-záporných**;
 - **EV ≈ neutrální až mírně záporná** s vysokou variancí (kladná → bere se vždy;
   moc záporná → mrtvá volba);
 - **tažená karta se povinně použije** (jinak to není sázka), bez ceny a bez capu —
   přirozený strop je, že smí plnit jen jinak nepokrytý slot (self-balancing);
 - **riziko musí být čitelné** (drama „tohle je sázka"), ne skryté (trap).
-
-U **3 hráčů** je 4. slot vždy gamble-draw — struktura, ne volba.
 
 ### 4.6 Standardní vs. prémiové karty *(prémiové mimo MVP)*
 - **Standardní** (~300 v plné vizi) — sdílené napříč světy, tvoří páteř balíku.
@@ -195,14 +229,27 @@ po přiřazení a dává okamžitou zpětnou vazbu (žádné čekání na síť)
 AI přijde až v kroku 8 (protokol, §12) — dramatizuje **hotový výsledek**, nerozhoduje.
 
 ### 5.2 Skryté prahy = kotva ± šum (learnabilita)
-Každý slot klíčuje na **1 stat** a má **skrytý práh**, odhalený až po vyhodnocení.
-Prahy jsou **kotva ± šum** (D15):
+Většina slotů klíčuje na **1 stat** a má **skrytý práh**, odhalený až po
+vyhodnocení. Prahy jsou **kotva ± šum** (D15):
 - **typ situace má naučitelný trend** (NPC „všimné" → hodnota; překážka „oprava"
   → nástroj) — kompetentní hráč po pár runech ví, *co* situace chce;
 - **instance kolísá ±1** kolem kotvy (kotva ≥3 → reálně ≥2 až ≥4) — **mistrovství
   roste, memorizace konkrétních čísel nefunguje**, a win-rate pásmo brány zůstává
   smysluplné.
 
+**Slotové výjimky (D3 — vrácené).** D15 mluví o „výjimkách u speciálních slotů";
+ať nezůstanou jen na kartách (štítcích), část **speciálních slotů** má výjimku
+na straně slotu *(střídmě, ladit obsahem)*:
+- **kombinovaný práh** — slot vyžaduje **dva staty** ≥ práh (např. „vylomit a
+  přitom hlídat" = nástroj ≥3 **a** obrana ≥2);
+- **štítek-citlivý slot** — role, která GANGSTER buď vylučuje (👁 viditelná), nebo
+  naopak odměňuje (skrytá přepadovka).
+Tím drží D15 doslovně: výjimky jsou **karetní** (štítky, §4.2) **i slotové**.
+
+**Telegraf je sázka, ne dart (D4).** Aby byl commit naslepo informovaný, telegraf
+sděluje **trend** (jaké staty situace nejspíš chce) **a kolik ze 4 slotů půjde
+„proti srsti"** (nečekané/skryté role). Např.: *„Sociální kontrola — dvě role
+poběží jinak, než čekáš."* Hráč tak sází s odhadem rizika, ne slepě.
 Telegraf a **názvy rolí** napovídají trend; přesné číslo ne. To je motor hádky
 u stolu („na šerifa dej hodinky, ne pistoli").
 
@@ -218,6 +265,27 @@ Skóre = počet slotů, které prošly práh (0–4) → **pásmo** *(hranice la
 
 Pásma (ne „73 %") drží čitelnost u party stolu a dávají AI čtyři jasné tóny
 protokolu.
+
+### 5.4 Vysvětlující vrstva „proč se to stalo" (first-class, B1)
+**Jediný lidský playtest (2026-07-22) padl na tom, že hra svá pravidla
+nevysvětluje.** Ve v3 se skrytostí prahů *a* tajných cílů (dva skryté systémy,
+D16) riziko roste — proto je vysvětlující vrstva **plnohodnotná položka MVP řezu**
+(§15), ne kosmetika. Princip: **každá netriviální mechanická událost nese při
+odhalení krátkou anotaci, proč nastala.** Pokrývá:
+
+- **prahy slotů** — po vyhodnocení se u každého slotu ukáže skrytý práh a realita
+  („hodnota 2, potřeba ≥3 → slot selhal"), jako v mikroprototypu;
+- **vynucení a štítky** — proč GANGSTER selhal (👁 viditelná role), proč slotová
+  výjimka chtěla dva staty;
+- **pohyby šerifa / Žáru** — každá změna má důvod v textu („+2: hlučná pistole"),
+  ne tichý skok (viz §8, D7);
+- **postihové řetězce** — proč postih vznikl, kdy vyprší, co ho vyléčí; proč
+  „složení" (§6);
+- **plnění tajných cílů** — reveal na konci ukáže **u každého cíle**, které
+  konkrétní tahy ho plnily nebo kazily (to pokrývá druhý skrytý systém dle D16).
+
+Není to tutoriál na začátku, ale **průběžné diegetické „proč"** vetkané do spisu a
+okraje mapy — hráč se pravidla učí tím, že vidí jejich dopad.
 
 ## 6. Postihy (nahrazují zranění + prokleté/zoufalé karty)
 
@@ -238,13 +306,22 @@ spirály smrti). Plná **taxonomie** (D15):
   proti „vždy jen šetřit kredity" (viz kreditová ekonomika).
 
 **Cap a eskalace:** max **2 aktivní postihy na hráče**. Třetí → postava je kolo–dvě
-**„složená"** (leží v autě, generuje poznámky do protokolu), pak **očištěná**
-(všechny postihy pryč, zpět do hry). Je to komediální ventil i tvrdý strop spirály
-— nikdo se nezasekne v nehratelném stavu.
+**„složená"** (leží v autě, generuje poznámky do protokolu), pak se vrací do hry.
+
+**Složení NIKDY nesmí být levnější než poctivé léčení (oprava B3).** Dřívější
+znění „po složení jsou všechny postihy pryč" dělalo z 3. postihu **free cleanse**,
+který dominoval placenému léčení (H=6 kreditů) a podkopával kreditovou smyčku.
+Oprava: **složení smaže jen LEHKÉ dočasné postihy** (ty by stejně brzy vypršely);
+**těžké trvalé postihy složení přetrvávají** a dál se léčí jen v motelu za kredity.
+Tím zůstává:
+- komediální ventil a strop spirály (nikdo se nezasekne v nehratelném stavu),
+- ale **cesta ven z těžkých postihů je pořád jen placená** — složení není zkratka,
+  jen bolestivá pauza (tým je kolo–dvě bez hráče). Léčit se vyplatí dřív, než tě to
+  složí.
 
 *Vazba na hlas z auta (v2): „složený" hráč může jednou za kolo binárně přispět
-spoluhráči — drží ho ve hře a krmí protokol. (Proveditelnost v hot-seat UI ověří
-technical-developer.)*
+spoluhráči — drží ho ve hře a krmí protokol. → **tech backlog** (technical-developer:
+proveditelnost „hlasu z auta" ve slotovém hot-seat UI, K2).*
 
 ## 7. Ekonomika: společné kredity
 
@@ -257,11 +334,33 @@ sáhne) a **per-run** (nepřecházejí mezi runy → žádný hoarding). Startov
 | **Směna karty (S)** v motelu | **3 kredity** |
 | **Vyléčení postihu (H)** v motelu | **6 kreditů** |
 
-Příjem: **truhla +3–5**, velmi úspěšná situace (HLADCE+LOOT) **+1**. Skvělý run
-≈ **12** kreditů, medián ≈ **5–6** → reálné dilema „léčit Kowalského, nebo 2×
-prohodit balík". **Motel nesmí být vzácný** (jinak mistiming zabije léčení jako
-volbu). Jen **těžké postihy** stojí za léčení; kdyby léčitelné bylo všechno, směna
-karet by umřela — proto tiery postihů (§6) a kreditová ekonomika visí na sobě.
+**Příjem (opravená aritmetika, mandát 1a).** Původní verze slibovala „skvělý run
+≈ 12", ale dosažitelné maximum bylo jen ~10 (truhla ≤5 + 5× loot po 1) — cíl
+„skvělý run ≈ 4 směny NEBO 2 léčení" (= 12) tak nešel naplnit. Přerovnané zdroje:
+
+| Zdroj | Příjem |
+|---|---|
+| **Truhla** | **+4–6** |
+| Situace **HLADCE + LOOT** (4/4) | **+2** |
+| Situace **HLADCE** (3/4) | **+1** |
+
+Kontrola konzistence *(vše ladit simulací)*:
+- **Skvělý run** ≈ truhla 6 + 2× LOOT (4) + 3× HLADCE (3) = **~13** → 4 směny (12)
+  nebo 2 léčení (12) reálně vyjdou;
+- **Medián run** ≈ truhla 5 + 1× LOOT (2) + 2× HLADCE (2) = **~7–9** → **unese aspoň
+  2 smysluplná ekonomická rozhodnutí** (2× směna, nebo 1× léčení + rezerva na
+  směnu) — splňuje mandát 1c, medián není tenký;
+- **Slabý run** ≈ truhla 4 + drobty = **~4–5** → tvrdý výběr jediné akce (napětí).
+
+**Dostupnost motelu (mandát 1b).** Jeden pevný motel na 7 uzlů odporoval vlastnímu
+pravidlu „motel nesmí být vzácný". Oprava: **motel je větvová odbočka, ne pevný
+slot** — na mapě jsou **2 motelové příležitosti** (typicky odbočka v uzlu 3–4 a
+druhá v 5–6), tým se u větvení **rozhoduje**: zajet do úkrytu (léčení + směna, ale
+delší/riskantnější cesta), nebo hnát náklad dál. Léčení je tak **dostupné, ale
+stojí volbu** — ne vzácnost, ale dilema.
+
+Jen **těžké postihy** stojí za léčení; kdyby léčitelné bylo všechno, směna karet by
+umřela — proto tiery postihů (§6) a kreditová ekonomika visí na sobě.
 
 ## 8. Žár a pronásledovatel (eskalace na mapě)
 
@@ -271,8 +370,15 @@ karet by umřela — proto tiery postihů (§6) a kreditová ekonomika visí na 
 
 - **Žár roste** za PRŮŠVIH uzly, za **hlučné** věci (GANGSTER / silně útočné hraní)
   a za vybrané výsledky. *(Konkrétní přírůstky a prahy ladit simulací — design drží
-  jen strukturu, hodnoty žijí v prototypu.)*
-- **Prahy** (jako v2, na mapě viditelné předem):
+  jen strukturu, hodnoty žijí v prototypu.)* „Hlučnost" bez tagů = odvozená ze
+  **štítků a statů** (GANGSTER karta, vysoký útok, výsledek „incident") — otázka do
+  simulace, jak přesně (§16).
+- **Žár je pozice na značené trati, ne číslo (D7).** Na mapě je vyznačená dráha
+  šerifa s **viditelnými prahy** (Zátah / léčka / konfrontace jako značky na trati),
+  takže tým vidí, jak daleko klobouk je a co ho čeká. **Každý pohyb šerifa nese
+  anotaci proč** („+2: hlučná pistole u kontroly") — přímá vazba na vysvětlující
+  vrstvu (§5.4). Řeší playtest nález „nikdo nechápal, proč Žár vyskočil 2×".
+- **Prahy** (jako v2, na trati viditelné předem):
   - **Zátah** — příští uzel na mapě **nahradí** speciální Zátah (obě větve vedou
     přes něj; beztrestně obejít nejde).
   - **Léčka** — vloží se mimořádný uzel s pronásledovatelem osobně.
@@ -287,26 +393,29 @@ karet by umřela — proto tiery postihů (§6) a kreditová ekonomika visí na 
 **Záměrně NE:** perzistence pronásledovatele napříč runy (scope + patent WB na
 nemesis), soubojový systém s HP, tahy nepřítele (v 30min hře mrtvý čas).
 
-## 9. Tajné osobní cíle — PŘEHODNOCENO
+## 9. Tajné osobní cíle — ZŮSTÁVAJÍ V MVP (osekaná verze)
 
-**Návrh: zachovat, ale osekat a přesunout na hranu MVP.** Argument pro: reveal na
-konci je **metrika úspěchu #4** („tys to dělal schválně?!") a v slotovém systému
-získávají cíle novou páku — máš skrytý důvod hádat se o **konkrétní přiřazení
-slotu** („dej MOJI pistoli do útoku"), zatímco tým optimalizuje globálně. To je
-přesně to tření, které kooperaci drží živou.
+**Rozhodnutí D16: tajné cíle zůstávají v MVP** (uživatel přehlasoval doporučení
+kritika odložit je). Argument pro: reveal na konci je **metrika úspěchu #4**
+(„tys to dělal schválně?!") a v slotovém systému získávají cíle novou páku — máš
+skrytý důvod hádat se o **konkrétní přiřazení slotu** („dej MOJI pistoli do
+útoku"), zatímco tým optimalizuje globálně. To je přesně to tření, které
+kooperaci drží živou.
 
-Adaptace na v3:
+**Osekaná verze pro MVP:**
 - cíle přeformulovat ze světa tagů/zranění na **staty, sloty, štítky a postihy**
   (např. „skonči run se 2 postihy a přesto DORUČENO", „ani jednou nedej GANGSTER
   do viditelné role", „buď v protokolu označen za mozek");
 - **mechanicky ověřitelné** cíle (simulace je boduje) převažují; **textové** jen
-  tam, kde nesou reveal.
+  tam, kde nesou reveal;
+- držet je **jednoduché a čitelné** — jedna páka na cíl, žádné vícekrokové řetězce.
 
-**Riziko / otázka pro kritika:** systém v3 je už teď bohatý (sloty, postihy,
-kredity, gamble, Žár). Tajné cíle můžou být **jedna vrstva navíc přes rozpočet
-kognitivní zátěže party**. Proto je vedu jako **první kandidát na odklad z MVP**,
-pokud se loop u lidské brány ukáže jako plný i bez nich. *(Rozhodne kritik +
-lidská brána.)*
+**Přijaté riziko (D16):** tajné cíle jsou **druhý skrytý systém** vedle skrytých
+prahů. Kompenzuje ho **vysvětlující vrstva (§5.4)**: reveal na konci ukáže u
+každého cíle **které konkrétní tahy ho plnily nebo kazily** — hráč nikdy neodejde
+se zmatkem „proč jsem to nesplnil". Bez téhle vazby by druhý skrytý systém
+reprodukoval playtest nález o neviditelnosti pravidel; s ní je to uspokojivý reveal.
+*(Že reveal je uspokojivý, ne matoucí, ověří lidská brána.)*
 
 ## 10. Profily hráčů a jména (post-hoc dosazení)
 
@@ -374,15 +483,16 @@ otestuje **slotovou smyčku + postihy + kredity**:
 | Co | Počet v MVP | Poznámka |
 |---|---|---|
 | Světy | **1** (1930 prohibice) | multi-svět rámec připraven, obsah ne |
-| Situace | **7 typů × 2 varianty = 14** (+1 speciální Zátah) | run = ~7 uzlů, mix 5/1/1 |
+| Situace | **7 typů × 2 varianty = 14** (+1 speciální Zátah) | run = ~7 uzlů, mix páteře 5 maso / 1 truhla + motelové odbočky |
 | Standardní karty (věci) | **~40** | 5 statů + pár štítků, česky |
 | Prémiové karty | **0** | meta-progrese mimo MVP |
 | Postihy | **~14** | info / zámek / ztráta, 2 tiery |
-| Truhla / motel | ano | kredity S=3 / H=6, léčení postihů |
-| Pronásledovatelé | **2** | rušený stat/štítek + léčka + konfrontace |
-| Tajné cíle | **8, nebo odloženo** | rozhodne kritik (viz §9) |
+| **Vysvětlující vrstva** (§5.4) | **first-class** | per-akční anotace: prahy, vynucení/štítky, pohyby šerifa, postihové řetězce, plnění cílů (B1 — přímý nález playtestu) |
+| Truhla / motel | ano | kredity S=3 / H=6, léčení postihů; motel jako větvová odbočka (§7) |
+| Pronásledovatelé | **2** | rušený stat/štítek + léčka + konfrontace; Žár jako značená trať |
+| Tajné cíle | **8 (osekané)** | zůstávají v MVP dle D16; kryté vysvětlující vrstvou (§9) |
 | Fallback šablony | **~20** | pro výpadek API |
-| Mapa | **1 StS graf**, ~7 uzlů | šerif křížkuje |
+| Mapa | **1 StS graf**, ~7 uzlů | šerif křížkuje, prahy Žáru vyznačené na trati |
 
 ### Záměrně MIMO rozsah v3 MVP
 Multi-svět / DLC obsah, prémiové karty + meta-progrese, **perzistence profilů
@@ -396,32 +506,43 @@ volitelný časovač, volba obtížnosti.
 kompetentní hra → win-rate pásmo dává smysl)? Kalibrace šumu ±1 rozhoduje, jestli
 je v3 skill-hra s pásmem, nebo komediální ruleta bez měřitelné brány.
 
-TOP 3 před stavbou v3 simu (z posudku):
-1. **Commit + přiřazení + klíčování prahu** — čísla ruk (6/4/3/3), režim naslepo
-   pro všechny, práh na 1 stat s výjimkami štítků. *Sim: srovnat 1p globální vs.
-   4p lokální optimalizaci — o desítky bodů win-rate.*
+*Rozhodnuto D16 (už neotevírat): kreditová ekonomika i tajné cíle zůstávají v MVP;
+škálování srovnává páku i hádku (poolový commit §4.3).*
+
+TOP 3 pro v3 sim (aktualizováno po D16):
+1. **Commit pool → přiřazení** — čísla ruk/commitů (**5 / 3+3 / 2×3 / 2×4**, pool
+   4–8 → 4 sloty), režim naslepo pro všechny, práh na 1 stat + slotové/karetní
+   výjimky. *Sim: srovnat 1p (jeden mozek, pool 5) vs. 4p (koordinace, pool 8) —
+   je páka i hádka opravdu srovnaná? A: nepřebíjí větší pool u 4p obtížnost do
+   triviality? B: nedělá benchování věcí u 4p pasažéry?*
 2. **Postihy: poměr tierů 70/30, doba trvání lehkých, hranice must-heal** — na
-   nich visí kreditová ekonomika (S=3/H=6). *Sim: informovaný vs. slepý bot =
-   síla info-postihu v měně −X.*
-3. **Gamble draw EV** — % net-záporných karet (návrh 20–30), aby EV ≈ 0.
+   nich visí kreditová ekonomika. *Sim: informovaný vs. slepý bot = síla
+   info-postihu v měně −X. Ověřit i B3: složení maže jen lehké → není levnější než
+   léčení H=6.*
+3. **Gamble draw EV** — % net-záporných karet (návrh 20–30), aby EV ≈ 0, opt-in.
    *Sim: bere se sázka vždy / nikdy / jen když nepokryješ slot?*
 
-Další:
-4. **Pásma 4/3/2/≤1** — kde jsou hranice, aby DORUČENO padlo do 45–70 % u
+Ekonomika (po opravě aritmetiky, mandát 1):
+4. **Příjmy vs. ceny** — sedí „skvělý ~13 / medián ~7–9 / slabý ~4–5" proti S=3/H=6
+   tak, že medián nese ≥2 rozhodnutí a skvělý run ≈ 4 směny / 2 léčení? Kolik
+   motelových odboček tým reálně navštíví?
+5. **Pásma 4/3/2/≤1** — kde jsou hranice, aby DORUČENO padlo do 45–70 % u
    kompetentní i realistické hry (pilíř z brány).
-5. **Žár ve slotovém světě** — přírůstky, prahy, medián prvního prahu uzel 3–4,
-   snowball od uzlu 3. Jak „hlučnost" definovat bez tagů (přes štítky/staty)?
-6. **Kognitivní zátěž měřidel** — náklad + kredity + Žár + postihy. Kolik jich
-   party u stolu unese? (v2 už bedny označil za 1. kandidáta na škrt.) **Návrh:
-   Žár = mapa/šerif, ne číslo; postihy = poznámky na spisu; zbývají náklad +
-   kredity jako jediná dvě „čísla".** Ověřit u lidské brány.
-7. **Tajné cíle in/out MVP** (§9) — vrstva navíc, nebo motor hádky o sloty?
-8. **Náklad (bedny) vs. Žár jako fail-condition** — potřebujeme obě prohry, nebo
-   jednu? (Návaznost na otázku 6.)
+6. **Žár ve slotovém světě** — přírůstky, prahy, medián prvního prahu uzel 3–4,
+   snowball od uzlu 3. Jak přesně definovat „hlučnost" ze štítků/statů (§8)?
 
-**Strop poctivosti:** nic z výše uvedeného neprokáže **zábavu**. „Skrytý práh =
-uspokojivý reveal, ne frustrující gotcha" je hypotéza pro **lidskou bránu**, ne
-pro simulaci.
+Zátěž a struktura:
+7. **Kognitivní zátěž měřidel + DVA skryté systémy** — náklad + kredity + Žár +
+   postihy + (skryté prahy *a* tajné cíle). Návrh na odlehčení: Žár = trať/šerif,
+   postihy = poznámky na spisu → „čísla" jsou jen náklad + kredity; oba skryté
+   systémy nese **vysvětlující vrstva §5.4**. Unese to party u stolu? **Klíčová
+   otázka lidské brány** (D16 přijal riziko dvou skrytých systémů).
+8. **Náklad (bedny) vs. Žár jako fail-condition** — potřebujeme obě prohry, nebo
+   jednu? (Návaznost na otázku 7.)
+
+**Strop poctivosti:** nic z výše uvedeného neprokáže **zábavu**. „Skryté prahy
+*i* skryté cíle = uspokojivý reveal (díky §5.4), ne frustrující gotcha" je
+hypotéza pro **lidskou bránu**, ne pro simulaci — a je to nejtěžší sázka celého v3.
 
 ---
 
@@ -448,16 +569,24 @@ pro simulaci.
   - **Prahy hodu 7+/5–6/≤4 (D7/D10) → pásma 4/3/2/≤1** ze slotů proti skrytým prahům.
   - **Žár:** struktura zůstává (Zátah/léčka/konfrontace), přírůstky se **předefinují**
     bez tagů; vizualizace = křížkující šerif na mapě.
-  - **Náklad:** k přehodnocení proti kreditům a Žáru (otázka 6/8) — v2 ho už označil
+  - **Náklad:** k přehodnocení proti kreditům a Žáru (otázka 7/8) — v2 ho už označil
     za 1. kandidáta na škrt.
-  - **Tajné cíle:** přehodnoceny, nikoli škrtnuty (§9).
+  - **Tajné cíle:** přehodnoceny, nikoli škrtnuty; **D16 je drží v MVP** (§9).
   - **Nově přibývá:** StS mapa + typy míst, kreditová ekonomika + motel, gamble
-    draw, multi-svět/DLC rámec, profily hráčů.
+    draw, multi-svět/DLC rámec, profily hráčů, vysvětlující vrstva (§5.4).
+
+*Revize po kritice (D16, 2026-07-23):* poolový commit srovnávající páku i hádku
+1–4p (§4.3, B2), vysvětlující vrstva jako first-class MVP položka (§5.4, B1),
+oprava free-cleanse složením (§6, B3), ikony viditelnosti slotů + telegraf proti
+srsti (§4.2/§5.2, B4/D4), slotové výjimky vrácené (§5.2, D3), gamble opt-in bez
+daně u 3p (§4.5, D1), Žár jako značená trať s anotací delty (§8, D7), status sóla
+(§2, D6), opravená aritmetika příjmů + motel na větvení (§7, mandát 1). Tajné cíle
+i kreditová ekonomika **zůstávají v MVP** (D16, přehlasováno proti doporučení kritika).
 
 *Souvisí: [prototyp-mvp.md](../prototyp-mvp.md), [design-dokument.md](../design-dokument.md)
 (v2, dosud kanonický), balanční posudek `technika/balanc-posudek-v3-2026-07-23.md`,
-rozhodnutí D14/D15 v `projekt/rozhodnuti.md`, mikroprototyp
-`experiments/mikroprototyp-sloty-v2.html` (schválený flow).*
+rozhodnutí D14/D15/D16 v `projekt/rozhodnuti.md`, audit kritika (paměť design-critica),
+mikroprototyp `experiments/mikroprototyp-sloty-v2.html` (schválený flow).*
 
 **Pozn. ke konzistenci:** tento návrh **neměním** do `design-dokument.md` ani
 `prototyp-mvp.md` — oba zůstávají na v2. Skill `consistency-check` se pustí až při
