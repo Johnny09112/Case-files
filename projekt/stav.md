@@ -65,14 +65,16 @@ engine + simulátor → hot-seat UI → LLM). Lidská brána zůstává otevřen
   (commit naslepo / tým přiřazuje / 1 stat s výjimkami; taxonomie postihů
   70/30 s capem 2 + eskalace; prémiové = meta + specializace; prahy kotva ± šum).
   Vizuál/UX současného prototypu je jen testovací — finální UX se ladí
-  dodatečně. **PIVOT DOKONÁN 2026-07-23:** v3 překlopeno do kanonu
-  (design-dokument v3 + prototyp-mvp v3 současně, navrh-v3.md archivován,
-  consistency-check beze nálezu, CLAUDE.md aktualizováno). Další kroky:
-  (1) playtest-facilitator definuje kritéria v3 simulační brány,
-  (2) obsahová pipeline v3 (věci s 5 staty ~40, situace 14+1, postihy ~14 —
-  obsah/*.yaml je v2 legacy), (3) přestavba enginu v kódovém repu na
-  slotovou resoluci, (4) prompt protokolu v3 (vstup = pásmo + rozdělení
-  slotů + postihy, jména placeholderem).
+  dodatečně. **PIVOT DOKONÁN 2026-07-23** (kanon v3, D14–D19). **Hotovo
+  k 2026-07-23 večer:** kritéria v3 brány K1–K9 zafixována v prototypu
+  (Fáze 0), v3 event-log spec + ADR-008 v architektuře, kompletní obsah v3
+  (40 věcí / 15 situací / 14 postihů / místa / štítky / pronásledovatelé;
+  v2 archivován). **Zbývá:** (1) cile.yaml v3 nad metrikami event-log specu
+  (content-generator, odblokováno), (2) prompt protokolu v3 remap na
+  sloty/pásma/postihy (protocol-humor-tester), (3) **přestavba enginu
+  v kódovém repu** (event-log spec + obsah hotové → odblokováno) + v3
+  simulátor a diagnostický run-1, (4) prověrky obsahu (kritik: stat
+  profily + kotvy; humor-tester: situace × rozdělení) — běží.
 
 *(D1–D9 schváleny a zapracovány 2026-07-22 — viz [[rozhodnuti]].)*
 
