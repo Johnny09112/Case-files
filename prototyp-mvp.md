@@ -84,9 +84,12 @@ se testuje agentem `protocol-humor-tester` nad promptem `prompty/protokol.md`.
   - **2/4** … S NÁSLEDKY (1 lehký postih)
   - **≤1/4** … PRŮŠVIH (těžký postih + ztráta nákladu + Žár)
 - **Gamble (záchrana po odhalení):** 1× za situaci, opt-in u všech počtů. Tým
-  vybere, **čí ruka** poskytne kartu; ta se líže **náhodně** (při 3 zbývajících
-  kartách šance **1/3**) a **povinně nahradí** jednu commitnutou (nahrazená se
-  **odhazuje**). EV ≈ neutrální až mírně záporná (bere se jen v zoufalé situaci).
+  vybere, **čí ruka** poskytne kartu; ta se líže **náhodně ze zbývajících karet
+  vybrané ruky** a **povinně nahradí** jednu commitnutou (nahrazená se
+  **odhazuje**). Pravděpodobnost konkrétní karty závisí na počtu zbývajících:
+  1p a 4p mají po commitu 2 zbývající (šance 1/2), 2p 2 (1/2), 3p ne-držitel 3
+  (1/3) — **EV gamblu se proto měří per počet hráčů** (kritérium K7).
+  EV ≈ neutrální až mírně záporná (bere se jen v zoufalé situaci).
 - **Postihy** (nahrazují zranění + prokleté/zoufalé karty):
   - taxonomie **informační / zámkové / ztrátové** (ztrátové střídmě);
   - **2 tiery ~70/30:** lehké dočasné (vyprší po ~2–3 kolech) / těžké trvalé (drží

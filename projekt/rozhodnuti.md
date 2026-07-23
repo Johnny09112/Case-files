@@ -9,6 +9,29 @@ ukazatel na archiv.*
 
 ## 2026-07-23
 
+- **D19 schváleno — kritéria v3 brány, finalizace schémat a model lízání.**
+  (a) **Náklad i Žár zůstávají obě fail-conditions v MVP** — diagnostika 1. běhu
+  (rozpad příčin proher bedny-0 vs. konfrontace) rozhodne o případné konsolidaci
+  nad daty. (b) **Kombinovaný slot = „oba staty ≥ kotva"** (fikce: potřebuješ
+  nářadí I důvtip), používat střídmě s nízkou kotvou; **kotvy jen 2–4** (práh 0
+  zakázán — žádný auto-pass slot ani coin-flip na spodku). (c) **Model lízání:
+  sdílený standardní balík** (~40, odhaz, reshuffle; líznutá věc patří lízajícímu);
+  **meta-progres = osobní loadout** (hráč si ze své sbírky bere ~2 prémiové věci
+  do startovní ruky — per hráč, neředí se sdíleným balíkem; post-MVP); **custom
+  karty ostatních sytí truhly** přes globální fond. Řeší námitku „stačí jeden
+  progresnutý hráč". (d) **Zbytek balíku schválen dle doporučení kritika:**
+  metodologie brány (provizorní pásmo K1 + diagnostický run-1, pásmo se fixuje
+  po run-1; kalibrace jádro→postihy→Žár→ekonomika→ruce→gamble/cíle + smoke-test
+  co-op inverze na startu), verdikty K4c gate (svázaná s noise-modelem),
+  K5 gate jen „<5 % beznadějných", K6a+K6c-run gate / K6b diagnostika;
+  **telegraf_signal derivuje engine ze slotů** (próza = lidský rendering, QA
+  invariant věrnosti; fidelita telegrafu = sweep knob); **v3 event-log spec
+  vlastní technical-developer** (nahradí §2.2, jeden log pro gate-metriky,
+  podminky cílů i max_achievable_band); enum postihů: škrtnut hide_nazvy,
+  lock_stat/lock_slot_viditelnost dodefinovat nebo škrtnout, kontrola asymetrie
+  malých rukou, zvážit lock_gamble; GANGSTER hustota = sweep parametr; gamble
+  pravděpodobnost per počet hráčů (kanonické „1/3" platí jen pro 3p ne-držitele,
+  jinde 1/2 — opravit v kanonu); mista.yaml dopracovat; event „1 ze 3" sim-inertní.
 - **D18 schváleno — UX vize v3 (interakční model závazný, grafika otevřená).**
   Pohled očima vyšetřovatele: střed ~60 % = papír ve stroji (jen texty; strana
   na uzel + úvod + závěr s razítkem), klávesnice pod hranou obrazovky. Veškerá
