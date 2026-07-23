@@ -69,12 +69,18 @@ engine + simulátor → hot-seat UI → LLM). Lidská brána zůstává otevřen
   k 2026-07-23 večer:** kritéria v3 brány K1–K9 zafixována v prototypu
   (Fáze 0), v3 event-log spec + ADR-008 v architektuře, kompletní obsah v3
   (40 věcí / 15 situací / 14 postihů / místa / štítky / pronásledovatelé;
-  v2 archivován). **Zbývá:** (1) cile.yaml v3 nad metrikami event-log specu
-  (content-generator, odblokováno), (2) prompt protokolu v3 remap na
-  sloty/pásma/postihy (protocol-humor-tester), (3) **přestavba enginu
-  v kódovém repu** (event-log spec + obsah hotové → odblokováno) + v3
-  simulátor a diagnostický run-1, (4) prověrky obsahu (kritik: stat
-  profily + kotvy; humor-tester: situace × rozdělení) — běží.
+  v2 archivován). **Hotovo navíc:** cile.yaml v3 (8 cílů nad spec
+  metrikami), prompt protokolu v0.3 + v3 regresní baterie (top riziko:
+  GANGSTER auto-fail s vysokým útokem svádí k zápisu úspěchu), prověrka
+  obsahu kritikem + **D20a: Malone nuluje hodnotu RUN-WIDE** (rozhodnutí
+  uživatele). **Zbývá:** (1) opravy obsahu dle prověrky (Malone run-wide,
+  GANGSTER strojová mapa per typ, trim hodnoty, vyrovnání postihových
+  poolů, telegraf konzistence) — běží; (2) **přestavba enginu v kódovém
+  repu** + v3 simulátor a diagnostický run-1 — vše odblokováno, doporučena
+  čerstvá session nad kódovým repem; (3) fallback šablony přepsat na v3
+  pásma (fáze 2 UI); (4) konzultace operations-economics: prompt v0.3 má
+  ~40 % delší systémový prompt a bohatší per-call vstup — ověřit rozpočet
+  Haiku.
 
 *(D1–D9 schváleny a zapracovány 2026-07-22 — viz [[rozhodnuti]].)*
 
