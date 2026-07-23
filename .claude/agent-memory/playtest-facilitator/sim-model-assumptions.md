@@ -1,11 +1,27 @@
 ---
 name: sim-model-assumptions
-description: Předpoklady simulátoru tam, kde MVP mlčí — nutné pro čtení čísel a příští sim
+description: Předpoklady simulátoru tam, kde MVP mlčí — POZOR: v2-specifické, pivotem v3 z větší části obsoletní
 metadata:
   type: project
 ---
 
-# Modelové předpoklady simulátoru (kde MVP nebylo explicitní)
+# ⚠️ PIVOT v3 (2026-07-23): tento soubor je z větší části OBSOLETNÍ
+
+Předpoklady níže patří **v2 kostkovému modelu**. Pivotem na slotovou resoluci (D14–D17)
+**zmizel motor snowballu = individuální hod každého hráče každý uzel → zranění**. Ve v3
+se uzel řeší **kolektivně** (4 karty do 4 slotů → pásmo → postih); snowball je
+**agency-based zpětná smyčka** (informační postih → horší přiřazení → horší pásmo → další
+postih) + Žár + ubývání beden, NE numerická spirála zranění. Konkrétně obsoletní:
+„výsledek 5–7 = zranění", „každý hráč hází každý uzel", zoufalé/prokleté karty (nahrazeny
+postihy + gamble), léčka/konfrontace tvrdosti (přerámovány). Co přežívá: seedovaný engine
+jako dva klienti API, cíle-driven ≈ nejbližší realistická hra, léčka jako vkládané setkání.
+**v3 kritéria brány a nové botí strategie jsou navržené (čeká na schválení) — viz
+[[v3-gate-criteria-draft]]. Obsah je pořád v2 (obsah/*.yaml: tagy, síla 1–3) → brána
+neběží, dokud nevznikne v3 obsah (karty s 5 staty, situace s kotvami).**
+
+---
+
+# Modelové předpoklady simulátoru v2 (archiv — kde MVP nebylo explicitní)
 
 **Why:** tahle rozhodnutí nesou balanc; kdo bude číst čísla z brány nebo sim upravovat,
 musí vědět, co je pravidlo a co můj domodel. Několik z nich jsou zároveň otevřené

@@ -1,8 +1,11 @@
 # Technická architektura prototypu v0.1
 
-**Stav:** schváleno 2026-07-22 (technical-developer, po schválení plánu uživatelem).
-Tento dokument je zadání pro samostatný kódový repozitář — sem žádný kód nepatří
-(viz `CLAUDE.md`). Změny architektury = nové/aktualizované ADR dole.
+**Stav:** základ schválen 2026-07-22; **§2.2 přepsán na v3 událostní log +
+ADR-008 (2026-07-23)** po pivotu na slotovou resoluci (D14–D19). Tento dokument
+je zadání pro samostatný kódový repozitář — sem žádný kód nepatří (viz `CLAUDE.md`).
+Změny architektury = nové/aktualizované ADR dole. **Pozn.:** zbytek dokumentu
+(vrstvy, cache, ADR-001–007, struktura repa) je stále v2-báze; místa, která v3
+přímo láme, nesou značku „v2 — přepsat při přestavbě enginu".
 
 ---
 
@@ -20,8 +23,9 @@ prohnat tisíci simulovaných runů. Z toho plyne hlavní architektonický princ
 > **Herní engine běží od prvního dne headless** — bez UI, bez sítě, bez DOM.
 > UI i simulátor jsou jen dva různí klienti téhož enginu.
 
-Druhý řídicí fakt: **resoluční čísla jsou právě v revizi** (audit design-critica:
-Žár per hod vs. per uzel, tvrdost uzlů). Architektura na konkrétních číslech
+Druhý řídicí fakt: **resoluční model je po pivotu na v3** (slotová resoluce,
+D14–D19) a jeho čísla nejsou zafixovaná (kotvy ± šum, hranice pásem, tempo Žáru —
+vše „ladit simulací" dle `prototyp-mvp.md`). Architektura na konkrétních číslech
 nesmí záviset — pravidla jsou data + čistá funkce (ADR-003), takže výměna
 resolučních pravidel je lokalizovaná do jednoho modulu a simulátor umí porovnat
 varianty pravidel proti sobě.
@@ -61,41 +65,97 @@ Závislosti tečou jen dolů: engine nezná UI ani síť; LLM adaptér nezná en
 
 Čistý JS modul bez závislosti na DOM, síti i hodinách. Deterministický:
 **stejný seed + stejná sekvence voleb = bit-přesně stejný run.** Veškerá
-náhoda (hody d6, míchání balíčků, los pronásledovatele, nabídka cest) jde
-z jediného seedovaného PRNG streamu (mulberry32 nebo ekvivalent — `Math.random`
-je v enginu zakázán).
+náhoda (míchání sdíleného balíku, los pronásledovatele, **šum kotev ±1**,
+náhodné líznutí gamblu, nabídka cest) jde z jediného seedovaného PRNG streamu
+(mulberry32 nebo ekvivalent — `Math.random` je v enginu zakázán).
 
 **Hranice API enginu:**
 
 - Vstup: `createRun({seed, content, rules, players})` + příkazy hráčů
-  (`chooseRoute(routeId)`, `playCard(characterId, cardId)`, `confirmNode()`).
-  Nic jiného stav nemění.
+  (`chooseRoute(routeId)`, `commitCards([{characterId, cardId}])`,
+  `assignToSlots([{slotIndex, cardId}])`, `gamble({handOwnerId, replacedCardId,
+  slotIndex})`, `motelChoice(...)`, `spendCredits(...)`, `confirmNode()`).
+  Nic jiného stav nemění. **Commit padá před `situation_revealed`** (odhalením
+  textu a prahů) — proto gamble sází na nejistotu prahů (K7).
 - Výstup: aktuální stav (read-only snapshot pro render) + **append-only
-  událostní log**. UI i simulátor čtou tentýž log; protokolová pipeline si z
-  události `node_resolved` postaví vstup pro LLM přesně ve formátu
-  `prompty/protokol.md`.
+  událostní log**. UI i simulátor čtou tentýž log; protokolová pipeline si vstup
+  pro LLM skládá z uzlových událostí (`band_resolved` + jeho `slot_resolved` /
+  `assignment` / `penalty_*` / `zar_move`), ne z jediné blob-události.
 
-**Formát událostního logu** (JSONL-serializovatelný; každá událost má `seq`,
-`type`, `nodeIndex` a payload):
+**Formát událostního logu v3** (JSONL-serializovatelný; každá událost má `seq`,
+`type`, `nodeIndex` a payload). **Jeden log obsluhuje tři konzumenty** (ADR-008):
+**(a) gate-metriky K1–K9** simulační brány, **(b) strojové `podminka` tajných
+cílů v3** (nástupce v2 měn zraneni/kolaps/max_sila_karty; viz odvozené metriky
+níže), **(c) `max_achievable_band`** = nejlepší dosažitelné pásmo z committnutých
+karet (jádro K5). Payload musí být tak granulární, aby všechny tři šly odvodit
+bez druhého průchodu enginem.
 
-| Událost | Payload (výběr) | Krmí metriku simulační brány |
+| Událost | Payload (výběr) | Krmí konzumenta |
 |---|---|---|
-| `run_started` | seed, verze obsahu, verze pravidel, pronásledovatel | reprodukce runu |
-| `route_offered` / `route_chosen` | nabídnuté uzly, volba, byl-li Zátah | detekce dominantní strategie |
-| `card_played` | postava, karta (id, tag, síla, hlučná), **`dobrovolna: bool`** (false = vynucená prokletou nebo zoufalá — nepočítá se do metriky `max_sila_karty` cíle obetni-beranek) | distribuce tagů na strategii; bodování cílů |
-| `check_resolved` | postava, hod, síla, afinita, postih zranění, součet, pásmo (úspěch / za cenu / selhání), aplikovaná tvrdost | prahy hodů, snowball |
-| `injury_added` / `cursed_drawn` / `character_down` | postava, počet zranění | distribuce zranění po uzlech |
-| `crate_lost` | důvod (`hod_selhani` / `rider_uplatek` / `rider_utek` / `tvrdost_uzlu`), **atribuce postavy** (čí hod/rider bednu shodil — nutné pro metriku `ztracene_bedny_vlastni` cíle kupecke-slovo), zbývá beden | ekonomika beden; bodování cílů |
-| `heat_changed` | delta, důvod (selhání/hlučná/uzel), nová hodnota | tempo Žáru |
-| `heat_threshold` | práh (hodnoty dle `prototyp-mvp.md`, nehardcodovat), nodeIndex | **kdy padají prahy Žáru** (cíl: 1. práh ~3.–4. uzel) |
-| `ambush_inserted` / `confrontation_started` | pronásledovatel | četnost léček/konfrontací |
-| `node_resolved` | kompletní strukturovaný výsledek uzlu (vstup pro protokol), vč. pole **`bedny_ztracene_timto_hodem`** per hod (0–2; formát vstupu protokolu v0.2 ho vyžaduje — jinak protokol neumí zapsat rider Útěku) | — |
-| `run_ended` | výsledek (DORUČENO/NEVYŘEŠENO), příčina, počet uzlů, skóre cílů | délka runu, příčiny konce |
+| `run_started` | seed; verze obsahu; verze pravidel; pronásledovatel (id, `rusi_stat`\|`rusi_stitek`); počet hráčů; ruce per hráč (velikost + karty id); `loadout` per hráč (**MVP `[]`**, post-MVP hook); start beden/Žáru/kreditů; přiřazené cíle per hráč (id) | reprodukce; K4c/K6 baseline; oracle |
+| `map_move` | nabídnuto `[{node_ref, typ_mista}]`; `volba`; `typ_mista`; `motel_odbocka` (bool + volba úkryt\|dál); `byl_zatah` (Žár nahradil uzel, obě větve přes něj) | K4 dominantní strategie (nejde vyroutovat kolem masa); diag D19a |
+| `telegraf_derived` | `signal_pravy {trend_staty, proti_srsti, zbran_projde}` — **derivuje engine ze slotů**, ne autor; `signal_vyslany` (po fidelitě/postihu „nevidíš telegraf"); `fidelita` p | K7 (commit naslepo); věrnost telegrafu (sweep knob) |
+| `commit` | `[{hrac_id, karta_id, staty snapshot (5×0–5), stitky, dobrovolna: bool}]` (**přesně 4**); rozdělení dle hráčů; `drzitel_mapy` (3p, rotuje po uzlu) | K4b stat-monokultura; cíl `commitnute_stitky`; **vstup max_band** |
+| `situation_revealed` | `typ_mista`; sloty `[{slot_index, role, klice_na (stat \| [s1,s2] u kombi), kotva (2–4), sum (±1), prah=kotva+šum, typ_prahu (jednostat\|kombi_oba\|stitek), viditelnost (viditelná\|skrytá), stitek_citlivost (např. GANGSTER)}]`; `vyjimky` (které sloty) | **vstup max_band**; oracle; „proč" vrstva |
+| `assignment` | `[{slot_index, karta_id, hrac_id}]`; `navrhl` (hrac_id); `souhlasili []` (vlastník souhlasí); `pocet_preskladani` (reassignment_count) | **K6c counterfactual (swing)**; K6b proxy sporu |
+| `gamble` | `ci_ruka` (hrac_id); `zbyvajici_v_ruce` (jmenovatel: 2 nebo 3 dle počtu hráčů); `tazena` (karta_id); `nahrazena` (commitnutá → odhoz); `do_slotu` | **K7 EV per počet hráčů**; cíl `gamble_pouzit` |
+| `slot_resolved` (×4/uzel) | `slot_index`; `karta_id`; `hrac_id`; `stat_hodnota` (1–2 u kombi); `prah`; `typ_prahu`; `viditelnost`; `stitek_efekt` (GANGSTER ve viditelné roli → auto-fail); `pronasledovatel_efekt` (zrušil stat/štítek); `zasah: bool`; `duvod` (enum anotace) | pásmo; „proč" vrstva; cíl `pocet_slotu_splnil` |
+| `band_resolved` | `zasahy` (0–4); `pasmo` (`4/4_HLADCE_LOOT`\|`3/4_HLADCE`\|`2/4_S_NASLEDKY`\|`≤1/4_PRUSVIH`); **`max_achievable_zasahy`** (0–4) + `max_achievable_band` (oracle: optimální rozdělení commitu × odhalené prahy); `gap` (max − real) | **K5** (max<4/4 v 30–50 %, ≤1/4 <5 %); K1; K4c learnabilita |
+| `penalty_added` | `hrac_id`; `postih_id`; `kategorie` (informacni\|zamkove\|ztratove); `tier` (lehky_docasny\|tezky_trvaly); `efekt` (enum, dodefinuje obsah — viz ADR-008); `vyprsi_za` (kola \| null u těžkých); `pricina` (uzel/pásmo); `aktivnich_po` (cap 2/hráč) | K2 snowball; cíl `postihy_utrpene` |
+| `penalty_expired` | `hrac_id`; `postih_id`; `duvod` (`cas`\|`slozeni` — složení maže **jen lehké**) | K2; cíle |
+| `penalty_healed` | `hrac_id`; `postih_id`; `cena` (=6); `uzel` (motel) | K8 (léčení ≥25 % motelů); cíle |
+| `character_folded` | `hrac_id`; `kolo_od`/`kolo_do` (kolo–dvě); `smazane_lehke []`; `pretrvavaji_tezke []` | K2 eskalace; cíl `slozeni_krat` |
+| `character_returned` | `hrac_id` | — |
+| `credit_flow` | `delta`; `duvod` (truhla +4–6 \| hladce_loot +2 \| hladce +1 \| smena −3 \| leceni −6 \| ztratovy_postih −X); `zustatek` | K8 (medián 7–9; <30 % koupí vše; směna/léčení každé ≥25 % motelů) |
+| `zar_move` | `delta`; **`duvod` (POVINNÁ anotace)** (prusvih \| hlucne_GANGSTER \| hlucne_utok \| incident \| konfrontace_prezita −…); `nova_pozice` (0–10, pozice šerifa); `prah_prekrocen` (null\|zatah\|lecka\|konfrontace) | **K3** první práh (medián uzel 3–4); K2 snowball; „proč" vrstva |
+| `goal_scored` | `hrac_id`; `cil_id`; `overeni_typ` (mechanicky\|textovy); `splnen` (bool \| null u textového); `metriky_snapshot`; `plnily_tahy []` / `kazily_tahy []` | **K9** (cíle 5–95 %); reveal §4.11 |
+| `run_ended` | `vysledek` (DORUCENO\|NEVYRESENO); **`pricina`** (`dojezd`\|`bedny_0`\|`konfrontace_prohra`\|`jina`) — **diag D19a**; `pocet_uzlu`; `zbyva_beden`; `konecny_zar`; `kredity_zbytek` | **K1** win-rate + rozpad příčin proher (bedny-0 vs. konfrontace) |
+
+**`max_achievable_band` (jádro K5, ADR-008):** engine (oracle hook) spočítá nad
+`commit` × `situation_revealed` (+ pronásledovatelovo rušení statu) **optimální**
+rozdělení 4 karet do 4 slotů maximalizující zásahy — **nezávisle na tom, jak tým
+rozdělil**. `band_resolved.max_achievable_zasahy < 4` i při optimálním rozdělení
+= „nevyhnutelně špatný slot" (K5). `gap = max − real` měří, kolik tým nechal na
+stole špatným rozdělením (learnabilita, K4c). Determinismus enginu (ADR-002)
+navíc umožní **counterfactual swing** (K6c): přeřešit run s alternativním
+přiřazením a porovnat pásmo — Gini swingu = „žádný pasažér".
+
+**`telegraf_signal` derivuje ENGINE ze slotů (ADR-008)** — ne autor. `signal_pravy`
+je čistá funkce definice slotů uzlu; autorská próza telegrafu je jen lidský
+rendering a musí věrně odpovídat (QA invariant, testuje content-check, ne engine).
+Fidelita `p` je v simu **sweep knob**: bot committne proti `signal_vyslany`
+(zašuměný o `1−p`), gap `pravy` vs. `vyslany` je měřitelný z logu.
+
+**Odvozené metriky pro cíle (v3 „měny", nástupce v2 zraneni/kolaps/…):** cíle se
+bodují přes `podminka` (schéma D3: `overeni_typ` + `podminka`) nad těmito
+metrikami, spočtenými z logu při scoringu — nedrží se v události redundantně:
+
+| Metrika (odvozená) | Z událostí | Krmí cíl / K |
+|---|---|---|
+| `pocet_slotu_splnil` / `_selhal` (per hráč) | assignment + slot_resolved | cíle „slot"; K4c |
+| `commitnute_stitky` (vč. GANGSTER do viditelné role) | commit + situation_revealed + slot_resolved | „ani jednou zbraň do viditelné role" |
+| `gamble_pouzit` (per hráč / tým) | gamble | „zachráněno gamblem" / „bez sázky" |
+| `postihy_utrpene` (počet, tiery, kategorie) | penalty_* | „skonči s 2 postihy a přesto DORUČENO"; K2 |
+| `slozeni_krat` | character_folded | cíle |
+| `kredity_utracene_za` {leceni, smena} | credit_flow | K8; cíle |
+| `pasma_dosazena` (histogram per hráč) | band_resolved + assignment | „HLADCE bez následků"; K5 |
+| `bedny_ztracene_vlastni` (atribuce) | band_resolved(PRŮŠVIH) + ztrátový penalty + assignment | analog v2 „kupecké slovo" |
+| `doruceno` | run_ended | cíle vázané na výsledek |
+| `max_achievable_gap_sum` (tým) | Σ band_resolved.gap | K4c learnabilita |
+| `nazev_v_protokolu` (textový, jen člověk) | — | „mozek operace" (reveal) |
+
+> **Historie — v2 událostní log (uzavřeno pivotem D14–D17).** Původní tabulka
+> stála na **kostkové resoluci** (`card_played` s tagem/silou, `check_resolved`
+> s hodem d6 a afinitou, `injury_added`/`cursed_drawn`/`character_down`,
+> `crate_lost`, `heat_changed`/`heat_threshold`, `node_resolved` jako jediný blob
+> pro protokol). Model padl s v2 (viz `prototyp-mvp.md` Historie). Detaily
+> uzavřené v2 brány: `technika/simulacni-brana-2026-07-22.md`.
 
 **Pravidla jako data + čistá funkce (ADR-003):** všechna resoluční čísla
-(prahy hodu, přírůstky a prahy Žáru, počet beden, práh kolapsu, sazba „Žár per
-hod vs. per uzel" — aktuální hodnoty vždy v `prototyp-mvp.md`, sem
-nehardcodovat) žijí v jednom konfiguračním objektu `rules`;
+(kotvy 2–4 + rozsah šumu ±1, hranice pásem, přírůstky a prahy Žáru, počet beden,
+cap postihů + eskalace, kreditové ceny/příjmy, pravděpodobnosti gamblu — aktuální
+hodnoty vždy v `prototyp-mvp.md`, sem nehardcodovat) žijí v jednom konfiguračním
+objektu `rules`;
 vyhodnocení je čistá funkce `resolve(state, action, rules, rng)`. Až audit čísla
 změní, mění se jeden objekt — a simulátor umí pustit tutéž dávku runů proti
 několika variantám `rules` a porovnat je.
@@ -109,7 +169,8 @@ Poskytovatel je **nerozhodnut** — rozhraní je provider-agnostic (ADR-004):
   prompt se bere z téhož souboru, nikde se neduplikuje. Žádný volný text hráčů
   do promptu (ochrana proti prompt injection).
 - **LLM nikdy nerozhoduje výsledek** — dostává hotový výsledek mechaniky
-  z události `node_resolved` a jen ho dramatizuje. Adaptér výstup lehce
+  z uzlových událostí (`band_resolved` + jeho `slot_resolved`/`assignment`/
+  `penalty_*`/`zar_move`) a jen ho dramatizuje. Adaptér výstup lehce
   validuje (délka, absence měny výsledku se nevaliduje strojově — to hlídá
   regresní baterie protocol-humor-testera).
 - **Tvrdý požadavek: hra nikdy nečeká na síť.** `Promise.race(provider, 10 s)`;
@@ -144,6 +205,14 @@ Poskytovatel je **nerozhodnut** — rozhraní je provider-agnostic (ADR-004):
    stínově), globální cache na proxy (mimo v0.1) se pak klíčuje podle dat,
    ne odhadu. Konkrétní čísla hit-rate předat operations-economics.
 
+> **v2 — přepsat při přestavbě enginu:** klíčovací pole nesou v2 měny — „typ
+> následku" a hrubý „bucket počtu zranění (0/1/2/3+)" jsou zranění; v3 je
+> nahradí **bucket stavu postihů** (např. 0/1/2+ aktivních, tier). Karta v klíči
+> už není `tag/síla`, ale `věc se staty (+ štítky)`. Vstupní formát promptu
+> (`prompty/protokol.md`, oddíl KARTY / VÝSLEDEK MECHANIKY) drží ještě v2 řez
+> (tagy/síly/zranění) — remapovat na sloty/pásma/postihy vlastní humor-tester,
+> ne tato architektura.
+
 Pozn.: jména postav jsou fixní čtveřice z obsahu, takže protokoly jsou mezi
 stoly přenositelné — to je předpoklad, aby globální cache vůbec dávala smysl.
 
@@ -161,19 +230,27 @@ logika v UI souboru, je architektonická chyba.
 Headless runner nad enginem (Node, `npm run sim`), pro simulační bránu Go/No-Go
 a agenta playtest-facilitator:
 
-- **Strategie hráčů:** `random` (baseline šumu), `greedy-affinity` (vždy
-  nejlepší tag+síla do afinity), `heat-averse` (minimalizuje Žár), a
-  `tag-spam:<tag>` (hraje jediný tag — detektor dominantní strategie: pokud
-  spam jednoho tagu vyhrává srovnatelně s greedy, je balanc rozbitý).
+- **Strategie hráčů (v3, dle návrhu kritérií playtest-facilitatora):** dvě osy.
+  **Commit** proti telegrafu: `informovaný` (čte zašuměný signál kotev, p≈0,7) /
+  `naivní` / `stat-monokultura` (detektor K4b). **Přiřazení do slotů:** `oracle`
+  (zná prahy — horní mez pro `max_achievable_band`) / `kompetentní` (zná staty,
+  ne prahy) / `greedy` / `random` (baseline) / `cíle-driven` / `memorizační`
+  (test K4c: memorizační − kompetentní ≤ ~3 b.). **Informační postih** =
+  ε-greedy přiřazení (ε 0,3–0,5) — gap informovaný vs. postižený měří sílu
+  postihu. **Ekonomika:** vždy-léčit / vždy-směnit / hoard / adaptivní.
+  Instrumentace `pocet_preskladani` (reassignment_count) na `assignment`;
+  `time_to_decision` je metrika **lidské** brány (engine nemá hodiny — ADR-002),
+  v simu ji nahrazuje existence sporu (K6b).
 - **Dávky:** tisíce runů na konfiguraci; každá dávka = {verze obsahu, varianta
   `rules`, strategie, rozsah seedů} — plně reprodukovatelná.
 - **Co loguje:** (a) kompletní událostní logy všech runů jako JSONL (1 řádek =
   1 událost, soubor na dávku), (b) `summary.json` + čitelný `summary.md`
-  s agregacemi: win-rate a příčiny konce, distribuce délky runu, **histogram
-  uzlu prvního/druhého/třetího prahu Žáru**, průměr zranění po uzlech (křivka
-  snowballu — cíl: citelný od ~3. uzlu), křivka beden, srovnávací tabulka
-  strategií. Playtest-facilitator navazuje na tyto dva artefakty, nemusí nic
-  počítat sám.
+  s agregacemi: win-rate a rozpad příčin konce (bedny-0 vs. konfrontace — diag
+  D19a), distribuce délky runu, **histogram uzlu prvního/druhého/třetího prahu
+  Žáru**, **křivka postihů/tlaku po uzlech** (snowball — cíl: citelný od ~3.
+  uzlu), **distribuce `max_achievable_zasahy`** (K5) a `gap` (K4c), křivka beden,
+  srovnávací tabulka strategií. Playtest-facilitator navazuje na tyto dva
+  artefakty, nemusí nic počítat sám.
 - Simulátor **nevolá LLM ani fallback šablony** — protokol je pro matematiku
   irelevantní. (Výjimka: cíle vázané na obsah protokolu se v simulaci bodují
   jen mechanicky přes `overeni` heuristiku, nebo se z metrik vynechají —
@@ -251,9 +328,12 @@ dukazni-material-prototyp/
 
 **Testovací strategie (Vitest — nativní k Vite, běží v Node):**
 
-- *Unit testy enginu:* `resolve()` přes všechna pásma prahů (dle `rules`), afinity,
-  postihy zranění, všechny tři tvrdosti, přírůstky a prahy Žáru, rušený tag
-  pronásledovatele, kolaps postavy, konec beden.
+- *Unit testy enginu:* `resolve()` přes všechna pásma (zásahy 0–4 → 4/4…≤1/4 dle
+  `rules`), kotva ± šum na jeden stat, **kombi-slot „oba ≥ kotva"**, štítek
+  GANGSTER ve viditelné vs. skryté roli, rušení statu/štítku pronásledovatelem,
+  přírůstky a prahy Žáru, `max_achievable_band` oracle (vč. „nevyhnutelně
+  špatného slotu"), gamble (náhrada + odhoz), postihy (tiery, cap 2, eskalace,
+  složení maže jen lehké), léčení v motelu, konec beden.
 - *Regresní testy resoluce (golden runs):* fixní seed + skriptovaná sekvence
   voleb → snapshot celého událostního logu. Změna pravidel změní snapshot
   **viditelně a záměrně** — commit message musí říct proč. Přesně tohle chrání
@@ -310,6 +390,10 @@ modulů (engine API, formát událostí, rozhraní provideru), volitelně
 - **Důsledky:** výměna pravidel = změna jednoho objektu; simulátor porovnává
   varianty pravidel v jedné dávce (přímo podporuje probíhající audit); golden
   testy verzují pravidla spolu se snapshoty.
+- **v3 (pivot D14–D17):** mechanismus (čísla = data, `resolve()` = čistá funkce)
+  **platí beze změny**; v2 příklady v Kontextu (Žár per hod, tvrdost, prahy hodu)
+  jsou nahrazeny v3 měnami (kotvy 2–4 ± šum, hranice pásem, cap postihů, ceny) —
+  viz §2.2. *Značka: v2 příklady přepsat při přestavbě enginu.*
 
 ### ADR-004: Provider-agnostic LLM adaptér (timeout → fallback, cache, log)
 - **Datum:** 2026-07-22 · **Status:** přijato
@@ -371,6 +455,55 @@ modulů (engine API, formát událostí, rozhraní provideru), volitelně
   viditelná pravidla).
 - **Důsledky:** v logu každého volání je obojí klíčování → ekonomika globální
   cache se spočítá z dat, ne z odhadu.
+- **v3 (pivot D14–D17):** dvouvrstvý mechanismus **platí**; v2 pole klíče (karta
+  `tag/síla`, hrubý „bucket počtu zranění") jsou nahrazeny v3 měnami (karta =
+  věc se staty + štítky; bucket **stavu postihů**) — viz značka v §2.3.
+  *Přepsat při přestavbě enginu.*
+
+### ADR-008: Událostní log v3 — jeden log, tři konzumenti; telegraf derivuje engine
+- **Datum:** 2026-07-23 · **Status:** přijato (vlastní technical-developer dle D19)
+- **Kontext:** Pivot na slotovou resoluci (D14–D17) zneplatnil v2 událostní log
+  (§2.2). Nález kritika B2: **jeden log musí uspokojit tři konzumenty** —
+  (a) gate-metriky K1–K9 v3 brány, (b) strojové `podminka` tajných cílů v3
+  (nástupce v2 měn zraneni/kolaps/max_sila_karty), (c) `max_achievable_band`
+  (nejlepší dosažitelné pásmo z committnutých karet, jádro K5). Bez granulárního
+  logu by se každý konzument musel dopočítávat druhým průchodem enginem.
+- **Rozhodnutí:**
+  1. **Nová sada událostí (§2.2 v3):** `run_started`, `map_move`,
+     `telegraf_derived`, `commit`, `situation_revealed`, `assignment`, `gamble`,
+     `slot_resolved` (×4), `band_resolved`, `penalty_added/expired/healed`,
+     `character_folded/returned`, `credit_flow`, `zar_move`, `goal_scored`,
+     `run_ended`. Zrnitost per slot (ne jediný `node_resolved` blob), protože
+     max_band i cíle potřebují stat-vs-práh na úrovni slotu.
+  2. **`telegraf_signal` derivuje ENGINE ze slotů, ne autor.** `signal_pravy`
+     (trend statů, počet „proti srsti", „zbraň projde") je čistá funkce definice
+     slotů uzlu. Autorská próza telegrafu je jen lidský rendering a **musí věrně
+     odpovídat derivovanému signálu — QA invariant** (hlídá content-check, ne
+     engine). **Fidelita `p`** je v simu **sweep knob**: bot committne proti
+     `signal_vyslany` (zašuměný o `1−p`); gap pravý vs. vyslaný je z logu měřitelný.
+  3. **`max_achievable_band`** počítá engine (oracle hook) nad `commit` ×
+     `situation_revealed` (+ rušení statu pronásledovatelem) jako **optimální**
+     rozdělení 4 karet do 4 slotů — nezávisle na skutečném rozdělení týmu.
+     Jádro K5 (max<4/4 = nevyhnutelně špatný slot); `gap = max − real` = K4c
+     learnabilita. Determinismus (ADR-002) umožní **counterfactual swing** (K6c).
+  4. **Model lízání (D19c):** **sdílený standardní balík** (~40, odhaz,
+     reshuffle; líznutá věc patří lízajícímu). `run_started.loadout` per hráč je
+     v MVP `[]` — **post-MVP hook** pro osobní loadout (prémiové věci do startovní
+     ruky, per hráč, neředí sdílený balík). Custom karty ostatních sytí truhly
+     přes globální fond — mimo engine, jen poznámka.
+  5. **Slotové/prahové invarianty do `rules` + logu:** kombinovaný slot =
+     **„oba staty ≥ kotva"** (`typ_prahu: kombi_oba`); **kotvy jen 2–4** (práh 0
+     zakázán) + **šum ±1** ze seedovaného PRNG (`prah = kotva + šum`). `efekt`
+     postihu je **enum z obsahu** (game-designer dodefinuje/škrtne — D19: hide_nazvy
+     škrtnut, lock_stat/lock_slot_viditelnost/lock_gamble otevřené); engine je
+     k enumu agnostický, jen ho loguje.
+- **Zavrženo:** jediná blob-událost `node_resolved` (v2) — neunese per-slot
+  max_band ani cíle; **autorsky psaný telegraf signál** (riziko, že próza slíbí
+  jinou informaci než sloty — proto derivace enginem + QA invariant).
+- **Důsledky:** protokolová pipeline i simulátor čtou tentýž log; cíle se bodují
+  přes odvozené metriky (§2.2), ne přes redundantní pole; instrumentace
+  `pocet_preskladani` (K6b) žije na `assignment`. Náklady: log je širší než v2 —
+  ale simulátor stejně serializuje vše do JSONL (§3), takže cena je nulová navíc.
 
 ---
 
