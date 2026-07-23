@@ -50,9 +50,14 @@ engine + simulátor → hot-seat UI → LLM). Lidská brána zůstává otevřen
   směr (input randomness místo output, komedie v mechanice, hádka u stolu), ale
   3 kolize s principy k vyřešení (AI statování → autorská pipeline s moderací;
   tvorba karet hráči → omezený skladač, ne volný text; skryté prahy → post-hoc
-  odhalení). **Mikroprototyp k osahání:**
-  `dukazni-material-prototyp/experiments/mikroprototyp-sloty.html` (otevřít
-  přímo v prohlížeči). Rozhodnutí o pivotu = design dokument v3.
+  odhalení). **Mikroprototypy k osahání** (otevřít přímo v prohlížeči):
+  `dukazni-material-prototyp/experiments/mikroprototyp-sloty.html` (v1 —
+  přiřazování 8 slov) a `…/mikroprototyp-sloty-v2.html` (v2 dle iterace
+  uživatele: commit 1 věci ze 4 naslepo dle telegrafu → odhalení Mad Libs
+  textu → týmové rozdělení rolí → volitelný slot za utracení druhé věci →
+  pásma). PM doporučení k v2: věc se utrácí (loot doplňuje), pásma místo
+  procent, text situací = autorský obsah (AI jen dramatizuje výsledek).
+  Rozhodnutí o pivotu = design dokument v3.
 
 *(D1–D9 schváleny a zapracovány 2026-07-22 — viz [[rozhodnuti]].)*
 
