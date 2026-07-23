@@ -9,7 +9,21 @@ ukazatel na archiv.*
 
 ## 2026-07-23
 
-- **D20 schváleno — pronásledovatelé run-wide + opravy obsahu dle prověrky.**
+- **D21 schváleno — fixace K1 a verdikty po diagnostickém run-1 (2000 runů,
+  přestavěný v3 engine).** (a) **K1 pásmo FIXOVÁNO: 45–70 %** DORUČENO
+  (kompetentní i cíle-driven, 4p reference) — kontinuita v2 struktury, run-1
+  baseline 84,5–88 % → kalibrace stahuje. (b) **Náklad zůstává fail-condition,
+  revize po kalibraci** — bedny-0 je dnes <1 % proher kompetentní hry, ale při
+  stažení do pásma PRŮŠVIHů přibude; finální verdikt konsolidace až nad
+  kalibrovanými čísly. (c) **Malone strop 3/4 v hodnota-situacích = záměr**
+  (vědomá cena „úplatky neplatí" — nedosáhneš na LOOT, ne beznadějnost; K5
+  breach jde za kotvami, spraví kalibrace). (d) Upřesnění K4a: měří
+  implementovatelné heuristiky, oracle (vševědoucí strop) do ní nepatří.
+  (e) Bot-artefakty k opravě v simu: cíle-bot se neodchyluje za cíli (čísla
+  identická s kompetentním), gamble se nikdy nebere (K7 + cíl hazarder
+  neměřitelné) — opravit před kalibrací. Run-1 pozitiva: parita 1–4p ≤3,6 b.,
+  learnabilita 83 b., memorizace −5,3, první Zátah uzel 4. Kalibrační cíle:
+  K2 snowball (0,96/1,14 → ≥1,3), K5 beznadějné (11,7/5,7 % → <5 %), K1. — pronásledovatelé run-wide + opravy obsahu dle prověrky.**
   (a) **Malone nuluje hodnotu RUN-WIDE** (rozhodnutí uživatele) — dokud je
   aktivním pronásledovatelem, všechny hodnota-sloty čtou hodnotu věci jako 0;
   původní znění bylo no-op (jeho uzly hodnota-slot nemají). (b) **Brody

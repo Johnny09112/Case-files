@@ -24,7 +24,7 @@ odblokuje stavbu a vstup do lidské brány. Plné odůvodnění a botí detaily 
 
 | # | Metrika | GATE práh | Pozn. |
 |---|---|---|---|
-| **K1** | % DORUČENO (cíle-driven i kompetentní bot) | **45–70 %** | Pásmo **provizorní**; run-1 je diagnostický (syrový baseline + rozpad proher **bedny-0 vs. konfrontace**, D19a), **pásmo se FIXUJE hned po run-1** a dál se ladí proti pevnému cíli. |
+| **K1** | % DORUČENO (cíle-driven i kompetentní bot) | **45–70 % — FIXOVÁNO (D21, po run-1)** | Run-1 baseline 84,5–88 % (2026-07-23); ladí se proti pevnému cíli. Náklad zůstává fail-condition, konsolidace do Žáru se reviduje po kalibraci (bedny-0 dnes <1 % proher, D21b). |
 | **K2** | přírůstek postihů/uzel (lehký 1, těžký 2,3) | uzel 3–4 ≥ **1,3×** uzel 1–2 | + korelace info-postih zátěž vs. pásmo (síla smyčky). Hlavní dataviz. |
 | **K3** | medián uzlu 1. překročení prahu Zátah | **∈ {3,4}** | čísla Žáru resetují (per-pásmo PRŮŠVIH + hlučné karty). |
 | **K4a** | max win-rate fixní přiřazovací heuristiky | **≤ 80 %** | |
