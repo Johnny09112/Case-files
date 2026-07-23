@@ -1,4 +1,98 @@
-# PŘESUNUTO (2026-07-23, pivot v3): v2 obsah je nyní v obsah/archiv-v2/cile.yaml.
-# v3 cíle ZATÍM NEVZNIKLY — čekají na v3 event-log spec technical-developera
-# (nahradí architektura.md §2.2). Pak se sem zapíší nad jeho metrikami (D19, bod 8).
-# Prázdný pahýl (žádná data) — nekoliduje, loader ignoruje.
+# Tajné osobní cíle (v3) — lízne si každý hráč na začátku runu, odhalují se na konci
+# (reveal §4.11: „tys to dělal schválně?!"). Dávají skrytý důvod hádat se o KONKRÉTNÍ
+# přiřazení slotu, zatímco tým optimalizuje globálně. MVP: osekaná sada 8 (D16 —
+# cíle v MVP zůstávají). Design §4.10.
+#
+# Schéma (nová pole nepřidávat bez úpravy tohoto komentáře):
+#   id:          kebab-case, unikátní napříč obsah/
+#   text:        co si hráč přeje, aby v protokolu stálo / co dokázal (zobrazí se
+#                jen jemu jako tajný cíl; dobová stylizace)
+#   overeni:     lidský popis, jak se na konci pozná splnění (hráčům se nečte).
+#                VŽDY přítomen — u textových cílů je to jediné ověření.
+#   overeni_typ: mechanicky | textovy — POVINNÉ, řídí, kdo cíl umí obodovat:
+#      mechanicky = simulátor/engine boduje z podminky nad v3 metrikami. MUSÍ mít `podminka`.
+#      textovy    = pozná až člověk z obsahu protokolu (metrika `nazev_v_protokolu`).
+#                   Simulátor ho z metrik VYNECHÁ; pole `podminka` nemá.
+#   podminka:    (jen u overeni_typ: mechanicky) strojově čitelná podmínka nad
+#                ODVOZENÝMI v3 METRIKAMI z událostního logu (technika/architektura.md
+#                §2.2 v3, tabulka „Odvozené metriky pro cíle"), vyhodnocená pro
+#                postavu vlastníka při scoringu (událost `goal_scored`). Metriky:
+#                  doruceno                       — run skončil DORUČENO (run_ended)
+#                  pocet_slotu_splnil / _selhal   — sloty, kde vlastníkova karta prošla/ne
+#                  commitnute_stitky.GANGSTER_viditelna — kolikrát dal vlastník GANGSTER
+#                                                   do VIDITELNÉ role (auto-fail past)
+#                  gamble_pouzit                  — počet gamble čerpajících z ruky vlastníka
+#                  postihy_utrpene.pocet/.lehke/.tezke — postihy utržené vlastníkem
+#                  slozeni_krat                   — kolikrát byl vlastník „složen"
+#                  kredity_utracene_za.leceni/.smena — společné kredity (atribuce dle logu)
+#                  pasma_dosazena["<pasmo>"]      — histogram pásem, kde byla vlastníkova
+#                                                   karta; pásma: "4/4_HLADCE_LOOT",
+#                                                   "3/4_HLADCE", "2/4_S_NASLEDKY", "≤1/4_PRUSVIH"
+#                  bedny_ztracene_vlastni         — bedny padlé atribucí vlastníka
+#                Zápis: `metrika operátor hodnota`, spojení přes `a`/`nebo`. Přesnou
+#                sadu predikátů uzavře engine; sem jen podmínky ověřitelné z §2.2 v3.
+#   body:        1–3 podle obtížnosti
+#
+# ZÁSADY (poučení v2, D5): žádný cíl nesmí odměňovat SEBE-SABOTÁŽ (zrušeno
+# do-posledniho-dechu) ani ČISTOU PASIVITU (zrušeno obetni-beranek jako „nehraj
+# silně"). Proto většina cílů podmíněna `doruceno` (tým musí uspět) a míří na
+# AKTIVNÍ volbu přiřazení slotu, ne na nehraní. Žádné dva cíle nesdílí podmínku.
+# Cílový počet pro MVP: 8 (převážně mechanické; textové jen tam, kde nesou reveal).
+
+cile:
+  - id: cista-ruka
+    text: "Ať v celém spisu nestojí, žes na někoho mířil zbraní na očích — a přesto dojedeš."
+    overeni: "Vlastník ani jednou nepřiřadil GANGSTER věc do viditelné role a run skončil DORUČENO."
+    overeni_typ: mechanicky
+    podminka: "commitnute_stitky.GANGSTER_viditelna == 0 a doruceno"
+    body: 2
+
+  - id: muj-den
+    text: "Ať je z protokolu znát, že to byla tvoje věc, co aspoň třikrát rozhodlo."
+    overeni: "Vlastníkova věc prošla prahem aspoň ve 3 slotech za run."
+    overeni_typ: mechanicky
+    podminka: "pocet_slotu_splnil >= 3"
+    body: 2
+    poznamka: "Práh 3 SIM-TUNE: pocet_slotu_splnil škáluje s počtem hráčů (1p vidí 4 sloty/uzel, 4p ~1). Možná potřeba per-count prahu."
+
+  - id: plny-zasah
+    text: "Aspoň jednu zastávku ať projedeš na plný počet — dočista a s kořistí."
+    overeni: "Aspoň jedna zastávka s vlastníkovou kartou skončila v pásmu 4/4 (HLADCE + LOOT) a run skončil DORUČENO."
+    overeni_typ: mechanicky
+    podminka: "pasma_dosazena[\"4/4_HLADCE_LOOT\"] >= 1 a doruceno"
+    body: 3
+
+  - id: dve-jizvy
+    text: "Do New Yorku dorazíš aspoň se dvěma šrámy na těle — a bednu přesto složíš."
+    overeni: "Vlastník utrpěl za run aspoň 2 postihy a run skončil DORUČENO."
+    overeni_typ: mechanicky
+    podminka: "postihy_utrpene.pocet >= 2 a doruceno"
+    body: 2
+    poznamka: "SIM-WATCH: nesmí vybízet k záměrnému shazování slotů kvůli postihům. Krytí: podmínka doruceno (tým musí uspět) + postihy plynou z týmových pásem, ne z vlastní volby o samotě."
+
+  - id: kupecke-slovo
+    text: "Kupecké slovo platí: ani jedna bedna nesmí padnout tvou vinou — a stejně dojedeš."
+    overeni: "Vlastníkovým přiřazením nepadla žádná bedna a run skončil DORUČENO."
+    overeni_typ: mechanicky
+    podminka: "bedny_ztracene_vlastni == 0 a doruceno"
+    body: 2
+
+  - id: hazarder
+    text: "Aspoň jednou ať se sáhne po tvé ruce naslepo — a risk vyjde až do konce."
+    overeni: "Aspoň jeden gamble za run čerpal z ruky vlastníka a run skončil DORUČENO."
+    overeni_typ: mechanicky
+    podminka: "gamble_pouzit >= 1 a doruceno"
+    body: 1
+
+  - id: bez-jizvy
+    text: "Projeď celou cestu bez jediného vážného zranění — ať tě polda nemá kam zapsat."
+    overeni: "Vlastník neutrpěl žádný těžký (trvalý) postih a run skončil DORUČENO."
+    overeni_typ: mechanicky
+    podminka: "postihy_utrpene.tezke == 0 a doruceno"
+    body: 2
+
+  - id: mozek-operace
+    text: "Polda tě v protokolu označí za mozek celé operace."
+    overeni: "Protokol obsahuje formulaci připisující vlastníkovi plán nebo velení operace."
+    overeni_typ: textovy
+    body: 3
