@@ -1,1 +1,2 @@
 - [v3 audit](v3-audit.md) — nálezy vznesené k navrh-v3.md (2026-07-23), verdikt „vrátit k dopracování", sleduj rozhodnutí
+- [Kalibrace-1 lék audit](kalibrace-1-lek-audit.md) — prověrka léku K5/K7/K2 (2026-07-24): K1/K5 coupling, D21c pool porušen, půl K7 na enginu, 3 eskalace k uživateli

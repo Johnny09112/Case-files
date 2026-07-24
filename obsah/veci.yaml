@@ -75,7 +75,7 @@ veci:
 
   - id: mosazny-boxer
     nazev: Mosazný boxer
-    staty: { utok: 4, obrana: 2, hodnota: 0, improvizace: 1, nastroj: 1 }
+    staty: { utok: 4, obrana: 3, hodnota: 0, improvizace: 1, nastroj: 1 }
     svet: sdilena
     premiova: false
     text: "Navlékneš na klouby mosaz. Zdvořilost tím obvykle končí, řeč taky."
@@ -96,7 +96,7 @@ veci:
 
   - id: reznicky-hak
     nazev: Řeznický hák
-    staty: { utok: 4, obrana: 1, hodnota: 1, improvizace: 1, nastroj: 2 }
+    staty: { utok: 4, obrana: 1, hodnota: 1, improvizace: 1, nastroj: 3 }
     svet: sdilena
     premiova: false
     text: "Zahnutý hák z jatek. Zavěsíš na něj půlku vepře — nebo chlapa, co se moc vyptává."
@@ -150,7 +150,7 @@ veci:
 
   - id: dedkuv-kabat
     nazev: Dědkův kabát
-    staty: { utok: 1, obrana: 3, hodnota: 1, improvizace: 2, nastroj: 2 }
+    staty: { utok: 1, obrana: 3, hodnota: 1, improvizace: 2, nastroj: 3 }
     svet: sdilena
     premiova: false
     text: "Těžký zimník s deseti kapsami. Vydrží déšť, nůž i noc pod mostem."
@@ -229,7 +229,7 @@ veci:
 
   - id: knezsky-kolarek
     nazev: Kněžský kolárek
-    staty: { utok: 0, obrana: 2, hodnota: 1, improvizace: 4, nastroj: 0 }
+    staty: { utok: 0, obrana: 3, hodnota: 1, improvizace: 4, nastroj: 0 }
     svet: sdilena
     premiova: false
     text: "Bílý kolárek a vážná tvář. Spustíš kázání o neřesti pití a hlídka zahanbeně sklopí zrak."
@@ -291,7 +291,7 @@ veci:
 
   - id: rezervni-pneu
     nazev: Rezervní pneumatika
-    staty: { utok: 1, obrana: 2, hodnota: 0, improvizace: 2, nastroj: 4 }
+    staty: { utok: 1, obrana: 3, hodnota: 0, improvizace: 2, nastroj: 4 }
     svet: sdilena
     premiova: false
     text: "Náhradní guma na blatníku. Když praskne v nejhorším, rozhoduje o všem."

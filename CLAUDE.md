@@ -119,17 +119,20 @@ StS mapa s křížkujícím šerifem, kreditová ekonomika. Kanon = design-dokum
 a `technika/simulacni-brana-2026-07-22.md`).
 
 Go/No-Go je **dvoustupňové**:
-1. **v3 simulační brána — OTEVŘENÁ:** kritéria teprve definuje
-   `playtest-facilitator` nad slotovým modelem (kandidátní osy v `prototyp-mvp.md`
-   Fáze 0); pak kalibrace čísel simulací a přestavba enginu v kódovém repu
-   (engine z v2 je na kostkovou resoluci — čeká přestavba).
+1. **v3 simulační brána — OTEVŘENÁ, běží kalibrace:** kritéria K1–K9 zafixována
+   (`prototyp-mvp.md` Fáze 0), engine přestavěn na slotovou resoluci, diagnostický
+   run-1 (1000×2) proměřen — K1/K6a/K8 prošly, K5/K7/K2 padly. **Kalibrace-1
+   zapracována 2026-07-24 (D22):** 45-slot kotva-patch + kořenový lék v obsahu;
+   míč u enginu (reset proxy, šum K4c, re-měření dle akceptační brány
+   v `technika/kalibrace-1-2026-07-24.md`).
 2. **Lidská brána — OTEVŘENÁ:** hádka o rozdělení, smích nad protokolem,
    dobrovolný další run + **čitelnost** (metrika 6 — nález playtestu 2026-07-22:
    hra musí vysvětlovat „proč se to stalo").
 
-**Pozor:** `obsah/*.yaml` je zatím **v2 legacy** (karty s tagy, uzly s afinitami) —
-obsahová pipeline v3 (věci s 5 staty, situace se sloty, postihy) je v backlogu;
-do té doby obsah needitovat, jen číst jako referenci tónu.
+**Obsah:** `obsah/*.yaml` je **v3-kompletní** (od 2026-07-23; kalibrace-1
+zapečena 2026-07-24) — 40 věcí s 5 staty, 15 situací se sloty, postihy, cíle,
+pronásledovatelé. Jediný zdroj pravdy pro obsah; edituj dle schémat v komentářích
+souborů (v2 obsah je archivovaný).
 
 Po dokončení fáze aktualizuj tuto sekci a zapiš výsledek Go/No-Go s datem —
 zastaralá sekce navádí špatně.

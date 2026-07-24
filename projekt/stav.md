@@ -5,10 +5,12 @@ Poslední aktualizace: 2026-07-24.*
 
 ## Aktuální fáze
 
-**Simulační brána SPLNĚNA 2026-07-22** (4 běhy, D7–D11, kritéria zafixovaná).
-Resoluční čísla kalibrovaná, obsah kompletní, **stavba prototypu odblokovaná**
-(samostatný kódový repozitář; pořadí dle [[../technika/architektura|architektury]] §5:
-engine + simulátor → hot-seat UI → LLM). Lidská brána zůstává otevřená.
+**v3 kalibrace (2026-07-24).** v2 simulační brána splněna 2026-07-22 a uzavřena
+pivotem v3 (D14–D20); v3 engine přestavěn v kódovém repu, diagnostický run-1
+(1000×2) proměřen — K1/K6a/K8/co-op inverze prošly, K5/K7/K2 padly (+ hraniční
+K4c). **Kalibrace-1 zapracována v design repu (D22):** 45-slot kotva-patch
+zapečen + kořenový lék K5/K7/K2 v obsahu. **Míč je u enginu:** reset proxy,
+šum, čisté re-měření dle akceptační brány (viz backlog). Lidská brána otevřená.
 
 ## Backlog
 
@@ -36,7 +38,8 @@ engine + simulátor → hot-seat UI → LLM). Lidská brána zůstává otevřen
 | Prototyp fáze 3: LLM adaptér (provider NEROZHODNUT — otevřená otázka) | kódový repo | na řadě spolu s 2.1 — cache→provider→timeout→fallback dle ADR-004/007; fallback větev už stojí |
 | První lidské sezení (lidská brána): solo/remote run přes `npm run dev`, vyhodnotit metriky + hypotézy (kolaps jako default, tři měřidla) | uživatel + playtest-facilitator | **odblokováno fází 2** — šablona playtestů připravena |
 | Jemné doladění obtížnosti po loot-injury (exploit-bot ~74–76 % vs. pásmo 45–70; ladit tvrdosti/Žár, ne resoluční práh) | game-designer + playtest-facilitator | **nahrazeno kalibrací-1 v3** — viz řádek níže |
-| **Kalibrace-1 v3: zapéct 45-slot kotva-patch + kořenový lék K5/K7/K2** (gamble vynucený ne zvolený, snowball plochý) | game-designer + content-generator | **otevřeno — předávka z enginu 2026-07-24**: patch + nálezy + akceptační brána v [[../technika/kalibrace-1-2026-07-24|technika/kalibrace-1-2026-07-24.md]]. Engine čeká na zapečení, pak reset proxy + šum (K4c) + re-měření |
+| **Kalibrace-1 v3: zapéct 45-slot kotva-patch + kořenový lék K5/K7/K2** (gamble vynucený ne zvolený, snowball plochý) | game-designer + content-generator | **hotovo 2026-07-24 (D22)** — patch zapečen (45 slotů +1, pásmo 2–4 drží); lék zapracován: 4 skryté obrana-kotvy 3→2 (dial), 2 telegraf-přepisy npc-pastí, 5 věcí +1 sekundární stat (obrana/nastroj, improvizace netknuta), info-heavy pooly pozdních událostí se stropem ≤7 (D20). Enginová část léku = řádek níže; 3 eskalace na uživatele (viz otevřené otázky) |
+| **Pro engine — kalibrace-1 uzavření (signál = tento commit):** (1) reset `rules.kotvaBumpFrakce` 0.8→0; (2) rozšíření šumu pro K4c (model D15 kotva ± šum); (3) derivace telegraf_signal: pozitivně rozlišit „zbraň funguje ve skrytém slotu (stat=utok)" od „zbraň k ničemu" — druhá polovina léku K7 + párová podmínka telegraf-přepisů urednik-vaha/razitko (jinak próza/signál drift); (4) ověřit, že hide_* postih z uzlu N reálně degraduje commit uzlu N+1 (bez toho info-postihy nesnowbalují); (5) zvážit shlukování léček/zátahů/konfrontací do uzlů 3–4+ přes tempo Žáru (K2 cíl ≥1,3); (6) čisté re-měření 1000×2 (seedy 1–1000) dle akceptační brány, POVINNĚ: K1∈[45,70] ∧ K5 odděleně viditelná/skrytá ∧ K7≤20 % současně, per-situace take-rate před/po, K6a v rozpadu dle typu postihu (info-postihy vs. 1p/2p), pozor nadrazi-noc (2 skryté sloty, nejtvrdší offender; skrytých slotů je 20, ne 19) + doladění K8 | kódový repo (technical-developer) | **čeká na engine — zadání z D22, 2026-07-24** |
 | Setup kódového repa: nainstalovat pluginy Superpowers (inženýrská disciplína), frontend-design (až UI — nakrmit estetikou z design dokumentu), security-guidance | uživatel (claude CLI v kódovém repu) | dle backlogu níže — až bude repo na GitHubu |
 | První měření instrumentovaného enginu: potvrdit win-rate (kompetentní ≤70 %) a hlídat obetni-beranek (94,8 % těsně pod stropem) | playtest-facilitator + technical-developer | **hotovo — run-1 (1000×2)**: K1 v pásmu (59.8–69.2 %), co-op inverze OK (4/4 ~4.8 %); report [[../technika/kalibrace-1-2026-07-24|technika/kalibrace-1-2026-07-24.md]] |
 | Fallback šablony protokolu (~20) | content-generator + protocol-humor-tester | čeká (potřeba až pro prototyp, ne pro simulaci) |
@@ -44,6 +47,13 @@ engine + simulátor → hot-seat UI → LLM). Lidská brána zůstává otevřen
 | Pro engine (technical-developer): (a) formalizovat razítko DORUČENO — metrika `doruceno` na něm stojí; (b) strukturovaný vstup protokolu nese pole „bedny ztracené tímto hodem"; (c) ověřit proveditelnost „hlasu z auta" v hot-seat UI; (d) nové metriky cílů `ztracene_bedny_vlastni`, `max_sila_karty` v event logu | technical-developer | poznámky z 2026-07-22 |
 
 ## Otevřené otázky (čekají na uživatele)
+
+- **Eskalace z D22 (kalibrace-1, 2026-07-24):** (1) ko-metrika K2 = drift míry
+  PRŮŠVIHŮ uzel3–4 vs. uzel1–2 — přidat do znění brány K2 v `prototyp-mvp.md`?
+  (zatím jen diagnostika v reportu enginu, gate ≥1,3× beze změny); (2) ratifikace
+  posunu u obrana-skrytých slotů (z „odvoditelný z telegrafu" na „levný
+  naslepo-slot + přeliv pokrytím"); (3) potvrzení pool-odchylky brody.lecka
+  (prilis-na-rane místo prach-do-oci kvůli stropu ≤7).
 
 - **D14 — Pivot resoluce na „slotový" systém (návrh uživatele 2026-07-22/23):**
   bez kostky; slova s 5 staty přiřazovaná do slotů situací se skrytými prahy
@@ -99,8 +109,9 @@ engine + simulátor → hot-seat UI → LLM). Lidská brána zůstává otevřen
 - **2026-07-22: tým agentů nebyl v session dosažitelný** (SendMessage „not
   reachable") — role design-critica a game-designera odehrál project-manager
   v zastoupení, s přiznáním v syntéze. Při příští session ověřit dostupnost týmu.
-- Session bez přístupu ke git nástrojům — změny `projekt/*` čekají na commit
-  (konvence „commitni a pushni sám" nešla naplnit).
+- **2026-07-24: tým dosažitelný** — kalibrace-1 odehrána plným kolečkem
+  game-designer → design-critic → content-generator (žádné zastoupení). PM nemá
+  Bash — commit/push proveden v zastoupení přes general-purpose agenta.
 
 ## „Vyřešíme později" sliby
 

@@ -7,6 +7,73 @@ rozhodnutí přehodnotí, přidej nový záznam, který na starý odkazuje.*
 aktuální a předchozí fázi) do `projekt/archiv/rozhodnuti-archiv.md` a nahoře nech
 ukazatel na archiv.*
 
+**Archiv:** uzavřená v2 fáze (2026-07-22, D1–D13 + založení týmu, konvencí a
+architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.md]]
+(přesunuto 2026-07-24).
+
+## 2026-07-24
+
+- **D22 — kořenový lék K5/K7/K2 po kalibraci-1** *(rozhodnutí týmu v delegaci
+  uživatele — zapracování kalibrace-1; sporné body eskalovány, viz (f))*.
+  Kontext: předávka enginu [[../technika/kalibrace-1-2026-07-24|technika/kalibrace-1-2026-07-24.md]],
+  návrh game-designera, adversariální prověrka design-critica.
+  (a) **45-slot kotva-patch zapečen** přesně dle předávky (`situace.yaml` 14
+  situací + `pronasledovatele.yaml` malone.lecka / brody.lecka /
+  brody.konfrontace): 45 viditelných slotů +1, všechny výsledné kotvy v pásmu
+  2–4, skryté a už-tvrdé sloty nedotčeny. Komentář schématu KOMBI slotu upraven
+  („nízká kotva 2–3" — farmar-stodola kombi jde patchem na 3).
+  (b) **K7 skryté sloty — princip „odvoditelnost, nebo přeliv":** 10 utok-skrytých
+  slotů PONECHÁNO (fikční podpis „kdyby přituhlo"; odvoditelné z verdiktu zbraně —
+  druhá polovina léku je enginová derivace signálu, viz stav.md). 4 skryté
+  obrana-kotvy sníženy 3→2 (most-prohnila-prkna, urednik-razitko, mesto-houkacky,
+  brody.konfrontace) jako **dávkovatelný dial** — engine smí část vrátit, kdyby
+  K1 podteklo; `zatah` záměrně zůstává 3 (leží v uzlech 3–4, drží K2);
+  urednik-vaha už na 2 byla. 2 npc-pasti (urednik-vaha, urednik-razitko): verdikt
+  zbraně v telegrafu implikoval skrytou zbraň, ale skrytý slot je obrana →
+  přepsáno na „papír tu zmůže víc než olovo" (žádná implikace tasení) —
+  nejcennější nález návrhu dle kritika; **podmíněno párovou opravou enginové
+  derivace signálu**, jinak vzniká próza/signál drift (D19).
+  (c) **K5 pokrytí balíku — 5 věcí +1 sekundární stat, žádná improvizace:**
+  obrana 2→3 u rezervni-pneu, mosazny-boxer, knezsky-kolarek; nastroj 2→3
+  u reznicky-hak, dedkuv-kabat. Pokrytí ≥3: obrana 9→12, nastroj 9→11,
+  improvizace 13 NETKNUTA (watchlist D14 „univerzální flex"), hodnota 6 NETKNUTA
+  (D21c: Malone strop 3/4 = záměr), tier ≥4 netknut (žádný power creep).
+  (d) **K2 pozdní rampa obsahem:** pozdní události (Žár-spouštěné) naloženy
+  informačními/zámkovými postihy, které degradují příští přiřazení (snowball
+  smyčka), místo jednorázových ztrát: malone.lecka `[mlha-v-hlave,
+  zvoneni-v-usich, prilis-na-rane]` + prusvih `otras-mozku`; brody.lecka (dřív
+  čistě ztrátová = nesnowbalovala) `[mlha-v-hlave, prilis-na-rane,
+  vysypana-bedna]`; zatah `[zvoneni-v-usich, prach-do-oci, prilis-na-rane]`;
+  výměnou deputy-mytnice prusvih otras-mozku→zlomene-zebro (info-tezky se
+  přesouvá z běžného poolu do pozdního). **Strop „žádný postih >7 poolů" (D20)
+  DRŽEN** — původní čísla designera by šla na 8 (otras-mozku, mlha-v-hlave,
+  po opravě i prach-do-oci), zapracována cap-safe varianta vč. odchylky
+  content-generatora u brody.lecka (prilis-na-rane místo prach-do-oci), PM
+  schválil. Finální maxima: prach/mlha/zvoneni/prilis 7, otras 6, zebro 6.
+  Taxonomie 70/30 a cap 2 (D15) beze změny.
+  (e) **Verdikt kritika přijat: tohle NENÍ uzavřený lék, ale vstup do společného
+  re-měření.** KRITICKÉ riziko K1/K5 coupling: tři současná změkčení zvednou
+  win-rate → engine drží K1 zvedáním VIDITELNÝCH kotev → K5 breach se reprodukuje
+  na viditelné straně. Proto akceptační brána MUSÍ měřit K1∈[45,70] ∧ K5
+  (odděleně viditelná/skrytá) ∧ K7≤20 % SOUČASNĚ; + per-situace take-rate
+  před/po (teze „obrana-skryté vynucují gamble" je neověřená — 3 z 8 už na kotvě
+  2 byly a K7 stejně breachoval); + K6a v rozpadu dle typu postihu (info-postihy
+  degradují u 1p/2p větší podíl informace než u 4p). **Hand-off:** po tomto
+  zapečení drží K1 výhradně engine (viditelné kotvy + šum) — skryté sloty a balík
+  se na K1 už neladí. Oprava čísla z předávky: skrytých slotů je **20**, ne 19
+  (nadrazi-noc má dva — a zůstává nejtvrdší K5/K7 offender, 50 % naslepo).
+  (f) **Eskalace k uživateli (NEPROVEDENO, čeká na potvrzení):** (1) ko-metrika
+  K2 = drift míry PRŮŠVIHŮ uzel3–4 vs. uzel1–2 — cap 2 zastropovává počet
+  postihů, počet nemusí být pravý signál snowballu; šlo by o změnu znění fixované
+  brány K2 v `prototyp-mvp.md` → zatím jen jako DIAGNOSTIKA v reportu enginu,
+  gate ≥1,3× beze změny. (2) Ratifikace posunu u obrana-skrytých slotů: z „stat
+  skrytého slotu má být odvoditelný z telegrafu" na „levný naslepo-slot + přeliv
+  pokrytím". (3) Potvrzení pool-odchylky brody.lecka (b/d výše).
+- **Oprava poškozeného textu logu:** hlavička záznamu D20 (2026-07-23) byla
+  dřívějším editem slepena s koncem D21 („…K1. — pronásledovatelé run-wide…");
+  při archivaci obnovena na zjevný původní tvar „**D20 schváleno — …**". Obsah
+  rozhodnutí nezměněn.
+
 ## 2026-07-23
 
 - **D21 schváleno — fixace K1 a verdikty po diagnostickém run-1 (2000 runů,
@@ -23,7 +90,8 @@ ukazatel na archiv.*
   identická s kompetentním), gamble se nikdy nebere (K7 + cíl hazarder
   neměřitelné) — opravit před kalibrací. Run-1 pozitiva: parita 1–4p ≤3,6 b.,
   learnabilita 83 b., memorizace −5,3, první Zátah uzel 4. Kalibrační cíle:
-  K2 snowball (0,96/1,14 → ≥1,3), K5 beznadějné (11,7/5,7 % → <5 %), K1. — pronásledovatelé run-wide + opravy obsahu dle prověrky.**
+  K2 snowball (0,96/1,14 → ≥1,3), K5 beznadějné (11,7/5,7 % → <5 %), K1.
+- **D20 schváleno — pronásledovatelé run-wide + opravy obsahu dle prověrky.**
   (a) **Malone nuluje hodnotu RUN-WIDE** (rozhodnutí uživatele) — dokud je
   aktivním pronásledovatelem, všechny hodnota-sloty čtou hodnotu věci jako 0;
   původní znění bylo no-op (jeho uzly hodnota-slot nemají). (b) **Brody
@@ -51,7 +119,7 @@ ukazatel na archiv.*
   co-op inverze na startu), verdikty K4c gate (svázaná s noise-modelem),
   K5 gate jen „<5 % beznadějných", K6a+K6c-run gate / K6b diagnostika;
   **telegraf_signal derivuje engine ze slotů** (próza = lidský rendering, QA
-  invariant věrnosti; fidelita telegrafu = sweep knob); **v3 event-log spec
+  invariant věrnosti; fidelita telegrafu = sweep knob brány); **v3 event-log spec
   vlastní technical-developer** (nahradí §2.2, jeden log pro gate-metriky,
   podminky cílů i max_achievable_band); enum postihů: škrtnut hide_nazvy,
   lock_stat/lock_slot_viditelnost dodefinovat nebo škrtnout, kontrola asymetrie
@@ -115,165 +183,4 @@ ukazatel na archiv.*
   *Kontext: balanční posudek `technika/balanc-posudek-v3-2026-07-23.md`.
   Samotný pivot na v3 se stvrzuje až schválením design dokumentu v3.*
 
-## 2026-07-22
-
-- **Simulační brána vyhlášena za SPLNĚNOU (4. běh, po D7–D11).** Všech 5
-  zafixovaných kritérií prošlo: win-rate 63,8/70,1 % (pásmo 45–70, kompetentní
-  na stropu — ověří první měření enginu), snowball od uzlu 3 s vrcholem v uzlu 4,
-  první práh Žáru medián uzel 3, žádná strategie >85 %, všech 7 mechanických
-  cílů v pásmu 5–95 %. Stavba prototypu odblokována (engine+simulátor → UI →
-  LLM). Do `architektura.md` §2.2 doplněna instrumentace pro bodování cílů
-  (atribuce `crate_lost`, flag `dobrovolna` u `card_played`, pole
-  `bedny_ztracene_timto_hodem` v `node_resolved`). Výhrady a hypotézy pro
-  lidskou bránu v `technika/simulacni-brana-2026-07-22.md`.
-- **D11 schváleno — finální kalibrace po 3. běhu brány (páky G/H/Ž).**
-  3. běh: jádro vyřešené (win-rate 55/65 % v pásmu, snowball správný tvar, žádná
-  dominance), padala jen 2 lokální kritéria. (G) `cisty-stit` + podmínka
-  `doruceno` (96,3 % → změřeno 52,5 %). (H) `frajer-v-klidu` přerámován ze
-  zranění na `kolaps == false a doruceno` — zranění jsou při 4p univerzální,
-  žádný práh zranění nefungoval (0,1–3,6 %). (Ž) první práh Žáru (Zátah) zvednut
-  ze 4 na 5 — medián prvního prahu padal uzel 2, kritérium chce 3–4; textura
-  „všechno Násilí hlučné" zůstává. *Vedlejší nález pro lidskou bránu:* „zbitý,
-  ale doručil" je default zážitek (kolaps ~96 % runů) — drama vs. frustrace
-  rozhodne první lidské sezení. Následuje 4. běh brány.
-- **D12 schváleno — zoufalé karty jako loot za zranění (loot-injury) + buff hlasu
-  z auta zůstává +1.** První měření reálným enginem (výhrada č. 1 brány) odhalilo
-  díru specifikace: MVP nedefinoval přístup k zoufalým; modelovaný „stálý sdílený
-  pool" byl hlavní zdroj hry bez tření (greedy 88–98 % DORUČENO). Změřeny varianty
-  (pool / pool-once / dealt / loot-node / loot-injury × buff): loot-injury (návrh
-  uživatele) je číselné dvojče dealt (~74–76 % exploit-bot), ale karta přichází
-  v dramatickém momentu a v digitálu má nulovou tempo-cenu. Pravidlo: po uzlu se
-  zraněním a 2+ celkem lízneš osobní zoufalou (max 1, jednorázová). Buff 0 by
-  padl do pásma, ale umrtvil by volbu hlasu z auta — zamítnuto. Zbylé ~body nad
-  pásmem doladí tvrdosti/Žár nad daty z prototypu. *Nový backlog: jemné doladění
-  obtížnosti po zavedení loot-injury.*
-- **D13 schváleno (obsah) — postavy 4/4 a fallback šablony 22.** Pevná čtveřice
-  Bartoš/Kowalski/Mazur/Fontana (fixní jména = předpoklad přenositelné cache
-  protokolů; vědomě 4 muži — rodové tvary šablon). Šablony parametrické,
-  `podminka` hlídá, co smí text tvrdit. Test s dosazenými čísly: 3 rozbité shody
-  opraveny; schválený patch: apozice „v místě zvaném" → úřední label „v úseku
-  vedeném jako {uzel}" (skřípala na uzlech pojmenovaných dějem), hlas z auta bez
-  implikace smrti, `{jmeno}` = příjmení (kontrakt pro engine — AI protokoly
-  i fallbacky pak drží stejný registr).
-- **D10 schváleno — prahy hodu 7+/5–6/≤4 (páka F) + frajer-v-klidu ≤1 zranění.**
-  2. běh brány (240k runů) ukázal overcorrection D7: kompetentní hra spadla na
-  18–25 % DORUČENO, kolaps v 99 % runů, snowball front-loaded, cíl frajer 0,1 %.
-  Kalibrační sweep našel páku F (snížení prahu plného úspěchu z 8+ na 7+):
-  kompetentní 62 %, realistická 49 % — obě v pásmu brány 45–70 %, duch D7
-  zachován (5–6 dál zraňuje). `frajer-v-klidu` zmírněn na ≤1 zranění. Potvrzeno
-  z 2. běhu: Zátah nevyhnutelný (1,24×/run), konfrontační kolotoč vyřešen
-  (0,97×/run), volba rideru Útěku je živá, obetni-beranek opraven (70 %).
-  Hardcodované prahy odstraněny i z šablony playtestů, architektury a definic
-  agentů (zdroj pravdy jen prototyp-mvp.md). Následuje 3. běh brány.
-  *Otevřená hypotéza pro lidskou bránu:* častý kolaps („zbitý, ale doručil") —
-  drama, nebo frustrace? Simulace to nerozhodne.
-- **D7 schváleno — výsledek 5–7 = reálné zranění** (+ poznámka do spisu), žádná
-  „poznámka zdarma". *Důvod:* simulační brána (216k runů) ukázala kompetentní hru
-  90–98 % DORUČENO; citlivostní analýza změřila, že tato jediná změna ji sráží na
-  72,5 % — směrem ke zdravému pásmu. Nejsilnější páka za nejmenší pravidlo.
-- **D8 schváleno — balíček pák simulace (probráno bod po bodu):**
-  (2) ruka definována = 5 karet, dolízání po uzlu, prahy hodu se nezpřísňují;
-  (3) přežití konfrontace → Žár klesá na **3** (proti kolotoči finále 1,5–2,6×/run);
-  (4) Zátah při prahu **nahrazuje obě cesty** (dřív beztrestně obejitelný, hrál se
-  0,22×/run); (5) rider Útěku: při selhání **volí vlastník** zranění vs. −1 bedna
-  (Útěk byl dominantní odtok beden a mono-Útěk past); (6) `obetni-beranek` na
-  max sílu ≤2 s výjimkou zoufalých/vynucených karet (byl ~1 % = mrtvý);
-  (7) škálování počtem hráčů se zatím NEřeší (kognitivní zátěž, rozhodne se z dat
-  po přesimulování); tvrdosti mini-uzlů pronásledovatelů: léčka `zar`,
-  konfrontace `zraneni`. *Zdroj čísel:* `technika/simulacni-brana-2026-07-22.md`.
-- **D9 schváleno — měřitelná kritéria simulační brány** zafixována
-  v `prototyp-mvp.md` (referenční 4p run: DORUČENO 45–70 % u realistické
-  i kompetentní hry, snowball od uzlu 3, první práh Žáru uzel 3–4, žádná strategie
-  >85 %, žádný cíl <5 %/>95 %). *Důvod:* slovní kritérium nešlo objektivně
-  vyhodnotit; příští běhy se měří proti číslům.
-- **D4 schváleno — tagová textura mechanicky: „ridery tagů".** Násilí = nejvyšší
-  síly, vše hlučné (+1 Žár); Úplatek = při selhání smíš odhodit 1 bednu a povýšit
-  na „úspěch za cenu"; Útěk = selhání nezraní, tým ztratí bednu; Lest = bez rideru,
-  nekrytá variance. *Důvod:* audit design-critica ukázal, že textura §4.5 se
-  v mechanice nerealizovala — tagy byly zaměnitelné, volba karty lookup, Lest
-  fakticky dominovala a Násilí (motor Žáru) bylo čistě nejhorší. Ridery zavěšují
-  texturu na existující měřidla (Žár/bedny/zranění), žádný nový subsystém,
-  simulovatelné. Řeší zároveň nálezy B1, B2, B3, D1 a část D5 auditu.
-- **D5 schváleno — doprovodná pravidla a úpravy obsahu (balík game-designera).**
-  (a) Nutkání ochutnat = modifikátor hodu místo „zrušení hodu" (sólo + fabrikace
-  protokolu). (b) Cíl `do-posledniho-dechu` stažen (odměna za sebe-vyřazení);
-  kolabovaný hráč dostává „hlas z auta" (+1 spoluhráči, nebo mu lízni prokletou).
-  (c) Textové cíle `obetni-beranek` a `frajer-v-klidu` převedeny na mechanické
-  proxy; `kupecke-slovo` personalizováno. (d) +1 generický Zátah-uzel (speciální,
-  vkládaný), `mesto-zatah` přejmenován kvůli kolizi. (e) Zoufalé karty ignorují
-  postih za zranění. (f) Priorita prokletých: zákaz tagu > vynucení. (g) Kosmetika
-  K1–K4 (2 Lest karty jiný vtip, ujasnění Ztráty důstojnosti, zkrácení úvodu).
-  *Pozn.:* proveditelnost „hlasu z auta" v hot-seat UI ověří technical-developer.
-- **D6 schváleno — prompt protokolu v0.2 + regresní baterie.** Rule 2 posílena:
-  počet beden a zranění se bere výhradně z výsledku mechaniky, nikdy z textu
-  karty (humor-tester prokázal riziko fabrikace u „hladkých" karet). Zakládá se
-  `prompty/protokol-testy.yaml` se 4 odhalenými případy jako regresní baterie.
-  Stav „bez hodu" není potřeba (Nutkání ochutnat předěláno na modifikátor).
-- **D1 schváleno — Žár: základní +1 per uzel, ne per hod.** Selhání v uzlu přidává
-  +1 Žár max 1× za uzel (aspoň jedno selhání = +1); hlučné karty +1 per karta
-  a výsledkové +2 beze změny; tvrdost `zar` (+2) zůstává záměrně per selhání.
-  *Důvod:* per hod škáluje tempo Žáru s počtem hráčů (solo max +1/uzel, 4 hráči
-  až +4/uzel) — práh 10 by u 4 hráčů padal téměř každý run. Per uzel dává první
-  práh ~3.–4. uzel nezávisle na velikosti party.
-- **D2 schváleno — sjednocení designu a prototypu (4 nálezy konzistence).**
-  (1) Prahy úspěchu jsou globální (8+/5–7/≤4 v prototypu), obtížnost uzlu dělají
-  afinity + tvrdost — design už nemluví o „prahu uzlu". (2) Prokleté karty se
-  lížou **od 2. zranění** (potvrzeno, design zpřesněn). (3) Zátah při prvním prahu
-  Žáru **nahrazuje** jednu ze dvou cest, nepřidává třetí — jinak by ho hráči vždy
-  obešli; klíčové i pro simulátor (`route_offered`). (4) Čísla Žáru vyškrtnuta
-  z design dokumentu — drží jen strukturu, hodnoty žijí v prototypu (dle §8).
-  Stejně odhardcodovány prahy Žáru z komentářů `obsah/cile.yaml`
-  a `obsah/pronasledovatele.yaml`.
-- **D3 schváleno — schéma tajných cílů: `overeni_typ` + `podminka`.** Cíle se dělí
-  na `mechanicky` (simulátor je boduje z událostního logu přes strojově čitelnou
-  `podminka` nad metrikami z architektury §2.2) a `textovy` (pozná jen člověk
-  z obsahu protokolu; simulátor je z metrik vynechá s poznámkou v reportu).
-  *Důvod:* `overeni` byla volná próza — simulační brána by neuměla bodovat cíle,
-  ač s tím architektura počítá. Přidány první 2 mechanické cíle jako vzor.
-- **Rozvrstvení modelů agentů.** `project-manager` → **Fable** (orchestrace,
-  dlouhohorizontová multi-agent práce, 1M kontext). Ostatní → **Opus 4.8**
-  (design, obsah, humor, ekonomika, technika, facilitátor playtestů). Levné
-  mechanické běhy (simulace) lze v případě potřeby stáhnout na Sonnet 5.
-  *Důvod:* „vše na Fable" (děděno ze session) je nejdražší konfigurace; Opus 4.8
-  dá ~90 % kvality za půlku ceny, Fable jen tam, kde je orchestrace jeho silou.
-  *Pozn.:* `playtest-facilitator` dán na Opus kvůli poctivé interpretaci
-  simulací; těžké simulační běhy jdou později zlevnit na Sonnet.
-- **Technická architektura prototypu v0.1 přijata (7 ADR)** —
-  `technika/architektura.md`. Klíčové: Vite + vanilla JS bez TypeScriptu (JSDoc
-  + `@ts-check`), headless deterministický engine se seedovaným RNG (UI i
-  simulátor jsou dva klienti téhož API), resoluční pravidla jako data + čistá
-  funkce (kvůli probíhající revizi čísel po auditu), provider-agnostic LLM
-  adaptér (cache → 10 s timeout → fallback, logovat vše), obsah mezi repy přes
-  git submodule + dev override `CONTENT_DIR`, server/Tauri/Steam odloženy mimo
-  v0.1, dvouvrstvé klíčování cache protokolů (exaktní aktivní, hrubý stínově
-  měřený). Pořadí stavby: engine+simulátor → hot-seat UI s fallbacky → LLM.
-  *Důvod a detaily v jednotlivých ADR.*
-- **Repozitář na GitHubu.** Nastaven remote `origin`
-  (`git@github.com:Johnny09112/Case-files.git`), výchozí větev přejmenována
-  z `master` na `main`, historie pushnuta. Push je od teď aktivní součástí
-  konvence po dokončení práce.
-- **Commit + push automaticky po dokončení práce.** Claude commituje a pushuje sám,
-  bez čekání na pokyn, jakmile je ucelená práce v konzistentním stavu; „kdy" určuje
-  Claude. Řešeno jako konvence v `CLAUDE.md`, ne slepý git hook — ten by neuměl
-  české zprávy „co a proč" ani logické celky a slepý auto-push je rizikový.
-  *Pozn.:* remote zatím nenastaven, push čeká na jeho přidání.
-- **Archivační strop `rozhodnuti.md`** ~200 řádků → archiv (viz hlavička).
-
-- **Paměťová architektura: vrstvená, sdílené soubory = pravda.** Doménová a
-  procesní pravda žije v gitem verzovaných souborech; privátní paměť agentů
-  (`memory: project`) slouží jen ke kalibraci role, ne k projektovým faktům.
-  *Důvod:* zabránit roztříštění mezi 9 samostatnými paměťmi a driftu od zdroje pravdy.
-- **Obsidian ano jako lidská vrstva nad repem; LLM-wiki odloženo.** Vault se otevře
-  nad stávajícími soubory. Generativní LLM-wiki až při velkém korpusu a jen jako
-  neautoritativní odvozený index. *Důvod:* tluče se se „source of truth" disciplínou
-  a duplikuje grep + consistency-check; korpus je zatím malý.
-- **Papírový playtest (Fáze 0) přeskočen.** Nejsou lokální hráči; jde se rovnou na
-  prototyp. Go/No-Go předefinováno na dvoustupňové (simulační brána → lidská brána).
-  *Důvod:* logistika; simulace nahrazuje papírovou pojistku pro matematiku a tempo.
-- **Model spolupráce agentů: hybrid.** `project-manager` orchestruje a dělá review;
-  specialisté konzultují adresně určené kolegy. *Důvod:* předvídatelné náklady a
-  koordinace bez úzkého hrdla.
-- **Založen tým agentů + skill.** 9 agentů (design-critic, content-generator,
-  protocol-humor-tester, game-designer, technical-developer, operations-economics,
-  marketer, project-manager, playtest-facilitator) a skill `consistency-check`.
-  Implementátor kódu záměrně NEzaložen — patří do samostatného kódového repa.
+*(Starší záznamy — 2026-07-22, v2 fáze — viz archiv v hlavičce.)*

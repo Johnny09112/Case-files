@@ -14,7 +14,8 @@
 #   sloty:     přesně 4×:
 #     - role:        krátký název role (co se v té mezeře děje)
 #       stat:        1 z 5 statů | [stat, stat] = KOMBI (obě věci? ne — JEDNA věc,
-#                    jejíž OBA uvedené staty musí být ≥ kotva; D19b, střídmě, kotva 2)
+#                    jejíž OBA uvedené staty musí být ≥ kotva; D19b, střídmě,
+#                    nízká kotva 2–3 — 3 od kalibrace-1 2026-07-24)
 #       kotva:       2–4 (práh 0 zakázán); engine přičte šum ±1 při odhalení
 #       viditelnost: viditelna | skryta   (ikona při odhalení)
 #       stitek_citlivy: (volitelné VÝJIMKA) VELKÝMI — přebíjí parametr štítku pro
@@ -54,9 +55,9 @@ situace:
       nabídl {VEC} za vytažení, {kdo} držel hlas mírný pomocí {VEC} a {kdo} zapřáhl
       koně s {VEC}. Kdyby chlap začal vyvádět, měl {kdo} po ruce {VEC}.
     sloty:
-      - { role: "Zaplatit za vytažení", stat: hodnota, kotva: 3, viditelnost: viditelna }
-      - { role: "Nezvednout hlas",      stat: obrana,  kotva: 2, viditelnost: viditelna }
-      - { role: "Zapřáhnout a táhnout", stat: nastroj, kotva: 2, viditelnost: viditelna }
+      - { role: "Zaplatit za vytažení", stat: hodnota, kotva: 4, viditelnost: viditelna }
+      - { role: "Nezvednout hlas",      stat: obrana,  kotva: 3, viditelnost: viditelna }
+      - { role: "Zapřáhnout a táhnout", stat: nastroj, kotva: 3, viditelnost: viditelna }
       - { role: "Kdyby začal vyvádět",  stat: utok,    kotva: 3, viditelnost: skryta }
     pasmove_vysledky:
       hladce_loot: { loot: karta }
@@ -72,9 +73,9 @@ situace:
       {VEC}, {kdo} zaklínil vrata {VEC} a {kdo} zahrabal bednu do sena s {VEC}.
       Když statkář obcházel s lucernou, {kdo} ani nedýchal za {VEC}.
     sloty:
-      - { role: "Utišit psy",            stat: improvizace,           kotva: 3, viditelnost: viditelna }
-      - { role: "Zaklínit vrata",        stat: [nastroj, improvizace], kotva: 2, viditelnost: viditelna }
-      - { role: "Schovat bednu do sena", stat: nastroj,               kotva: 3, viditelnost: viditelna }
+      - { role: "Utišit psy",            stat: improvizace,           kotva: 4, viditelnost: viditelna }
+      - { role: "Zaklínit vrata",        stat: [nastroj, improvizace], kotva: 3, viditelnost: viditelna }
+      - { role: "Schovat bednu do sena", stat: nastroj,               kotva: 4, viditelnost: viditelna }
       - { role: "Nedýchat, když jde kolem", stat: obrana,             kotva: 2, viditelnost: skryta }
     event:
       - "Ve vedlejším stání funí prasata a pod korytem leží zapomenutá bedna cizí kořalky."
@@ -98,13 +99,13 @@ situace:
       držel kamennou tvář za {VEC}. Kdyby přituhlo, čekala pod plachtou {VEC}.
     sloty:
       - { role: "Silniční poplatek",  stat: hodnota,     kotva: 3, viditelnost: viditelna }
-      - { role: "Zamluvit to",        stat: improvizace, kotva: 3, viditelnost: viditelna }
+      - { role: "Zamluvit to",        stat: improvizace, kotva: 4, viditelnost: viditelna }
       - { role: "Klidná tvář",        stat: obrana,      kotva: 2, viditelnost: viditelna }
       - { role: "Kdyby přituhlo",     stat: utok,        kotva: 3, viditelnost: skryta }
     pasmove_vysledky:
       hladce_loot: { loot: karta }
       s_nasledky:  { postih_lehky: [drobna-pokuta, vysypana-bedna, nervy-v-hajzlu] }
-      prusvih:     { postih_tezky: [otras-mozku] }
+      prusvih:     { postih_tezky: [zlomene-zebro] }
 
   - id: deputy-hlidka
     typ: npc
@@ -115,9 +116,9 @@ situace:
       {VEC}, {kdo} mu strčil něco na přilepšenou v podobě {VEC} a {kdo} spravil,
       co bylo třeba, s {VEC}. Kdyby vytáhl bouchačku první, měl {kdo} po ruce {VEC}.
     sloty:
-      - { role: "Nedat na sobě znát", stat: obrana,  kotva: 3, viditelnost: viditelna }
-      - { role: "Na přilepšenou",     stat: hodnota, kotva: 2, viditelnost: viditelna }
-      - { role: "Spravit, co třeba",  stat: nastroj, kotva: 3, viditelnost: viditelna }
+      - { role: "Nedat na sobě znát", stat: obrana,  kotva: 4, viditelnost: viditelna }
+      - { role: "Na přilepšenou",     stat: hodnota, kotva: 3, viditelnost: viditelna }
+      - { role: "Spravit, co třeba",  stat: nastroj, kotva: 4, viditelnost: viditelna }
       - { role: "Kdyby tasil první",  stat: utok,    kotva: 3, viditelnost: skryta }
     pasmove_vysledky:
       hladce_loot: { loot: karta }
@@ -139,7 +140,7 @@ situace:
       - { role: "Zvednout závoru", stat: nastroj,                kotva: 3, viditelnost: viditelna }
       - { role: "Zpevnit prkna",   stat: [nastroj, improvizace], kotva: 2, viditelnost: viditelna }
       - { role: "Projet dírou",    stat: improvizace,            kotva: 3, viditelnost: viditelna }
-      - { role: "Nedat to na sobě", stat: obrana,                kotva: 3, viditelnost: skryta }
+      - { role: "Nedat to na sobě", stat: obrana,                kotva: 2, viditelnost: skryta }
     event:
       - "Pod mostem chrápe tramp a za doutník ohlídá vůz."
       - "V polovině mostu leží převrácený vůz konkurence — a plná bedna v příkopu."
@@ -158,9 +159,9 @@ situace:
       mu zamotal hlavu pomocí {VEC}, {kdo} přesunul náklad z očí do {VEC} a {kdo}
       mu nenápadně přilepšil {VEC}. Kdyby přeci jen čenichal dál, čekala {VEC}.
     sloty:
-      - { role: "Zamotat hlavu",      stat: improvizace, kotva: 3, viditelnost: viditelna }
-      - { role: "Přesunout z očí",    stat: nastroj,     kotva: 3, viditelnost: viditelna }
-      - { role: "Přilepšit do dlaně", stat: hodnota,     kotva: 2, viditelnost: viditelna }
+      - { role: "Zamotat hlavu",      stat: improvizace, kotva: 4, viditelnost: viditelna }
+      - { role: "Přesunout z očí",    stat: nastroj,     kotva: 4, viditelnost: viditelna }
+      - { role: "Přilepšit do dlaně", stat: hodnota,     kotva: 3, viditelnost: viditelna }
       - { role: "Kdyby čenichal dál", stat: utok,        kotva: 3, viditelnost: skryta }
     pasmove_vysledky:
       hladce_loot: { loot: karta }
@@ -180,8 +181,8 @@ situace:
       vyklouznout stranou s {VEC}. Než se kdo nadál, měl {kdo} v ruce {VEC}.
     sloty:
       - { role: "Postavit se jim",  stat: utok,        kotva: 4, viditelnost: viditelna }
-      - { role: "Ustát nápor",      stat: obrana,      kotva: 3, viditelnost: viditelna }
-      - { role: "Vyklouznout stranou", stat: improvizace, kotva: 3, viditelnost: viditelna }
+      - { role: "Ustát nápor",      stat: obrana,      kotva: 4, viditelnost: viditelna }
+      - { role: "Vyklouznout stranou", stat: improvizace, kotva: 4, viditelnost: viditelna }
       - { role: "Tasit včas a první", stat: utok,       kotva: 3, viditelnost: skryta }
     pasmove_vysledky:
       hladce_loot: { loot: karta }
@@ -197,9 +198,9 @@ situace:
       {VEC}, {kdo} držel řeč uhlazenou pomocí {VEC} a {kdo} se nedal zastrašit za
       {VEC}. Kdyby úsměv zmizel, měl {kdo} pod stolem {VEC}.
     sloty:
-      - { role: "Peníze na stůl",   stat: hodnota,     kotva: 3, viditelnost: viditelna }
-      - { role: "Uhlazená řeč",     stat: improvizace, kotva: 3, viditelnost: viditelna }
-      - { role: "Nedat se zastrašit", stat: obrana,    kotva: 2, viditelnost: viditelna }
+      - { role: "Peníze na stůl",   stat: hodnota,     kotva: 4, viditelnost: viditelna }
+      - { role: "Uhlazená řeč",     stat: improvizace, kotva: 4, viditelnost: viditelna }
+      - { role: "Nedat se zastrašit", stat: obrana,    kotva: 3, viditelnost: viditelna }
       - { role: "Kdyby úsměv zmizel", stat: utok,      kotva: 3, viditelnost: skryta }
     pasmove_vysledky:
       hladce_loot: { loot: karta }
@@ -212,15 +213,15 @@ situace:
   - id: urednik-vaha
     typ: npc
     svet: 1930
-    telegraf: "U váhy sedí úředník s knírkem a hromadou předpisů, brát nesmí a sledují ho shora. Tři viditelné role chtějí papíry, správné nářadí a když nezbude, zvýšený hlas; jedna skrytá drží nervy. Zbraň na očích ho jen vyděsí, schovej ji."
+    telegraf: "U váhy sedí úředník s knírkem a hromadou předpisů, brát nesmí a sledují ho shora. Tři viditelné role chtějí papíry, správné nářadí a když nezbude, zvýšený hlas; jedna skrytá drží nervy. Papír tu zmůže víc než olovo — na očích úředníka jen popudí, schovaná nezmůže nic."
     text: >
       Úředník naklepal razítko a založil si brýle. {kdo} mu podstrčil {VEC}, {kdo}
       doložil chybějící razítko pomocí {VEC} a {kdo} zvýšil hlas s {VEC}. Celou
       dobu {kdo} držel kamennou tvář za {VEC}.
     sloty:
-      - { role: "Podstrčit papíry",  stat: improvizace, kotva: 3, viditelnost: viditelna }
-      - { role: "Doložit razítko",   stat: nastroj,     kotva: 3, viditelnost: viditelna }
-      - { role: "Zvýšit hlas",       stat: utok,        kotva: 3, viditelnost: viditelna }
+      - { role: "Podstrčit papíry",  stat: improvizace, kotva: 4, viditelnost: viditelna }
+      - { role: "Doložit razítko",   stat: nastroj,     kotva: 4, viditelnost: viditelna }
+      - { role: "Zvýšit hlas",       stat: utok,        kotva: 4, viditelnost: viditelna }
       - { role: "Nedat se rozhodit", stat: obrana,      kotva: 2, viditelnost: skryta }
     pasmove_vysledky:
       hladce_loot: { loot: karta }
@@ -230,16 +231,16 @@ situace:
   - id: urednik-razitko
     typ: npc
     svet: 1930
-    telegraf: "Na celnici chybí jediné razítko a úředník je úzkostlivě poctivý. Tři viditelné role chtějí věrohodný list, dorazit razítko a něco navíc do dlaně; jedna skrytá je o pevné nervy. Papír tu zmůže víc než dolar — a zbraň drž z dohledu."
+    telegraf: "Na celnici chybí jediné razítko a úředník je úzkostlivě poctivý. Tři viditelné role chtějí věrohodný list, dorazit razítko a něco navíc do dlaně; jedna skrytá je o pevné nervy. Papír tu zmůže víc než dolar — a olovo tady nepořídí nic, ať u pasu nebo v ruce."
     text: >
       Za přepážkou přebíral úředník listiny a mračil se na prázdné políčko. {kdo}
       mu předložil věrohodný list pomocí {VEC}, {kdo} dorazil chybějící razítko
       s {VEC} a {kdo} nabídl něco navíc v podobě {VEC}. {kdo} přitom ani nemrkl za {VEC}.
     sloty:
-      - { role: "Věrohodný list",   stat: improvizace, kotva: 3, viditelnost: viditelna }
-      - { role: "Dorazit razítko",  stat: nastroj,     kotva: 3, viditelnost: viditelna }
-      - { role: "Něco navíc",       stat: hodnota,     kotva: 2, viditelnost: viditelna }
-      - { role: "Ani nemrknout",    stat: obrana,      kotva: 3, viditelnost: skryta }
+      - { role: "Věrohodný list",   stat: improvizace, kotva: 4, viditelnost: viditelna }
+      - { role: "Dorazit razítko",  stat: nastroj,     kotva: 4, viditelnost: viditelna }
+      - { role: "Něco navíc",       stat: hodnota,     kotva: 3, viditelnost: viditelna }
+      - { role: "Ani nemrknout",    stat: obrana,      kotva: 2, viditelnost: skryta }
     pasmove_vysledky:
       hladce_loot: { loot: karta }
       s_nasledky:  { postih_lehky: [drobna-pokuta, prach-do-oci, roztresene-ruce] }
@@ -257,10 +258,10 @@ situace:
       pomocí {VEC}, {kdo} zajel do postranní s {VEC} a {kdo} zahodil stopu za {VEC}.
       V tom náporu {kdo} udržel klid jen díky {VEC}.
     sloty:
-      - { role: "Splynout s davem",   stat: improvizace, kotva: 2, viditelnost: viditelna }
-      - { role: "Zajet do postranní", stat: nastroj,     kotva: 3, viditelnost: viditelna }
-      - { role: "Zahodit stopu",      stat: improvizace, kotva: 2, viditelnost: viditelna }
-      - { role: "Klid v návalu",      stat: obrana,      kotva: 3, viditelnost: skryta }
+      - { role: "Splynout s davem",   stat: improvizace, kotva: 3, viditelnost: viditelna }
+      - { role: "Zajet do postranní", stat: nastroj,     kotva: 4, viditelnost: viditelna }
+      - { role: "Zahodit stopu",      stat: improvizace, kotva: 3, viditelnost: viditelna }
+      - { role: "Klid v návalu",      stat: obrana,      kotva: 2, viditelnost: skryta }
     event:
       - "Z hlídkového vozu vypadl zapomenutý svazek policejních klíčů."
       - "Novinář s bleskem vás vyfotil. Snímek zítra vyjde — s vaší espézetkou."
@@ -279,9 +280,9 @@ situace:
       {VEC}, {kdo} je zkoušel zamluvit pomocí {VEC} a {kdo} zvedl ruku s {VEC}.
       Zatímco mluvili, {kdo} nahmatal skulinu skrz {VEC}.
     sloty:
-      - { role: "Držet nervy",     stat: obrana,      kotva: 3, viditelnost: viditelna }
-      - { role: "Zamluvit to",     stat: improvizace, kotva: 3, viditelnost: viditelna }
-      - { role: "Zastrašit gestem", stat: utok,       kotva: 3, viditelnost: viditelna }
+      - { role: "Držet nervy",     stat: obrana,      kotva: 4, viditelnost: viditelna }
+      - { role: "Zamluvit to",     stat: improvizace, kotva: 4, viditelnost: viditelna }
+      - { role: "Zastrašit gestem", stat: utok,       kotva: 4, viditelnost: viditelna }
       - { role: "Najít skulinu",   stat: nastroj,     kotva: 2, viditelnost: skryta }
     pasmove_vysledky:
       hladce_loot: { loot: karta }
@@ -300,9 +301,9 @@ situace:
       {kdo} na něj zatlačil hrubě s {VEC}, {kdo} odsunul závoru {VEC} a {kdo} mu
       podmázl dlaň {VEC}. Mezitím {kdo} podstrčil zmatený papír pomocí {VEC}.
     sloty:
-      - { role: "Zatlačit hrubě",  stat: utok,        kotva: 3, viditelnost: viditelna }
-      - { role: "Odsunout závoru", stat: nastroj,     kotva: 2, viditelnost: viditelna }
-      - { role: "Podmáznout dlaň", stat: hodnota,     kotva: 2, viditelnost: viditelna }
+      - { role: "Zatlačit hrubě",  stat: utok,        kotva: 4, viditelnost: viditelna }
+      - { role: "Odsunout závoru", stat: nastroj,     kotva: 3, viditelnost: viditelna }
+      - { role: "Podmáznout dlaň", stat: hodnota,     kotva: 3, viditelnost: viditelna }
       - { role: "Zmást papírem",   stat: improvizace, kotva: 3, viditelnost: skryta }
     pasmove_vysledky:
       hladce_loot: { loot: karta }
@@ -318,8 +319,8 @@ situace:
       kolem něj pomocí {VEC}, {kdo} páčil dveře vagonu {VEC} a {kdo} ztuhl ve stínu
       za {VEC}. Kdyby se hlídač probudil, měl {kdo} připravené {VEC}.
     sloty:
-      - { role: "Proklouznout kolem", stat: improvizace, kotva: 2, viditelnost: viditelna }
-      - { role: "Vypáčit vagon",      stat: nastroj,     kotva: 3, viditelnost: viditelna }
+      - { role: "Proklouznout kolem", stat: improvizace, kotva: 3, viditelnost: viditelna }
+      - { role: "Vypáčit vagon",      stat: nastroj,     kotva: 4, viditelnost: viditelna }
       - { role: "Ztuhnout ve stínu",  stat: obrana,      kotva: 2, viditelnost: skryta }
       - { role: "Kdyby se probudil",  stat: utok,        kotva: 3, viditelnost: skryta }
     event:
@@ -344,10 +345,10 @@ situace:
       zmizel v bočních ulicích za {VEC}. U okna přitom {kdo} držel nervy na uzdě s {VEC}.
     sloty:
       - { role: "Prorazit blokádu", stat: utok,        kotva: 4, viditelnost: viditelna }
-      - { role: "Strhnout do postranní", stat: nastroj, kotva: 3, viditelnost: viditelna }
-      - { role: "Zmizet v ulicích", stat: improvizace, kotva: 3, viditelnost: viditelna }
+      - { role: "Strhnout do postranní", stat: nastroj, kotva: 4, viditelnost: viditelna }
+      - { role: "Zmizet v ulicích", stat: improvizace, kotva: 4, viditelnost: viditelna }
       - { role: "Držet nervy u okna", stat: obrana,    kotva: 3, viditelnost: skryta }
     pasmove_vysledky:
       hladce_loot: { loot: karta }
-      s_nasledky:  { postih_lehky: [zvoneni-v-usich, narazene-rameno, prilis-na-rane] }
+      s_nasledky:  { postih_lehky: [zvoneni-v-usich, prach-do-oci, prilis-na-rane] }
       prusvih:     { postih_tezky: [ochrnuta-ruka, otras-mozku] }

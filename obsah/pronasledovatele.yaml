@@ -43,14 +43,14 @@ pronasledovatele:
         pomocí {VEC}, {kdo} nedal na sobě znát strach za {VEC} a {kdo} navedl vůz kolem
         něj s {VEC}. Kdyby federál sáhl po zbrani, měl {kdo} připravené {VEC}.
       sloty:
-        - { role: "Zapřít totožnost",   stat: improvizace, kotva: 3, viditelnost: viditelna }
-        - { role: "Nedat na sobě znát", stat: obrana,      kotva: 3, viditelnost: viditelna }
-        - { role: "Objet ho stranou",   stat: nastroj,     kotva: 3, viditelnost: viditelna }
+        - { role: "Zapřít totožnost",   stat: improvizace, kotva: 4, viditelnost: viditelna }
+        - { role: "Nedat na sobě znát", stat: obrana,      kotva: 4, viditelnost: viditelna }
+        - { role: "Objet ho stranou",   stat: nastroj,     kotva: 4, viditelnost: viditelna }
         - { role: "Kdyby sáhl po zbrani", stat: utok,      kotva: 3, viditelnost: skryta }
       pasmove_vysledky:
         hladce_loot: { loot: karta }
-        s_nasledky:  { postih_lehky: [mlha-v-hlave, prilis-na-rane, nervy-v-hajzlu] }
-        prusvih:     { postih_tezky: [rozdrcena-noha] }
+        s_nasledky:  { postih_lehky: [mlha-v-hlave, zvoneni-v-usich, prilis-na-rane] }
+        prusvih:     { postih_tezky: [otras-mozku] }
     konfrontace:
       typ: konfrontace
       svet: 1930
@@ -85,13 +85,13 @@ pronasledovatele:
         pomocí {VEC}, {kdo} přimazal šerifovi dlaň {VEC} a {kdo} držel kamennou tvář
         za {VEC}. Kdyby padl výstřel, měl {kdo} po ruce {VEC}.
       sloty:
-        - { role: "Uklidnit dav",     stat: improvizace, kotva: 3, viditelnost: viditelna }
-        - { role: "Přimazat dlaň",    stat: hodnota,     kotva: 3, viditelnost: viditelna }
-        - { role: "Kamenná tvář",     stat: obrana,      kotva: 2, viditelnost: viditelna }
+        - { role: "Uklidnit dav",     stat: improvizace, kotva: 4, viditelnost: viditelna }
+        - { role: "Přimazat dlaň",    stat: hodnota,     kotva: 4, viditelnost: viditelna }
+        - { role: "Kamenná tvář",     stat: obrana,      kotva: 3, viditelnost: viditelna }
         - { role: "Kdyby padl výstřel", stat: utok,      kotva: 3, viditelnost: skryta }
       pasmove_vysledky:
         hladce_loot: { loot: karta }
-        s_nasledky:  { postih_lehky: [drobna-pokuta, vysypana-bedna, utrzena-kapsa] }
+        s_nasledky:  { postih_lehky: [mlha-v-hlave, prilis-na-rane, vysypana-bedna] }
         prusvih:     { postih_tezky: [zlomene-zebro] }
     konfrontace:
       typ: konfrontace
@@ -103,9 +103,9 @@ pronasledovatele:
         za {VEC}. Nápor přitom vydržel {kdo} díky {VEC}.
       sloty:
         - { role: "Probít se vpřed", stat: utok,        kotva: 4, viditelnost: viditelna }
-        - { role: "Najít, kudy ujet", stat: nastroj,    kotva: 3, viditelnost: viditelna }
-        - { role: "Kličkovat mezi vozy", stat: improvizace, kotva: 3, viditelnost: viditelna }
-        - { role: "Vydržet nápor",   stat: obrana,      kotva: 3, viditelnost: skryta }
+        - { role: "Najít, kudy ujet", stat: nastroj,    kotva: 4, viditelnost: viditelna }
+        - { role: "Kličkovat mezi vozy", stat: improvizace, kotva: 4, viditelnost: viditelna }
+        - { role: "Vydržet nápor",   stat: obrana,      kotva: 2, viditelnost: skryta }
       pasmove_vysledky:
         hladce_loot: { loot: karta }
         s_nasledky:  { postih_lehky: [narazene-rameno, zvoneni-v-usich, nervy-v-hajzlu] }
