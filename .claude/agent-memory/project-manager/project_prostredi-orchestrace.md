@@ -1,19 +1,30 @@
 ---
 name: prostredi-orchestrace
-description: Omezení prostředí PM session — dostupnost týmu agentů a git nástrojů se liší mezi sessions, vždy ověřit na startu
+description: Dostupnost týmu agentů a gitu se mezi sessions liší — co ověřit na startu a jaké workaroundy fungují
 metadata:
   type: project
 ---
 
-Dostupnost nástrojů orchestrace se mezi sessions liší: 2026-07-22 nebyl tým
-agentů dosažitelný přes SendMessage („No agent named … is reachable") a session
-neměla Bash/git nástroje, takže konvence „commitni a pushni sám" nešla naplnit.
+Dostupnost nástrojů orchestrace se mezi sessions liší — na startu delegačního
+úkolu ověř, co reálně funguje, a podle toho plánuj.
 
-**Why:** PM systémový prompt předpokládá delegaci na 9 agentů a CLAUDE.md
-předpokládá auto-commit; když nástroje chybí, je nutné role odehrát v zastoupení
-a přiznat to v syntéze, a commit vykázat jako nesplněný dluh v `projekt/stav.md`.
+**Why:** 2026-07-22 nebyl tým dosažitelný (SendMessage „not reachable") a session
+neměla git — role se hrály v zastoupení a commit zůstal jako dluh. 2026-07-24
+naopak plné kolečko game-designer → design-critic → content-generator přes
+**Agent tool** proběhlo bez problémů a commit šel delegovat.
 
-**How to apply:** Na začátku session s delegačním úkolem si ověř dosažitelnost
-agentů prvním malým SendMessage; při nedostupnosti pracuj v zastoupení (kritika,
-design) a označ to tak ve stavu i syntéze. Procesní fakta piš vždy do
-`projekt/stav.md`, ne sem (vrstvená paměť dle CLAUDE.md).
+**How to apply:**
+- Agenty spouštěj přes **Agent tool (subagent_type dle jména)**, ne SendMessage
+  na jméno bez předchozího spawnu.
+- PM **nemá Bash** → commit/push deleguj na `general-purpose` agenta (jmenovitý
+  `git add` konkrétních cest, česká zpráva, Co-Authored-By patička). Validace
+  YAML: `npx js-yaml` (Python na stroji není).
+- Pokud agent nedostupný → odehraj roli v zastoupení a přiznej to v syntéze
+  (precedens 2026-07-22, uživatelem akceptováno); commit-dluh vykaž ve stavu.
+- Sekvenční kolečko návrh→kritika→implementace pouštěj synchronně
+  (run_in_background: false); paralelně jen nezávislé kroky.
+- design-critic si ukládá detailní audity do své paměti
+  (`.claude/agent-memory/design-critic/`) — po jeho reportu je čti, shrnutí
+  v odpovědi bývá zkrácené.
+- Procesní fakta piš vždy do `projekt/stav.md`, ne sem (vrstvená paměť dle
+  CLAUDE.md).
