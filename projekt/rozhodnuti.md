@@ -13,6 +13,32 @@ architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.m
 
 ## 2026-07-26
 
+- **D24 — kalibrace-3: NEZAPÉKAT, lék „snížit viditelné kotvy" měřením
+  vyvrácen** *(rozhodnutí týmu v delegaci uživatele — plné kolečko
+  game-designer → design-critic → playtest-facilitator)*. Hypotéza kalibrace-2
+  („revert viditelných kotev běžných uzlů srazí K1 do pásma i uleví K5/K7")
+  falzifikována kontrafaktuálním měřením přes `CONTENT_DIR` (1000×2, seedy
+  1–1000, kopie obsahu ve scratchpadu — repo netknuto): (a) **SMĚR** — revert
+  win-rate zvyšuje; návrh 12 slotů dal K1 3p/4p 72.5/72.9 (baseline 70.7/70.9),
+  mandátové maximum 23 slotů 74.5/73.6, K4a oracle 80.4 (>80); (b) **DOSAH** —
+  ani maximum nedá K5/K7 do brány (K5 ≥ 13.6 % vs. gate <5 %, K7 ≥ 40.5 % vs.
+  ≤20 %) → žádná podmnožina mandátu gate nesplní; (c) **DRIVER** — per-slot
+  atribuce: top drivery jsou hodnota-sloty kotvy 3 mechanicky nulované Malonem
+  (oracle-miss 66–72 %, D20a) a finále (~50 % neřešitelnosti), obojí mimo
+  mandát; premisa „viditelný improv-4 je řešitelný flex" vyvrácena (rovnocenný
+  driver, miss 53–57 %). **Žádný revert se nezapéká, obsahové kotvy beze
+  změny.** Vedlejší zisky: K2 ko-metrika drift PRŮŠVIH-rate uzel1–2→3–4 měřitelně
+  roste (1.29–1.47×) — podporuje eskalaci D22f(1); K6a 7.5 u maxima potvrzuje,
+  že rozpětí 1–4p je funkcí obtížnosti běžných uzlů. **Eskalace mandátu
+  kalibrace-4 na uživatele (P0–P4, NEROZHODNUTO):** P0 redefinice K5/K7
+  (bez mechanicky nulovaných slotů; scope common vs. finále; revize stropu K7),
+  P1 K1 3p/4p přes finále/Žár + otázka škálování obtížnosti počtem hráčů,
+  P2 hodnota-sloty pod Malonem, P3 signál `improv_skryte` (delegovatelné),
+  P4 ruka 1p 8→9 až po P1 (delegovatelné). Detaily a čísla:
+  [[../technika/kalibrace-3-2026-07-26|technika/kalibrace-3-2026-07-26.md]].
+  Doprovodně (nález consistency-check): sync šumu ±1→±2 v `prototyp-mvp.md`
+  a komentáři `obsah/situace.yaml` dle kalibrace-2 (žádná nová mechanika);
+  golden snapshoty obnoveny kvůli změně otisku verzeObsahu.
 - **D23 schváleno — monorepo: kódový repo sloučen do design repa jako
   `prototyp/`.** Rozhodnutí uživatele (plán
   [[../technika/migrace-monorepo-plan-2026-07-26|technika/migrace-monorepo-plan-2026-07-26.md]]

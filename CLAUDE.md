@@ -127,15 +127,19 @@ StS mapa s křížkujícím šerifem, kreditová ekonomika. Kanon = design-dokum
 a `technika/simulacni-brana-2026-07-22.md`).
 
 Go/No-Go je **dvoustupňové**:
-1. **v3 simulační brána — OTEVŘENÁ, běží kalibrace:** kritéria K1–K9 zafixována
-   (`prototyp-mvp.md` Fáze 0), engine přestavěn na slotovou resoluci.
-   Kalibrace-1 (D22) zapracována; **kalibrace-2 doměřena 2026-07-24**
-   (`technika/kalibrace-2-2026-07-24.md`): K4c opraveno (šum ±2), K5/K7 dál
-   breachují — K1/K5 coupling potvrzen (80 % neřešitelných slotů = viditelné
-   kotvy). **Míč: kalibrace-3** = snížit viditelné kotvy běžných uzlů (částečný
-   revert 45-slot patche); obtížnost má nést konfrontace/Žár. Od **D23
-   (2026-07-26) je projekt monorepo** — kód v `prototyp/`, kalibrační smyčka
-   běží v jednom repu.
+1. **v3 simulační brána — OTEVŘENÁ, kalibrace pozastavena na rozhodnutí
+   uživatele:** kritéria K1–K9 zafixována (`prototyp-mvp.md` Fáze 0), engine na
+   slotové resoluci. Kalibrace-1 (D22) zapečena; kalibrace-2 opravila K4c
+   (šum ±2), K1/K5/K7 breach. **Kalibrace-3 (D24, 2026-07-26): lék „snížit
+   viditelné kotvy" měřením VYVRÁCEN** — revert K1 zhoršuje (3p/4p dál nad 70),
+   K5/K7 jsou v mandátu nedosažitelné (i maximum: K5 ≥ 13.6 %, K7 ≥ 40.5 %),
+   drivery = hodnota-sloty nulované Malonem + finále (~50 %). Nic se nezapeklo.
+   **Čeká se na rozhodnutí uživatele P0–P2 mandátu kalibrace-4** (redefinice
+   K5/K7 gate, škálování obtížnosti finále počtem hráčů, hodnota pod Malonem) —
+   viz `technika/kalibrace-3-2026-07-26.md` + otevřené otázky v `projekt/stav.md`.
+   Od **D23 (2026-07-26) monorepo** — kód v `prototyp/`, kalibrační smyčka
+   v jednom repu; kandidátní obsah se měří kontrafaktuálně přes `CONTENT_DIR`
+   před zapečením.
 2. **Lidská brána — OTEVŘENÁ:** hádka o rozdělení, smích nad protokolem,
    dobrovolný další run + **čitelnost** (metrika 6 — nález playtestu 2026-07-22:
    hra musí vysvětlovat „proč se to stalo").

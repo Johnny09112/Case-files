@@ -13,7 +13,11 @@ zapečen + kořenový lék K5/K7/K2 v obsahu. **Míč je u enginu:** reset proxy
 šum, čisté re-měření dle akceptační brány (viz backlog). Lidská brána otevřená.
 **Kalibrace-2 doměřena a MONOREPO (D23, 2026-07-26):** kódový repo sloučen sem
 jako `prototyp/` (subtree, submodule zrušen, ADR-009) — kalibrační iterace jsou
-nově jedna smyčka v jednom repu. Míč: kalibrace-3 = snížení viditelných kotev.
+nově jedna smyčka v jednom repu. **Kalibrace-3 (D24, 2026-07-26): poctivý
+negativní výsledek** — lék „snížit viditelné kotvy" měřením vyvrácen (směr K1
+opačný, K5/K7 v mandátu nedosažitelné, drivery = Malone-nulované hodnota-sloty
++ finále), nic se nezapeklo. **Míč: uživatel — rozhodnutí P0/P1/P2 mandátu
+kalibrace-4** (viz otevřené otázky a [[../technika/kalibrace-3-2026-07-26|report]]).
 
 ## Backlog
 
@@ -43,7 +47,9 @@ nově jedna smyčka v jednom repu. Míč: kalibrace-3 = snížení viditelných 
 | Jemné doladění obtížnosti po loot-injury (exploit-bot ~74–76 % vs. pásmo 45–70; ladit tvrdosti/Žár, ne resoluční práh) | game-designer + playtest-facilitator | **nahrazeno kalibrací-1 v3** — viz řádek níže |
 | **Kalibrace-1 v3: zapéct 45-slot kotva-patch + kořenový lék K5/K7/K2** (gamble vynucený ne zvolený, snowball plochý) | game-designer + content-generator | **hotovo 2026-07-24 (D22)** — patch zapečen (45 slotů +1, pásmo 2–4 drží); lék zapracován: 4 skryté obrana-kotvy 3→2 (dial), 2 telegraf-přepisy npc-pastí, 5 věcí +1 sekundární stat (obrana/nastroj, improvizace netknuta), info-heavy pooly pozdních událostí se stropem ≤7 (D20). Enginová část léku = řádek níže; 3 eskalace na uživatele (viz otevřené otázky) |
 | **Pro engine — kalibrace-1 uzavření (signál = tento commit):** (1) reset `rules.kotvaBumpFrakce` 0.8→0; (2) rozšíření šumu pro K4c (model D15 kotva ± šum); (3) derivace telegraf_signal: pozitivně rozlišit „zbraň funguje ve skrytém slotu (stat=utok)" od „zbraň k ničemu" — druhá polovina léku K7 + párová podmínka telegraf-přepisů urednik-vaha/razitko (jinak próza/signál drift); (4) ověřit, že hide_* postih z uzlu N reálně degraduje commit uzlu N+1 (bez toho info-postihy nesnowbalují); (5) zvážit shlukování léček/zátahů/konfrontací do uzlů 3–4+ přes tempo Žáru (K2 cíl ≥1,3); (6) čisté re-měření 1000×2 (seedy 1–1000) dle akceptační brány, POVINNĚ: K1∈[45,70] ∧ K5 odděleně viditelná/skrytá ∧ K7≤20 % současně, per-situace take-rate před/po, K6a v rozpadu dle typu postihu (info-postihy vs. 1p/2p), pozor nadrazi-noc (2 skryté sloty, nejtvrdší offender; skrytých slotů je 20, ne 19) + doladění K8 | kódový repo (technical-developer) | **hotovo 2026-07-24 (kalibrace-2)** — body 1–4 zapracovány, 5 vědomě odloženo; re-měření 1000×2. **K4c OPRAVENO** (+2.4 ≤3). K5/K7 dál breach, K1/K5 coupling z D22(e) POTVRZEN (80 % neřešitelných slotů = viditelné); K1 3p/4p těsně >70, K6a regrese 11.8. Report [[../technika/kalibrace-2-2026-07-24|technika/kalibrace-2-2026-07-24.md]]; míč zpět u obsahu (řádek níže) |
-| **Kalibrace-2 lék: snížit viditelné kotvy běžných uzlů** (npc/lokace kde 45-slot patch zvedl viditelný slot na 4 → zvážit zpět 3) | game-designer + content-generator | **otevřeno — z kalibrace-2 2026-07-24**: jeden tah srazí K1 do pásma *i* uleví K5/K7 (obtížnost ať drží konfrontace/Žár, ne viditelné prahy běžných uzlů); skryté sloty + balík (D22 b/c) NEMĚNIT. K2 metrika a K6a k rozhodnutí — viz [[../technika/kalibrace-2-2026-07-24|report]] + D22f |
+| **Kalibrace-2 lék: snížit viditelné kotvy běžných uzlů** | game-designer + content-generator | **uzavřeno 2026-07-26 (D24) — lék VYVRÁCEN měřením**, nic se nezapeklo; viz řádek kalibrace-3 |
+| **Kalibrace-3: selektivní revert kotev 4→3** — návrh 12 slotů (designer) → adversariální prověrka (kritik) → per-slot diagnostika + kontrafaktuální gate-měření 1000×2 přes CONTENT_DIR (facilitátor) | celé kolečko + playtest-facilitator | **hotovo 2026-07-26 (D24) — NEGATIVNÍ VÝSLEDEK**: žádná podmnožina mandátu gate nesplní (K1 špatný směr, K5≥13.6 %, K7≥40.5 % i při maximu); drivery mimo mandát (Malone-nulovaná hodnota, finále ~50 %). Report [[../technika/kalibrace-3-2026-07-26|technika/kalibrace-3-2026-07-26.md]]; mandát kalibrace-4 (P0–P4) eskalován na uživatele |
+| Pro technical-developer: do `sim/report.js` doplnit rozpady per-situace / per-slot / common-vs-finále / K5 viditelná-skrytá (v kalibraci-3 počítáno ad-hoc skriptem) | technical-developer | otevřeno — z kalibrace-3 2026-07-26 |
 | **Monorepo (D23): sloučení kódového repa do `prototyp/`** — subtree se zachovanou historií, submodule zrušen, cesty na kořen, ADR-009, otisk verzeObsahu nezávislý na line endings | project-manager | **hotovo 2026-07-26** — 118/118 testů, sim smoke shodný s kalibrací-2, build+lint čisté; GitHub repo prototypu archivovat (viz plán); plán [[../technika/migrace-monorepo-plan-2026-07-26|technika/migrace-monorepo-plan]] |
 | Setup pluginů pro kódovou část (`prototyp/`): Superpowers (inženýrská disciplína), frontend-design (až UI — nakrmit estetikou z design dokumentu), security-guidance | uživatel (claude CLI) | po monorepu (D23) se instalují do tohoto repa — dělba platí: Superpowers jen pro práci v `prototyp/`, herně-designovou disciplínu drží naši agenti |
 | První měření instrumentovaného enginu: potvrdit win-rate (kompetentní ≤70 %) a hlídat obetni-beranek (94,8 % těsně pod stropem) | playtest-facilitator + technical-developer | **hotovo — run-1 (1000×2)**: K1 v pásmu (59.8–69.2 %), co-op inverze OK (4/4 ~4.8 %); report [[../technika/kalibrace-1-2026-07-24|technika/kalibrace-1-2026-07-24.md]] |
@@ -53,6 +59,15 @@ nově jedna smyčka v jednom repu. Míč: kalibrace-3 = snížení viditelných 
 
 ## Otevřené otázky (čekají na uživatele)
 
+- **Mandát kalibrace-4 (z D24, 2026-07-26) — P0–P2 jsou designová rozhodnutí:**
+  **P0** redefinice K5/K7 gate: (a) K5 bez mechanicky nulovaných slotů (hodnota
+  pod Malonem je záměr D20a/D21c), (b) scope K5/K7 na běžné uzly + vlastní
+  metrika finále, (c) revize stropu K7 ≤ 20 % (kompetentní bot gambluje při
+  odhadu ≤2/4 z definice). **P1** K1 3p/4p srazit přes finále/Žár — má obtížnost
+  škálovat s počtem hráčů? **P2** hodnota-sloty pod Malonem (zmírnit na −2 /
+  řešitelnost bez hodnota-slotu / prohodit staty). P3 (`improv_skryte`) a P4
+  (ruka 1p 8→9, až po P1) jsou po schválení delegovatelné. Procesní:
+  re-ratifikovat dělbu „kdo vlastní K1" (engine vs. obsah).
 - **Eskalace z D22 (kalibrace-1, 2026-07-24):** (1) ko-metrika K2 = drift míry
   PRŮŠVIHŮ uzel3–4 vs. uzel1–2 — přidat do znění brány K2 v `prototyp-mvp.md`?
   (zatím jen diagnostika v reportu enginu, gate ≥1,3× beze změny); (2) ratifikace
@@ -117,6 +132,10 @@ nově jedna smyčka v jednom repu. Míč: kalibrace-3 = snížení viditelných 
 - **2026-07-24: tým dosažitelný** — kalibrace-1 odehrána plným kolečkem
   game-designer → design-critic → content-generator (žádné zastoupení). PM nemá
   Bash — commit/push proveden v zastoupení přes general-purpose agenta.
+- **2026-07-26 (kalibrace-3): metodický standard** — kandidátní obsah se před
+  zapečením měří kontrafaktuálně přes `CONTENT_DIR` na kopii `obsah/` ve
+  scratchpadu; per-slot diagnostika PŘED zapečením zabránila spálené iteraci.
+  Testy/commity za PM provádí playtest-facilitator (má Bash).
 
 ## „Vyřešíme později" sliby
 
