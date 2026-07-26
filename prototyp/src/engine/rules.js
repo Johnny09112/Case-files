@@ -3,7 +3,7 @@
  * Resoluční pravidla v3 jako data (ADR-003).
  *
  * Jediné místo v kódu, kde smí žít resoluční ČÍSLA. Hodnoty se přebírají
- * z `content/prototyp-mvp.md` (§ Resoluční systém v3). Konstanta resolučního
+ * z `prototyp-mvp.md` v kořeni monorepa (§ Resoluční systém v3). Konstanta resolučního
  * systému kdekoli jinde = chyba. **Všechna čísla jsou „ladit simulací"** —
  * v3 simulační brána je otevřená a pásmo K1 se fixuje až po diagnostickém
  * run-1 (Fáze 0). Simulátor umí pustit tutéž dávku proti více variantám

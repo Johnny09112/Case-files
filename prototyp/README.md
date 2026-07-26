@@ -3,13 +3,14 @@
 Kooperativní party hra (1–4 hráči): gangsteři pašují chlast z Buffala do New
 Yorku, zkorumpovaný polda o tom píše protokol. **Mechanika rozhoduje, AI vypráví.**
 
-Tento repozitář je digitální prototyp (Vite + vanilla JS, hot-seat). Design,
-pravidla a herní obsah žijí v design repu, připojeném jako submodule `content/`.
+Tento adresář je digitální prototyp (Vite + vanilla JS, hot-seat) uvnitř
+monorepa — design, pravidla a herní obsah žijí v kořeni repozitáře
+(`../design-dokument.md`, `../prototyp-mvp.md`, `../obsah/`, `../prompty/`).
 
 ## Setup
 
 ```bash
-git clone --recurse-submodules <url>
+cd prototyp
 npm install
 npm test          # Vitest — unit + golden runs + validace obsahu
 npm run sim       # headless simulátor (dávky runů, summary)
@@ -20,11 +21,11 @@ Bez API klíče hra běží plně na fallback šablonách. Pro LLM protokoly zko
 `.env.example` → `.env` a doplň klíč (build se nikam nenasazuje, klíč zůstává
 lokální — viz architektura ADR-006).
 
-Živé ladění obsahu: nastav `CONTENT_DIR` na lokální checkout design repa
-(jinak se čte pinovaný submodule `content/`).
+Obsah se čte z kořene monorepa (`../obsah`); pro experimenty lze přesměrovat
+proměnnou `CONTENT_DIR` (ADR-005).
 
 ## Dokumentace
 
-- `CLAUDE.md` — pravidla práce v tomto repu.
-- `content/technika/architektura.md` — architektura (7 ADR), struktura, testy.
-- `content/prototyp-mvp.md` — resoluční systém a definice MVP.
+- `CLAUDE.md` — pravidla práce v tomto adresáři.
+- `../technika/architektura.md` — architektura (ADR), struktura, testy.
+- `../prototyp-mvp.md` — resoluční systém a definice MVP.

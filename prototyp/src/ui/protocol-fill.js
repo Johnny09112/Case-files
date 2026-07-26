@@ -1,7 +1,7 @@
 // @ts-check
 /**
  * Výběr a dosazení fallback šablon protokolu
- * (content/prompty/fallback-sablony.yaml — schéma v hlavičce souboru).
+ * (prompty/fallback-sablony.yaml v kořeni monorepa — schéma v hlavičce souboru).
  *
  * Čistý modul bez DOM a bez herní logiky (architektura §2.4): dostává hotové
  * výsledky z událostí enginu (`node_resolved`, `run_ended`) a jen z nich skládá
@@ -9,7 +9,7 @@
  * (v testech deterministická, v aplikaci Math.random; engine se jí nedotýká).
  *
  * Kontrakt {jmeno} (CLAUDE.md): dosazuje se PŘÍJMENÍ postavy — poslední slovo
- * pole `jmeno` z content/obsah/postavy.yaml.
+ * pole `jmeno` z obsah/postavy.yaml.
  */
 
 /**

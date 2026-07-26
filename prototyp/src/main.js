@@ -4,9 +4,9 @@
  *
  * POZOR: hot-seat UI je po pivotu na v3 (slotová resoluce) DOČASNĚ ODPOJENO —
  * v2 UI (`ui/app.js`, `ui/screens/*`) stálo na kostkové resoluci a starém
- * obsahu (karty.yaml/uzly.yaml, dnes v content/obsah/archiv-v2/). Fáze 2.1
+ * obsahu (karty.yaml/uzly.yaml, dnes v obsah/archiv-v2/). Fáze 2.1
  * (přestavba UI na sloty) přijde AŽ PO v3 simulační bráně (viz
- * content/projekt/stav.md „Další kroky" bod 3). Do té doby engine + simulátor
+ * projekt/stav.md „Další kroky" bod 3). Do té doby engine + simulátor
  * jedou headless (`npm run sim`, `npm test`); tento vstup jen drží dev server
  * naživu, ať se repo nerozbije.
  */

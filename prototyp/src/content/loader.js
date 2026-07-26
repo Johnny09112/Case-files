@@ -86,7 +86,8 @@ export function parseContent(yaml) {
     pronasledovatele,
     cile,
     postavy,
-    verze: fnv1a([yaml.veci, yaml.situace, yaml.postihy, yaml.mista, yaml.stitky, yaml.pronasledovatele, yaml.cile, yaml.postavy].join('\n')),
+    // CRLF→LF, ať otisk nezávisí na line-ending konfiguraci checkoutu (git autocrlf)
+    verze: fnv1a([yaml.veci, yaml.situace, yaml.postihy, yaml.mista, yaml.stitky, yaml.pronasledovatele, yaml.cile, yaml.postavy].join('\n').replace(/\r\n/g, '\n')),
   };
 }
 

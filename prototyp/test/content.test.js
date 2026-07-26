@@ -1,6 +1,6 @@
 // @ts-check
 /**
- * v3 validace obsahu: reálné content/obsah/*.yaml musí projít v3 schématy
+ * v3 validace obsahu: reálné obsah/*.yaml (kořen monorepa) musí projít v3 schématy
  * (rozbitý YAML od content-generatora spadne v testu, ne za běhu hry) +
  * negativní případy s konkrétními českými hláškami.
  */
@@ -11,7 +11,7 @@ import { fileURLToPath } from 'node:url';
 import { parseContent } from '../src/content/loader.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const obsahDir = path.join(__dirname, '..', 'content', 'obsah');
+const obsahDir = path.join(__dirname, '..', '..', 'obsah');
 
 export function loadRealYaml() {
   const precti = (soubor) => fs.readFileSync(path.join(obsahDir, soubor), 'utf8');
@@ -27,7 +27,7 @@ export function loadRealYaml() {
   };
 }
 
-describe('reálný v3 obsah z content/obsah/', () => {
+describe('reálný v3 obsah z obsah/', () => {
   it('projde validací a odpovídá cílovým počtům MVP', () => {
     const content = parseContent(loadRealYaml());
     expect(content.veci.length).toBeGreaterThanOrEqual(38); // ~40

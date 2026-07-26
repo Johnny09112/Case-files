@@ -9,12 +9,14 @@
  */
 import { load } from 'js-yaml';
 
-import kartyYaml from '../../content/obsah/karty.yaml?raw';
-import uzlyYaml from '../../content/obsah/uzly.yaml?raw';
-import cileYaml from '../../content/obsah/cile.yaml?raw';
-import pronasledovateleYaml from '../../content/obsah/pronasledovatele.yaml?raw';
-import postavyYaml from '../../content/obsah/postavy.yaml?raw';
-import sablonyYaml from '../../content/prompty/fallback-sablony.yaml?raw';
+// v2 UI (dočasně odpojené, viz main.js) — v2 obsah žije v obsah/archiv-v2/;
+// fáze 2.1 tyto importy přepíše na v3 obsah v kořeni monorepa.
+import kartyYaml from '../../../obsah/archiv-v2/karty.yaml?raw';
+import uzlyYaml from '../../../obsah/archiv-v2/uzly.yaml?raw';
+import cileYaml from '../../../obsah/archiv-v2/cile.yaml?raw';
+import pronasledovateleYaml from '../../../obsah/archiv-v2/pronasledovatele.yaml?raw';
+import postavyYaml from '../../../obsah/postavy.yaml?raw';
+import sablonyYaml from '../../../prompty/fallback-sablony.yaml?raw';
 
 import { parseContent } from '../content/loader.js';
 import { RULES } from '../engine/rules.js';

@@ -3,7 +3,7 @@ import js from '@eslint/js';
 export default [
   js.configs.recommended,
   {
-    ignores: ['node_modules/**', 'dist/**', 'logs/**', 'content/**'],
+    ignores: ['node_modules/**', 'dist/**', 'logs/**'],
   },
   {
     files: ['**/*.js'],

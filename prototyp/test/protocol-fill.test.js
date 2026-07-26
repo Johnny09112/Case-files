@@ -21,7 +21,7 @@ import {
 
 const REALNE_SABLONY = load(
   opravUvozovkySablon(
-    fs.readFileSync(new URL('../content/prompty/fallback-sablony.yaml', import.meta.url), 'utf8')
+    fs.readFileSync(new URL('../../prompty/fallback-sablony.yaml', import.meta.url), 'utf8')
   )
 ).sablony;
 

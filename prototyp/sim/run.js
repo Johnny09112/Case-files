@@ -38,9 +38,9 @@ export const PRESETY = {
 
 /* ---------------- obsah ---------------- */
 
-/** Obsah se čte ze submodulu content/, přepsatelné přes CONTENT_DIR (ADR-005). */
+/** Obsah se čte z kořene monorepa (../obsah), přepsatelné přes CONTENT_DIR (ADR-005). */
 export function loadContent() {
-  const contentDir = process.env.CONTENT_DIR ? path.resolve(process.env.CONTENT_DIR) : path.join(REPO_ROOT, 'content');
+  const contentDir = process.env.CONTENT_DIR ? path.resolve(process.env.CONTENT_DIR) : path.resolve(REPO_ROOT, '..');
   const obsahDir = path.join(contentDir, 'obsah');
   const precti = (soubor) => fs.readFileSync(path.join(obsahDir, soubor), 'utf8');
   return parseContent({
