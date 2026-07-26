@@ -11,6 +11,24 @@ ukazatel na archiv.*
 architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.md]]
 (přesunuto 2026-07-24).
 
+## 2026-07-26
+
+- **D23 schváleno — monorepo: kódový repo sloučen do design repa jako
+  `prototyp/`.** Rozhodnutí uživatele (plán
+  [[../technika/migrace-monorepo-plan-2026-07-26|technika/migrace-monorepo-plan-2026-07-26.md]]
+  schválen vč. doporučených voleb: podadresář `prototyp/`, GitHub repo
+  prototypu archivovat, subtree se zachováním historie). Důvod: dvourepová
+  režie (předávky, pin submodulu, dvě sessions na kalibrační iteraci) převážila
+  přínos; jedno SHA = stav kódu i obsahu. Provedení: subtree merge (22 commitů
+  historie zachováno), submodule `content/` zrušen, engine čte `obsah/` z kořene
+  (`CONTENT_DIR` override zůstává), architektura **ADR-009** (+ ADR-005
+  překonáno). Princip „obsah se z kódu needituje" je nově konvence (CLAUDE.md +
+  review), ne strukturální zámek. Verifikace: 118/118 testů, sim smoke shodný
+  s kalibrací-2, vite build + eslint čisté, dev server běží. Jediná kódová
+  změna nad rámec cest: otisk `verzeObsahu` normalizuje CRLF→LF (otisk dřív
+  závisel na line-ending konfiguraci checkoutu — golden snapshoty se lišily
+  jen v otisku, mechanika bajt po bajtu shodná; snapshoty vědomě obnoveny).
+
 ## 2026-07-24
 
 - **D22 — kořenový lék K5/K7/K2 po kalibraci-1** *(rozhodnutí týmu v delegaci

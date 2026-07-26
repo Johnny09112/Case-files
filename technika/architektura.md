@@ -56,10 +56,10 @@ Závislosti tečou jen dolů: engine nezná UI ani síť; LLM adaptér nezná en
   česky a konkrétní.
 - Parser je izomorfní: funkce `parseContent(yamlString)` bez I/O; browser ji krmí
   přes Vite import, simulátor (Node) přes `fs`. Jeden validátor pro oba světy.
-- **Sdílení mezi repy: git submodule + dev override** (ADR-005). Kódové repo
-  pinuje design repo jako submodule (reprodukovatelnost buildů a CI); pro živé
-  ladění obsahu lze ve vývoji nastavit `CONTENT_DIR` na lokální checkout design
-  repa — neprogramátor uloží YAML, F5 v prototypu, hotovo, žádný sync krok.
+- **Sdílení obsahu: monorepo** (ADR-009, dříve submodule dle ADR-005). Kód
+  v `prototyp/` čte obsah přímo z kořene repa (`../obsah`, `../prompty`) —
+  neprogramátor uloží YAML, F5 v prototypu, hotovo, žádný sync krok. Pro
+  experimenty lze `CONTENT_DIR` přesměrovat jinam (dev override z ADR-005).
 
 ### 2.2 Game engine
 
@@ -412,7 +412,8 @@ modulů (engine API, formát událostí, rozhraní provideru), volitelně
   promptu i budoucí malý lokální model.
 
 ### ADR-005: Sdílení obsahu — git submodule + dev override `CONTENT_DIR`
-- **Datum:** 2026-07-22 · **Status:** přijato
+- **Datum:** 2026-07-22 · **Status:** překonáno ADR-009 (2026-07-26 — monorepo:
+  submodule zrušen, obsah se čte z kořene repa; `CONTENT_DIR` override zůstává)
 - **Kontext:** `obsah/*.yaml` a `prompty/protokol.md` mají jediný zdroj pravdy
   v design repu; obsah ladí neprogramátor a potřebuje smyčku „ulož → F5".
 - **Rozhodnutí:** Kódové repo vkládá design repo jako **git submodule**
@@ -504,6 +505,26 @@ modulů (engine API, formát událostí, rozhraní provideru), volitelně
   přes odvozené metriky (§2.2), ne přes redundantní pole; instrumentace
   `pocet_preskladani` (K6b) žije na `assignment`. Náklady: log je širší než v2 —
   ale simulátor stejně serializuje vše do JSONL (§3), takže cena je nulová navíc.
+
+### ADR-009: Monorepo — kód prototypu jako `prototyp/` v design repu
+- **Datum:** 2026-07-26 · **Status:** přijato (rozhodnutí uživatele, D23)
+- **Kontext:** Dvourepová struktura (design repo + kódové repo se submodulem
+  `content/`, ADR-005) dělala z každé kalibrační iterace dvoukrokový proces:
+  předávkové markdowny, „signál = commit", ruční pin submodulu, dvě sessions.
+  Pro sólo vývojáře s AI týmem režie převážila přínos.
+- **Rozhodnutí:** Kódové repo sloučeno do design repa jako podadresář
+  `prototyp/` (git subtree, historie 22 commitů zachována). Submodule zrušen;
+  engine čte obsah **přímo z kořene monorepa** (`../obsah`, `../prompty`),
+  override `CONTENT_DIR` z ADR-005 zůstává. Jedno SHA = stav kódu i obsahu →
+  reprodukovatelnost měření bez pinování. Otisk `verzeObsahu` normalizuje
+  CRLF→LF, aby nezávisel na line-ending konfiguraci checkoutu.
+- **Zavrženo:** *status quo* (režie iterací); *kopie obsahu do kódu* (drift,
+  porušuje CLAUDE.md).
+- **Důsledky:** Princip „obsah se z kódu needituje" přechází ze strukturálního
+  zámku (read-only submodule) na **konvenci** hlídanou CLAUDE.md a review.
+  Kódové konvence žijí v `prototyp/CLAUDE.md`. Původní GitHub repo
+  `dukazni-material-prototyp` archivován (read-only). Až půjde hra do produkce,
+  kód se případně vyčlení tehdy — ne preventivně.
 
 ---
 

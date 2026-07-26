@@ -1,7 +1,7 @@
 # Stav projektu
 
 *Živý dokument. Udržuje `project-manager` — aktualizuj po každém větším kroku.
-Poslední aktualizace: 2026-07-24.*
+Poslední aktualizace: 2026-07-26.*
 
 ## Aktuální fáze
 
@@ -11,6 +11,9 @@ pivotem v3 (D14–D20); v3 engine přestavěn v kódovém repu, diagnostický ru
 K4c). **Kalibrace-1 zapracována v design repu (D22):** 45-slot kotva-patch
 zapečen + kořenový lék K5/K7/K2 v obsahu. **Míč je u enginu:** reset proxy,
 šum, čisté re-měření dle akceptační brány (viz backlog). Lidská brána otevřená.
+**Kalibrace-2 doměřena a MONOREPO (D23, 2026-07-26):** kódový repo sloučen sem
+jako `prototyp/` (subtree, submodule zrušen, ADR-009) — kalibrační iterace jsou
+nově jedna smyčka v jednom repu. Míč: kalibrace-3 = snížení viditelných kotev.
 
 ## Backlog
 
@@ -41,7 +44,8 @@ zapečen + kořenový lék K5/K7/K2 v obsahu. **Míč je u enginu:** reset proxy
 | **Kalibrace-1 v3: zapéct 45-slot kotva-patch + kořenový lék K5/K7/K2** (gamble vynucený ne zvolený, snowball plochý) | game-designer + content-generator | **hotovo 2026-07-24 (D22)** — patch zapečen (45 slotů +1, pásmo 2–4 drží); lék zapracován: 4 skryté obrana-kotvy 3→2 (dial), 2 telegraf-přepisy npc-pastí, 5 věcí +1 sekundární stat (obrana/nastroj, improvizace netknuta), info-heavy pooly pozdních událostí se stropem ≤7 (D20). Enginová část léku = řádek níže; 3 eskalace na uživatele (viz otevřené otázky) |
 | **Pro engine — kalibrace-1 uzavření (signál = tento commit):** (1) reset `rules.kotvaBumpFrakce` 0.8→0; (2) rozšíření šumu pro K4c (model D15 kotva ± šum); (3) derivace telegraf_signal: pozitivně rozlišit „zbraň funguje ve skrytém slotu (stat=utok)" od „zbraň k ničemu" — druhá polovina léku K7 + párová podmínka telegraf-přepisů urednik-vaha/razitko (jinak próza/signál drift); (4) ověřit, že hide_* postih z uzlu N reálně degraduje commit uzlu N+1 (bez toho info-postihy nesnowbalují); (5) zvážit shlukování léček/zátahů/konfrontací do uzlů 3–4+ přes tempo Žáru (K2 cíl ≥1,3); (6) čisté re-měření 1000×2 (seedy 1–1000) dle akceptační brány, POVINNĚ: K1∈[45,70] ∧ K5 odděleně viditelná/skrytá ∧ K7≤20 % současně, per-situace take-rate před/po, K6a v rozpadu dle typu postihu (info-postihy vs. 1p/2p), pozor nadrazi-noc (2 skryté sloty, nejtvrdší offender; skrytých slotů je 20, ne 19) + doladění K8 | kódový repo (technical-developer) | **hotovo 2026-07-24 (kalibrace-2)** — body 1–4 zapracovány, 5 vědomě odloženo; re-měření 1000×2. **K4c OPRAVENO** (+2.4 ≤3). K5/K7 dál breach, K1/K5 coupling z D22(e) POTVRZEN (80 % neřešitelných slotů = viditelné); K1 3p/4p těsně >70, K6a regrese 11.8. Report [[../technika/kalibrace-2-2026-07-24|technika/kalibrace-2-2026-07-24.md]]; míč zpět u obsahu (řádek níže) |
 | **Kalibrace-2 lék: snížit viditelné kotvy běžných uzlů** (npc/lokace kde 45-slot patch zvedl viditelný slot na 4 → zvážit zpět 3) | game-designer + content-generator | **otevřeno — z kalibrace-2 2026-07-24**: jeden tah srazí K1 do pásma *i* uleví K5/K7 (obtížnost ať drží konfrontace/Žár, ne viditelné prahy běžných uzlů); skryté sloty + balík (D22 b/c) NEMĚNIT. K2 metrika a K6a k rozhodnutí — viz [[../technika/kalibrace-2-2026-07-24|report]] + D22f |
-| Setup kódového repa: nainstalovat pluginy Superpowers (inženýrská disciplína), frontend-design (až UI — nakrmit estetikou z design dokumentu), security-guidance | uživatel (claude CLI v kódovém repu) | dle backlogu níže — až bude repo na GitHubu |
+| **Monorepo (D23): sloučení kódového repa do `prototyp/`** — subtree se zachovanou historií, submodule zrušen, cesty na kořen, ADR-009, otisk verzeObsahu nezávislý na line endings | project-manager | **hotovo 2026-07-26** — 118/118 testů, sim smoke shodný s kalibrací-2, build+lint čisté; GitHub repo prototypu archivovat (viz plán); plán [[../technika/migrace-monorepo-plan-2026-07-26|technika/migrace-monorepo-plan]] |
+| Setup pluginů pro kódovou část (`prototyp/`): Superpowers (inženýrská disciplína), frontend-design (až UI — nakrmit estetikou z design dokumentu), security-guidance | uživatel (claude CLI) | po monorepu (D23) se instalují do tohoto repa — dělba platí: Superpowers jen pro práci v `prototyp/`, herně-designovou disciplínu drží naši agenti |
 | První měření instrumentovaného enginu: potvrdit win-rate (kompetentní ≤70 %) a hlídat obetni-beranek (94,8 % těsně pod stropem) | playtest-facilitator + technical-developer | **hotovo — run-1 (1000×2)**: K1 v pásmu (59.8–69.2 %), co-op inverze OK (4/4 ~4.8 %); report [[../technika/kalibrace-1-2026-07-24|technika/kalibrace-1-2026-07-24.md]] |
 | Fallback šablony protokolu (~20) | content-generator + protocol-humor-tester | čeká (potřeba až pro prototyp, ne pro simulaci) |
 | Revize pronásledovatelů (nález kritika „léčky tlačí k Lesti") | game-designer | **uzavřeno 2026-07-22 — beze změn**: Malone→Lest je záměrná protiváha nulovaného Úplatku, Brody otevírá jiné pruhy; výjimka „konfrontace Malonea bez +2" potvrzena jako záměr (komentář v YAML) |
@@ -119,22 +123,18 @@ zapečen + kořenový lék K5/K7/K2 v obsahu. **Míč je u enginu:** reset proxy
 - Podplácení poldy důkazy z runu (nápad do v2).
 - Lajky a statistiky karet (v2).
 
-## Až vznikne kódový repozitář (plugin / tooling)
+## Plugin / tooling (pozn. po D23: jeden repo, jedna instalace)
 
-- Zvážit **zabalení týmu agentů + skillu `consistency-check` do pluginu**, ať se
-  sdílí mezi tímto design repem a kódovým repem (GitHub repo může být i zdroj
-  marketplace). Až se agenti ustálí — teď je předčasné.
-- Nainstalovat tam plugin **Superpowers** (oficiální marketplace) pro inženýrskou
-  disciplínu (clarify→design→plan→code→verify, TDD). Dělba: Superpowers vlastní
-  *inženýrskou* disciplínu, naši agenti *herně-designovou* — ne dvě metodiky na
-  jeden úkol.
-- Do tohoto design repa Superpowers **NEinstalovat** (kód-skilly by ležely ladem
-  a překrývaly by naši disciplínu).
-- **frontend-design** — použít v kódovém repu při stavbě UI prototypu (obrazovka
-  psacího stroje, pohled na stůl); nakrmit ho estetikou z design dokumentu
+- ~~Zabalení týmu agentů do pluginu ke sdílení mezi repy~~ — **bezpředmětné po
+  monorepu (D23)**: agenti i skilly žijí v `.claude/` jednoho repa.
+- Nainstalovat plugin **Superpowers** (oficiální marketplace) pro inženýrskou
+  disciplínu (clarify→design→plan→code→verify, TDD) — **používat jen pro práci
+  v `prototyp/`**. Dělba: Superpowers vlastní *inženýrskou* disciplínu, naši
+  agenti *herně-designovou* — ne dvě metodiky na jeden úkol.
+- **frontend-design** — použít při stavbě UI prototypu (obrazovka psacího
+  stroje, pohled na stůl); nakrmit ho estetikou z design dokumentu
   (Papers Please, sépiová 16barevná paleta), ať nevznikne generický vzhled.
-- **security-guidance** — reálná hodnota v kódovém repu (API klíče, Supabase/SQL,
-  edge funkce, vrstva LLM volání, obrana proti prompt injection u UGC); tam mu
-  přidat `claude-security-guidance.md`. V tomto design repu jen prohlíží markdown
-  za cenu LLM volání → zvážit vypnutí (`ENABLE_CODE_SECURITY_REVIEW=0`) zde.
+- **security-guidance** — reálná hodnota pro kódovou část (API klíče, vrstva
+  LLM volání, obrana proti prompt injection u UGC); přidat mu
+  `claude-security-guidance.md`, až se bude stavět LLM adaptér.
 - **skill-creator** je fázově neutrální, on-demand (vznikl jím `consistency-check`).

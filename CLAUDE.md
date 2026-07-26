@@ -5,9 +5,15 @@ zkorumpovaný polda o tom píše protokol. Mechanika rozhoduje, AI vypráví.
 
 ## Co tento repozitář je
 
-**Pouze design dokumenty.** Kód prototypu vznikne v samostatném repozitáři.
-Sem patří: design, definice MVP, herní obsah (karty, uzly, cíle, šablony),
-poznámky z playtestů. Sem nepatří: zdrojový kód, buildy, assety.
+**Monorepo projektu (od 2026-07-26, D23).** Kořen = design vrstva (design,
+definice MVP, herní obsah, prompty, poznámky z playtestů, procesní paměť).
+Podadresář `prototyp/` = kód digitálního prototypu (Vite + vanilla JS) —
+má vlastní `CLAUDE.md` s kódovými konvencemi; engine čte `obsah/*.yaml`
+přímo z kořene. Dřívější samostatný repo `dukazni-material-prototyp` byl
+2026-07-26 sloučen sem (subtree, historie zachována) a na GitHubu archivován.
+
+Dělba: **obsah a design dokumenty edituje jen designový tým** (kód je pouze
+čte), kód se mění podle pravidel v `prototyp/CLAUDE.md` (testy před commitem).
 
 ## Soubory
 
@@ -28,6 +34,8 @@ poznámky z playtestů. Sem nepatří: zdrojový kód, buildy, assety.
 - `playtesty/` — poznámky z playtestů, jeden soubor na sezení (`RRRR-MM-DD.md`),
   vždy podle struktury `playtesty/sablona.md`. Bez vyplněných metrik se sezení
   nepočítá do Go/No-Go.
+- `prototyp/` — kód prototypu (engine, simulátor, UI, testy). Konvence a
+  principy kódu: `prototyp/CLAUDE.md`; architektura: `technika/architektura.md`.
 
 Oba dokumenty udržuj konzistentní: změna mechaniky v jednom = zkontroluj druhý.
 Křížové odkazy v patičkách zachovávej.
@@ -44,7 +52,7 @@ Křížové odkazy v patičkách zachovávej.
 3. **Testér AI humoru** — největší produktové riziko je kvalita českého humoru
    protokolů. Při ladění promptů: suchý policejní zápis, 3–5 vět, česky, humor
    plyne z kontrastu úřední řeči a absurdní situace — ne z vtipkování.
-4. **Programátor prototypu** (později, v jiném repu) — Vite + vanilla JS,
+4. **Programátor prototypu** (v `prototyp/`) — Vite + vanilla JS,
    hot-seat only, jediný povinný efekt je psací stroj vyklepávající protokol.
 
 ## Neporušitelné design principy
@@ -71,8 +79,8 @@ Křížové odkazy v patičkách zachovávej.
 
 ## Konvence
 
-- Dokumentace a komunikace **česky**; budoucí kód (identifikátory, komentáře)
-  **anglicky**. Herní obsah (karty, protokoly) česky.
+- Dokumentace a komunikace **česky**; kód v `prototyp/` (identifikátory,
+  komentáře) **anglicky**. Herní obsah (karty, protokoly) česky.
 - Datumy zapisuj absolutně (2026-07-22), ne relativně.
 - Škrtnuté nápady nemaž — přesuň do historie v patičce s důvodem škrtnutí.
 - Repozitář je verzovaný gitem: **po dokončení ucelené práce Claude vždy sám
@@ -120,11 +128,14 @@ a `technika/simulacni-brana-2026-07-22.md`).
 
 Go/No-Go je **dvoustupňové**:
 1. **v3 simulační brána — OTEVŘENÁ, běží kalibrace:** kritéria K1–K9 zafixována
-   (`prototyp-mvp.md` Fáze 0), engine přestavěn na slotovou resoluci, diagnostický
-   run-1 (1000×2) proměřen — K1/K6a/K8 prošly, K5/K7/K2 padly. **Kalibrace-1
-   zapracována 2026-07-24 (D22):** 45-slot kotva-patch + kořenový lék v obsahu;
-   míč u enginu (reset proxy, šum K4c, re-měření dle akceptační brány
-   v `technika/kalibrace-1-2026-07-24.md`).
+   (`prototyp-mvp.md` Fáze 0), engine přestavěn na slotovou resoluci.
+   Kalibrace-1 (D22) zapracována; **kalibrace-2 doměřena 2026-07-24**
+   (`technika/kalibrace-2-2026-07-24.md`): K4c opraveno (šum ±2), K5/K7 dál
+   breachují — K1/K5 coupling potvrzen (80 % neřešitelných slotů = viditelné
+   kotvy). **Míč: kalibrace-3** = snížit viditelné kotvy běžných uzlů (částečný
+   revert 45-slot patche); obtížnost má nést konfrontace/Žár. Od **D23
+   (2026-07-26) je projekt monorepo** — kód v `prototyp/`, kalibrační smyčka
+   běží v jednom repu.
 2. **Lidská brána — OTEVŘENÁ:** hádka o rozdělení, smích nad protokolem,
    dobrovolný další run + **čitelnost** (metrika 6 — nález playtestu 2026-07-22:
    hra musí vysvětlovat „proč se to stalo").
