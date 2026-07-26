@@ -29,7 +29,7 @@ odblokuje stavbu a vstup do lidské brány. Plné odůvodnění a botí detaily 
 | **K3** | medián uzlu 1. překročení prahu Zátah | **∈ {3,4}** | čísla Žáru resetují (per-pásmo PRŮŠVIH + hlučné karty). |
 | **K4a** | max win-rate fixní přiřazovací heuristiky | **≤ 80 %** | |
 | **K4b** | dominance stat-monokultury commitu | žádná; rozpětí statů ≤ ~10 b. | kotvy 2–4 nesmí být předvídatelné. |
-| **K4c** | learnabilita | kompetentní − random **≥ 12 b.** A memorizační − kompetentní **≤ 3 b.** | **GATE svázaná s noise-modelem:** pád nejdřív spustí „oprav šum", pak teprve „zahoď design". Memorizační bot memorizuje **stabilní kotvy per situace-ID**; šum je **per-instance IID uniform ±1**. |
+| **K4c** | learnabilita | kompetentní − random **≥ 12 b.** A memorizační − kompetentní **≤ 3 b.** | **GATE svázaná s noise-modelem:** pád nejdřív spustí „oprav šum", pak teprve „zahoď design". Memorizační bot memorizuje **stabilní kotvy per situace-ID**; šum je **per-instance IID uniform ±2, clamp do [0, stat-max]** (±1→±2 rozšířeno kalibrací-2 2026-07-24, minimální celé číslo plnící gate). |
 | **K5** | frekvence vynuceného pásma (oracle na committnutých kartách) | **max ≤1/4 (beznadějné) < 5 %** | Vrstvy „max<4/4: 30–50 %" a „max≤2/4: 10–20 %" = **diagnostika k pozorování**, ne gate. |
 | **K6a** | rozpětí win-rate mezi 1–4p | **≤ 10 b.** | parita obtížnosti. |
 | **K6c** | run-agregovaný pasažér | žádný hráč pod podlahou příspěvku | swing agregovaný přes run, ne per-situace. |
@@ -39,7 +39,7 @@ odblokuje stavbu a vstup do lidské brány. Plné odůvodnění a botí detaily 
 | **K9** | mechanické cíle (per držící hráč) | každý **5–95 %** | v3 cíle čekají na **event-log spec technical-developera** (přepis z injury-měn). |
 
 **Předpoklady simu (D19):** commit **naslepo**; **kotvy 2–4** (práh 0 zakázán),
-**šum uniform ±1**; kombinovaný slot = „oba staty ≥ kotva" (střídmě). **Telegraf:
+**šum uniform ±2 s clampem do [0, stat-max]** (od kalibrace-2 2026-07-24); kombinovaný slot = „oba staty ≥ kotva" (střídmě). **Telegraf:
 signál (`trend`, `proti_srsti`, `zbraň_projde`) derivuje engine ze slotů**, próza je
 lidský rendering s QA invariantem věrnosti; **fidelita telegrafu `p` = sweep knob.**
 Sdílený standardní balík ~40 (líz patří lízajícímu); prémiový osobní loadout je
@@ -99,7 +99,8 @@ se testuje agentem `protocol-humor-tester` nad promptem `prompty/protokol.md`.
   karty do 4 slotů (vlastník souhlasí). **Nic se nevrací, nic nebenchuje** — jádro
   je „rozděl nejméně špatně".
 - **Skryté prahy = kotva ± šum:** většina slotů klíčuje na **1 stat**, práh =
-  kotva ± 1 (kotva ≥3 → reálně ≥2 až ≥4). Práh **skrytý před**, **odhalený po**
+  kotva ± 2 s clampem do [0, stat-max] (kotva 4 → reálně 2 až 5; ±1→±2 rozšířeno
+  kalibrací-2 2026-07-24 kvůli K4c). Práh **skrytý před**, **odhalený po**
   vyhodnocení. **Slotové výjimky** (střídmě): kombinovaný práh přes 2 staty, nebo
   slot citlivý na štítek. Každý slot má při odhalení **ikonu viditelnosti**
   (viditelná / skrytá role).

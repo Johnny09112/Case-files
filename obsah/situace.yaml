@@ -16,7 +16,8 @@
 #       stat:        1 z 5 statů | [stat, stat] = KOMBI (obě věci? ne — JEDNA věc,
 #                    jejíž OBA uvedené staty musí být ≥ kotva; D19b, střídmě,
 #                    nízká kotva 2–3 — 3 od kalibrace-1 2026-07-24)
-#       kotva:       2–4 (práh 0 zakázán); engine přičte šum ±1 při odhalení
+#       kotva:       2–4 (práh 0 zakázán); engine přičte šum ±2 při odhalení
+#                    (clamp do [0, stat-max]; ±1→±2 od kalibrace-2 2026-07-24)
 #       viditelnost: viditelna | skryta   (ikona při odhalení)
 #       stitek_citlivy: (volitelné VÝJIMKA) VELKÝMI — přebíjí parametr štítku pro
 #                    tento slot (např. GANGSTER = eso i ve viditelné roli)
