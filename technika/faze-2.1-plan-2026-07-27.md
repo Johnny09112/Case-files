@@ -102,6 +102,9 @@ duplikace mechaniky. Řeším takto a hlásím to nahlas:
 - Produces:
   - `MISTO = { SLOT: 'slot', OKRAJ: 'okraj', SPIS: 'spis' }`
   - `vysvetli(events: object[], ctx?: VysvetliCtx): Map<number, Anotace[]>`
+  - `TYPY_S_HANDLEREM: string[]` — klíče registru handlerů (proti němu testuje
+    Task 4 pokrytí enumu; bez registru by byl tripwire slepý u událostí,
+    jejichž handler vrací prázdno)
   - `VysvetliCtx = { jmena?: Record<string,string>, postihy?: Record<string,string>,
     veci?: Record<string,string>, situace?: Record<string,string>,
     pronasledovatele?: Record<string,string>, cile?: Record<string,{text:string}> }`
@@ -126,7 +129,7 @@ u KTERÉHO slotu anotace visí a jaké razítko vyklepnout. Vytahovat to parsov�
  */
 import { describe, it, expect } from 'vitest';
 import { EVENT } from '../src/engine/events.js';
-import { vysvetli, MISTO } from '../src/ui/vysvetleni.js';
+import { vysvetli, MISTO, TYPY_S_HANDLEREM } from '../src/ui/vysvetleni.js';
 
 /** Poskládá log ze zadaných událostí a dopočítá seq (jako createLog). */
 export function log(...udalosti) {
@@ -290,6 +293,12 @@ const HANDLERS = {
   // Čistě měřicí událost (ADR-010) — anotaci nenese.
   [EVENT.ASSIGN_CONTEXT]: () => [],
 };
+
+/**
+ * Typy událostí, které vrstva umí přeložit. Testuje se proti `EVENT` — bez
+ * toho by tripwire byl slepý u událostí, jejichž handler vrací prázdno.
+ */
+export const TYPY_S_HANDLEREM = Object.keys(HANDLERS);
 ```
 
 - [ ] **Step 4: Pusť test a ověř, že prochází**
@@ -353,8 +362,8 @@ describe('vysvetli — odhalení prahů (jádro učení, §5)', () => {
     expect(anotace).toHaveLength(2);
     expect(anotace[0].misto).toBe(MISTO.SLOT);
     expect(anotace[0].slot_index).toBe(0);
-    expect(anotace[0].veta).toContain('Práh 4 = kotva 3 +1');
-    expect(anotace[1].veta).toContain('Práh 1 = kotva 2 −1');
+    expect(anotace[0].veta).toContain('práh 4 = kotva 3 +1');
+    expect(anotace[1].veta).toContain('práh 1 = kotva 2 −1');
     expect(anotace[0].detail).toContain('naučitelná');
   });
 
@@ -809,7 +818,7 @@ describe('vysvetli — telegraf, pásmo, Žár, mapa, gamble, konec (§5)', () =
     expect(a.veta).toContain('hodnota');
     expect(a.veta).toContain('obrana');
     expect(a.veta).toContain('nástroj');
-    expect(a.veta).toContain('jedna skrytá');
+    expect(a.veta).toContain('jedna skrytá role');
     expect(a.veta).toContain('Zbraň na očích neprojde');
     expect(a.detail).toContain('Kowalski');
   });
@@ -872,7 +881,13 @@ describe('vysvetli — telegraf, pásmo, Žár, mapa, gamble, konec (§5)', () =
 });
 
 describe('vysvetli — pokrytí enumu (§7 test 2, tripwire proti rozjetí vrstvy a enginu)', () => {
-  it.each(Object.values(EVENT))('typ %s má handler (nespadne do „neznámá")', (typ) => {
+  it.each(Object.values(EVENT))('typ %s má registrovaný handler', (typ) => {
+    // Registr, ne jen chování: události s prázdným handlerem (commit, assignment…)
+    // by jinak testem prošly i kdyby handler chyběl úplně.
+    expect(TYPY_S_HANDLEREM).toContain(typ);
+  });
+
+  it.each(Object.values(EVENT))('typ %s nespadne do „neznámá" ani s minimálním payloadem', (typ) => {
     const anotace = vsechny(vysvetli(log({ type: typ, ...MINIMALNI_PAYLOAD[typ] })));
     for (const a of anotace) expect(a.veta).not.toContain('neznámá událost');
   });
@@ -987,7 +1002,10 @@ do `novaKniha` přidej:
 nad `HANDLERS` přidej:
 
 ```js
-const POCET_SLOVY = ['žádná', 'jedna', 'dvě', 'tři', 'čtyři'];
+// Čeština se neskloňuje šablonou — malé tabulky jsou levnější než špatné tvary.
+const VIDITELNE_FRAZE = ['žádnou viditelnou roli', 'jednu viditelnou roli', 'dvě viditelné role', 'tři viditelné role', 'čtyři viditelné role'];
+const SKRYTE_FRAZE = ['nic skrytého', 'jedna skrytá role', 'dvě skryté role', 'tři skryté role', 'čtyři skryté role'];
+const CESTY_FRAZE = ['žádná cesta', 'jedna cesta', 'dvě cesty', 'tři cesty'];
 
 /** Typ místa je veřejné pravidlo (D34/N7) — hráč ho zná před volbou cesty. */
 const TYP_MISTA_PRAVIDLO = {
@@ -1008,10 +1026,10 @@ a do `HANDLERS` zbývající handlery:
     const staty = (s.trend ?? []).map((t) => popisStatu(t.stat));
     const skryte = s.proti_srsti ?? 0;
     const veta = [
-      staty.length > 0
-        ? `Telegraf slibuje ${POCET_SLOVY[staty.length] ?? staty.length} viditelné role (${staty.join(', ')})`
-        : 'Telegraf neslibuje žádnou viditelnou roli',
-      skryte > 0 ? ` a ${POCET_SLOVY[skryte] ?? skryte} skrytá čeká na nejhorší.` : ' a nic skrytého.',
+      `Telegraf slibuje ${VIDITELNE_FRAZE[staty.length] ?? `${staty.length} viditelných rolí`}${staty.length > 0 ? ` (${staty.join(', ')})` : ''}`,
+      skryte > 0
+        ? `, ${SKRYTE_FRAZE[skryte] ?? `skrytých rolí ${skryte}`} čeká na nejhorší.`
+        : ' a nic skrytého.',
       s.zbran_projde === 'ano' ? ' Zbraň tady projde i na očích.' : ' Zbraň na očích neprojde.',
       s.zbran_skryte ? ' Ve skryté roli se ale zbraň vyplatí.' : '',
       s.improv_skryte ? ' Skrytá role stojí na improvizaci.' : '',
@@ -1066,7 +1084,7 @@ a do `HANDLERS` zbývající handlery:
       misto: MISTO.OKRAJ,
       veta: e.byl_zatah
         ? 'Zátah: Žár překročil práh, jiná cesta než přes kontrolu není.'
-        : `Na výběr jsou ${POCET_SLOVY[kolik] ?? kolik} cesty — typ místa je vidět předem a rozhoduje o tom, jestli projde zbraň.`,
+        : `Na výběr: ${CESTY_FRAZE[kolik] ?? `${kolik} cest`} — typ místa je vidět předem a rozhoduje o tom, jestli projde zbraň.`,
     }];
   },
 
@@ -1075,7 +1093,7 @@ a do `HANDLERS` zbývající handlery:
     return [{
       misto: MISTO.SPIS,
       veta: `Sázka: místo „${nazevVeci(k, e.nahrazena)}" přišel „${nazevVeci(k, e.tazena)}" (ruka ${jmenoHrace(k, e.ci_ruka)}).`,
-      detail: `V ruce zbývalo ${e.zbyvajici_v_ruce} věcí, tažení je naslepo. Jednou za situaci.`,
+      detail: `Tažení je naslepo, v ruce zbývalo kusů: ${e.zbyvajici_v_ruce}. Sázka jde jednou za situaci.`,
     }];
   },
 
