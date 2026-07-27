@@ -16,8 +16,11 @@ jako `prototyp/` (subtree, submodule zrušen, ADR-009) — kalibrační iterace 
 nově jedna smyčka v jednom repu. **Kalibrace-3 (D24, 2026-07-26): poctivý
 negativní výsledek** — lék „snížit viditelné kotvy" měřením vyvrácen (směr K1
 opačný, K5/K7 v mandátu nedosažitelné, drivery = Malone-nulované hodnota-sloty
-+ finále), nic se nezapeklo. **Míč: uživatel — rozhodnutí P0/P1/P2 mandátu
-kalibrace-4** (viz otevřené otázky a [[../technika/kalibrace-3-2026-07-26|report]]).
++ finále), nic se nezapeklo. **Mandát kalibrace-4 ROZHODNUT (D25, 2026-07-27):**
+K5 bez mechanicky nulovaných slotů, scope K5/K7 na běžné uzly + vlastní metrika
+finále, K7/K2 znění v revizi (tým předloží balík ke schválení), obtížnost
+jednotná napříč 1–4p, Malone: řešitelnost bez hodnota-slotu. **Kalibrace-4 je
+odblokovaná — připravena ke spuštění.**
 
 ## Backlog
 
@@ -50,6 +53,8 @@ kalibrace-4** (viz otevřené otázky a [[../technika/kalibrace-3-2026-07-26|rep
 | **Kalibrace-2 lék: snížit viditelné kotvy běžných uzlů** | game-designer + content-generator | **uzavřeno 2026-07-26 (D24) — lék VYVRÁCEN měřením**, nic se nezapeklo; viz řádek kalibrace-3 |
 | **Kalibrace-3: selektivní revert kotev 4→3** — návrh 12 slotů (designer) → adversariální prověrka (kritik) → per-slot diagnostika + kontrafaktuální gate-měření 1000×2 přes CONTENT_DIR (facilitátor) | celé kolečko + playtest-facilitator | **hotovo 2026-07-26 (D24) — NEGATIVNÍ VÝSLEDEK**: žádná podmnožina mandátu gate nesplní (K1 špatný směr, K5≥13.6 %, K7≥40.5 % i při maximu); drivery mimo mandát (Malone-nulovaná hodnota, finále ~50 %). Report [[../technika/kalibrace-3-2026-07-26|technika/kalibrace-3-2026-07-26.md]]; mandát kalibrace-4 (P0–P4) eskalován na uživatele |
 | Pro technical-developer: do `sim/report.js` doplnit rozpady per-situace / per-slot / common-vs-finále / K5 viditelná-skrytá (v kalibraci-3 počítáno ad-hoc skriptem) | technical-developer | otevřeno — z kalibrace-3 2026-07-26 |
+| **Kalibrace-4 dle mandátu D25:** (1) balík nového znění brány Fáze 0 (K5 bez nulovaných slotů + scope běžné uzly, metrika finále, revize K7, K2 ko-metrika) → schválení uživatelem; (2) obsah: řešitelnost situací bez hodnota-slotu (P2); (3) engine: `improv_skryte` (P3), dorovnání obtížnosti 1–4p přes finále/Žár (P1), ruka 1p až po P1 (P4); (4) re-měření | celé kolečko + technical-developer | **otevřeno — mandát rozhodnut 2026-07-27 (D25)**, připraveno ke spuštění |
+| Volitelná obtížnost při startu runu (easy/normal/hard) | game-designer | **budoucí úkol (D25d)** — neřešit teď; až po lidské bráně |
 | **Monorepo (D23): sloučení kódového repa do `prototyp/`** — subtree se zachovanou historií, submodule zrušen, cesty na kořen, ADR-009, otisk verzeObsahu nezávislý na line endings | project-manager | **hotovo 2026-07-26** — 118/118 testů, sim smoke shodný s kalibrací-2, build+lint čisté; GitHub repo prototypu archivovat (viz plán); plán [[../technika/migrace-monorepo-plan-2026-07-26|technika/migrace-monorepo-plan]] |
 | Setup pluginů pro kódovou část (`prototyp/`): Superpowers (inženýrská disciplína), frontend-design (až UI — nakrmit estetikou z design dokumentu), security-guidance | uživatel (claude CLI) | po monorepu (D23) se instalují do tohoto repa — dělba platí: Superpowers jen pro práci v `prototyp/`, herně-designovou disciplínu drží naši agenti |
 | První měření instrumentovaného enginu: potvrdit win-rate (kompetentní ≤70 %) a hlídat obetni-beranek (94,8 % těsně pod stropem) | playtest-facilitator + technical-developer | **hotovo — run-1 (1000×2)**: K1 v pásmu (59.8–69.2 %), co-op inverze OK (4/4 ~4.8 %); report [[../technika/kalibrace-1-2026-07-24|technika/kalibrace-1-2026-07-24.md]] |
@@ -59,15 +64,12 @@ kalibrace-4** (viz otevřené otázky a [[../technika/kalibrace-3-2026-07-26|rep
 
 ## Otevřené otázky (čekají na uživatele)
 
-- **Mandát kalibrace-4 (z D24, 2026-07-26) — P0–P2 jsou designová rozhodnutí:**
-  **P0** redefinice K5/K7 gate: (a) K5 bez mechanicky nulovaných slotů (hodnota
-  pod Malonem je záměr D20a/D21c), (b) scope K5/K7 na běžné uzly + vlastní
-  metrika finále, (c) revize stropu K7 ≤ 20 % (kompetentní bot gambluje při
-  odhadu ≤2/4 z definice). **P1** K1 3p/4p srazit přes finále/Žár — má obtížnost
-  škálovat s počtem hráčů? **P2** hodnota-sloty pod Malonem (zmírnit na −2 /
-  řešitelnost bez hodnota-slotu / prohodit staty). P3 (`improv_skryte`) a P4
-  (ruka 1p 8→9, až po P1) jsou po schválení delegovatelné. Procesní:
-  re-ratifikovat dělbu „kdo vlastní K1" (engine vs. obsah).
+- ~~Mandát kalibrace-4 (P0–P2)~~ — **ROZHODNUTO 2026-07-27 (D25):** P0a vyjmout
+  nulované sloty z K5, P0b scope na běžné uzly + vlastní metrika finále,
+  P0c/K2 znění brány předloží tým jedním balíkem ke schválení, P1 obtížnost
+  jednotná 1–4p (interní dorovnání = delegovaná kalibrace), P2 řešitelnost
+  situací bez hodnota-slotu. Zbývá procesní: re-ratifikovat dělbu „kdo vlastní
+  K1" (engine vs. obsah) — navrhne tým v rámci kalibrace-4.
 - **Eskalace z D22 (kalibrace-1, 2026-07-24):** (1) ko-metrika K2 = drift míry
   PRŮŠVIHŮ uzel3–4 vs. uzel1–2 — přidat do znění brány K2 v `prototyp-mvp.md`?
   (zatím jen diagnostika v reportu enginu, gate ≥1,3× beze změny); (2) ratifikace

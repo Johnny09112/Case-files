@@ -11,6 +11,35 @@ ukazatel na archiv.*
 architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.md]]
 (přesunuto 2026-07-24).
 
+## 2026-07-27
+
+- **D25 schváleno — mandát kalibrace-4 (rozhodnutí uživatele, P0–P2 + P1).**
+  Odpovědi na eskalaci z D24 (vždy doporučená varianta týmu):
+  (a) **P0a — K5 bez mechanicky nulovaných slotů:** hodnota-sloty nulované
+  Malonem (D20a) se do K5 nepočítají — jsou záměrnou strategickou překážkou
+  známou od startu runu, ne vadou obsahu.
+  (b) **P0b — scope K5/K7 jen na běžné uzly:** finálové střety (zátah, léčka,
+  konfrontace) dostanou vlastní metriku tvrdosti (např. % přežití konfrontace) —
+  vynucený risk ve finále je klimax, ne vada. Návrh metriky předloží tým.
+  (c) **P0c — strop K7 ≤ 20 % v revizi:** tým předloží novou definici s čísly
+  (vynucené vs. zvolené gambly / strop odvozený z chování botů) ke schválení.
+  Spolu s ní se předloží JEDNÍM balíkem i nové znění brány Fáze 0
+  v `prototyp-mvp.md` vč. K2 ko-metriky „drift míry PRŮŠVIHŮ" (D22f(1),
+  měřením kalibrace-3 podpořeno: 1.29–1.47×) — do schválení balíku platí
+  stávající znění a nové metriky jsou diagnostika.
+  (d) **P1 — obtížnost stejná bez ohledu na počet hráčů:** cíl = srovnat
+  K1 napříč 1–4p (dnes 4p znatelně snazší — víc rukou, víc pokrytí). Interní
+  dorovnání (tempo Žáru, severity postihů konfrontace, skryté sloty finále)
+  je delegovaná kalibrace. **Budoucí úkol (backlog, teď neřešit):** volitelná
+  obtížnost při startu runu.
+  (e) **P2 — Malone: řešitelnost bez hodnota-slotu:** Malone dál nuluje hodnotu
+  run-wide (identita, D20a potvrzeno), ale obsah zaručí, že každá situace jde
+  slušně zvládnout i bez hodnota-slotu; dopočet pokrytí = delegovaná kalibrace
+  (content-generator + sim). Zamítnuté alternativy: oslabení na −2 (rozmělňuje
+  identitu), prohazování statů slotů (řeší symptom).
+  (f) P3 (`improv_skryte`) a P4 (ruka 1p 8→9, až po P1) delegovány dle D24.
+  *Kalibrace-4 je tímto odblokovaná.*
+
 ## 2026-07-26
 
 - **D24 — kalibrace-3: NEZAPÉKAT, lék „snížit viditelné kotvy" měřením
