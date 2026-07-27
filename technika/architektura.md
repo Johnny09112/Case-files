@@ -97,6 +97,7 @@ bez druhého průchodu enginem.
 | `telegraf_derived` | `signal_pravy {trend_staty, proti_srsti, zbran_projde}` — **derivuje engine ze slotů**, ne autor; `signal_vyslany` (po fidelitě/postihu „nevidíš telegraf"); `fidelita` p | K7 (commit naslepo); věrnost telegrafu (sweep knob) |
 | `commit` | `[{hrac_id, karta_id, staty snapshot (5×0–5), stitky, dobrovolna: bool}]` (**přesně 4**); rozdělení dle hráčů; `drzitel_mapy` (3p, rotuje po uzlu) | K4b stat-monokultura; cíl `commitnute_stitky`; **vstup max_band** |
 | `situation_revealed` | `typ_mista`; sloty `[{slot_index, role, klice_na (stat \| [s1,s2] u kombi), kotva (2–4), sum (±1), prah=kotva+šum, typ_prahu (jednostat\|kombi_oba\|stitek), viditelnost (viditelná\|skrytá), stitek_citlivost (např. GANGSTER)}]`; `vyjimky` (které sloty) | **vstup max_band**; oracle; „proč" vrstva |
+| `assign_context` (ADR-010) | `situace_id`; `typ`; `stitek_chovani`; `gamble_dostupny`; `gamble_blokovan` (`lock_gamble`\|`prazdne_ruce`\|`bez_commitu`\|`jiz_pouzit`\|`null`); `ruce [{hrac_id, slozena, karty [{karta_id, staty, stitky}]}]` | **K5 varianta D** (kontrafaktuál po gamblu); **K7 klasifikace záchranný/hedge + take-rate** (jmenovatel = dostupné příležitosti); per-situace rozpad |
 | `assignment` | `[{slot_index, karta_id, hrac_id}]`; `navrhl` (hrac_id); `souhlasili []` (vlastník souhlasí); `pocet_preskladani` (reassignment_count) | **K6c counterfactual (swing)**; K6b proxy sporu |
 | `gamble` | `ci_ruka` (hrac_id); `zbyvajici_v_ruce` (jmenovatel: 2 nebo 3 dle počtu hráčů); `tazena` (karta_id); `nahrazena` (commitnutá → odhoz); `do_slotu` | **K7 EV per počet hráčů**; cíl `gamble_pouzit` |
 | `slot_resolved` (×4/uzel) | `slot_index`; `karta_id`; `hrac_id`; `stat_hodnota` (1–2 u kombi); `prah`; `typ_prahu`; `viditelnost`; `stitek_efekt` (GANGSTER ve viditelné roli → auto-fail); `pronasledovatel_efekt` (zrušil stat/štítek); `zasah: bool`; `duvod` (enum anotace) | pásmo; „proč" vrstva; cíl `pocet_slotu_splnil` |
@@ -525,6 +526,39 @@ modulů (engine API, formát událostí, rozhraní provideru), volitelně
   Kódové konvence žijí v `prototyp/CLAUDE.md`. Původní GitHub repo
   `dukazni-material-prototyp` archivován (read-only). Až půjde hra do produkce,
   kód se případně vyčlení tehdy — ne preventivně.
+
+### ADR-010: `assign_context` v logu; definice gate-metrik post-hoc v `report.js`
+- **Datum:** 2026-07-27 · **Status:** přijato (kalibrace-4, D26 bod 0a)
+- **Kontext:** Schválené znění brány (D26) potřebuje metriky, které z logu nešly
+  spočítat: **K5 varianta D** („`max≤1` před gamblem i po něm" — vyžaduje zbytky
+  rukou, aby šel dopočítat kontrafaktuál „mohl hráč uniknout?") a **K7
+  klasifikace** záchranný/hedge (vyžaduje `odhad` a hlavně příležitosti, kde se
+  gamble NEvzal — ty v logu chyběly úplně, `gamble` se logoval jen při vzetí).
+  Kalibrace-3 to obcházela ad-hoc skriptem; výsledkem byl dvojí měřicí cut
+  (K5 17,3 vs. 18,4 %; přežití 1p 68,8 vs. 76,6) a nedůvěryhodný baseline.
+- **Rozhodnutí:** Jedna nová událost `assign_context` na hraně commit→assign
+  nesoucí **jen objektivní stav enginu** (zbytky rukou se staty, dostupnost
+  gamblu + důvod blokace, `situace_id`, `typ`, chování štítku). **Žádný odhad
+  ani rozhodnutí bota do logu nejde** — veškerá definiční logika gate (odhad,
+  gamble-politika, varianta D, free-pass, bucket common/finále) žije post-hoc
+  v `sim/report.js`. Předefinování metriky je pak úprava report.js + přeagregace
+  uložených JSONL — bez re-simulace a bez dotyku enginu. `estimateHitsVsKotva`
+  vytažen do `sim/estimate.js` jako **jediná** definice sdílená botem i reportem;
+  shodu hlídá tripwire test nad reálnou dávkou.
+- **Zavrženo:** *logovat `odhad`/rozhodnutí ze strategie* — obrací směr závislosti
+  (`sim/ → src/engine/`), dělá z logu dvouautorský zápis (log z lidské hry by
+  pole neměl, spor s ADR-008), gate by byl přivázaný na jednu konkrétní strategii
+  a tiše by se měnil s botem. A hlavně: variantu D to neumí ani principiálně —
+  kontrafaktuál potřebuje OBSAH zbylých rukou, ne skalární odhad.
+- **Důsledky:** Golden snapshoty se změnily vědomě (nová událost + posun `seq`);
+  ověřeno, že logy bez `seq` a bez `assign_context` jsou před změnou i po ní
+  bytově identické — `assign_context` nesahá na RNG, resoluce se nezměnila.
+  Log s `--events` roste ~7 kB/run. Report umí i staré dávky bez události:
+  dotčené metriky vrací `null` (nikdy 0) a jmenuje je v poli `nedostupne`.
+  **Nález s dopadem na výklad dosavadních měření:**
+  `band_resolved.max_achievable_zasahy` je **post-gamble** (gamble přepíše
+  `situ.committed` před resolucí) — report proto počítá i `maxPre` a obě čísla
+  labeluje.
 
 ---
 

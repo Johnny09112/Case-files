@@ -215,6 +215,7 @@ export function createRun({ seed, content, rules, players, pronasledovatelId }) 
     if (commitPlan.length === 0) {
       situ.odhaleno = revealSlots(situ.def, rng, rules);
       logSituationRevealed();
+      logAssignContext();
       situ.assignment = [];
       phase = 'confirm';
       return resolveSituation();
@@ -253,6 +254,8 @@ export function createRun({ seed, content, rules, players, pronasledovatelId }) 
 
   function logSituationRevealed() {
     log.append(EVENT.SITUATION_REVEALED, nodeSeq, {
+      situace_id: situ.def.id,
+      typ: situ.typ,
       typ_mista: situ.typMista,
       sloty: situ.odhaleno.map((s) => ({
         slot_index: s.slot_index,
@@ -264,6 +267,43 @@ export function createRun({ seed, content, rules, players, pronasledovatelId }) 
         typ_prahu: s.typ_prahu,
         viditelnost: s.viditelnost,
         stitek_citlivy: s.stitek_citlivy,
+      })),
+    });
+  }
+
+  /**
+   * Objektivní kontext na hraně commit→assign (ADR-010) — zbytky rukou a
+   * dostupnost gamblu, tedy data, která po gamblu už nejdou zrekonstruovat.
+   * Loguje se u KAŽDÉ situace (i té, kterou nikdo nekomitoval, protože jsou
+   * všichni složení), ať report nemusí rozlišovat „chybí, protože stará dávka"
+   * od „chybí, protože degenerovaný uzel". Nesahá na `rng`.
+   */
+  function logAssignContext() {
+    const blokovan = situ.gambleUsed
+      ? 'jiz_pouzit'
+      : characters.some((c) => hasEfekt(c, 'lock_gamble'))
+        ? 'lock_gamble'
+        : situ.committed.length === 0
+          ? 'bez_commitu'
+          : characters.every((c) => c.ruka.length === 0)
+            ? 'prazdne_ruce'
+            : null;
+    log.append(EVENT.ASSIGN_CONTEXT, nodeSeq, {
+      situace_id: situ.def.id,
+      typ: situ.typ,
+      stitek_chovani: gangsterParams?.chovani_dle_typu?.[situ.typ] ?? null,
+      gamble_dostupny: blokovan === null,
+      gamble_blokovan: blokovan,
+      // Složené postavy se logují také (s příznakem) — `gamble()` je nefiltruje,
+      // takže report musí replikovat stejnou doménu výběru ruky.
+      ruce: characters.map((c) => ({
+        hrac_id: c.id,
+        slozena: c.slozena,
+        karty: c.ruka.map((k) => ({
+          karta_id: k.id,
+          staty: { ...k.staty },
+          stitky: k.stitek ? [k.stitek] : [],
+        })),
       })),
     });
   }
@@ -764,6 +804,7 @@ export function createRun({ seed, content, rules, players, pronasledovatelId }) 
       // Odhalení situace.
       situ.odhaleno = revealSlots(situ.def, rng, rules);
       logSituationRevealed();
+      logAssignContext();
       phase = 'assign';
     },
 

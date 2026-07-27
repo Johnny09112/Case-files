@@ -17,8 +17,13 @@
  */
 
 import { createRng } from '../src/engine/rng.js';
-import { resolveSlot } from '../src/engine/resolve.js';
 import { RULES } from '../src/engine/rules.js';
+import { decideAssignment, randomMapping } from './assign.js';
+import { estimateHitsVsKotva } from './estimate.js';
+
+// Přiřazovací heuristiky žijí v `assign.js` (ADR-010) — re-export drží zpětnou
+// kompatibilitu importů (test/strategies.test.js).
+export { decideAssignment };
 
 /** @param {number} seed @param {typeof RULES} [rules] pro model šumu (kalibrace-2) */
 export function createStrategy(spec, seed, rules = RULES) {
@@ -102,7 +107,7 @@ export function createStrategy(spec, seed, rules = RULES) {
       // Gamble: odhad zásahů vs kotva; ≤2/4 → jednou líznout záchranu (ne při ≥3/4).
       if (s.gamble !== false && !state.situace.gambleUsed) {
         const locked = state.postavy.some((p) => p.postihy.some((x) => x.efekt?.druh === 'lock_gamble'));
-        if (!locked && estimateHitsVsKotva(state, noise) <= 2) {
+        if (!locked && odhadZeStavu(state, noise) <= 2) {
           const owner = chooseGambleHand(state);
           const replaced = weakestCommittedId(state);
           if (owner && replaced) {
@@ -137,20 +142,16 @@ export function createStrategy(spec, seed, rules = RULES) {
 
 /* ================= gamble heuristiky ================= */
 
-/** Odhad zásahů: nejlepší rozdělení vůči KOTVĚ (bot nezná per-instance šum). */
-function estimateHitsVsKotva(state, noise) {
-  const committed = state.situace.committed;
-  const sloty = state.situace.odhaleno.sloty;
-  const rusi = state.pronasledovatel?.rusi ?? null;
-  const stitekParams = state.situace.stitekParams ?? null;
-  const typSituace = state.situace.typ;
-  const map = decideAssignment({ strat: 'memorizacni', committed, sloty, rusi, stitekParams, typSituace, ...noise });
-  let hits = 0;
-  map.forEach((slotPos, cardIdx) => {
-    const slot = sloty[slotPos];
-    if (resolveSlot({ karta: committed[cardIdx].karta, slot: { ...slot, prah: slot.kotva }, rusi, stitekParams, typSituace }).zasah) hits += 1;
+/** Odhad zásahů ze stavu enginu — tenký adaptér nad sdíleným `estimate.js`. */
+function odhadZeStavu(state, noise) {
+  return estimateHitsVsKotva({
+    committed: state.situace.committed,
+    sloty: state.situace.odhaleno.sloty,
+    rusi: state.pronasledovatel?.rusi ?? null,
+    stitekParams: state.situace.stitekParams ?? null,
+    typSituace: state.situace.typ,
+    ...noise,
   });
-  return hits;
 }
 
 /** Čí ruka poskytne gamble: hazardérův cíl preferuje vlastní, jinak nejplnější ruka. */
@@ -194,116 +195,5 @@ function commitScore(k, demanded, s) {
   return demanded.reduce((a, stat) => a + (k.staty[stat] ?? 0), 0);
 }
 
-/* ================= přiřazovací heuristiky ================= */
-
-/** Všechny permutace [0..n-1] (n ≤ 4). */
-function permutace(n) {
-  const arr = Array.from({ length: n }, (_, i) => i);
-  const out = [];
-  const gen = (k, a) => {
-    if (k === 1) return out.push(a.slice());
-    for (let i = 0; i < k; i++) {
-      gen(k - 1, a);
-      const j = k % 2 === 0 ? i : 0;
-      [a[j], a[k - 1]] = [a[k - 1], a[j]];
-    }
-  };
-  gen(n, arr);
-  return out;
-}
-
-/** mapping[indexKarty] = pozice slotu; karty jdou na náhodný podmnožinový výběr slotů. */
-function randomMapping(pocetKaret, pocetSlotu, rng) {
-  return rng.shuffle(Array.from({ length: pocetSlotu }, (_, i) => i)).slice(0, pocetKaret);
-}
-
-/**
- * Bias cíle-driven bota: bonus/postih per (karta VLASTNÍKA cíle, slot). Vytváří
- * měřitelnou odchylku od kompetentního (týmově-optimálního) přiřazení.
- */
-function goalBias(karta, slot, goalId) {
-  if (!goalId) return 0;
-  const LAMBDA = 3;
-  const rawStaty = Array.isArray(slot.stat) ? slot.stat : [slot.stat];
-  const pass = Math.min(...rawStaty.map((st) => karta.staty[st] ?? 0)) >= slot.kotva; // odhad vs kotva
-  const gangsterVisible = karta.stitek === 'GANGSTER' && slot.viditelnost === 'viditelna';
-  switch (goalId) {
-    case 'cista-ruka':
-      return gangsterVisible ? -100 : 0; // NIKDY zbraň do viditelné role
-    case 'dve-jizvy':
-      return pass ? -LAMBDA : LAMBDA; // toleruj/vyhledej vlastní propad (chce postihy)
-    case 'muj-den':
-    case 'bez-jizvy':
-    case 'kupecke-slovo':
-    case 'plny-zasah':
-      return pass ? LAMBDA : -LAMBDA; // tlač vlastní průchod
-    default:
-      return 0; // hazarder (řeší gamble), mozek-operace (textový)
-  }
-}
-
-/**
- * Vrací `mapping[indexKarty] = pozice slotu` — přiřazení dle strategie.
- * ČISTÁ funkce (testovatelná bez enginu).
- *
- * @param {object} p {strat, committed:[{hrac_id,karta}], sloty, rusi, stitekParams, typSituace, goalByHrac, rng}
- */
-export function decideAssignment({ strat, committed, sloty, rusi = null, stitekParams = null, typSituace = null, goalByHrac = {}, rng = null, sumRozsah = 1, statMax = 5 }) {
-  const karty = committed.map((c) => c.karta);
-  const M = karty.length;
-  if (strat === 'random') return randomMapping(M, sloty.length, rng);
-
-  const passVsPrah = (k, slot) => (resolveSlot({ karta: k, slot, rusi, stitekParams, typSituace }).zasah ? 1 : 0);
-  const rawStat = (k, slot) => {
-    const staty = Array.isArray(slot.stat) ? slot.stat : [slot.stat];
-    return Math.min(...staty.map((st) => (rusi?.typ === 'stat' && rusi.cil === st ? 0 : k.staty[st] ?? 0)));
-  };
-  // Memorizační bot ZNÁ kotvu (ne per-instance šum) → maximalizuje OČEKÁVANÝ počet
-  // zásahů: P(stat ≥ clamp(kotva+šum, 0, statMax)) přes šum uniform v {−R…+R}.
-  // Model se počítá ze STEJNÉHO rozsahu + clampu jako engine (kalibrace-2) — jinak
-  // by byl bot mis-kalibrovaný a K4c gate by měřil artefakt. GANGSTER auto-fail
-  // se promítne jako nulová hodnota přes resolveSlot ve viditelné roli.
-  const R = sumRozsah;
-  const expectedPass = (k, slot) => {
-    const auto = resolveSlot({ karta: k, slot: { ...slot, prah: -99 }, rusi, stitekParams, typSituace });
-    if (!auto.zasah) return 0; // GANGSTER auto-fail (prošel by i s prahem −99, jinak zásah)
-    const stat = rawStat(k, slot);
-    let hits = 0;
-    for (let sv = -R; sv <= R; sv++) {
-      const prah = Math.max(0, Math.min(statMax, slot.kotva + sv));
-      if (stat >= prah) hits += 1;
-    }
-    return hits / (2 * R + 1);
-  };
-
-  if (strat === 'greedy') {
-    const zbyleSloty = sloty.map((_, i) => i);
-    const mapping = new Array(M);
-    for (let cardIdx = 0; cardIdx < M; cardIdx++) {
-      let best = 0;
-      for (let j = 1; j < zbyleSloty.length; j++) {
-        if (rawStat(karty[cardIdx], sloty[zbyleSloty[j]]) > rawStat(karty[cardIdx], sloty[zbyleSloty[best]])) best = j;
-      }
-      mapping[cardIdx] = zbyleSloty.splice(best, 1)[0];
-    }
-    return mapping;
-  }
-
-  const base = strat === 'oracle' ? passVsPrah : strat === 'memorizacni' ? expectedPass : rawStat;
-  const scoreFn =
-    strat === 'cile'
-      ? (k, slot, i) => rawStat(k, slot) + goalBias(k, slot, goalByHrac[committed[i].hrac_id])
-      : (k, slot) => base(k, slot);
-
-  let bestMap = null;
-  let bestScore = -Infinity;
-  for (const perm of permutace(sloty.length)) {
-    let sc = 0;
-    for (let i = 0; i < M; i++) sc += scoreFn(karty[i], sloty[perm[i]], i);
-    if (sc > bestScore) {
-      bestScore = sc;
-      bestMap = perm.slice(0, M);
-    }
-  }
-  return bestMap;
-}
+/* Přiřazovací heuristiky (decideAssignment, randomMapping, goalBias) se
+   přestěhovaly do `assign.js` — viz re-export v hlavičce a ADR-010. */

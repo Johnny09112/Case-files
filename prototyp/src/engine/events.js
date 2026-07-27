@@ -17,6 +17,18 @@ export const EVENT = /** @type {const} */ ({
   TELEGRAF_DERIVED: 'telegraf_derived',
   COMMIT: 'commit',
   SITUATION_REVEALED: 'situation_revealed',
+  /**
+   * Objektivní stav na hraně commit→assign (ADR-010): zbytky rukou všech postav
+   * a dostupnost gamblu. Bez něj nejde spočítat K5 variantu D (`max≤1` i PO
+   * gamblu proti realistické gamble-politice) ani K7 klasifikaci záchranný/hedge
+   * — příležitosti, kde se gamble NEvzal, jinak v logu nejsou vůbec.
+   *
+   * Nese jen data enginu, žádný odhad ani rozhodnutí bota: definiční logika gate
+   * žije post-hoc v `sim/report.js`, takže předefinování metriky nevyžaduje
+   * re-simulaci. Karta vytažená gamblem (`gamble.tazena`) je jen id — její staty
+   * se dohledají právě zde, o událost dřív.
+   */
+  ASSIGN_CONTEXT: 'assign_context',
   ASSIGNMENT: 'assignment',
   GAMBLE: 'gamble',
   SLOT_RESOLVED: 'slot_resolved',
