@@ -1,5 +1,14 @@
 # Kalibrace-4 — výsledek: 7 z 9 gatů splněno, 2 otevřené
 
+> **DODATEK 2026-07-27 (po opravě bota, D29 nález 3).** Rozhodnutím uživatele se
+> jako první krok další iterace opravila commit i assign heuristika kompetentního
+> bota, aby respektovala veřejné pravidlo štítku GANGSTER. **Všechna čísla níže
+> jsou tím překonaná** — aktuální baseline je v §6. Souhrn posunu:
+> gangster_auto_fail **9497 → 2858** propadů (−70 %); K1 per count
+> **64,6 / 61,2 / 63,7 / 64,6** (breach žádný); K6a **3,4 b.**;
+> K2 drift **1,18 → 1,26**; K5 expDead **11,3 → 10,7 %**.
+> Otevřené gaty se nezměnily co do identity, jen se přiblížily.
+
 > **STAV: brána Fáze 0 NENÍ splněna.** Splněno je K1 (per-count), K6a, K5f,
 > K7 a K3/K4/K8/K9; **nesplněné zůstávají K2 drift (1,18 proti ≥1,3)** a
 > **K5 varianta D (11,3 % proti ≤10 %)**, plus jeden marginální breach K5f
@@ -190,7 +199,46 @@ tedy uvnitř run-to-run šumu. Neřešit samostatně — vyřeší se při itera
 
 ---
 
+---
+
+## 6. Aktuální baseline po opravě bota (2026-07-27, `f3bb97d`)
+
+Referenční bot byl v jednom místě hloupější než člověk u stolu: telegraf hlásí
+doslova „zbraň na očích neprojde" a `stitky.yaml` vede to pravidlo jako **veřejné**,
+ale bot ho ignoroval na **obou** osách — v commitu i v přiřazení. Zbraň s útokem 5
+měla ve viditelném utok-slotu nejvyšší skóre, přestože tam padne bez ohledu na
+staty. Gate tedy neměřil hru, ale botovu chybu.
+
+| # | Metrika | Gate | Před opravou | **Po opravě** | Plní? |
+|---|---|---|---|---|---|
+| **K1** | % DORUČENO per count | ∈ [45, 70] % | 61,6 / 56,6 / 59,1 / 60,3 | **64,6 / 61,2 / 63,7 / 64,6** | ✅ |
+| **K2** | drift PRŮŠVIH-rate | ≥ 1,3 | 1,18 | **1,26** | ❌ |
+| **K2** | floor pozdní PRŮŠVIH-rate | ≥ 20 % | 25,4 | **23,5 %** | ✅ |
+| **K5** | varianta D `expDead` | ≤ 10 % | 11,3 | **10,7 %** | ❌ |
+| **K5f** | přežití konfrontace | ∈ [60, 80] % | breach 4p Brody 80,1 | **breach 3p Brody 80,6 · 4p Malone 80,5** | ❌ marginálně |
+| **K5f** | podíl proher ve finále | ≥ 90 % | 97,1 | **97,8 %** | ✅ |
+| **K6a** | spread 1–4p | ≤ 6 b. | 5,0 | **3,4 b.** | ✅ |
+| **K7** | podíl uzlů záchranný | ≤ 15 % | 10,1 | **8,0 %** | ✅ |
+
+**Co to znamená pro zbývající dva gaty:**
+
+- **K2 drift 1,26** — oprava bota přiblížila drift ke gate **bez jediného zásahu
+  do obsahu** (1,18 → 1,26). Mechanismus: kompetentní hráč teď v raných uzlech
+  nechybuje, kdežto v pozdních ho `hide_telegraf` oslepí a on zbraně committne
+  znovu — tedy snowball konečně funguje tak, jak byl navržen. Zbývá **0,04**.
+  Páka „krokově podmíněné pooly" je stále nepoužitá a měla by na to stačit.
+- **K5 expDead 10,7 %** — vázající je dál **výhradně Malone**
+  (10,9–16,6 % vs. Brody 5,9–10,0 %). Zbývá **0,7 b.**
+- **K5f** se opravou mírně **zhoršila**: lepší bot přežívá konfrontaci častěji.
+  Žár-offsety to neopraví — dřívější konfrontace znamená zdravější tým, tedy
+  vyšší přežití. Páka je severita finále (obsah), ne tempo trati.
+  P1 offsety `{0,2,2,2}` byly nad opraveným botem přeověřeny sweepem a zůstávají
+  optimální (spread 2,6 b.), takže re-tune netřeba.
+
+---
+
 *Podklady měření (scratchpad 2026-07-27): `kal4-final/summary.{md,json}`,
+`cf-bot/`, `cf-bot2/` (oprava bota),
 `kal4-baseline/`, `cf-a/`, `cf-b/`, `cf-b5/`, `cf-p3/`, `cf-p1/`,
 `kal4-learnabilita.{md,json}`, `kal4-variance/`. Kontrafaktuální artefakty
 k P2 doloženy dle change-controlu D26 bodu 6. Nástroje: `sim/report.js`,

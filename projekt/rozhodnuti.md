@@ -13,8 +13,31 @@ architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.m
 
 ## 2026-07-27
 
+- **D30 (rozhodnutí uživatele + provedeno) — opravena commit i assign heuristika
+  kompetentního bota o veřejné pravidlo štítku GANGSTER.** Z nabídnutých cest
+  („botí oprava + přeměření" / „dotáhnout bránu bez ní" / „paralelně lidská
+  brána" / „přehodnotit prahy") uživatel zvolil **botí opravu jako první krok**.
+  PM zároveň opravil vlastní chybu v §5 reportu, kde byla tahle položka až
+  čtvrtá: zbraně přidávají +1/+2 Žár, takže oprava mění tempo Žáru → K1 → a tím
+  i offsety z P1; jakákoli obsahová práce udělaná dřív by se musela přeměřit.
+  **Nález:** bot ignoroval verdikt zbraně na OBOU osách (commit i přiřazení),
+  ačkoli telegraf ho hlásí doslova a `stitky.yaml` ho vede jako veřejné pravidlo
+  — gate tedy neměřil hru, ale botovu chybu. **Naměřeno:** gangster_auto_fail
+  9497 → 2858 propadů (−70 %; zbytek jsou slepí hráči, což je správně);
+  K1 per count 64,6 / 61,2 / 63,7 / 64,6 (breach žádný); K6a 5,0 → **3,4 b.**;
+  **K2 drift 1,18 → 1,26 bez jediného zásahu do obsahu** (snowball konečně
+  funguje jak navržen: kompetentní hráč v raných uzlech nechybuje, v pozdních ho
+  `hide_telegraf` oslepí); K5 expDead 11,3 → **10,7 %**. P1 offsety `{0,2,2,2}`
+  přeověřeny sweepem nad opraveným botem — zůstávají optimální, re-tune netřeba.
+  **Cena:** K5f se mírně zhoršila (2 marginální breache 80,5–80,6 proti stropu
+  80), protože lepší bot přežívá finále častěji; Žár-offsety to neopraví,
+  páka je severita finále v obsahu. `greedy` zůstal naivní schválně — je to
+  detektor K4a, ne model kompetence. Detail: §6
+  [[../technika/kalibrace-4-final-2026-07-27|reportu kalibrace-4]].
+
 - **D29 (VÝSLEDEK kalibrace-4) — 7 z 9 gatů splněno, brána Fáze 0 stále
-  NESPLNĚNA; nic se nesnížilo.** Provedeny kroky P2, P3, P1 mandátu D25/D26;
+  NESPLNĚNA; nic se nesnížilo.** *(Čísla D29 překonána opravou bota v D30 —
+  identita otevřených gatů se nezměnila, jen se přiblížily.)* Provedeny kroky P2, P3, P1 mandátu D25/D26;
   re-měření 1000×2×4 (8000 runů) proti zapečenému znění. Report:
   [[../technika/kalibrace-4-final-2026-07-27|technika/kalibrace-4-final-2026-07-27.md]].
   **NOVĚ SPLNĚNO:** (a) **K1 per-count** — 61,6 / 56,6 / 59,1 / 60,3 %,

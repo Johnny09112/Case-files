@@ -29,8 +29,15 @@ per-count i K6a současně** (61,6 / 56,6 / 59,1 / 60,3 %, spread 5,0 b.).
 11,3 % (gate ≤10 %); obojí s hotovou diagnózou a identifikovaným lékem, nic
 se nesnížilo. Report:
 [[../technika/kalibrace-4-final-2026-07-27|technika/kalibrace-4-final-2026-07-27.md]].
-**Míč: další iterace** — pořadí v §5 reportu (oprava `deriveTelegrafSignal` →
-varianta C → krokově podmíněné pooly pro K2 → rozhodnout o commit-heuristice bota).
+**Botí oprava PROVEDENA (D30, rozhodnutí uživatele)** — kompetentní bot nově
+respektuje veřejné pravidlo štítku GANGSTER na obou osách; gangster_auto_fail
+−70 %, K2 drift 1,18 → **1,26** a K5-D 11,3 → **10,7 %** bez zásahu do obsahu.
+**Zbývají dva gaty, oba blízko:** K2 drift 1,26 (chybí 0,04) a K5-D 10,7 %
+(chybí 0,7 b., vázající je výhradně Malone); marginálně K5f (2 konfigurace
+80,5–80,6 proti stropu 80). **Míč: další iterace** — (1) oprava
+`deriveTelegrafSignal` o slotové `stitek_citlivy`, (2) varianta C, (3) krokově
+podmíněné pooly pro K2, (4) severita finále pro K5f. Aktuální baseline: §6
+[[../technika/kalibrace-4-final-2026-07-27|reportu]].
 
 [[../technika/kalibrace-4-brana-navrh-2026-07-27|Balík]] je kanonické zadání.
 **Re-měřicí session proběhla 2026-07-27 a ZASTAVILA SE na podmínce 0(c) (D27):**
@@ -74,7 +81,7 @@ V1–V4: [[../technika/kalibrace-4-2026-07-27|technika/kalibrace-4-2026-07-27.md
 | **Kalibrace-3: selektivní revert kotev 4→3** — návrh 12 slotů (designer) → adversariální prověrka (kritik) → per-slot diagnostika + kontrafaktuální gate-měření 1000×2 přes CONTENT_DIR (facilitátor) | celé kolečko + playtest-facilitator | **hotovo 2026-07-26 (D24) — NEGATIVNÍ VÝSLEDEK**: žádná podmnožina mandátu gate nesplní (K1 špatný směr, K5≥13.6 %, K7≥40.5 % i při maximu); drivery mimo mandát (Malone-nulovaná hodnota, finále ~50 %). Report [[../technika/kalibrace-3-2026-07-26|technika/kalibrace-3-2026-07-26.md]]; mandát kalibrace-4 (P0–P4) eskalován na uživatele |
 | Pro technical-developer: do `sim/report.js` doplnit rozpady per-situace / per-slot / common-vs-finále / K5 viditelná-skrytá (v kalibraci-3 počítáno ad-hoc skriptem) | technical-developer | **hotovo 2026-07-27 (D27, podmínka 0a)** — ADR-010, událost `assign_context`, report přestavěn na záznamy; +19 testů (vč. tripwire shody odhadu s botem), 137 zelených. Sjednotilo dvojí měřicí cut |
 | **Kalibrace-4 dle mandátu D25:** (1) balík nového znění brány Fáze 0 → schválení uživatelem; (2) obsah: řešitelnost situací bez hodnota-slotu (P2); (3) engine: `improv_skryte` (P3), dorovnání obtížnosti 1–4p přes finále/Žár (P1), ruka 1p až po P1 (P4); (4) re-měření | celé kolečko + technical-developer | **(1) HOTOVO 2026-07-27 — balík předložen:** [[../technika/kalibrace-4-brana-navrh-2026-07-27|technika/kalibrace-4-brana-navrh]] (designer → facilitátor baseline doměření 1000×2 → verdikt kritika „schválit rámec s úpravami"); **SCHVÁLENO uživatelem 2026-07-27 (D26, body 1–8, K5 = varianta D)**. **Kroky 2–4 ZASTAVENY na podmínce 0(c) (D27, 2026-07-27):** K7 learnabilita 9,1 / 10,3 b. proti gate ≥12 b. → dle mandátu eskalace, varianty V1–V4 v [[../technika/kalibrace-4-2026-07-27|technika/kalibrace-4-2026-07-27.md]] §6. Podmínky 0(a)/0(b)/0(d) + K6a variance hotové; `prototyp-mvp.md` i `obsah/` netknuté |
-| **Další iterace kalibrace (z D29):** (1) `deriveTelegrafSignal` musí respektovat slotové `stitek_citlivy` — bez toho by próza telegrafu lhala a je to blokátor varianty C; (2) varianta C na `nadrazi-vypravci` (K5-D + K2); (3) **K2 drift: krokově podmíněné pooly** (tvrdé situace pozdě, měkké brzy — PRŮŠVIH-rate se mezi situacemi liší 3,8×, ale losují se rovnoměrně), engine + `mista.yaml`; (4) rozhodnout o commit-heuristice bota (ignoruje `zbran_projde` → 107 z 204 propadů je gangster_auto_fail; oprava = re-baseline všeho) | technical-developer + content-generator + PM | otevřeno — pořadí a odůvodnění v §5 [[../technika/kalibrace-4-final-2026-07-27|reportu kalibrace-4]] |
+| **Další iterace kalibrace (z D29):** (1) `deriveTelegrafSignal` musí respektovat slotové `stitek_citlivy` — bez toho by próza telegrafu lhala a je to blokátor varianty C; (2) varianta C na `nadrazi-vypravci` (K5-D + K2); (3) **K2 drift: krokově podmíněné pooly** (tvrdé situace pozdě, měkké brzy — PRŮŠVIH-rate se mezi situacemi liší 3,8×, ale losují se rovnoměrně), engine + `mista.yaml`; (4) severita finále pro K5f (2 marginální breache; Žár-offsety to neopraví). ~~commit-heuristika bota~~ HOTOVO (D30) | technical-developer + content-generator + PM | otevřeno — pořadí a odůvodnění v §5 [[../technika/kalibrace-4-final-2026-07-27|reportu kalibrace-4]] |
 | Obsahové vady mimo mandát P2 (z D29): viditelný utok-4 slot v NPC je ve 40 % instancí nesplnitelný (`rival-prepad`, `urednik-vaha`, `mesto-ulicka`); kombi `[nastroj, improvizace]` nesplnitelný nad práh 3 (`farmar-stodola`, `most-prohnila-prkna`) | content-generator | otevřeno — nepřibalovat k jiné iteraci, rozmazalo by měření |
 | ~~P4: ruka 1p 8→9~~ | — | **ZRUŠENO (D29)** — po P1 je 1p nejvyšší ze všech počtů (61,6 %), zvětšení ruky by rozbilo K6a |
 | Volitelná obtížnost při startu runu (easy/normal/hard) | game-designer | **budoucí úkol (D25d)** — neřešit teď; až po lidské bráně |
