@@ -13,6 +13,42 @@ architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.m
 
 ## 2026-07-27
 
+- **D38 (NÁLEZ, ne rozhodnutí) — sweep `prahOffsetDlePoctu` proveden: K1 se
+  koupit DÁ, ale jen za cenu K2 a v režimu, který předregistrace předem
+  označila za „jiná hra". Páka je vyčerpaná; volba dalšího kroku je na
+  uživateli.** Zadání D37 provedeno plným kolečkem (game-designer předregistroval
+  kritéria naslepo, playtest-facilitator souběžně měřil; metodika D31, 6 bloků
+  × 8000 runů, verdikt z průměru). `rules.js` NEZMĚNĚN, nic nezapečeno.
+  Report: [[../technika/kalibrace-5-sweep-prahoffset-2026-07-27|technika/kalibrace-5-sweep-prahoffset-2026-07-27.md]].
+  **Jediný kandidát v pásmu je `{1:0, 2:5, 3:6, 4:6}`:** K1 57,3 / 57,0 / 51,7 /
+  54,7 (6/6 bloků čistých, breach spraven), K6a 22,4 → 6,03 b. — ale to je *na*
+  gate ≤6, ne pod ním (3/6 bloků; při dvojnásobné dávce 5,08 a 5/6, rozdíl je
+  šum měřidla). **Cena: K2 drift 1,39 → 1,28 (6/6 → 2/6) — kritérium, které
+  D35 poprvé rozsvítil zeleně, nově padá.** Mechanismus doložen: pozdní
+  PRŮŠVIH-rate se nehnula (20,6 → 20,9 %), zvedla se raná (14,8 → 16,3 %) —
+  kratší trať tahá tvrdost dopředu, a K2 měří, že má růst dozadu. K5-D zůstává
+  9,73 (ale 5/6 místo 6/6), K5f přežití breachne 7 z 8 buněk místo 6, K7/K8
+  beze změny.
+  **Klíčové: dvě nezávislé cesty došly ke stejnému strukturálnímu stropu.**
+  Designér *bez znalosti čísel* předregistroval guardrail „offset ≤ 3, nad tím
+  je to jiná hra" — protože prahy jsou `max(1, base − offset)` a
+  `poPrezitiKonfrontace = 3`, takže od offsetu 4 clamp slévá rozestupy a prahy
+  ≤3 přestanou po finále reármovat. Facilitátor tentýž mechanismus *naměřil*:
+  monotonie neplatí, offset 4 mírně zlehčí a od offsetu 7 se obtížnost otočí.
+  **Doporučený kandidát leží na offsetech 5–6, tedy uvnitř zakázaného pásma** —
+  a K6a (3/6) i K2 padají i proti předregistrovanému pravidlu „≥5/6 bloků".
+  Podle předem daného regresního rozpočtu (pořadí hodnoty K5 > K5f > tvar trati
+  > K1/K6a) tedy **zapečení nedoporučeno**. Vedlejší nález mimo sweep: cíl
+  `mozek-operace` má 0 % splnění ve všech variantách včetně baseline — mrtvá
+  volba, nezávislá na této páce.
+  **Eskalace na uživatele — tři cesty (detail v §4 předregistrace a §9 reportu):**
+  (a) přiznat breach K1 3p/4p do lidské brány jako známou, vyčíslenou odchylku
+  (precedent D33/K5) a jít dál na 2.1/3; (b) nový mandát na přímou páku driveru
+  `hraci[n].ruka` (dnes 8/5/4/3) — pořád engine, ne obsah, ale bije K4d/K6c;
+  (c) jít do lidské brány beze změny s tím, že „snazší, než jsme chtěli" je
+  u co-op party hry méně škodlivé než „nudné". **PM doporučuje (a)** — páka je
+  vyčerpaná, další kolo je přesně to, co D33 vědomě zavřel, a týmová K1 je
+  proxy z bota, kterou lidská brána stejně přeměří.
 - **D37 (ROZHODNUTÍ uživatele) — kalibrační kolo K1/K6a schváleno: sweep
   `prahOffsetDlePoctu` souběžně s fází 2.1.** Řeší breach z D35 (K1 3p/4p
   77,5/79,7 % nad stropem 70; K6a spread 22,4 b.) — týmová hra je po opravě

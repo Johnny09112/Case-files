@@ -50,5 +50,21 @@ designéra a remote/async sezení. Každou spáruj se signálem z šablony playt
   runu jako DRAMA, nebo jako „nadarmo jsem hrál celý run"? (Váže se na kolaps-frustraci
   výše — stejná otázka „drsná komedie vs. nefér".)
 
+## Nové z kalibrace-5 (2026-07-27, viz [[kalibrace-5-sweep-prahoffset]])
+
+- **Kandidát A1 `{0,5,6,6}` mění týmovému runu STRUKTURU, ne jen obtížnost:**
+  léčka předběhne zátah (pozice 2,6 vs. 3,9), konfrontace je u 3–4p prakticky
+  jistá (99,7 %) a **82 % týmových runů má dvě a víc konfrontací** (baseline 28 %);
+  přes polovinu uzlů runu je finálový typ. → Čte se to jako **eskalace štvanice**
+  („čtyři lidi v autě = od začátku se po vás jde"), nebo jako opakování a šeď?
+  Simulace vidí jen, že je to těžší.
+- **Je rozdíl K2 driftu 1,28 vs. 1,39 u stolu vůbec rozeznatelný?** Míra PRŮŠVIHŮ
+  16,3 % (rané uzly) → 20,9 % (pozdní). Cítí hráč „utahuje se to", nebo jen
+  „občas to nevyjde"? Na tomhle stojí, jestli se smí K2 obětovat za K1.
+- **Nerozbije obrácené pořadí léčka → zátah vyprávění?**
+- **Po A1 citelně klesne splnění cílů** (čistá-ruka 41,8 → 22,6 %, hazardér
+  72,5 → 53,7 %). Je to správně (těžší hra), nebo se cíle stanou nedosažitelnými?
+  Sim to nerozsoudí — neví, jaká míra splnění je zábavná.
+
 Otevřené číselné páky, které se po lidské zpětné vazbě můžou hnout, jsou v
 [[sim-gate-findings]].
