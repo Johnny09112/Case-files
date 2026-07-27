@@ -15,7 +15,7 @@
  * Volá se nad PREFIXEM logu při hře i nad CELÝM logem po runu — jedna definice.
  */
 import { EVENT } from '../engine/events.js';
-import { STAT_LABEL, STAT_LABEL_4, znamenko } from './labels.js';
+import { STAT_LABEL, STAT_LABEL_4, znamenko, BAND_LABEL, KATEGORIE_LABEL } from './labels.js';
 
 /** Kam anotace v UI patří (slot situace / okraj mapy / list spisu). */
 export const MISTO = /** @type {const} */ ({ SLOT: 'slot', OKRAJ: 'okraj', SPIS: 'spis' });
@@ -132,9 +132,15 @@ function popisEfektu(efekt) {
   }
 }
 
-/** Najde aktivní postih hráče podle druhu efektu (pro zpětný odkaz auto-failu). */
+/**
+ * Najde aktivní postih hráče podle druhu efektu (pro zpětný odkaz auto-failu).
+ * Cap postihů je 2 a obsah dovoluje mít dva aktivní postihy se STEJNÝM druhem
+ * efektu zároveň (např. „nervy-v-hajzlu" + „ochrnutá ruka" oba lock_stitek).
+ * Odkazujeme na NEJNOVĚJŠÍ shodu (`findLast`) — u stolu si hráč nejlíp
+ * pamatuje postih, který schytal naposledy, ne ten nejstarší.
+ */
 function najdiPostih(k, hracId, druh) {
-  return (k.aktivniPostihy.get(hracId) ?? []).find((p) => p.druh === druh) ?? null;
+  return (k.aktivniPostihy.get(hracId) ?? []).findLast((p) => p.druh === druh) ?? null;
 }
 
 /** Odebere postih z knihy (vypršel / vyléčen / smazán složením). */
@@ -144,7 +150,12 @@ function odeberPostih(k, hracId, postihId) {
   k.aktivniPostihy.set(hracId, seznam.filter((p) => p.postih_id !== postihId));
 }
 
-const KATEGORIE_LABEL = { informacni: 'informační', zamkovy: 'zámkový', ztratovy: 'ztrátový' };
+/** Skloňování slova „kolo" podle počtu (čeština: 1 kolo, 2–4 kola, 5 a víc kol). */
+function pocetKol(n) {
+  if (n === 1) return `${n} kolo`;
+  if (n >= 2 && n <= 4) return `${n} kola`;
+  return `${n} kol`;
+}
 
 /**
  * Handlery per typ události. Prázdné pole = událost vědomě BEZ anotace
@@ -238,10 +249,10 @@ const HANDLERS = {
       seznam.push({ postih_id: e.postih_id, druh: e.efekt?.druh, seq: e.seq, nodeIndex: e.nodeIndex });
       k.aktivniPostihy.set(e.hrac_id, seznam);
     }
-    const trvani = e.tier === 'tezky' ? 'drží do vyléčení v motelu' : e.vyprsi_za === 'ihned' ? 'jednorázově' : `vyprší za ${e.vyprsi_za} kola`;
+    const trvani = e.tier === 'tezky' ? 'drží do vyléčení v motelu' : e.vyprsi_za === 'ihned' ? 'jednorázově' : `vyprší za ${pocetKol(e.vyprsi_za)}`;
     return [{
       misto: MISTO.SPIS,
-      veta: `Za ${e.pricina}: ${jmenoHrace(k, e.hrac_id)} — ${nazevPostihu(k, e.postih_id)} (${e.tier === 'tezky' ? 'těžký' : 'lehký'}, ${KATEGORIE_LABEL[e.kategorie] ?? e.kategorie}).`,
+      veta: `Za ${BAND_LABEL[e.pricina] ?? e.pricina}: ${jmenoHrace(k, e.hrac_id)} — ${nazevPostihu(k, e.postih_id)} (${e.tier === 'tezky' ? 'těžký' : 'lehký'}, ${KATEGORIE_LABEL[e.kategorie] ?? e.kategorie}).`,
       detail: `${popisEfektu(e.efekt)}; ${trvani}. Aktivních postihů: ${e.aktivnich_po}.`,
     }];
   },

@@ -48,6 +48,21 @@ export const PRICINA_LABEL = /** @type {Record<string, string>} */ ({
   vsichni_vyrazeni: 'všichni podezřelí vyřazeni',
 });
 
+/** Pásma v3 (events.BAND) → čitelný popisek. */
+export const BAND_LABEL = /** @type {Record<string, string>} */ ({
+  '4/4_HLADCE_LOOT': '4/4 — hladce, ještě se něco našlo',
+  '3/4_HLADCE': '3/4 — hladce',
+  '2/4_S_NASLEDKY': '2/4 — s následky',
+  '≤1/4_PRUSVIH': '≤1/4 — průšvih',
+});
+
+/** Kategorie postihu (informační/zámkový/ztrátový) → čeština. */
+export const KATEGORIE_LABEL = /** @type {Record<string, string>} */ ({
+  informacni: 'informační',
+  zamkovy: 'zámkový',
+  ztratovy: 'ztrátový',
+});
+
 /**
  * Co navíc stojí selhání v tomto uzlu.
  * @param {string} tvrdost @param {{tvrdostZarPrirustek: number}} rules

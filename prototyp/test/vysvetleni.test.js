@@ -152,8 +152,20 @@ describe('vysvetli — postihy (§5)', () => {
     expect(a.veta).toContain('Rozdrcená noha');
     expect(a.veta).toContain('těžký');
     expect(a.veta).toContain('zámkový');
+    // Pásmo (pricina) musí být přeložené do češtiny, ne syrový interní kód (nález review 2).
+    expect(a.veta).toContain('≤1/4 — průšvih');
+    expect(a.veta).not.toContain('PRUSVIH');
     expect(a.detail).toContain('skryté role');
     expect(a.detail).toContain('do vyléčení');
+  });
+
+  it('penalty_added skloňuje „kolo" podle počtu (nález review 2)', () => {
+    const zaklad = { type: EVENT.PENALTY_ADDED, nodeIndex: 1, hrac_id: 'p1', postih_id: 'narazene-rameno', kategorie: 'informacni', tier: 'lehky', efekt: { druh: 'hide_staty' }, pricina: '2/4_S_NASLEDKY', aktivnich_po: 1 };
+    const veta = (vyprsi_za) => vsechny(vysvetli(log({ ...zaklad, vyprsi_za }), CTX_POSTIH))[0].detail;
+    expect(veta(1)).toContain('vyprší za 1 kolo');
+    expect(veta(2)).toContain('vyprší za 2 kola');
+    expect(veta(4)).toContain('vyprší za 4 kola');
+    expect(veta(5)).toContain('vyprší za 5 kol');
   });
 
   it('penalty_expired a penalty_healed se liší důvodem a cenou', () => {
@@ -204,7 +216,24 @@ describe('vysvetli — řetězec přes uzly (§7 test 4)', () => {
     );
     const a = vsechny(vysvetli(s, CTX_POSTIH)).at(-1);
     expect(a.veta).toContain('Ochrnutá ruka');
+    expect(a.veta).toContain('zbraň v ruce neudržíš');
+    expect(a.veta).toContain('Bouchačka');
     expect(a.odkaz.seq).toBe(1);
+  });
+
+  it('dva aktivní postihy STEJNÉHO druhu efektu → odkaz ukazuje na novější (nález review 2)', () => {
+    // p1 dostane lock_stitek dvakrát (nervy-v-hajzlu v uzlu 2, ochrnuta-ruka v uzlu 5) —
+    // cap je 2, takže oba mohou být aktivní zároveň. Zpětný odkaz auto-failu
+    // musí ukázat na ten NOVĚJŠÍ (uzel 5), ne na nejstarší shodu.
+    const s = log(
+      { type: EVENT.PENALTY_ADDED, nodeIndex: 2, hrac_id: 'p1', postih_id: 'nervy-v-hajzlu', kategorie: 'zamkovy', tier: 'lehky', efekt: { druh: 'lock_stitek', stitek: 'GANGSTER' }, vyprsi_za: 3, pricina: '2/4_S_NASLEDKY', aktivnich_po: 1 },
+      { type: EVENT.PENALTY_ADDED, nodeIndex: 5, hrac_id: 'p1', postih_id: 'ochrnuta-ruka', kategorie: 'zamkovy', tier: 'tezky', efekt: { druh: 'lock_stitek', stitek: 'GANGSTER' }, vyprsi_za: null, pricina: '≤1/4_PRUSVIH', aktivnich_po: 2 },
+      { type: EVENT.SLOT_RESOLVED, nodeIndex: 7, ...resolved({ karta_id: 'bouchacka', zasah: false, duvod: 'postih_lock_stitek', postih_efekt: 'lock_stitek', stitky: ['GANGSTER'], stat_hodnota: 0 }) }
+    );
+    const a = vsechny(vysvetli(s, { ...CTX_POSTIH, postihy: { ...CTX_POSTIH.postihy, 'nervy-v-hajzlu': 'Nervy v hajzlu' } })).at(-1);
+    expect(a.veta).toContain('Ochrnutá ruka');
+    expect(a.odkaz.seq).toBe(2);
+    expect(a.odkaz.popis).toContain('uzel 5');
   });
 
   it('po vyléčení už další auto-fail na týž postih neodkazuje', () => {
