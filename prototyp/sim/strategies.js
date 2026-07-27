@@ -93,6 +93,18 @@ export function createStrategy(spec, seed, rules = RULES, content = null) {
     commit(state, run) {
       const signal = state.situace.signal;
       const out = [];
+      // Kolik GANGSTER věcí má smysl committnout (kalibrace-4, nález D29).
+      // Verdikt zbraně je VEŘEJNÉ pravidlo — telegraf ho hlásí doslova („zbraň
+      // na očích neprojde") a `stitky.yaml` ho vede jako veřejné, takže se
+      // neškáluje fidelitou; kompetentní hráč ho zná.
+      //   `ano`        → zbraň projde všude (lokace) → bez omezení
+      //   `jen_skryte` → ve viditelné roli AUTO-FAIL; smysl má nanejvýš JEDNA
+      //                  zbraň, a jen když existuje skrytý utok-slot, kam ji dát
+      // Dřív bot tohle ignoroval a cpal nejsilnější útočnou kartu do viditelné
+      // role, kde padla bez ohledu na staty (107 z 204 propadů útočného slotu
+      // v nadrazi-vypravci byl gangster_auto_fail) — bot byl hloupější než
+      // člověk u stolu a K5/K1 byly o tuhle chybu pesimistické.
+      let zbraniPovoleno = signal.zbran_projde === 'ano' ? Infinity : signal.zbran_skryte ? 1 : 0;
       for (const plan of state.situace.commitPlan) {
         // Bod 4 (D22): hráč s hide_telegraf z minulého uzlu NEVIDÍ telegraf →
         // committne naivně (bez trendu i bez skryté-zbraně) → info-postih
@@ -118,9 +130,15 @@ export function createStrategy(spec, seed, rules = RULES, content = null) {
           for (let i = 0; i < plan.pocet; i++) out.push({ characterId: plan.hrac_id, cardId: michana[i].id });
           continue;
         }
-        const skore = (k) => commitScore(k, demanded, s);
+        // Slepý hráč (hide_telegraf) verdikt zbraně NEVIDÍ — nesmí ho tedy ani
+        // použít. Info-postih tím bije i sem, ne jen do trendu.
+        const skore = (k) => commitScore(k, demanded, s) + (!slepy && zbraniPovoleno <= 0 && k.stitek === 'GANGSTER' ? -100 : 0);
         ruka.sort((a, b) => skore(b) - skore(a));
-        for (let i = 0; i < plan.pocet; i++) out.push({ characterId: plan.hrac_id, cardId: ruka[i].id });
+        for (let i = 0; i < plan.pocet; i++) {
+          const karta = ruka[i];
+          out.push({ characterId: plan.hrac_id, cardId: karta.id });
+          if (karta.stitek === 'GANGSTER') zbraniPovoleno -= 1;
+        }
       }
       run.commitCards(out);
     },

@@ -72,6 +72,16 @@ export function decideAssignment({ strat, committed, sloty, rusi = null, stitekP
     const staty = Array.isArray(slot.stat) ? slot.stat : [slot.stat];
     return Math.min(...staty.map((st) => (rusi?.typ === 'stat' && rusi.cil === st ? 0 : k.staty[st] ?? 0)));
   };
+  /** Padne věc v tomto slotu na tvrdé pravidlo štítku bez ohledu na staty? */
+  const autoFail = (k, slot) => !resolveSlot({ karta: k, slot: { ...slot, prah: -99 }, rusi, stitekParams, typSituace }).zasah;
+  /**
+   * Skóre KOMPETENTNÍHO hráče: jako `rawStat`, ale zná veřejné pravidlo štítku
+   * (kalibrace-4, nález D29). Zbraň ve viditelné roli NPC padne bez ohledu na
+   * staty — dřív ji `rawStat` s útokem 5 hodnotil jako ideální kandidátku
+   * a bot ji tam cpal. `greedy` zůstává naivní schválně: je to detektor K4a
+   * („max win-rate fixní přiřazovací heuristiky"), ne model kompetence.
+   */
+  const kompetentniStat = (k, slot) => (autoFail(k, slot) ? -1 : rawStat(k, slot));
   // Memorizační bot ZNÁ kotvu (ne per-instance šum) → maximalizuje OČEKÁVANÝ počet
   // zásahů: P(stat ≥ clamp(kotva+šum, 0, statMax)) přes šum uniform v {−R…+R}.
   // Model se počítá ze STEJNÉHO rozsahu + clampu jako engine (kalibrace-2) — jinak
@@ -103,10 +113,10 @@ export function decideAssignment({ strat, committed, sloty, rusi = null, stitekP
     return mapping;
   }
 
-  const base = strat === 'oracle' ? passVsPrah : strat === 'memorizacni' ? expectedPass : rawStat;
+  const base = strat === 'oracle' ? passVsPrah : strat === 'memorizacni' ? expectedPass : kompetentniStat;
   const scoreFn =
     strat === 'cile'
-      ? (k, slot, i) => rawStat(k, slot) + goalBias(k, slot, goalByHrac[committed[i].hrac_id])
+      ? (k, slot, i) => kompetentniStat(k, slot) + goalBias(k, slot, goalByHrac[committed[i].hrac_id])
       : (k, slot) => base(k, slot);
 
   let bestMap = null;
