@@ -41,6 +41,7 @@ export const MISTO = /** @type {const} */ ({ SLOT: 'slot', OKRAJ: 'okraj', SPIS:
  * @property {Record<string,string>} [situace] situace_id → lidský label
  * @property {Record<string,string>} [pronasledovatele] id → název
  * @property {Record<string,{text: string}>} [cile] cil_id → definice cíle
+ * @property {Record<string,string>} [stitky] stitek_id → název (např. GANGSTER → Gangster)
  */
 
 /**
@@ -118,6 +119,11 @@ function nazevPostihu(k, postihId) {
   return k.ctx.postihy?.[postihId] ?? postihId;
 }
 
+/** Štítek je vzácná značka na věci (obsah/stitky.yaml) — id je VELKÝMI, label ho lidsky pojmenuje. */
+function nazevStitku(k, stitekId) {
+  return k.ctx.stitky?.[stitekId] ?? stitekId;
+}
+
 /** Popis uzlu pro zpětný odkaz: „uzel 3 — Brod u farmy". */
 function popisUzlu(k, nodeIndex) {
   const situaceId = k.situaceUzlu.get(nodeIndex);
@@ -125,18 +131,39 @@ function popisUzlu(k, nodeIndex) {
   return label ? `uzel ${nodeIndex} — ${label}` : `uzel ${nodeIndex}`;
 }
 
+/** Skloňování „kredit ubyl / kredity ubyly / kreditů ubylo" podle počtu. */
+function fluktuaceKreditu(n) {
+  if (n === 1) return `ubyl ${n} kredit`;
+  if (n >= 2 && n <= 4) return `ubyly ${n} kredity`;
+  return `ubylo ${n} kreditů`;
+}
+
+/** Skloňování „odhodil 1 věc / 2 věci / 5 věcí" podle počtu. */
+function pocetOdhozenychVeci(n) {
+  if (n === 1) return `${n} věc`;
+  if (n >= 2 && n <= 4) return `${n} věci`;
+  return `${n} věcí`;
+}
+
+/** Skloňování „ubyla 1 bedna nákladu / ubyly 2 bedny nákladu / ubylo 5 beden nákladu". */
+function fluktuaceNakladu(n) {
+  if (n === 1) return `ubyla ${n} bedna nákladu`;
+  if (n >= 2 && n <= 4) return `ubyly ${n} bedny nákladu`;
+  return `ubylo ${n} beden nákladu`;
+}
+
 /** Co postih dělá, česky — uzavřený enum efektů (rules.POSTIH_EFEKTY). */
-function popisEfektu(efekt) {
+function popisEfektu(efekt, k) {
   switch (efekt?.druh) {
     case 'hide_staty': return 'vlastník vidí názvy věcí, ne jejich staty';
     case 'hide_telegraf': return 'vlastník nevidí telegraf příští situace — commituje naslepo';
     case 'hide_viditelnost': return 'vlastník nevidí, které role jsou skryté';
-    case 'lock_stitek': return `co má štítek ${efekt.stitek}, vlastníkovi ve slotu propadne`;
+    case 'lock_stitek': return `co má štítek ${nazevStitku(k, efekt.stitek)}, vlastníkovi ve slotu propadne`;
     case 'lock_slot_viditelnost': return `do ${efekt.viditelnost === 'skryta' ? 'skryté role' : 'viditelné role'} vlastník nic neprosadí`;
     case 'lock_gamble': return 'tým nesmí použít gamble, dokud postih drží';
-    case 'ztrata_kreditu': return `týmu ubylo ${efekt.kolik ?? 1} kreditů`;
-    case 'ztrata_karty': return `vlastník odhodil ${efekt.kolik ?? 1} věcí z ruky`;
-    case 'ztrata_naklad': return `týmu ubyly ${efekt.kolik ?? 1} bedny nákladu`;
+    case 'ztrata_kreditu': return `týmu ${fluktuaceKreditu(efekt.kolik ?? 1)}`;
+    case 'ztrata_karty': return `vlastník odhodil ${pocetOdhozenychVeci(efekt.kolik ?? 1)} z ruky`;
+    case 'ztrata_naklad': return `týmu ${fluktuaceNakladu(efekt.kolik ?? 1)}`;
     case 'ruka_minus': return `vlastník má o ${efekt.kolik ?? 1} menší ruku`;
     default: return 'efekt neznámý';
   }
@@ -224,7 +251,7 @@ const HANDLERS = {
       detail: [
         `Chce ${popisStatu4(s.stat)}${s.typ_prahu === 'kombi_oba' ? ' (OBA staty)' : ''}`,
         s.viditelnost === 'skryta' ? 'skrytá role — telegraf ji hlásil jen počtem' : 'viditelná role',
-        s.stitek_citlivy ? `výjimka ze štítku: ${s.stitek_citlivy} projde i na očích` : null,
+        s.stitek_citlivy ? `výjimka ze štítku: ${nazevStitku(k, s.stitek_citlivy)} projde i na očích` : null,
         'Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.',
       ].filter(Boolean).join(' · '),
     }));
@@ -299,7 +326,7 @@ const HANDLERS = {
     return [{
       misto: MISTO.SPIS,
       veta: `Za ${BAND_LABEL[e.pricina] ?? e.pricina}: ${jmenoHrace(k, e.hrac_id)} — ${nazevPostihu(k, e.postih_id)} (${e.tier === 'tezky' ? 'těžký' : 'lehký'}, ${KATEGORIE_LABEL[e.kategorie] ?? e.kategorie}).`,
-      detail: `${popisEfektu(e.efekt)}; ${trvani}. Aktivních postihů: ${e.aktivnich_po}.`,
+      detail: `${popisEfektu(e.efekt, k)}; ${trvani}. Aktivních postihů: ${e.aktivnich_po}.`,
     }];
   },
 
@@ -439,3 +466,27 @@ const HANDLERS = {
  * toho by tripwire byl slepý u událostí, jejichž handler vrací prázdno.
  */
 export const TYPY_S_HANDLEREM = Object.keys(HANDLERS);
+
+/**
+ * Postaví kontext labelů z validovaného obsahu — jediné místo, kde se z id
+ * dělají české názvy (používá ho golden test i app.js).
+ *
+ * `situace` nemá v obsahu pole `nazev` (schéma obsah/situace.yaml), takže label
+ * padá na id; až obsah název dostane, opraví se věty samy.
+ *
+ * @param {object} content výstup parseContent()
+ * @param {Record<string,string>} [jmena] hrac_id → celé jméno postavy
+ * @returns {VysvetliCtx}
+ */
+export function ctxZObsahu(content, jmena = {}) {
+  const mapa = (pole, klic) => Object.fromEntries(pole.map((x) => [x.id, x[klic] ?? x.id]));
+  return {
+    jmena,
+    veci: mapa(content.veci, 'nazev'),
+    postihy: mapa(content.postihy, 'nazev'),
+    pronasledovatele: mapa(content.pronasledovatele, 'nazev'),
+    situace: mapa(content.situace, 'nazev'),
+    stitky: mapa(content.stitky, 'nazev'),
+    cile: Object.fromEntries(content.cile.map((c) => [c.id, { text: c.text }])),
+  };
+}
