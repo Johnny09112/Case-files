@@ -13,6 +13,43 @@ architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.m
 
 ## 2026-07-27
 
+- **D34 (NÁLEZ, ne rozhodnutí) — prověrka bota proti veřejným pravidlům: bot není
+  kompetentní model hráče; 8 nálezů, 4 měřitelně velké.** Backlog bod (a) z D32/D33
+  proveden nad 2000 runy (250 seedů × 1–4p × oba pronásledovatele) čistě
+  diagnosticky — **engine ani bot se neměnily**, žádné číslo v reportu nevzniklo
+  zásahem do kódu. Report: [[../technika/proverka-bota-2026-07-27|technika/proverka-bota-2026-07-27.md]].
+  **(N1) Engine nevynucuje tři druhy postihů** (`lock_stitek`,
+  `lock_slot_viditelnost`, `hide_viditelnost`) — jsou v enumu, loader je validuje,
+  obsah je uděluje, ale `assignToSlots` nemá žádnou kontrolu. Sonda: 840 přiřazení
+  zakázané zbraně a 1716 přiřazení do zakázané viditelnosti. **36,5 % všech
+  udělených postihů je mechanicky nic.** Není to chyba měřidla, ale hry: kategorie
+  „zámkové postihy" — jeden ze tří pilířů pivotu v3 — u stolu nedělá nic.
+  **(N2) Commit slévá role telegrafu do pytle statů** místo pokrytí jednotlivých
+  slotů; kontrafaktuál sráží kandidáty K5-D 13,1 → 9,6 % a PRŮŠVIH proxy
+  15,3 → 11,2 % bez jediné řádky obsahu. **(N3) Commit nezná run-wide rušený stat**
+  (přiřazení ho zná), ač je veřejný od startu runu → proti Malonovi bot committuje
+  karty vybrané podle statu, který je zaručeně 0. Rozpad per-konfigurace: mezera
+  Malone − Brody se opravou zúží z ~7,7 na ~5,0 b., tedy **~třetina přebytku,
+  kvůli kterému K5 nesplňuje bránu, není Malone, ale bot** — a oprava nesahá na
+  jeho identitu (zákaz D25e platí dál). **(N4) Bot nemá model Žáru:** nikdy nečte
+  `state.zar`, nezná cenu hlučné karty ani Brodyho veřejné ×2; přitom hlučné hraní
+  je 58,4 % přírůstku Žáru a překročilo 61 % prahů Zátahu / 54,7 % léček / 51,4 %
+  konfrontací. Kolik je odstranitelné, uzlový kontrafaktuál neumí — meze 2,6 %
+  (jen z telegrafu) až 51,5 % (se zpětným pohledem); rozhodne až re-simulace.
+  Dále: N5 `hide_staty` randomizuje celý tým místo postiženého hráče (11,8 % uzlů,
+  míří do K6a), N6 gamble nahrazuje nejslabší kartu místo mrtvé (minul únik
+  z max≤1 na ≥2 ve 4,9 % gamblů), N7 volba cesty je los (32,4 % nabídek má dva
+  různé typy místa), N8 motel je volná opce, kterou si adaptivní bot zamyká,
+  N9 hygiena — `getState()` posílá `prah`/`sum`, což UI fáze 2.1 nesmí zobrazit.
+  **Klíčový závěr:** chyby jdou na OBĚ strany (N1/N5 dělají bota silnějším než
+  člověk hrající dle pravidel, N2/N3/N4/N6/N7/N8 slabším) a **nevyrušují se** —
+  jdou do různých metrik. Z kalibrace-4 tedy neplyne „brána byla přísná" ani
+  „mírná", nýbrž **„brána měřila jiného hráče, než jakého slibujeme"**.
+  **Opravy vědomě NEPROVEDENY** — všech sedm mění čísla, po nich neplatí ani jedno
+  číslo kalibrace-4, a D33 kalibraci zavřel vědomě. Rozsah je proto rozhodnutí
+  uživatele (viz otevřené otázky ve [[stav]]), s dělící čárou: **N1 je oprava HRY**
+  (do lidské brány jde tak jako tak), N2/N3/N6 jsou oprava MĚŘIDLA.
+
 - **D33 (ROZHODNUTÍ PM v delegaci uživatele) — kalibrace-4 se UZAVÍRÁ, jde se na
   lidskou bránu; dvě přiznaná zvolnění laťky.** Uživatel delegoval rozhodnutí na
   PM („nechávám to na tobě") a zároveň vytkl, že se ladí dokola. Výtka je

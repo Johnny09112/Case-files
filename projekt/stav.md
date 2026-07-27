@@ -50,6 +50,18 @@ mechanismus s r² 1,7 %. **K5 (10,58 % proti ≤10 %) zůstává NESPLNĚNÉ a o
 — váže výhradně Malone a oprava by sáhla na jeho identitu (zákaz D25e).
 **Míč: (a) prověrka bota proti veřejným pravidlům, (b) fáze 2.1 vysvětlující
 vrstva, (c) fáze 3 LLM + test humoru, (d) LIDSKÁ BRÁNA.**
+**(a) PROVĚRKA BOTA HOTOVA (D34, 2026-07-27) — 8 nálezů nad 2000 runy, opravy
+zatím NEPROVEDENY.** Nejtvrdší: (N1) `lock_stitek`, `lock_slot_viditelnost`
+a `hide_viditelnost` **engine vůbec nevynucuje** → 36,5 % udělených postihů je
+mechanicky nic (sonda: 840 + 1716 porušení); (N2) commit slévá role telegrafu do
+pytle statů — pokrytí rolí sráží K5-D kandidáty 13,1 → 9,6 % a PRŮŠVIH proxy
+15,3 → 11,2 %; (N3) commit nezná run-wide rušený stat, ač je veřejný od startu —
+**třetina „Maloneho" přebytku u K5 je bot, ne Malone** (a oprava nesahá na jeho
+identitu, tedy neporušuje D25e); (N4) bot nikdy nečte Žár, přitom hlučné hraní
+tvoří 58,4 % přírůstku a překračuje 51–61 % všech prahů trati. Chyby jdou na obě
+strany (N1/N5 dělají bota silnějším než člověk, N2/N3/N4/N6 slabším), takže
+z brány kalibrace-4 se **nedá dovodit ani „byla přísná", ani „byla mírná"**.
+Report: [[../technika/proverka-bota-2026-07-27|technika/proverka-bota-2026-07-27.md]].
 
 *Průběh kalibrace-4 (historie):*
 [[../technika/kalibrace-4-brana-navrh-2026-07-27|Balík]] byl kanonické zadání.
@@ -94,7 +106,8 @@ variance doměřena (2sd = 3,22 < 6). Eskalace V1–V4 rozhodnuta uživatelem ja
 | Pro technical-developer: do `sim/report.js` doplnit rozpady per-situace / per-slot / common-vs-finále / K5 viditelná-skrytá (v kalibraci-3 počítáno ad-hoc skriptem) | technical-developer | **hotovo 2026-07-27 (D27, podmínka 0a)** — ADR-010, událost `assign_context`, report přestavěn na záznamy; +19 testů (vč. tripwire shody odhadu s botem), 137 zelených. Sjednotilo dvojí měřicí cut |
 | **Kalibrace-4 dle mandátu D25:** (1) balík nového znění brány Fáze 0 → schválení uživatelem; (2) obsah: řešitelnost situací bez hodnota-slotu (P2); (3) engine: `improv_skryte` (P3), dorovnání obtížnosti 1–4p přes finále/Žár (P1), ruka 1p až po P1 (P4); (4) re-měření | celé kolečko + technical-developer | **(1) HOTOVO 2026-07-27 — balík předložen:** [[../technika/kalibrace-4-brana-navrh-2026-07-27|technika/kalibrace-4-brana-navrh]] (designer → facilitátor baseline doměření 1000×2 → verdikt kritika „schválit rámec s úpravami"); **SCHVÁLENO uživatelem 2026-07-27 (D26, body 1–8, K5 = varianta D)**. **Kroky 2–4 ZASTAVENY na podmínce 0(c) (D27, 2026-07-27):** K7 learnabilita 9,1 / 10,3 b. proti gate ≥12 b. → dle mandátu eskalace, varianty V1–V4 v [[../technika/kalibrace-4-2026-07-27|technika/kalibrace-4-2026-07-27.md]] §6. Podmínky 0(a)/0(b)/0(d) + K6a variance hotové; `prototyp-mvp.md` i `obsah/` netknuté |
 | ~~Další iterace kalibrace (z D29)~~ | — | **uzavřeno D33** — (1) `deriveTelegrafSignal` HOTOVO, (2) varianta C HOTOVO a zapečena, (3) K2 pooly změřeny a **nezapečeny** (drift 1,282, nekupuje gate a zhoršuje K5-D; enginová podpora `faze` zapečena inertní, návrh v `scratchpad/k2-faze-navrh.md`), (4) severita finále — bezpředmětné po D33 (K5f se gatuje pooled) |
-| **PROVĚRKA BOTA proti všem veřejným pravidlům** — dvakrát se ukázalo, že měřidlo bylo horší než hra (D30: bot ignoroval verdikt zbraně na obou osách; oprava přinesla víc než dvě kola ladění obsahu). Systematicky projít, co telegraf a `stitky.yaml` hlásí jako VEŘEJNÉ, a ověřit, že to kompetentní bot používá. Levné, a všechna čísla nesená do lidské brány na tom stojí. | technical-developer + PM | **na řadě první** (D32 bod a, D33) |
+| **PROVĚRKA BOTA proti všem veřejným pravidlům** — dvakrát se ukázalo, že měřidlo bylo horší než hra (D30: bot ignoroval verdikt zbraně na obou osách; oprava přinesla víc než dvě kola ladění obsahu). Systematicky projít, co telegraf a `stitky.yaml` hlásí jako VEŘEJNÉ, a ověřit, že to kompetentní bot používá. Levné, a všechna čísla nesená do lidské brány na tom stojí. | technical-developer + PM | **HOTOVO 2026-07-27 (D34) — 8 nálezů, 4 velké**; report [[../technika/proverka-bota-2026-07-27|technika/proverka-bota-2026-07-27.md]]. Opravy NEPROVEDENY (mění všechna čísla brány → rozhodnutí uživatele, viz otevřené otázky) |
+| **Opravy z prověrky bota (N1–N8) + jedno re-měření** | technical-developer (+ engine) | **čeká na rozhodnutí uživatele o rozsahu** — N1 (zámkové postihy inertní) je oprava HRY, ne kalibrace; N2/N3/N6 jsou oprava měřidla |
 | **Fáze 2.1: vysvětlující vrstva pravidel v UI** — bez ní lidská brána selže na čitelnosti (metrika 6), ne na designu | kódový repo | **na řadě** — nález playtestu 2026-07-22 |
 | **Fáze 3: LLM adaptér + test kvality českého humoru** — největší produktové riziko dle CLAUDE.md, simulace ho z principu neotestuje | kódový repo + protocol-humor-tester | **na řadě** — BLOKUJE volba poskytovatele (viz otevřené otázky) |
 | Obsahové vady mimo mandát P2 (z D29): viditelný utok-4 slot v NPC je ve 40 % instancí nesplnitelný (`rival-prepad`, `urednik-vaha`, `mesto-ulicka`); kombi `[nastroj, improvizace]` nesplnitelný nad práh 3 (`farmar-stodola`, `most-prohnila-prkna`) | content-generator | otevřeno — nepřibalovat k jiné iteraci, rozmazalo by měření |
@@ -121,6 +134,12 @@ variance doměřena (2sd = 3,22 < 6). Eskalace V1–V4 rozhodnuta uživatelem ja
 - **K5 zůstává nesplněné** (10,58 % proti ≤10 %, váže výhradně Malone; oprava by
   sáhla na jeho identitu, což zakázalo D25e). Vědomě jde do lidské brány jako
   známý otevřený bod — ne k rozhodnutí teď, ale k připomenutí při Go/No-Go.
+  **Pozor: D34 ukazuje, že ~třetina toho přebytku je chyba bota, ne Maloneho.**
+- **ROZSAH OPRAV Z PROVĚRKY BOTA (D34) — čeká na uživatele.** Sedm oprav, jedno
+  re-měření; po nich **neplatí ani jedno číslo z kalibrace-4**. Proto to není
+  rozhodnutí PM: D33 kalibraci vědomě zavřel s tím, že se jde na lidskou bránu.
+  Dělící čára: **N1 je oprava HRY** (třetina postihů u stolu nedělá nic — jde do
+  lidské brány tak jako tak), N2/N3/N6 jsou oprava MĚŘIDLA (mění jen simulaci).
 
 **Budoucí, neblokující:**
 
