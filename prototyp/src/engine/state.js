@@ -169,6 +169,29 @@ export function createRun({ seed, content, rules, players, pronasledovatelId }) 
     offerRoutes(krok);
   }
 
+  /**
+   * Krokové zúžení maso-poolu dle volitelného pole `faze` (kalibrace-4, K2).
+   *
+   * Run je cesta z Buffala do New Yorku: venkovské situace patří na začátek,
+   * městské a rivalské na konec. Tvrdost tím roste s postupem trasy, což je
+   * přesně to, co K2 měří (drift míry PRŮŠVIHŮ uzel 3–4 / 1–2) — dnes se
+   * všechno losuje z jednoho pytle, takže se snowball rozmělňuje.
+   *
+   * Není to nové pravidlo pro hráče, jen sekvencování obsahu — mapa už dnes
+   * krokově podmiňuje truhlu (`rules.map.truhlaKrok`). Situace bez `faze`
+   * se nabízí kdykoli.
+   *
+   * **Fallback je povinný:** kdyby zúžení nechalo míň než 2 možnosti, vrací se
+   * celý pool. Nabídka na mapě nesmí zdegenerovat na jedinou cestu — volba
+   * trasy je herní rozhodnutí (StS graf), ne dekorace.
+   */
+  function faziPool(pool, krok) {
+    const faze = krok <= rules.map.faziRanaDoKroku ? 'rana' : krok >= rules.map.faziPozdniOdKroku ? 'pozdni' : null;
+    if (!faze) return pool;
+    const uzsi = pool.filter((s) => s.faze === faze || s.faze == null);
+    return uzsi.length >= 2 ? uzsi : pool;
+  }
+
   function offerRoutes(krok) {
     nodeSeq += 1;
     if (zatahPending && zatahSituace) {
@@ -178,7 +201,7 @@ export function createRun({ seed, content, rules, players, pronasledovatelId }) 
       const vyber = rng.shuffle(truhly).slice(0, Math.min(2, truhly.length));
       offered = { nabidnuto: vyber.map((t) => ({ ref: t.id, typ_mista: 'truhla' })), zatah: false };
     } else {
-      const pool = masoPool.filter((s) => !visited.has(s.id));
+      const pool = faziPool(masoPool.filter((s) => !visited.has(s.id)), krok);
       const vyber = rng.shuffle(pool).slice(0, Math.min(2, pool.length));
       offered = { nabidnuto: vyber.map((s) => ({ ref: s.id, typ_mista: s.typ })), zatah: false };
     }

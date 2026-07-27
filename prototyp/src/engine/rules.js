@@ -78,6 +78,13 @@ export const RULES = {
   map: {
     truhlaKrok: 3,
     motelKroky: [4, 6],
+    /**
+     * Krokové zúžení maso-poolu dle `faze` situace (kalibrace-4, K2): venkov
+     * na začátek trasy, město a rivalové na konec. Hranice sedí na bucket,
+     * který K2 měří (uzly 1–2 vs. 3–4), aby metrika a obsah mluvily o témž.
+     */
+    faziRanaDoKroku: 2,
+    faziPozdniOdKroku: 4,
   },
 
   /** PRŮŠVIH (≤1/4) bere náklad. */

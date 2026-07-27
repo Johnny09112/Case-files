@@ -15,6 +15,8 @@ import { parseCondition } from '../engine/events.js';
 
 const STATY = ['utok', 'obrana', 'hodnota', 'improvizace', 'nastroj'];
 const TYPY_SITUACI = ['npc', 'lokace', 'zatah'];
+/** Volitelné krokové zařazení situace na trase (kalibrace-4, K2); chybí = kdykoli. */
+const FAZE_SITUACI = ['rana', 'pozdni'];
 const TYPY_MIST = ['truhla', 'motel'];
 const TYPY_POSTIHU = ['informacni', 'zamkovy', 'ztratovy'];
 const TIERY = ['lehky', 'tezky'];
@@ -202,6 +204,12 @@ function validujSituace(s, postihIds, stitkyIds, chyby, soubor, dovoleneTypy = T
   validujPasmoveVysledky(s.pasmove_vysledky, postihIds, kde, chyby);
   if (s.event !== undefined && (!Array.isArray(s.event) || s.event.some((e) => typeof e !== 'string'))) {
     chyby.push(`${kde}: event musí být seznam textů (flavor).`);
+  }
+  // `faze` se validuje explicitně: překlep by feature jen TIŠE vypnul (situace
+  // by se chovala jako „kdykoli") a stálo by to celou kalibrační iteraci, než by
+  // si toho někdo všiml.
+  if (s.faze !== undefined && !FAZE_SITUACI.includes(s.faze)) {
+    chyby.push(`${kde}: neplatná faze „${s.faze}" (povolené: ${FAZE_SITUACI.join(', ')}, nebo pole vynech).`);
   }
 }
 

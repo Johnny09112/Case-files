@@ -156,3 +156,45 @@ describe('pronásledovatel run-wide', () => {
     expect(vinilHodnotu).toBe(true);
   });
 });
+
+describe('krokové zúžení maso-poolu dle `faze` (kalibrace-4, K2)', () => {
+  /** Vrátí nabídnuté situace pro každý map_move (mimo Zátah). */
+  function nabidky(content) {
+    const run = createRun({ seed: 5, content, rules: RULES, players: hraci(2), pronasledovatelId: 'serif-brody' });
+    return drive(run)
+      .filter((e) => e.type === EVENT.MAP_MOVE && !e.byl_zatah && e.nabidnuto)
+      .map((e) => e.nabidnuto.filter((n) => n.typ_mista === 'npc' || n.typ_mista === 'lokace').map((n) => n.ref))
+      .filter((n) => n.length > 0);
+  }
+
+  it('bez `faze` v obsahu se chová jako dřív (feature je inertní)', () => {
+    const content = syntetickyObsah();
+    expect(nabidky(content).length).toBeGreaterThan(0);
+    // žádná situace nemá faze → všechny se smí nabídnout kdykoli
+    expect(content.situace.every((s) => s.faze === undefined)).toBe(true);
+  });
+
+  it('rané kroky nenabídnou situaci označenou `pozdni` (a naopak)', () => {
+    const content = syntetickyObsah();
+    // s1–s4 rané, s5–s8 pozdní
+    for (const s of content.situace) {
+      if (s.typ !== 'npc' && s.typ !== 'lokace') continue;
+      s.faze = ['s1', 's2', 's3', 's4'].includes(s.id) ? 'rana' : 'pozdni';
+    }
+    const n = nabidky(content);
+    const pozdniIds = ['s5', 's6', 's7', 's8'];
+    // první nabídka je krok 1 → nesmí obsahovat pozdní situaci
+    expect(n[0].some((id) => pozdniIds.includes(id))).toBe(false);
+  });
+
+  it('FALLBACK: když by zúžení nechalo míň než 2 možnosti, nabídne se celý pool', () => {
+    const content = syntetickyObsah();
+    // jen JEDNA raná situace → zúžení by dalo 1 možnost, což by zabilo volbu trasy
+    for (const s of content.situace) {
+      if (s.typ !== 'npc' && s.typ !== 'lokace') continue;
+      s.faze = s.id === 's1' ? 'rana' : 'pozdni';
+    }
+    const n = nabidky(content);
+    expect(n[0].length).toBe(2); // volba trasy zůstala zachovaná
+  });
+});
