@@ -24,6 +24,15 @@ export const DRUH_LABEL = /** @type {Record<string, string|null>} */ ({
   konfrontace: 'KONFRONTACE',
 });
 
+/** Pět statů věci v češtině (pořadí kanonické dle rules.staty). */
+export const STAT_LABEL = /** @type {Record<string, string>} */ ({
+  utok: 'útok',
+  obrana: 'obrana',
+  hodnota: 'hodnota',
+  improvizace: 'improvizace',
+  nastroj: 'nástroj',
+});
+
 export const PRICINA_LABEL = /** @type {Record<string, string>} */ ({
   doruceno: 'náklad dojel do New Yorku',
   dosly_bedny: 'došly bedny',

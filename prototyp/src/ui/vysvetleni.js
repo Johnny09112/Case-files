@@ -15,6 +15,7 @@
  * Volá se nad PREFIXEM logu při hře i nad CELÝM logem po runu — jedna definice.
  */
 import { EVENT } from '../engine/events.js';
+import { STAT_LABEL, znamenko } from './labels.js';
 
 /** Kam anotace v UI patří (slot situace / okraj mapy / list spisu). */
 export const MISTO = /** @type {const} */ ({ SLOT: 'slot', OKRAJ: 'okraj', SPIS: 'spis' });
@@ -80,6 +81,27 @@ function neznama(e) {
   };
 }
 
+/** Název statu (jednostat i kombi) — „nástroj" / „nástroj + improvizace". */
+function popisStatu(stat) {
+  return Array.isArray(stat) ? stat.map((s) => STAT_LABEL[s] ?? s).join(' + ') : (STAT_LABEL[stat] ?? stat);
+}
+
+/** „stat hodnota" pro jednostat i kombi: „nástroj 4" / „nástroj 4, improvizace 2". */
+function statSHodnotou(stat, hodnota) {
+  if (Array.isArray(stat)) {
+    return stat.map((s, i) => `${STAT_LABEL[s] ?? s} ${Array.isArray(hodnota) ? hodnota[i] : '?'}`).join(', ');
+  }
+  return `${STAT_LABEL[stat] ?? stat} ${hodnota ?? '?'}`;
+}
+
+function nazevVeci(k, kartaId) {
+  return k.ctx.veci?.[kartaId] ?? kartaId ?? 'neobsazeno';
+}
+
+function jmenoHrace(k, hracId) {
+  return k.ctx.jmena?.[hracId] ?? hracId ?? 'nikdo';
+}
+
 /**
  * Handlery per typ události. Prázdné pole = událost vědomě BEZ anotace
  * (§5 návrhu) — musí tu ale být, aby nespadla do `neznama`.
@@ -99,6 +121,56 @@ const HANDLERS = {
   [EVENT.ASSIGNMENT]: () => [],
   // Čistě měřicí událost (ADR-010) — anotaci nenese.
   [EVENT.ASSIGN_CONTEXT]: () => [],
+
+  // JÁDRO UČENÍ: práh se rozepisuje na stálou (naučitelnou) kotvu a per-instance šum.
+  [EVENT.SITUATION_REVEALED]: (e, k) => {
+    k.situaceUzlu.set(e.nodeIndex, e.situace_id);
+    return e.sloty.map((s) => ({
+      misto: MISTO.SLOT,
+      slot_index: s.slot_index,
+      veta: `${s.role}: práh ${s.prah} = kotva ${s.kotva} ${s.sum === 0 ? 'bez šumu' : znamenko(s.sum)}.`,
+      detail: [
+        `Chce ${popisStatu(s.stat)}${s.typ_prahu === 'kombi_oba' ? ' (OBA staty)' : ''}`,
+        s.viditelnost === 'skryta' ? 'skrytá role — telegraf ji hlásil jen počtem' : 'viditelná role',
+        s.stitek_citlivy ? `výjimka ze štítku: ${s.stitek_citlivy} projde i na očích` : null,
+        'Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.',
+      ].filter(Boolean).join(' · '),
+    }));
+  },
+
+  [EVENT.SLOT_RESOLVED]: (e, k) => {
+    const vec = nazevVeci(k, e.karta_id);
+    const zaklad = { misto: MISTO.SLOT, slot_index: e.slot_index, razitko: e.zasah ? 'PROŠLO' : 'NEPROŠLO' };
+    const kdo = `„${vec}" — ${jmenoHrace(k, e.hrac_id)}`;
+    switch (e.duvod) {
+      case 'proslo':
+        return [{ ...zaklad, veta: `${statSHodnotou(e.stat, e.stat_hodnota)} proti prahu ${e.prah}.`, detail: kdo }];
+      case 'nizky_stat':
+        return [{ ...zaklad, veta: `Chtělo to ${popisStatu(e.stat)} ${e.prah}, „${vec}" má ${e.stat_hodnota}.`, detail: kdo }];
+      case 'kombi_neuplny':
+        return [{ ...zaklad, veta: `Kombi slot chce OBA staty nad práh ${e.prah}: „${vec}" má ${statSHodnotou(e.stat, e.stat_hodnota)}.`, detail: kdo }];
+      case 'stat_zrusen':
+        return [{
+          ...zaklad,
+          veta: `${k.pronasledovatel ?? 'Pronásledovatel'} ruší ${popisStatu(e.stat)} — „${vec}" se počítá jako 0 proti prahu ${e.prah}.`,
+          detail: `${kdo} · Rušení platí v celém runu, ne jen v tomhle slotu.`,
+        }];
+      case 'gangster_auto_fail':
+        return [{
+          ...zaklad,
+          veta: `„${vec}" je zbraň ve viditelné roli — padá bez ohledu na staty.`,
+          detail: `${kdo} · Telegraf to hlásil předem: zbraň na očích tady neprojde.`,
+        }];
+      case 'neobsazeno':
+        return [{
+          ...zaklad,
+          veta: 'Slot nikdo neobsadil — složená postava necommituje.',
+          detail: 'Co se nedostane do slotu, propadá automaticky.',
+        }];
+      default:
+        return [{ ...zaklad, veta: `Slot vyhodnocen (${e.duvod}).`, detail: kdo }];
+    }
+  },
 };
 
 /**
