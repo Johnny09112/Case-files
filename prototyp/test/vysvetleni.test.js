@@ -5,10 +5,6 @@
  */
 import { describe, it, expect } from 'vitest';
 import { EVENT } from '../src/engine/events.js';
-// TYPY_S_HANDLEREM se v tomto testu zatím nepoužívá — pokrytí proti EVENT
-// (aby tripwire nebyl slepý) přidává až Task 4. Import je tu podle briefu
-// Tasku 1, aby soubor od začátku odpovídal API vrstvy.
-// eslint-disable-next-line no-unused-vars
 import { vysvetli, MISTO, TYPY_S_HANDLEREM } from '../src/ui/vysvetleni.js';
 
 /** Poskládá log ze zadaných událostí a dopočítá seq (jako createLog). */
@@ -25,6 +21,10 @@ describe('vysvetli — kostra', () => {
   it('vrací Map indexovanou podle seq události', () => {
     const events = log({ type: EVENT.RUN_STARTED, pronasledovatel: 'agent-malone', rusi: { typ: 'stat', cil: 'hodnota' } });
     expect(vysvetli(events)).toBeInstanceOf(Map);
+  });
+
+  it('registr handlerů je exportovaný (Task 4 proti němu testuje pokrytí enumu)', () => {
+    expect(TYPY_S_HANDLEREM).toContain(EVENT.RUN_STARTED);
   });
 
   it('události vědomě bez anotace nic nevydají (§5 návrhu)', () => {
