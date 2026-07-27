@@ -248,5 +248,12 @@ export function deriveTelegrafSignal(sloty, stitekParams, typSituace) {
   // a slot byl naslepo. Bez této derivace by próza a strojový signál tvrdily
   // každý něco jiného (porušení QA invariantu věrnosti, D19).
   const improv_skryte = sloty.some((s) => s.viditelnost === 'skryta' && slotHasStat(s, 'improvizace'));
-  return { trend, proti_srsti, zbran_projde, zbran_skryte, improv_skryte };
+  // Slotová VÝJIMKA ze štítku (`stitek_citlivy: GANGSTER`) — role, která zbraň
+  // vítá i ve viditelném provedení. `resolveSlot` ji respektuje už dnes, ale
+  // `zbran_projde` se odvozoval JEN z typu situace, takže telegraf u takové
+  // situace tvrdil „zbraň na očích neprojde", zatímco jeden viditelný slot ji
+  // vyžadoval. Próza a strojový signál si protiřečily (QA invariant věrnosti,
+  // D19) a bot se výjimce vyhýbal, i když byla jediná cesta slot naplnit.
+  const zbran_slot_vyjimka = sloty.some((s) => s.stitek_citlivy === 'GANGSTER');
+  return { trend, proti_srsti, zbran_projde, zbran_skryte, improv_skryte, zbran_slot_vyjimka };
 }

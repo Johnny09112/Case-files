@@ -104,7 +104,11 @@ export function createStrategy(spec, seed, rules = RULES, content = null) {
       // role, kde padla bez ohledu na staty (107 z 204 propadů útočného slotu
       // v nadrazi-vypravci byl gangster_auto_fail) — bot byl hloupější než
       // člověk u stolu a K5/K1 byly o tuhle chybu pesimistické.
-      let zbraniPovoleno = signal.zbran_projde === 'ano' ? Infinity : signal.zbran_skryte ? 1 : 0;
+      // Slotová výjimka (`stitek_citlivy: GANGSTER`) je DALŠÍ místo, kam zbraň
+      // patří — sčítá se se skrytým utok-slotem, nenahrazuje ho.
+      let zbraniPovoleno = signal.zbran_projde === 'ano'
+        ? Infinity
+        : (signal.zbran_skryte ? 1 : 0) + (signal.zbran_slot_vyjimka ? 1 : 0);
       for (const plan of state.situace.commitPlan) {
         // Bod 4 (D22): hráč s hide_telegraf z minulého uzlu NEVIDÍ telegraf →
         // committne naivně (bez trendu i bez skryté-zbraně) → info-postih
