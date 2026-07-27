@@ -163,7 +163,7 @@ describe('vysvetli — postihy (§5)', () => {
     ), CTX_POSTIH));
     expect(anotace[0].veta).toContain('Naražené rameno');
     expect(anotace[0].veta).toContain('vypršel');
-    expect(anotace[1].veta).toContain('vyléčena v motelu za 6');
+    expect(anotace[1].veta).toContain('vyléčen v motelu za 6');
   });
 
   it('character_folded vysvětlí cap i to, že lehké se mažou a těžké zůstávají', () => {

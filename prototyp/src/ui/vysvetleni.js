@@ -248,14 +248,14 @@ const HANDLERS = {
 
   [EVENT.PENALTY_EXPIRED]: (e, k) => {
     odeberPostih(k, e.hrac_id, e.postih_id);
-    return [{ misto: MISTO.SPIS, veta: `${nazevPostihu(k, e.postih_id)} (${jmenoHrace(k, e.hrac_id)}) vypršel.` }];
+    return [{ misto: MISTO.SPIS, veta: `Postih „${nazevPostihu(k, e.postih_id)}" (${jmenoHrace(k, e.hrac_id)}) vypršel.` }];
   },
 
   [EVENT.PENALTY_HEALED]: (e, k) => {
     odeberPostih(k, e.hrac_id, e.postih_id);
     return [{
       misto: MISTO.SPIS,
-      veta: `${nazevPostihu(k, e.postih_id)} (${jmenoHrace(k, e.hrac_id)}) vyléčena v motelu za ${e.cena} kreditů.`,
+      veta: `Postih „${nazevPostihu(k, e.postih_id)}" (${jmenoHrace(k, e.hrac_id)}) vyléčen v motelu za ${e.cena} kreditů.`,
       detail: 'Těžké postihy se jinak než v motelu nezbavíš — složení maže jen lehké.',
     }];
   },
