@@ -38,14 +38,18 @@ bere z průměru přes bloky. Přes 6 bloků: **K5-D 10,58 (0/6 bloků v gate)**
 Tagování `faze` pro K2 změřeno a **NEZAPEČENO** — drift jen 1,282 a platí se
 za to zhoršením K5-D. Detail: §7
 [[../technika/kalibrace-4-final-2026-07-27|reportu]].
-**VERDIKT KRITIKA (D32): přestat brousit simulaci.** Zbývající tři deficity
-dělají dohromady **1 PRŮŠVIH na 70 runů / 1 mrtvý uzel na 34 / 1 přežití na 135**
-— neovlivní ani jeden odehraný večer. K2 ≥1,3 je vadný gate (hladinový agregát
-kauzální hypotézy, rozlišovací schopnost 1,2 sd); K5-D má vadnou UNIFORMITU, ne
-práh — D25e zakazuje sáhnout na Malona a gate zároveň žádá, aby jeho následek
-zmizel. **Doporučené pořadí: (a) prověrka bota proti všem veřejným pravidlům
-(může oba gaty zavřít zadarmo), (b) symetrie pronásledovatelů, (c) K2,
-(d) lidská brána.** **Míč u uživatele — tři otázky v D32.**
+**KALIBRACE-4 UZAVŘENA (D33, 2026-07-27).** Kritik doporučil přestat brousit
+simulaci (D32) a uživatel rozhodnutí delegoval na PM. Zbývající mezery znamenají
+u stolu 1 mrtvý uzel na 34 runů, 1 PRŮŠVIH na 70 a 1 přežití na 135 — hráč by
+musel odehrát ~35 hodin, aby si jich všiml. **Dvě přiznaná zvolnění laťky:**
+(1) pronásledovatel je PŘÍCHUŤ, ne obtížnost → K5/K5f se gatují přes oba
+dohromady, protože si ho hráč nevybírá (losuje se, design §4.9) — tím se K5f
+uzavírá poctivě (77,6 %); (2) K2 drift degradován na diagnostiku, floor ≥20 %
+zůstává gate — viditelný snowball je Žár a ten funguje, drift měřil neviditelný
+mechanismus s r² 1,7 %. **K5 (10,58 % proti ≤10 %) zůstává NESPLNĚNÉ a otevřené**
+— váže výhradně Malone a oprava by sáhla na jeho identitu (zákaz D25e).
+**Míč: (a) prověrka bota proti veřejným pravidlům, (b) fáze 2.1 vysvětlující
+vrstva, (c) fáze 3 LLM + test humoru, (d) LIDSKÁ BRÁNA.**
 
 *Průběh kalibrace-4 (historie):*
 [[../technika/kalibrace-4-brana-navrh-2026-07-27|Balík]] byl kanonické zadání.

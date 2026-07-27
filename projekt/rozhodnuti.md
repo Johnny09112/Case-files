@@ -13,6 +13,42 @@ architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.m
 
 ## 2026-07-27
 
+- **D33 (ROZHODNUTÍ PM v delegaci uživatele) — kalibrace-4 se UZAVÍRÁ, jde se na
+  lidskou bránu; dvě přiznaná zvolnění laťky.** Uživatel delegoval rozhodnutí na
+  PM („nechávám to na tobě") a zároveň vytkl, že se ladí dokola. Výtka je
+  oprávněná a odpověď je měřením: za kalibraci-4 se K6a posunulo 11,8 → 4,7 b.,
+  K1 z breache u 3p/4p do pásma u všech počtů, K5-D 13,1 → 10,6 %, K2 1,14 → 1,25.
+  Pohyb tedy byl velký — a právě proto jsme za bodem výnosnosti.
+  **(1) Kalibrace se ukončuje.** Simulace ověřila, co ověřit umí (matematika,
+  tempo). Zbývající mezery znamenají u stolu 1 mrtvý uzel na 34 runů, 1 PRŮŠVIH
+  na 70 runů a 1 přežití na 135 runů — aby hráč rozdíl u K2 zaznamenal, musel by
+  odehrát ~35 hodin. Přitom největší produktové riziko dle CLAUDE.md (kvalita
+  českého humoru) není otestované ani jednou.
+  **(2) ZVOLNĚNÍ: pronásledovatel je PŘÍCHUŤ, ne obtížnost → K5-D i K5f se gatují
+  přes oba dohromady, ne per-pronásledovatel.** Odůvodnění, které z toho nedělá
+  slevu: hráč si pronásledovatele **nevybírá**, losuje se na začátku runu
+  (design §4.9), takže co fakticky zažívá, je směs obou. Gatovat per-pronásledovatel
+  je over-specifikace vlastnosti, která není hráči přístupná. Tím se **K5f uzavírá
+  poctivě** (pooled 77,6 %, uvnitř pásma [60,80]) — odpověď na kritikovu otázku N4.
+  K5-D pooled 10,58 % tím splněné NENÍ a nezakrývá se (viz bod 4).
+  **(3) ZVOLNĚNÍ: K2 drift přestává být gate a stává se diagnostikou; floor
+  ≥20 % gate zůstává.** Odůvodnění: viditelný snowball téhle hry je **Žár**
+  (šerif na trati) a ten funguje. K2 drift měří DRUHÝ, neviditelný snowball
+  (info-postih → horší přiřazení), který hra hráči nikdy neslibuje a který
+  vysvětluje 1,7 % rozptylu (r², korelace −0,131). Gatovat na něm jde proti
+  axiomu „viditelná pravidla". Kritik nezávisle došel k témuž (D32 bod 1:
+  hladinový agregát kauzální hypotézy bez rozlišovací schopnosti — 1,2 sd).
+  **Poctivě přiznáno: 1,3 NENÍ nedosažitelné** — dosažitelné je ohnutím fikce
+  (obě nádraží jako `rana` → ~1,52); tuhle cestu tým odmítl a odmítá ji i PM.
+  **(4) K5-D zůstává NESPLNĚNÉ a viditelně otevřené.** Chybí 0,6 b. a váže
+  výhradně Malone. Opravit to znamená sáhnout na jeho identitu, což zakázalo
+  D25e — tedy nesplnitelná dvojice omezení (nález kritika). Nepřepisuje se práh
+  ani se nevyhlašuje splnění; jde do lidské brány jako známý otevřený bod.
+  **Pořadí dál:** (a) prověrka bota proti všem veřejným pravidlům (levné, dvakrát
+  se ukázalo, že měřidlo bylo horší než hra), (b) fáze 2.1 vysvětlující vrstva,
+  (c) fáze 3 LLM + test humoru, (d) lidská brána.
+  Přehled pro uživatele publikován jako HTML artefakt.
+
 - **D32 (VERDIKT KRITIKA k P-rozhodnutím K2 a K5-D) — doporučení: přestat brousit
   simulaci.** Plné znění: `scratchpad/kritik-verdikt-k2-k5d.md`, shrnutí zde.
   **(1) K2 ≥1,3 je vadný gate — ale ne přísností.** Je to hladinový agregát
