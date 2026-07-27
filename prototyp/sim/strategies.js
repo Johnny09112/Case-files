@@ -95,6 +95,15 @@ export function createStrategy(spec, seed, rules = RULES) {
         const slepy = hrac?.postihy?.some((x) => x.efekt?.druh === 'hide_telegraf') ?? false;
         const demanded = slepy ? [] : effectiveDemand(signal, s, rng);
         const ruka = run.getHand(plan.hrac_id).slice();
+        if (s.commit === 'nahodny') {
+          // MĚŘICÍ NÁSTROJ (K7 gate 3, kalibrace-4): podlaha commit-learnability.
+          // Committne náhodné karty bez ohledu na telegraf — rozdíl win-rate proti
+          // `informovany` (obojí s gamble-politikou) měří, kolik rozhodnutí commit
+          // ještě nese. Kdyby gamble commit trivializoval, mezera by zmizela.
+          const michana = rng.shuffle(ruka.slice());
+          for (let i = 0; i < plan.pocet; i++) out.push({ characterId: plan.hrac_id, cardId: michana[i].id });
+          continue;
+        }
         const skore = (k) => commitScore(k, demanded, s);
         ruka.sort((a, b) => skore(b) - skore(a));
         for (let i = 0; i < plan.pocet; i++) out.push({ characterId: plan.hrac_id, cardId: ruka[i].id });

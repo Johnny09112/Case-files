@@ -188,9 +188,9 @@ function main() {
       `\n\n**Souhrn:** mean ${v.souhrn.mean} · sd ${v.souhrn.sd} · min ${v.souhrn.min} · max ${v.souhrn.max} · 2sd ${v.souhrn.dve_sd}\n` +
       `**Je gate ≤6 b. nad šumem?** ${v.souhrn.prah_6_nad_sumem ? 'ANO (2sd < 6)' : 'NE — práh měří šum, úprava je P-rozhodnutí uživatele'}\n`;
     if (args.out) {
-      fs.mkdirSync(path.join(REPO_ROOT, args.out), { recursive: true });
-      fs.writeFileSync(path.join(REPO_ROOT, args.out, 'variance.json'), JSON.stringify(v, null, 2));
-      fs.writeFileSync(path.join(REPO_ROOT, args.out, 'variance.md'), md);
+      fs.mkdirSync(path.resolve(REPO_ROOT, args.out), { recursive: true });
+      fs.writeFileSync(path.resolve(REPO_ROOT, args.out, 'variance.json'), JSON.stringify(v, null, 2));
+      fs.writeFileSync(path.resolve(REPO_ROOT, args.out, 'variance.md'), md);
       console.log(`Hotovo → ${args.out}/variance.md`);
     }
     console.log(md);
@@ -217,8 +217,8 @@ function main() {
       casti.push(renderSummaryMd({ ...meta, label }, fin));
       jsonAll[`${players}p_${pursuer}_${args.strategy}`] = fin;
       if (args.out && args.events) {
-        fs.mkdirSync(path.join(REPO_ROOT, args.out), { recursive: true });
-        fs.writeFileSync(path.join(REPO_ROOT, args.out, `events_${players}p_${pursuer}.jsonl`), jsonl.join('\n'));
+        fs.mkdirSync(path.resolve(REPO_ROOT, args.out), { recursive: true });
+        fs.writeFileSync(path.resolve(REPO_ROOT, args.out, `events_${players}p_${pursuer}.jsonl`), jsonl.join('\n'));
       }
     }
   }
@@ -228,9 +228,9 @@ function main() {
   casti.unshift(renderSummaryMd({ label: 'CELÁ BRÁNA (slito přes všechny konfigurace)', seedOd: args.seed, seedDo: args.seed + args.runs - 1, strategy: args.strategy }, gateFin));
   const md = casti.join('\n');
   if (args.out) {
-    fs.mkdirSync(path.join(REPO_ROOT, args.out), { recursive: true });
-    fs.writeFileSync(path.join(REPO_ROOT, args.out, 'summary.md'), md);
-    fs.writeFileSync(path.join(REPO_ROOT, args.out, 'summary.json'), JSON.stringify({ verzeObsahu: content.verze, verzePravidel: RULES.verze, brana: gateFin, konfigurace: jsonAll }, null, 2));
+    fs.mkdirSync(path.resolve(REPO_ROOT, args.out), { recursive: true });
+    fs.writeFileSync(path.resolve(REPO_ROOT, args.out, 'summary.md'), md);
+    fs.writeFileSync(path.resolve(REPO_ROOT, args.out, 'summary.json'), JSON.stringify({ verzeObsahu: content.verze, verzePravidel: RULES.verze, brana: gateFin, konfigurace: jsonAll }, null, 2));
     console.log(`Hotovo → ${args.out}/summary.md`);
   } else {
     console.log(md);

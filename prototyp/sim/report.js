@@ -607,6 +607,12 @@ function k7Metriky(common) {
   return {
     dostupne: true,
     podil_uzlu_zachranny: val(podilVynucenych, '% common uzlů s odhadem ≤1 („bez volby") — GATE ≤ 15 %'),
+    // POZOR na dvojí čtení v balíku D26 bod 3: pásmo „take_zvolený 30–50 %
+    // (baseline ~40 %)" odpovídá PODÍLU UZLŮ s odhadem =2, ne take-rate na nich
+    // (ten je ~100 %, bot gambluje deterministicky iff odhad ≤2). Obě čísla
+    // proto reportujeme zvlášť a pásmo 30–50 % čteme proti podílu uzlů.
+    podil_uzlu_hedge: val(pct(tridy.hedge.length, sOdhadem.length), '% common uzlů s odhadem =2 — pásmo 30–50 % z balíku se vztahuje k TOMUTO číslu'),
+    podil_uzlu_silny: val(pct(tridy.silny.length, sOdhadem.length), '% common uzlů s odhadem ≥3'),
     zachranny: { n: tridy.zachranny.length, ...take(tridy.zachranny), ev: evProxy(tridy.zachranny), gate: 'take ≥ 80 %' },
     hedge: { n: tridy.hedge.length, ...take(tridy.hedge), ev: evProxy(tridy.hedge), gate: 'diagnostika, pásmo 30–50 %' },
     silny: { n: tridy.silny.length, ...take(tridy.silny), gate: 'take ≈ 0 % (EV<0 z pozice síly)' },
@@ -617,7 +623,8 @@ function k7Metriky(common) {
       podil_zachranny_do_15: podilVynucenych <= 15,
       take_zachranny_nad_80: takeZachranny == null ? null : takeZachranny >= 80,
       take_silny_nula: takeSilny == null ? null : takeSilny === 0,
-      hedge_v_pasmu_30_50: takeHedge == null ? null : takeHedge >= 30 && takeHedge <= 50,
+      hedge_podil_uzlu_v_pasmu_30_50: (() => { const p = pct(tridy.hedge.length, sOdhadem.length); return p == null ? null : p >= 30 && p <= 50; })(),
+      _take_hedge_diagnostika: takeHedge,
       learnabilita: 'měří se samostatným během (diffWinRate) — není v report.js',
     },
   };
@@ -739,7 +746,7 @@ export function renderSummaryMd(meta, fin) {
   radky.push(`- **K5f přežití konfrontace:** ${h(fin.k5f.celkem.hodnota)} % | ${Object.entries(fin.k5f.per_count).map(([k, v]) => `${k} ${h(v.preziti_konfrontace.hodnota)}`).join(' · ')} | gate ${fin.k5f.gate}`);
   radky.push(`- **K5f proher ve finále:** ${h(fin.k5f.podil_proher_ve_finale.hodnota)} % ${flag(fin.k5f.plni_podil_proher)} (gate ≥ 90 %)`);
   if (k7.dostupne) {
-    radky.push(`- **K7 záchranný gamble:** uzlů ${h(k7.podil_uzlu_zachranny.hodnota)} % (gate ≤15) · take ${h(k7.zachranny.take_rate.hodnota)} % (gate ≥80) | **hedge:** take ${h(k7.hedge.take_rate.hodnota)} % (diag. 30–50) | **silný:** take ${h(k7.silny.take_rate.hodnota)} % (gate ≈0)`);
+    radky.push(`- **K7 záchranný gamble:** uzlů ${h(k7.podil_uzlu_zachranny.hodnota)} % (gate ≤15) · take ${h(k7.zachranny.take_rate.hodnota)} % (gate ≥80) | **hedge:** uzlů ${h(k7.podil_uzlu_hedge.hodnota)} % (diag. 30–50) · take ${h(k7.hedge.take_rate.hodnota)} % | **silný:** uzlů ${h(k7.podil_uzlu_silny.hodnota)} % · take ${h(k7.silny.take_rate.hodnota)} % (gate ≈0)`);
     radky.push(`- **K7 EV-proxy:** Δmax záchranný ${h(k7.zachranny.ev.delta_max.hodnota)} / hedge ${h(k7.hedge.ev.delta_max.hodnota)} · překonal strop ${h(k7.zachranny.ev.prekonal_strop.hodnota)} / ${h(k7.hedge.ev.prekonal_strop.hodnota)} %`);
   } else {
     radky.push(`- **K7:** ${k7.duvod}`);
