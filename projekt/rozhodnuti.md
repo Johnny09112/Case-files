@@ -13,6 +13,52 @@ architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.m
 
 ## 2026-07-27
 
+- **D32 (VERDIKT KRITIKA k P-rozhodnutím K2 a K5-D) — doporučení: přestat brousit
+  simulaci.** Plné znění: `scratchpad/kritik-verdikt-k2-k5d.md`, shrnutí zde.
+  **(1) K2 ≥1,3 je vadný gate — ale ne přísností.** Je to hladinový agregát
+  kauzální hypotézy, zatímco přímý estimátor mechanismu (korelace info-postihy ×
+  zásahy = −0,131, r² 1,7 %) byl degradován na diagnostiku — tedy **táž chyba,
+  kterou kritik přiznal u vlastního prahu ≥12 b. (D27)**, a konzistence ho k
+  tomu zavazuje. Navíc gate nemá rozlišovací schopnost, kterou předstírá:
+  **rozdíl mezi driftem 1,25 a 1,30 je 0,014 PRŮŠVIHU na run, tedy 1 na ~70 runů**
+  (ověřeno PM aritmeticky), a mezera 0,050 při sd 0,040 je 1,2 sd. Jiné poctivě
+  odvoditelné číslo na téhle metrice neexistuje — až po výměně estimátoru za
+  **podmíněný kontrast** (pozdní PRŮŠVIH | ≥1 aktivní postih vs. | 0 postihů,
+  párováno uvnitř runu). Kritik předem přiznává riziko: ten test snowball
+  nejspíš vyvrátí.
+  **(2) K5-D ≤10 % — práh obhajitelný, systém v pořádku, vadná je UNIFORMITA.**
+  D25e zakazuje sáhnout na Malona a K5-D zároveň žádá, aby jeho následek zmizel
+  — **nesplnitelná dvojice omezení**; proto pět léků za sebou koupilo jen
+  desetiny. Poměr Malone/Brody 1,7–1,9× je aritmetický stín D20a, ne vada
+  obsahu; Brody po variantě C plní všude, takže systém prahu dosáhnout umí.
+  PM derivaci z délky runu kritik **neoznačuje** za stejnou chybu jako své ≥12 b.
+  (nativní osa, hladinový test hladinové vlastnosti). Per-pronásledovatel ano,
+  ale **až po rozhodnutí o symetrii pronásledovatelů**, jinak je to sleva — a
+  v run-level jednotce („podíl runů s ≥1 beznadějným uzlem"), ne po desetinách.
+  **(3) `faze` zamítnuto** — nekupuje nic (2/6 bloků = nesplněno), takže je
+  jakákoli cena záporná. **Ale „1,3 je nedosažitelné" je NEPRAVDA:** dosažitelné
+  je (obě nádraží `rana` → ~1,52), jen ne poctivě — to musí být na stole
+  explicitně, ne skryté.
+  **(4) K5f Brody: pásmo je špatně specifikované.** 0,78 p. b. = 1 run ze 135.
+  Malone je tvrdší v obou osách, Brody měkčí v obou, a gaty předepisují oběma
+  totéž. **K5-D a K5f jsou jedna nezodpovězená otázka se dvěma znaménky:**
+  paritu napříč počty hráčů projekt vyslovil (K6a), napříč pronásledovateli
+  NIKDY — a brána se chová, jako by ji vyslovil.
+  **(5) Další broušení simulace je špatná investice, bez zmírňování.** Zbývající
+  tři deficity dohromady nezmění ani jeden odehraný večer (**1/70, 1/34, 1/135
+  runů** — ověřeno), zatímco největším hybatelem celé kalibrace-4 byla **oprava
+  měřicího přístroje** (D30 > P2+P3 dohromady) a bot nebyl systematicky prověřen
+  proti veřejným pravidlům. Doporučené pořadí: (a) prověrka bota proti VŠEM
+  veřejným pravidlům (hodiny práce, doložený výnos, může oba gaty zavřít
+  zadarmo); (b) rozhodnutí o symetrii pronásledovatelů; (c) rozhodnutí o K2;
+  (d) lidská brána. Čitelnost (metrika 6) je otevřená od 2026-07-22 a humor —
+  dle CLAUDE.md největší produktové riziko — je netestovaný.
+  **Tři otázky na uživatele:** je volba pronásledovatele volbou OBTÍŽNOSTI, nebo
+  PŘÍCHUTI? Má být snowball vůbec statistický, nebo viditelný (Pandemic ho dělá
+  posuvníkem míry nákazy, ne distribucí — a „viditelná pravidla" je axiom
+  projektu)? Co musí platit, aby se šlo na lidskou bránu, a smí gate se
+  vzdáleností 1/70 runu ještě blokovat?
+
 - **D31 (ZJIŠTĚNÍ) — seedy 1–1000 jsou příznivý blok; část dosavadních verdiktů
   byla bloková, ne systémová. Dva gaty se vracejí jako P-rozhodnutí.**
   Zapečeno: oprava `deriveTelegrafSignal` o slotovou výjimku (`zbran_slot_vyjimka`,

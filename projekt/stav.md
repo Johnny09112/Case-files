@@ -36,8 +36,16 @@ u všech počtů), plus inertní enginová podpora pole `faze`.
 bere z průměru přes bloky. Přes 6 bloků: **K5-D 10,58 (0/6 bloků v gate)**,
 **K2 drift 1,25 (1/6)**, K6a 4,68 ale 1 blok breachne, K2 floor robustní.
 Tagování `faze` pro K2 změřeno a **NEZAPEČENO** — drift jen 1,282 a platí se
-za to zhoršením K5-D. **Míč u uživatele: K2 a K5-D jako P-rozhodnutí.**
-Detail: §7 [[../technika/kalibrace-4-final-2026-07-27|reportu]].
+za to zhoršením K5-D. Detail: §7
+[[../technika/kalibrace-4-final-2026-07-27|reportu]].
+**VERDIKT KRITIKA (D32): přestat brousit simulaci.** Zbývající tři deficity
+dělají dohromady **1 PRŮŠVIH na 70 runů / 1 mrtvý uzel na 34 / 1 přežití na 135**
+— neovlivní ani jeden odehraný večer. K2 ≥1,3 je vadný gate (hladinový agregát
+kauzální hypotézy, rozlišovací schopnost 1,2 sd); K5-D má vadnou UNIFORMITU, ne
+práh — D25e zakazuje sáhnout na Malona a gate zároveň žádá, aby jeho následek
+zmizel. **Doporučené pořadí: (a) prověrka bota proti všem veřejným pravidlům
+(může oba gaty zavřít zadarmo), (b) symetrie pronásledovatelů, (c) K2,
+(d) lidská brána.** **Míč u uživatele — tři otázky v D32.**
 
 *Průběh kalibrace-4 (historie):*
 [[../technika/kalibrace-4-brana-navrh-2026-07-27|Balík]] byl kanonické zadání.
