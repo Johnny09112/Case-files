@@ -17,7 +17,7 @@
 import { EVENT, deriveGoalMetrics } from '../engine/events.js';
 import {
   STAT_LABEL, STAT_LABEL_4, znamenko, BAND_LABEL, KATEGORIE_LABEL,
-  ZAR_DUVOD_LABEL, PRAH_LABEL, CREDIT_DUVOD_LABEL, PRICINA_LABEL,
+  ZAR_DUVOD_LABEL, PRAH_LABEL, CREDIT_DUVOD_LABEL, PRICINA_LABEL, TYP_MISTA_LABEL,
 } from './labels.js';
 
 /** Kam anotace v UI patří (slot situace / okraj mapy / list spisu). */
@@ -174,6 +174,8 @@ function pocetKol(n) {
 function pocetZasahuZustalo(n) {
   if (n === 1) return `${n} zásah zůstal`;
   if (n >= 2 && n <= 4) return `${n} zásahy zůstaly`;
+  // gap je rozdíl dvou hodnot z rozsahu 0–4, takže sem se nikdy nedostane —
+  // větev je jen pojistka (obranná symetrie s pocetKol).
   return `${n} zásahů zůstalo`;
 }
 
@@ -388,7 +390,7 @@ const HANDLERS = {
     if (e.volba) {
       return [{
         misto: MISTO.OKRAJ,
-        veta: `Cesta zvolena: ${k.ctx.situace?.[e.volba] ?? e.volba} (${e.typ_mista}) — ${TYP_MISTA_PRAVIDLO[e.typ_mista] ?? 'typ místa je veřejný'}.`,
+        veta: `Cesta zvolena: ${k.ctx.situace?.[e.volba] ?? e.volba} (${TYP_MISTA_LABEL[e.typ_mista] ?? e.typ_mista}) — ${TYP_MISTA_PRAVIDLO[e.typ_mista] ?? 'typ místa je veřejný'}.`,
       }];
     }
     const kolik = (e.nabidnuto ?? []).length;

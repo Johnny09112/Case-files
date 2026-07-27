@@ -113,3 +113,13 @@ export function znamenko(n) {
 export function vysledekLabel(vysledek) {
   return vysledek === 'DORUCENO' ? 'DORUČENO' : 'NEVYŘEŠENO';
 }
+
+/** Typ místa je veřejná informace (D34/N7) — hráč ho vidí před volbou cesty. */
+export const TYP_MISTA_LABEL = /** @type {Record<string, string>} */ ({
+  npc: 'člověk',
+  lokace: 'lokace',
+  truhla: 'nález',
+  zatah: 'zátah',
+  lecka: 'léčka',
+  konfrontace: 'konfrontace',
+});

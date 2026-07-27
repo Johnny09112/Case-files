@@ -293,6 +293,16 @@ describe('vysvetli — telegraf, pásmo, Žár, mapa, gamble, konec (§5)', () =
     expect(anotace[2].veta).toContain('motel');
   });
 
+  it('map_move přeloží syrový typ_mista do češtiny (nález review 1)', () => {
+    // Jediný dřív testovaný typ byl `lokace`, což je náhodou i české slovo —
+    // test to nechytil. `npc` odhalí, jestli se do věty dostává syrový kód.
+    const a = vsechny(vysvetli(log(
+      { type: EVENT.MAP_MOVE, volba: 's1', typ_mista: 'npc' }
+    ), CTX))[0];
+    expect(a.veta).toContain('člověk');
+    expect(a.veta).not.toContain('npc');
+  });
+
   it('gamble popíše výměnu a zpětně doplní, jak tažená karta dopadla', () => {
     const events = log(
       { type: EVENT.GAMBLE, ci_ruka: 'p1', zbyvajici_v_ruce: 3, tazena: 'klic', nahrazena: 'svara', do_slotu: null },
@@ -304,6 +314,19 @@ describe('vysvetli — telegraf, pásmo, Žár, mapa, gamble, konec (§5)', () =
     expect(a.veta).toContain('Francouzský klíč');
     expect(a.detail).toContain('3');
     expect(a.detail).toContain('vyšla');
+  });
+
+  it('gamble nad PREFIXEM logu (bez navazujícího slot_resolved) anotaci má, ale nedoplní výsledek (nález review 2)', () => {
+    // Stejná funkce se volá nad prefixem při živé hře i nad celým logem po
+    // runu (§4.1) — v okamžiku sázky ještě není známo, jak tažená věc dopadla.
+    const events = log(
+      { type: EVENT.GAMBLE, ci_ruka: 'p1', zbyvajici_v_ruce: 3, tazena: 'klic', nahrazena: 'svara', do_slotu: null }
+    );
+    const a = vysvetli(events, CTX).get(1)[0];
+    expect(a.veta).toContain('Sochor');
+    expect(a.veta).toContain('Francouzský klíč');
+    expect(a.detail).not.toContain('vyšla');
+    expect(a.detail).not.toContain('nevyšla');
   });
 
   it('run_ended hlásí příčinu konce', () => {
