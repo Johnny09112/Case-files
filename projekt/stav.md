@@ -39,15 +39,15 @@ respektuje veřejné pravidlo štítku GANGSTER na obou osách; gangster_auto_fa
 podmíněné pooly pro K2, (4) severita finále pro K5f. Aktuální baseline: §6
 [[../technika/kalibrace-4-final-2026-07-27|reportu]].
 
-[[../technika/kalibrace-4-brana-navrh-2026-07-27|Balík]] je kanonické zadání.
-**Re-měřicí session proběhla 2026-07-27 a ZASTAVILA SE na podmínce 0(c) (D27):**
-K7 learnabilita naměřena 9,1 / 10,3 b. proti gate ≥12 b. → dle mandátu se
-nepokračuje bez eskalace. Podmínky 0(a), 0(b), 0(d) hotové (report.js
-formalizován, dvojí měřicí cut vysvětlen, práh K5-D navržen), K6a variance
-doměřena (2sd = 3,22 < 6 → práh ≤6 b. je nad šumem). **Kroky 1–5 mandátu
-nezačaly — `prototyp-mvp.md` i `obsah/` jsou netknuté.** Verdikt a varianty
-V1–V4: [[../technika/kalibrace-4-2026-07-27|technika/kalibrace-4-2026-07-27.md]].
-**Míč: uživatel rozhodne V1–V4 (doporučení týmu V1).**
+*Průběh kalibrace-4 (historie):*
+[[../technika/kalibrace-4-brana-navrh-2026-07-27|Balík]] byl kanonické zadání.
+Re-měřicí session se nejdřív **zastavila na podmínce 0(c) (D27)** — K7
+learnabilita 9,1 / 10,3 b. proti gate ≥12 b.; podmínky 0(a), 0(b), 0(d) hotové
+(report.js formalizován, dvojí měřicí cut vysvětlen, práh K5-D navržen), K6a
+variance doměřena (2sd = 3,22 < 6). Eskalace V1–V4 rozhodnuta uživatelem jako
+**V1 (D28)**, čímž se odblokovaly kroky 1–5 mandátu — ty jsou nyní **hotové**
+(zapečení znění, P2, P3, P1, re-měření). Verdikt eskalace:
+[[../technika/kalibrace-4-2026-07-27|technika/kalibrace-4-2026-07-27.md]].
 
 ## Backlog
 
