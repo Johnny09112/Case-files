@@ -243,3 +243,108 @@ describe('vysvetli — řetězec přes uzly (§7 test 4)', () => {
     expect(a.odkaz).toBeUndefined();
   });
 });
+
+describe('vysvetli — telegraf, pásmo, Žár, mapa, gamble, konec (§5)', () => {
+  it('telegraf_derived přeloží signál na trend, skryté role a verdikt zbraně', () => {
+    const a = vsechny(vysvetli(log({ type: EVENT.TELEGRAF_DERIVED, signal_pravy: { trend: [{ slot_index: 0, stat: 'hodnota' }, { slot_index: 1, stat: 'obrana' }, { slot_index: 2, stat: 'nastroj' }], proti_srsti: 1, zbran_projde: 'jen_skryte', zbran_skryte: true, improv_skryte: false, zbran_slot_vyjimka: false }, signal_vyslany: {}, nevidi: ['p2'] }), CTX))[0];
+    expect(a.misto).toBe(MISTO.SPIS);
+    expect(a.veta).toContain('hodnota');
+    expect(a.veta).toContain('obrana');
+    expect(a.veta).toContain('nástroj');
+    expect(a.veta).toContain('jedna skrytá role');
+    expect(a.veta).toContain('Zbraň na očích neprojde');
+    expect(a.detail).toContain('Kowalski');
+  });
+
+  it('band_resolved nese pásmo i learnabilitu z gap', () => {
+    const a = vsechny(vysvetli(log({ type: EVENT.BAND_RESOLVED, zasahy: 2, pasmo: '2/4_S_NASLEDKY', max_achievable_zasahy: 3, max_achievable_band: '3/4_HLADCE', gap: 1, naklad_ztrata: 0, zbyva_beden: 5 }), CTX))[0];
+    expect(a.veta).toContain('2/4');
+    expect(a.detail).toContain('TÉHOŽ commitu');
+    expect(a.detail).toContain('3/4');
+    expect(a.detail).toContain('na stole');
+  });
+
+  it('band_resolved bez mezery learnabilitu nevymýšlí', () => {
+    const a = vsechny(vysvetli(log({ type: EVENT.BAND_RESOLVED, zasahy: 3, pasmo: '3/4_HLADCE', max_achievable_zasahy: 3, max_achievable_band: '3/4_HLADCE', gap: 0, naklad_ztrata: 0, zbyva_beden: 5 }), CTX))[0];
+    expect(a.detail).toContain('nejlepší možné');
+    expect(a.detail).not.toContain('na stole');
+  });
+
+  it('zar_move hlásí důvod a překročený práh', () => {
+    const anotace = vsechny(vysvetli(log(
+      { type: EVENT.ZAR_MOVE, delta: 2, duvod: 'prusvih', nova_pozice: 4, prah_prekrocen: 'zatah' },
+      { type: EVENT.ZAR_MOVE, delta: 1, duvod: 'hlucne_GANGSTER', nova_pozice: 5, prah_prekrocen: null }
+    ), CTX));
+    expect(anotace[0].misto).toBe(MISTO.OKRAJ);
+    expect(anotace[0].veta).toContain('o 2');
+    expect(anotace[0].veta).toContain('práh Zátahu');
+    expect(anotace[1].veta).toContain('zbraň');
+  });
+
+  it('map_move rozlišuje nabídku, volbu i odbočku do motelu', () => {
+    const anotace = vsechny(vysvetli(log(
+      { type: EVENT.MAP_MOVE, nabidnuto: [{ ref: 's1', typ_mista: 'lokace' }, { ref: 's2', typ_mista: 'npc' }], byl_zatah: false },
+      { type: EVENT.MAP_MOVE, volba: 's1', typ_mista: 'lokace' },
+      { type: EVENT.MAP_MOVE, motel_odbocka: { volba: 'ukryt' } }
+    ), CTX));
+    expect(anotace[0].veta).toContain('dvě cesty');
+    expect(anotace[1].veta).toContain('lokace');
+    expect(anotace[1].veta).toContain('zbraň');
+    expect(anotace[2].veta).toContain('motel');
+  });
+
+  it('gamble popíše výměnu a zpětně doplní, jak tažená karta dopadla', () => {
+    const events = log(
+      { type: EVENT.GAMBLE, ci_ruka: 'p1', zbyvajici_v_ruce: 3, tazena: 'klic', nahrazena: 'svara', do_slotu: null },
+      { ...resolved({ karta_id: 'klic', zasah: true, duvod: 'proslo' }), type: EVENT.SLOT_RESOLVED }
+    );
+    const mapa = vysvetli(events, CTX);
+    const a = mapa.get(1)[0];
+    expect(a.veta).toContain('Sochor');
+    expect(a.veta).toContain('Francouzský klíč');
+    expect(a.detail).toContain('3');
+    expect(a.detail).toContain('vyšla');
+  });
+
+  it('run_ended hlásí příčinu konce', () => {
+    const a = vsechny(vysvetli(log({ type: EVENT.RUN_ENDED, vysledek: 'NEVYRESENO', pricina: 'bedny_0', pocet_uzlu: 5, zbyva_beden: 0, konecny_zar: 8, kredity_zbytek: 2, cile: [] }), CTX))[0];
+    expect(a.veta).toContain('NEVYŘEŠENO');
+    expect(a.veta).toContain('bedny');
+  });
+});
+
+/** Minimální payload per typ, aby handler měl na čem pracovat. */
+const MINIMALNI_PAYLOAD = {
+  [EVENT.RUN_STARTED]: { pronasledovatel: 'agent-malone', rusi: null },
+  [EVENT.MAP_MOVE]: { nabidnuto: [{ ref: 's1', typ_mista: 'npc' }], byl_zatah: false },
+  [EVENT.TELEGRAF_DERIVED]: { signal_pravy: { trend: [], proti_srsti: 0, zbran_projde: 'ano', zbran_skryte: false, improv_skryte: false, zbran_slot_vyjimka: false }, nevidi: [] },
+  [EVENT.COMMIT]: { commit: [], rozdeleni: [] },
+  [EVENT.SITUATION_REVEALED]: { situace_id: 's1', typ: 'npc', typ_mista: 'npc', sloty: [slot()] },
+  [EVENT.ASSIGN_CONTEXT]: { situace_id: 's1', gamble_dostupny: true, gamble_blokovan: null, ruce: [] },
+  [EVENT.ASSIGNMENT]: { prirazeni: [] },
+  [EVENT.GAMBLE]: { ci_ruka: 'p1', zbyvajici_v_ruce: 2, tazena: 'klic', nahrazena: 'svara' },
+  [EVENT.SLOT_RESOLVED]: resolved(),
+  [EVENT.BAND_RESOLVED]: { zasahy: 3, pasmo: '3/4_HLADCE', max_achievable_zasahy: 3, max_achievable_band: '3/4_HLADCE', gap: 0, naklad_ztrata: 0, zbyva_beden: 6 },
+  [EVENT.PENALTY_ADDED]: { hrac_id: 'p1', postih_id: 'x', kategorie: 'ztratovy', tier: 'lehky', efekt: { druh: 'ztrata_kreditu', kolik: 1 }, vyprsi_za: 'ihned', pricina: '2/4_S_NASLEDKY', aktivnich_po: 0 },
+  [EVENT.PENALTY_EXPIRED]: { hrac_id: 'p1', postih_id: 'x', duvod: 'cas' },
+  [EVENT.PENALTY_HEALED]: { hrac_id: 'p1', postih_id: 'x', cena: 6 },
+  [EVENT.CHARACTER_FOLDED]: { hrac_id: 'p1', kolo_od: 1, smazane_lehke: [], pretrvavaji_tezke: [] },
+  [EVENT.CHARACTER_RETURNED]: { hrac_id: 'p1' },
+  [EVENT.CREDIT_FLOW]: { delta: 2, duvod: 'hladce', zustatek: 4 },
+  [EVENT.ZAR_MOVE]: { delta: 1, duvod: 'prusvih', nova_pozice: 1, prah_prekrocen: null },
+  [EVENT.GOAL_SCORED]: { hrac_id: 'p1', cil_id: 'c1', overeni_typ: 'mechanicky', splnen: true },
+  [EVENT.RUN_ENDED]: { vysledek: 'DORUCENO', pricina: 'dojezd', pocet_uzlu: 7, zbyva_beden: 4, konecny_zar: 3, kredity_zbytek: 5, cile: [] },
+};
+
+describe('vysvetli — pokrytí enumu (§7 test 2, tripwire proti rozjetí vrstvy a enginu)', () => {
+  it.each(Object.values(EVENT))('typ %s má registrovaný handler', (typ) => {
+    // Registr, ne jen chování: události s prázdným handlerem (commit, assignment…)
+    // by jinak testem prošly i kdyby handler chyběl úplně.
+    expect(TYPY_S_HANDLEREM).toContain(typ);
+  });
+
+  it.each(Object.values(EVENT))('typ %s nespadne do „neznámá" ani s minimálním payloadem', (typ) => {
+    const anotace = vsechny(vysvetli(log({ type: typ, ...MINIMALNI_PAYLOAD[typ] })));
+    for (const a of anotace) expect(a.veta).not.toContain('neznámá událost');
+  });
+});

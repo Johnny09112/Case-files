@@ -42,10 +42,38 @@ export const STAT_LABEL_4 = /** @type {Record<string, string>} */ ({
   nastroj: 'nástroj',
 });
 
+/** Příčiny konce runu (events.END_PRICINA, v3). */
 export const PRICINA_LABEL = /** @type {Record<string, string>} */ ({
-  doruceno: 'náklad dojel do New Yorku',
-  dosly_bedny: 'došly bedny',
-  vsichni_vyrazeni: 'všichni podezřelí vyřazeni',
+  dojezd: 'náklad dojel do New Yorku',
+  bedny_0: 'došly bedny',
+  konfrontace_prohra: 'prohraná konfrontace s pronásledovatelem',
+  jina: 'jiná příčina',
+});
+
+/** Důvody pohybu Žáru (events.ZAR_DUVOD) — proč šerif postoupil. */
+export const ZAR_DUVOD_LABEL = /** @type {Record<string, string>} */ ({
+  prusvih: 'průšvih v uzlu',
+  s_nasledky: 'uzel zvládnutý s následky',
+  hlucne_GANGSTER: 'zbraň v akci',
+  hlucne_utok: 'hlučné násilí (vysoký útok)',
+  konfrontace_prezita: 'přežitá konfrontace — pozornost opadla',
+});
+
+/** Prahy trati Žáru (rules.zar.prahy) → jak se jmenují ve spisu. */
+export const PRAH_LABEL = /** @type {Record<string, string>} */ ({
+  zatah: 'Zátahu',
+  lecka: 'léčky',
+  konfrontace: 'konfrontace',
+});
+
+/** Důvody pohybu kreditů (events.CREDIT_DUVOD). */
+export const CREDIT_DUVOD_LABEL = /** @type {Record<string, string>} */ ({
+  truhla: 'nález v truhle',
+  hladce_loot: 'čistá práce (4/4)',
+  hladce: 'zvládnutý uzel (3/4)',
+  smena: 'směna věci v motelu',
+  leceni: 'léčení v motelu',
+  ztratovy_postih: 'ztrátový postih',
 });
 
 /** Pásma v3 (events.BAND) → čitelný popisek. */

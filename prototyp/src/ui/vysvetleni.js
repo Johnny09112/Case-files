@@ -14,8 +14,11 @@
  *
  * Volá se nad PREFIXEM logu při hře i nad CELÝM logem po runu — jedna definice.
  */
-import { EVENT } from '../engine/events.js';
-import { STAT_LABEL, STAT_LABEL_4, znamenko, BAND_LABEL, KATEGORIE_LABEL } from './labels.js';
+import { EVENT, deriveGoalMetrics } from '../engine/events.js';
+import {
+  STAT_LABEL, STAT_LABEL_4, znamenko, BAND_LABEL, KATEGORIE_LABEL,
+  ZAR_DUVOD_LABEL, PRAH_LABEL, CREDIT_DUVOD_LABEL, PRICINA_LABEL,
+} from './labels.js';
 
 /** Kam anotace v UI patří (slot situace / okraj mapy / list spisu). */
 export const MISTO = /** @type {const} */ ({ SLOT: 'slot', OKRAJ: 'okraj', SPIS: 'spis' });
@@ -71,6 +74,8 @@ function novaKniha(ctx, events, out) {
     situaceUzlu: /** @type {Map<number, string>} */ (new Map()),
     /** hrac_id → aktivní trvalé postihy (pro řetězec: kde vznikly). */
     aktivniPostihy: /** @type {Map<string, {postih_id: string, druh: string, seq: number, nodeIndex: number}[]>} */ (new Map()),
+    /** Poslední gamble (pro zpětné doplnění, jak tažená karta dopadla). */
+    gamble: /** @type {{seq: number, tazena: string}|null} */ (null),
   };
 }
 
@@ -86,6 +91,11 @@ function neznama(e) {
 /** Název statu ve 4. pádě (jednostat i kombi) — pro vazby „chce / ruší / chtělo to". */
 function popisStatu4(stat) {
   return Array.isArray(stat) ? stat.map((s) => STAT_LABEL_4[s] ?? s).join(' a ') : (STAT_LABEL_4[stat] ?? stat);
+}
+
+/** Název statu v 1. pádě (jednostat i kombi) — „nástroj" / „nástroj + improvizace". */
+function popisStatu(stat) {
+  return Array.isArray(stat) ? stat.map((s) => STAT_LABEL[s] ?? s).join(' + ') : (STAT_LABEL[stat] ?? stat);
 }
 
 /** „stat hodnota" pro jednostat i kombi: „nástroj 4" / „nástroj 4, improvizace 2". */
@@ -158,6 +168,31 @@ function pocetKol(n) {
 }
 
 /**
+ * Skloňování „X zásah zůstal / zásahy zůstaly / zásahů zůstalo" podle počtu
+ * (brief psal jen `${e.gap} zásah zůstal` — pro gap 2–4 to gramaticky drhne).
+ */
+function pocetZasahuZustalo(n) {
+  if (n === 1) return `${n} zásah zůstal`;
+  if (n >= 2 && n <= 4) return `${n} zásahy zůstaly`;
+  return `${n} zásahů zůstalo`;
+}
+
+// Čeština se neskloňuje šablonou — malé tabulky jsou levnější než špatné tvary.
+const VIDITELNE_FRAZE = ['žádnou viditelnou roli', 'jednu viditelnou roli', 'dvě viditelné role', 'tři viditelné role', 'čtyři viditelné role'];
+const SKRYTE_FRAZE = ['nic skrytého', 'jedna skrytá role', 'dvě skryté role', 'tři skryté role', 'čtyři skryté role'];
+const CESTY_FRAZE = ['žádná cesta', 'jedna cesta', 'dvě cesty', 'tři cesty'];
+
+/** Typ místa je veřejné pravidlo (D34/N7) — hráč ho zná před volbou cesty. */
+const TYP_MISTA_PRAVIDLO = {
+  npc: 'někdo se ti dívá do rukou — zbraň na očích neprojde',
+  lokace: 'nikdo tě nešpehuje — zbraň projde i na očích',
+  zatah: 'zátah — zbraň projde, jiná cesta není',
+  truhla: 'bez resoluce, jen nález',
+  lecka: 'léčka — zbraň na očích neprojde',
+  konfrontace: 'finále — zbraň projde',
+};
+
+/**
  * Handlery per typ události. Prázdné pole = událost vědomě BEZ anotace
  * (§5 návrhu) — musí tu ale být, aby nespadla do `neznama`.
  * @type {Record<string, (e: object, k: ReturnType<typeof novaKniha>) => Anotace[]>}
@@ -194,6 +229,15 @@ const HANDLERS = {
   },
 
   [EVENT.SLOT_RESOLVED]: (e, k) => {
+    // Gamble je v logu PŘED resolucí, takže „jak to dopadlo" jde doplnit až tady.
+    // Fold to umí: anotace už v Map je a drží se na ni reference (§4.1).
+    if (k.gamble && e.karta_id === k.gamble.tazena) {
+      const gambleAnotace = k.out.get(k.gamble.seq)?.[0];
+      if (gambleAnotace) {
+        gambleAnotace.detail += ` Tažená věc ${e.zasah ? 'vyšla' : 'nevyšla'} — slot ${e.slot_index + 1}.`;
+      }
+      k.gamble = null;
+    }
     const zaklad = { misto: MISTO.SLOT, slot_index: e.slot_index, razitko: e.zasah ? 'PROŠLO' : 'NEPROŠLO' };
     if (e.duvod === 'neobsazeno') {
       return [{
@@ -287,6 +331,104 @@ const HANDLERS = {
   [EVENT.CHARACTER_RETURNED]: (e, k) => [{
     misto: MISTO.SPIS,
     veta: `${jmenoHrace(k, e.hrac_id)} se vrací do hry a zase committuje.`,
+  }],
+
+  [EVENT.TELEGRAF_DERIVED]: (e, k) => {
+    const s = e.signal_pravy ?? {};
+    const staty = (s.trend ?? []).map((t) => popisStatu(t.stat));
+    const skryte = s.proti_srsti ?? 0;
+    const veta = [
+      `Telegraf slibuje ${VIDITELNE_FRAZE[staty.length] ?? `${staty.length} viditelných rolí`}${staty.length > 0 ? ` (${staty.join(', ')})` : ''}`,
+      skryte > 0
+        ? `, ${SKRYTE_FRAZE[skryte] ?? `skrytých rolí ${skryte}`} ${skryte === 1 ? 'čeká' : 'čekají'} na nejhorší.`
+        : ' a nic skrytého.',
+      s.zbran_projde === 'ano' ? ' Zbraň tady projde i na očích.' : ' Zbraň na očích neprojde.',
+      s.zbran_skryte ? ' Ve skryté roli se ale zbraň vyplatí.' : '',
+      s.improv_skryte ? ' Skrytá role stojí na improvizaci.' : '',
+      s.zbran_slot_vyjimka ? ' Jedna role zbraň přímo vítá.' : '',
+    ].join('');
+    const nevidi = (e.nevidi ?? []).map((id) => jmenoHrace(k, id));
+    return [{
+      misto: MISTO.SPIS,
+      veta,
+      detail: nevidi.length > 0
+        ? `Telegraf nevidí: ${nevidi.join(', ')} (informační postih) — nesmí podle něj radit.`
+        : 'Commituje se naslepo: telegraf je jediné, co o situaci před commitem víš.',
+    }];
+  },
+
+  [EVENT.BAND_RESOLVED]: (e) => [{
+    misto: MISTO.SPIS,
+    veta: `Pásmo ${BAND_LABEL[e.pasmo] ?? e.pasmo}: ${e.zasahy} ze 4 slotů prošly.${e.naklad_ztrata > 0 ? ` Náklad ztrácí ${e.naklad_ztrata} bednu (zbývá ${e.zbyva_beden}).` : ''}`,
+    detail: e.gap > 0
+      ? `Optimální rozdělení TÉHOŽ commitu by dalo ${e.max_achievable_zasahy}/4 (${BAND_LABEL[e.max_achievable_band] ?? e.max_achievable_band}) — ${pocetZasahuZustalo(e.gap)} na stole.`
+      : 'Z toho, co tým committnul, se líp rozdělit nedalo — tohle bylo nejlepší možné.',
+  }],
+
+  [EVENT.ZAR_MOVE]: (e) => [{
+    misto: MISTO.OKRAJ,
+    veta: `Šerif postoupil o ${Math.abs(e.delta)} na ${e.nova_pozice} — ${ZAR_DUVOD_LABEL[e.duvod] ?? e.duvod}.${e.prah_prekrocen ? ` Tím překročil práh ${PRAH_LABEL[e.prah_prekrocen] ?? e.prah_prekrocen}.` : ''}`,
+    ...(e.delta < 0 ? { detail: 'Žár klesl — prahy se znovu nabíjejí.' } : {}),
+  }],
+
+  [EVENT.CREDIT_FLOW]: (e) => [{
+    misto: MISTO.OKRAJ,
+    veta: `Kredity ${znamenko(e.delta)} (${CREDIT_DUVOD_LABEL[e.duvod] ?? e.duvod}), zůstatek ${e.zustatek}.`,
+  }],
+
+  [EVENT.MAP_MOVE]: (e, k) => {
+    if (e.motel_odbocka) {
+      return [{
+        misto: MISTO.OKRAJ,
+        veta: e.motel_odbocka.volba === 'ukryt'
+          ? 'Tým zajel do motelu — léčení a směna stojí kredity, čas neběží.'
+          : 'Tým motel minul a hnal náklad dál.',
+      }];
+    }
+    if (e.volba) {
+      return [{
+        misto: MISTO.OKRAJ,
+        veta: `Cesta zvolena: ${k.ctx.situace?.[e.volba] ?? e.volba} (${e.typ_mista}) — ${TYP_MISTA_PRAVIDLO[e.typ_mista] ?? 'typ místa je veřejný'}.`,
+      }];
+    }
+    const kolik = (e.nabidnuto ?? []).length;
+    return [{
+      misto: MISTO.OKRAJ,
+      veta: e.byl_zatah
+        ? 'Zátah: Žár překročil práh, jiná cesta než přes kontrolu není.'
+        : `Na výběr: ${CESTY_FRAZE[kolik] ?? `${kolik} cest`} — typ místa je vidět předem a rozhoduje o tom, jestli projde zbraň.`,
+    }];
+  },
+
+  [EVENT.GAMBLE]: (e, k) => {
+    k.gamble = { seq: e.seq, tazena: e.tazena };
+    return [{
+      misto: MISTO.SPIS,
+      veta: `Sázka: místo „${nazevVeci(k, e.nahrazena)}" přišel „${nazevVeci(k, e.tazena)}" (ruka ${jmenoHrace(k, e.ci_ruka)}).`,
+      detail: `Tažení je naslepo, v ruce zbývalo kusů: ${e.zbyvajici_v_ruce}. Sázka jde jednou za situaci.`,
+    }];
+  },
+
+  [EVENT.GOAL_SCORED]: (e, k) => {
+    const cil = k.ctx.cile?.[e.cil_id];
+    if (e.overeni_typ === 'textovy') {
+      return [{
+        misto: MISTO.SPIS,
+        veta: `Tajný cíl ${jmenoHrace(k, e.hrac_id)}: ${cil?.text ?? e.cil_id} — posoudí stůl z protokolu.`,
+      }];
+    }
+    const m = deriveGoalMetrics(k.events, e.hrac_id);
+    return [{
+      misto: MISTO.SPIS,
+      veta: `Tajný cíl ${jmenoHrace(k, e.hrac_id)}: ${cil?.text ?? e.cil_id} — ${e.splnen ? 'SPLNĚN' : 'nesplněn'}.`,
+      detail: `Sloty ${m.pocet_slotu_splnil} splnil / ${m.pocet_slotu_selhal} propadl · postihy ${m.postihy_utrpene.pocet} · gamble ${m.gamble_pouzit}× · složen ${m.slozeni_krat}× · ztracené bedny ${m.bedny_ztracene_vlastni} · doručeno: ${m.doruceno ? 'ano' : 'ne'}.`,
+    }];
+  },
+
+  [EVENT.RUN_ENDED]: (e) => [{
+    misto: MISTO.SPIS,
+    veta: `Spis se uzavírá: ${e.vysledek === 'DORUCENO' ? 'DORUČENO' : 'NEVYŘEŠENO'} — ${PRICINA_LABEL[e.pricina] ?? e.pricina}.`,
+    detail: `Uzlů ${e.pocet_uzlu} · zbývá beden ${e.zbyva_beden} · konečný Žár ${e.konecny_zar} · kredity ${e.kredity_zbytek}.`,
   }],
 };
 
