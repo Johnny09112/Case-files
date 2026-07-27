@@ -93,7 +93,10 @@ variance doměřena (2sd = 3,22 < 6). Eskalace V1–V4 rozhodnuta uživatelem ja
 | **Kalibrace-3: selektivní revert kotev 4→3** — návrh 12 slotů (designer) → adversariální prověrka (kritik) → per-slot diagnostika + kontrafaktuální gate-měření 1000×2 přes CONTENT_DIR (facilitátor) | celé kolečko + playtest-facilitator | **hotovo 2026-07-26 (D24) — NEGATIVNÍ VÝSLEDEK**: žádná podmnožina mandátu gate nesplní (K1 špatný směr, K5≥13.6 %, K7≥40.5 % i při maximu); drivery mimo mandát (Malone-nulovaná hodnota, finále ~50 %). Report [[../technika/kalibrace-3-2026-07-26|technika/kalibrace-3-2026-07-26.md]]; mandát kalibrace-4 (P0–P4) eskalován na uživatele |
 | Pro technical-developer: do `sim/report.js` doplnit rozpady per-situace / per-slot / common-vs-finále / K5 viditelná-skrytá (v kalibraci-3 počítáno ad-hoc skriptem) | technical-developer | **hotovo 2026-07-27 (D27, podmínka 0a)** — ADR-010, událost `assign_context`, report přestavěn na záznamy; +19 testů (vč. tripwire shody odhadu s botem), 137 zelených. Sjednotilo dvojí měřicí cut |
 | **Kalibrace-4 dle mandátu D25:** (1) balík nového znění brány Fáze 0 → schválení uživatelem; (2) obsah: řešitelnost situací bez hodnota-slotu (P2); (3) engine: `improv_skryte` (P3), dorovnání obtížnosti 1–4p přes finále/Žár (P1), ruka 1p až po P1 (P4); (4) re-měření | celé kolečko + technical-developer | **(1) HOTOVO 2026-07-27 — balík předložen:** [[../technika/kalibrace-4-brana-navrh-2026-07-27|technika/kalibrace-4-brana-navrh]] (designer → facilitátor baseline doměření 1000×2 → verdikt kritika „schválit rámec s úpravami"); **SCHVÁLENO uživatelem 2026-07-27 (D26, body 1–8, K5 = varianta D)**. **Kroky 2–4 ZASTAVENY na podmínce 0(c) (D27, 2026-07-27):** K7 learnabilita 9,1 / 10,3 b. proti gate ≥12 b. → dle mandátu eskalace, varianty V1–V4 v [[../technika/kalibrace-4-2026-07-27|technika/kalibrace-4-2026-07-27.md]] §6. Podmínky 0(a)/0(b)/0(d) + K6a variance hotové; `prototyp-mvp.md` i `obsah/` netknuté |
-| **Další iterace kalibrace (z D29):** (1) `deriveTelegrafSignal` musí respektovat slotové `stitek_citlivy` — bez toho by próza telegrafu lhala a je to blokátor varianty C; (2) varianta C na `nadrazi-vypravci` (K5-D + K2); (3) **K2 drift: krokově podmíněné pooly** (tvrdé situace pozdě, měkké brzy — PRŮŠVIH-rate se mezi situacemi liší 3,8×, ale losují se rovnoměrně), engine + `mista.yaml`; (4) severita finále pro K5f (2 marginální breache; Žár-offsety to neopraví). ~~commit-heuristika bota~~ HOTOVO (D30) | technical-developer + content-generator + PM | otevřeno — pořadí a odůvodnění v §5 [[../technika/kalibrace-4-final-2026-07-27|reportu kalibrace-4]] |
+| ~~Další iterace kalibrace (z D29)~~ | — | **uzavřeno D33** — (1) `deriveTelegrafSignal` HOTOVO, (2) varianta C HOTOVO a zapečena, (3) K2 pooly změřeny a **nezapečeny** (drift 1,282, nekupuje gate a zhoršuje K5-D; enginová podpora `faze` zapečena inertní, návrh v `scratchpad/k2-faze-navrh.md`), (4) severita finále — bezpředmětné po D33 (K5f se gatuje pooled) |
+| **PROVĚRKA BOTA proti všem veřejným pravidlům** — dvakrát se ukázalo, že měřidlo bylo horší než hra (D30: bot ignoroval verdikt zbraně na obou osách; oprava přinesla víc než dvě kola ladění obsahu). Systematicky projít, co telegraf a `stitky.yaml` hlásí jako VEŘEJNÉ, a ověřit, že to kompetentní bot používá. Levné, a všechna čísla nesená do lidské brány na tom stojí. | technical-developer + PM | **na řadě první** (D32 bod a, D33) |
+| **Fáze 2.1: vysvětlující vrstva pravidel v UI** — bez ní lidská brána selže na čitelnosti (metrika 6), ne na designu | kódový repo | **na řadě** — nález playtestu 2026-07-22 |
+| **Fáze 3: LLM adaptér + test kvality českého humoru** — největší produktové riziko dle CLAUDE.md, simulace ho z principu neotestuje | kódový repo + protocol-humor-tester | **na řadě** — BLOKUJE volba poskytovatele (viz otevřené otázky) |
 | Obsahové vady mimo mandát P2 (z D29): viditelný utok-4 slot v NPC je ve 40 % instancí nesplnitelný (`rival-prepad`, `urednik-vaha`, `mesto-ulicka`); kombi `[nastroj, improvizace]` nesplnitelný nad práh 3 (`farmar-stodola`, `most-prohnila-prkna`) | content-generator | otevřeno — nepřibalovat k jiné iteraci, rozmazalo by měření |
 | ~~P4: ruka 1p 8→9~~ | — | **ZRUŠENO (D29)** — po P1 je 1p nejvyšší ze všech počtů (61,6 %), zvětšení ruky by rozbilo K6a |
 | Volitelná obtížnost při startu runu (easy/normal/hard) | game-designer | **budoucí úkol (D25d)** — neřešit teď; až po lidské bráně |
@@ -106,88 +109,28 @@ variance doměřena (2sd = 3,22 < 6). Eskalace V1–V4 rozhodnuta uživatelem ja
 
 ## Otevřené otázky (čekají na uživatele)
 
-- ~~P-ROZHODNUTÍ: K7 learnabilita padla (D27) — varianty V1–V4~~ —
-  **ROZHODNUTO 2026-07-27 (D28): V1.** K7 (3′) = DiD ≥ −3 b.; nová **K4d**
-  s prahem **τ = 6 b. sdíleným s K6a** (tam strop, tady floor — nedá se ohnout).
-  Znění brány **ZAPEČENO** do `prototyp-mvp.md`. Watchlist: **3p** je na K4d
-  jen 1,9 b. nad prahem a je to potřetí problémový count (breach K1 i K5f).
-  Původní znění eskalace:
-  Gate ≥12 b. neprochází (9,1 / 10,3 b.) a **nad ~10,3 b. se na commit-ose
-  dostat nelze** bez rozbití blind-commitu (D15/D17). „Cena gamblu" je jako lék
-  aritmeticky vyloučená (i bez gamblu je mezera 8,1–10,5 b.). Kritik označil
-  vlastní podmínku za mis-specifikovanou (práh importován z K4c, kde nikdy
-  nevázal; testovala se hladina místo rozdílu rozdílů). **Doporučení týmu: V1**
-  — rozdělit na K7 (3′) `DiD ≥ −3 b.` (baseline ✅) a novou **K4d**
-  (`kompetentní − náhodný ≥ τ` ∧ `memorizační − kompetentní ≤ 3 b.` ∧ monotonie
-  fidelity; baseline ✅, ale 3p jen 1,9 b. nad prahem). Detail a varianty:
-  [[../technika/kalibrace-4-2026-07-27|technika/kalibrace-4-2026-07-27.md]] §6.
-  Vedlejší otázka k témuž rozhodnutí: **gamble je nezaznamenaná K1 páka**
-  (+4,1 b.; bez něj jsou všechny 4 county v pásmu) — tým nedoporučuje ji použít,
-  ale P1 o ní má vědět.
+**Živé — blokují další fáze:**
 
-- ~~SCHVÁLENÍ BALÍKU KALIBRACE-4~~ — **SCHVÁLENO 2026-07-27 jako D26**
-  (body 1–8, K5 = varianta D). Původní znění:
-  [[../technika/kalibrace-4-brana-navrh-2026-07-27|technika/kalibrace-4-brana-navrh-2026-07-27.md]]
-  — 8 očíslovaných bodů (K5 varianty A–D — doslovné D25a je měřením no-op;
-  scope + K5f 60–80 %; K7 reframe podmíněný doměřením learnability; zamítnutí
-  ceny gamblu; K2 drift ≥1,3; K1 per-count + K6a ≤6; dělba K1 s povinným
-  kontrafaktuálním artefaktem; eskalace D22f). Verdikt kritika: schválit rámec
-  s úpravami, nic nezapékat před doměřením 3 věcí. Do schválení platí stávající
-  znění brány.
-- ~~Mandát kalibrace-4 (P0–P2)~~ — **ROZHODNUTO 2026-07-27 (D25)**; balík
-  z toho plynoucí viz výše (vč. procesní dělby „kdo vlastní K1" = bod 7 balíku).
-- ~~Eskalace z D22 (kalibrace-1, 2026-07-24)~~ — **UZAVŘENO D26 (2026-07-27):**
-  (1) K2 ko-metrika schválena jako bod 5 balíku; (2) obrana-skryté sloty
-  a (3) pool brody.lecka ratifikovány jako bod 8.
+- **LLM poskytovatel NEROZHODNUT.** Blokuje fázi 3 (adaptér) a tím i test
+  kvality českého humoru, což je dle CLAUDE.md největší produktové riziko.
+  Volání drž abstrahované (ADR-004/007), levný model třídy Haiku, jedno volání
+  na uzel. Konzultace s `operations-economics` k rozpočtu je připravená.
+- **Jazyková strategie CZ→EN** — kdy zařadit překlad a test anglických protokolů.
+  Obsah vzniká a testuje se česky (rizikovější jazyk pro AI humor), primární
+  Steam trh je anglický.
+- **K5 zůstává nesplněné** (10,58 % proti ≤10 %, váže výhradně Malone; oprava by
+  sáhla na jeho identitu, což zakázalo D25e). Vědomě jde do lidské brány jako
+  známý otevřený bod — ne k rozhodnutí teď, ale k připomenutí při Go/No-Go.
 
-- **D14 — Pivot resoluce na „slotový" systém (návrh uživatele 2026-07-22/23):**
-  bez kostky; slova s 5 staty přiřazovaná do slotů situací se skrytými prahy
-  (odhalovanými po vyhodnocení); AI vypráví, staty rozhodují. PM posudek: silný
-  směr (input randomness místo output, komedie v mechanice, hádka u stolu), ale
-  3 kolize s principy k vyřešení (AI statování → autorská pipeline s moderací;
-  tvorba karet hráči → omezený skladač, ne volný text; skryté prahy → post-hoc
-  odhalení). **Mikroprototypy k osahání** (otevřít přímo v prohlížeči):
-  `dukazni-material-prototyp/experiments/mikroprototyp-sloty.html` (v1 —
-  přiřazování 8 slov) a `…/mikroprototyp-sloty-v2.html` (v2 dle iterace
-  uživatele: commit 1 věci ze 4 naslepo dle telegrafu → odhalení Mad Libs
-  textu → týmové rozdělení rolí → volitelný slot za utracení druhé věci →
-  pásma). PM doporučení k v2: věc se utrácí (loot doplňuje), pásma místo
-  procent, text situací = autorský obsah (AI jen dramatizuje výsledek).
-  **2026-07-23 rozšířeno o připomínky uživatele** (profily místo pevných jmen,
-  multi-svět/DLC, 300+100 karet, gamble draw, komediální/informační postihy,
-  mapa StS se společnými kredity) — PM + balanční posudek
-  v [[../technika/balanc-posudek-v3-2026-07-23|technika/balanc-posudek-v3]];
-  **TOP 3 rozhodnutí + learnabilita prahů UZAVŘENY 2026-07-23 jako D15**
-  (commit naslepo / tým přiřazuje / 1 stat s výjimkami; taxonomie postihů
-  70/30 s capem 2 + eskalace; prémiové = meta + specializace; prahy kotva ± šum).
-  Vizuál/UX současného prototypu je jen testovací — finální UX se ladí
-  dodatečně. **PIVOT DOKONÁN 2026-07-23** (kanon v3, D14–D19). **Hotovo
-  k 2026-07-23 večer:** kritéria v3 brány K1–K9 zafixována v prototypu
-  (Fáze 0), v3 event-log spec + ADR-008 v architektuře, kompletní obsah v3
-  (40 věcí / 15 situací / 14 postihů / místa / štítky / pronásledovatelé;
-  v2 archivován). **Hotovo navíc:** cile.yaml v3 (8 cílů nad spec
-  metrikami), prompt protokolu v0.3 + v3 regresní baterie (top riziko:
-  GANGSTER auto-fail s vysokým útokem svádí k zápisu úspěchu), prověrka
-  obsahu kritikem + **D20a: Malone nuluje hodnotu RUN-WIDE** (rozhodnutí
-  uživatele). **DESIGN REPO JE v3-KOMPLETNÍ (2026-07-23, D14–D20)** —
-  opravy obsahu po prověrce hotové a commitnuté (Malone i Brody run-wide,
-  GANGSTER strojová mapa v stitky.yaml, hodnota trim + záložní staty,
-  pooly vyrovnané, kotvy 19/53/4, telegrafy na plném invariantu).
-  **Další kroky (doporučeno: nová session nad kódovým repem):**
-  (1) přestavba enginu na slotovou resoluci dle architektura §2.2 v3 +
-  ADR-008 + obsah/*.yaml v3; (2) v3 simulátor + diagnostický run-1 →
-  fixace K1 pásma → kalibrace dle pořadí Fáze 0; (3) fallback šablony
-  přepsat na v3 pásma (fáze 2 UI); (4) konzultace operations-economics
-  k promptu v0.3 (delší per-call vstup — rozpočet Haiku); (5) sim
-  watchlist: improvizace jako univerzální flex, GANGSTER hustota,
-  ruka_minus u 4p, player-count práh cíle muj-den.
+**Budoucí, neblokující:**
 
-*(D1–D9 schváleny a zapracovány 2026-07-22 — viz [[rozhodnuti]].)*
+- Volitelná obtížnost při startu runu (easy/normal/hard) — D25d, až po lidské bráně.
 
-- Škálování obtížnosti počtem hráčů (páka 7) — odloženo, rozhodne se z dat
-  2. běhu simulace / lidské brány.
-- LLM poskytovatel nerozhodnut (drž volání abstrahované).
-- Jazyková strategie CZ→EN (kdy zařadit překlad a test anglických protokolů).
+**Uzavřeno (detaily v [[rozhodnuti]]):** pivot v3 na slotovou resoluci (D14–D20) ·
+mandát kalibrace-4 (D25) · balík znění brány (D26) · eskalace K7 learnability
+→ varianta V1 (D28) · P-rozhodnutí K2 a K5-D → uzavření kalibrace (D32, D33) ·
+škálování obtížnosti počtem hráčů — **vyřešeno P1** (per-count posun prahů Žáru,
+K6a 11,8 → 4,7 b.) · eskalace z D22 (D26).
 
 ## Provozní poznámky
 
