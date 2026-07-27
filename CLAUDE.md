@@ -131,12 +131,14 @@ Go/No-Go je **dvoustupňové**:
    (`prototyp-mvp.md` Fáze 0), engine na slotové resoluci. Kalibrace-1 (D22)
    zapečena; kalibrace-2 opravila K4c (šum ±2); kalibrace-3 (D24) lék „snížit
    viditelné kotvy" měřením vyvrátila — nic se nezapeklo, drivery jsou
-   hodnota-sloty nulované Malonem + finále. **Mandát kalibrace-4 ROZHODNUT
-   (D25, 2026-07-27):** K5 bez mechanicky nulovaných slotů, scope K5/K7 na
-   běžné uzly + vlastní metrika finále, K7/K2 znění předloží tým balíkem ke
-   schválení, obtížnost jednotná napříč 1–4p, Malone: řešitelnost situací bez
-   hodnota-slotu — viz `technika/kalibrace-3-2026-07-26.md` + D25
-   v `projekt/rozhodnuti.md`.
+   hodnota-sloty nulované Malonem + finále. **Mandát kalibrace-4 rozhodnut (D25)
+   a balík nového znění brány SCHVÁLEN (D26, 2026-07-27):** K5 = varianta D
+   („mříž mrtvých rozhodnutí" — max≤1 před i po gamblu), K5f metrika finále,
+   K7 reframe podmíněný learnabilitou, K2 drift ≥1,3, K1 per-count + K6a ≤6,
+   dělba K1 s kontrafaktuálním otiskem; eskalace D22f uzavřeny. Kanon zadání =
+   `technika/kalibrace-4-brana-navrh-2026-07-27.md`; zapečení do
+   `prototyp-mvp.md` + P1–P4 + re-měření = samostatná re-měřicí session
+   (prompt v části E balíku).
    Od **D23 (2026-07-26) monorepo** — kód v `prototyp/`, kalibrační smyčka
    v jednom repu; kandidátní obsah se měří kontrafaktuálně přes `CONTENT_DIR`
    před zapečením.

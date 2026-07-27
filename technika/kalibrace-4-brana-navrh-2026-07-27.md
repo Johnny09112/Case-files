@@ -1,8 +1,10 @@
 # Kalibrace-4 — schvalovací balík nového znění simulační brány Fáze 0
 
-> **STAV: NÁVRH — ČEKÁ NA SCHVÁLENÍ UŽIVATELE.** Nic z tohoto dokumentu není
-> zapečeno; `prototyp-mvp.md` je nedotčený a do schválení platí stávající znění
-> brány (nové metriky jsou jen diagnostika). Předkládá se JEDNÍM balíkem dle D25c.
+> **STAV: SCHVÁLENO UŽIVATELEM 2026-07-27 (D26)** — body 1–8 v plném rozsahu,
+> u bodu 1 (K5) zvolena **varianta D** („mříž mrtvých rozhodnutí", s opravou
+> operacionalizace dle kritika), bod 8 ratifikován celý (obrana-skryté sloty
+> i pool brody.lecka). Zapečení do `prototyp-mvp.md` provede re-měřicí session
+> dle části E (podmínky platnosti 0a–0d z verdiktu kritika platí).
 
 *Sestavil: PM (orchestrace: game-designer → playtest-facilitator → design-critic,
 plné kolečko). Datum: 2026-07-27. Zdroj čísel: baseline doměření facilitátora na

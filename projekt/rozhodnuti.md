@@ -13,6 +13,33 @@ architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.m
 
 ## 2026-07-27
 
+- **D26 schváleno — balík nového znění simulační brány Fáze 0 (body 1–8,
+  K5 = varianta D).** Uživatel schválil
+  [[../technika/kalibrace-4-brana-navrh-2026-07-27|technika/kalibrace-4-brana-navrh-2026-07-27.md]]
+  v plném rozsahu: (1) **K5 varianta D** — „mříž mrtvých rozhodnutí": podíl
+  uzlů, kde `max≤1` platí PŘED gamblem i PO gamblu (realistická gamble-politika,
+  ne best-case; práh doměří re-měřicí session); free-pass definice nulovaných
+  slotů součástí, stará metrika `max≤1` zůstává diagnostika. Kontext: doslovné
+  P0a z D25 je měřením no-op a gate <5 % nedosažitelný žádnou redefinicí —
+  D26 tímto v bodě K5 nahrazuje D25a. (2) scope K5/K7 na běžné uzly + **K5f**
+  přežití konfrontace 60–80 % per count × pronásledovatel ∧ ≥90 % proher ve
+  finále; (3) **K7 reframe** (take_vynucený ≥80 % ∧ podíl vynucených uzlů
+  ≤15 % ∧ learnabilita ≥12 b. ∧ EV<0 při est≥3; zvolený take 30–50 % jen
+  diagnostika) — PODMÍNĚNO doměřením learnability jako prvním krokem, při
+  <12 b. reframe padá a „cena gamblu" se vrací jako P-rozhodnutí;
+  (4) potvrzeno zamítnutí „ceny gamblu" (vize §4.4); (5) **K2 = drift
+  PRŮŠVIH-rate ≥1,3 ∧ floor pozdní ≥20 %** (baseline 1,16 neplní — zpřísnění,
+  snowball se musí vyrobit; ratifikuje D22f(1)); (6) **K1 per-count ∈[45,70]
+  ∧ K6a ≤6 b.** (zpřísnění, operacionalizace P1/D25d); (7) dělba K1 podle
+  páky + povinný kontrafaktuální whole-gate artefakt před každým zapečením
+  (nahrazuje D22e „výhradně engine"); (8) ratifikace zbytku D22f: obrana-skryté
+  sloty = „levný naslepo-slot + přeliv pokrytím" (potvrzeno falzifikací
+  kalibrace-3), pool-odchylka brody.lecka (prilis-na-rane) potvrzena.
+  Verdikt kritika (schválit rámec, nic nezapékat před doměřením learnability,
+  prahu K5-D a sjednocením měřicích cutů) je součástí schválení — podmínky
+  platnosti 0a–0d v části E balíku. *Provedení kalibrace-4 = samostatná
+  re-měřicí session (prompt v části E).*
+
 - **D25 schváleno — mandát kalibrace-4 (rozhodnutí uživatele, P0–P2 + P1).**
   Odpovědi na eskalaci z D24 (vždy doporučená varianta týmu):
   (a) **P0a — K5 bez mechanicky nulovaných slotů:** hodnota-sloty nulované

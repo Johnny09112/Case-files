@@ -19,12 +19,12 @@ opačný, K5/K7 v mandátu nedosažitelné, drivery = Malone-nulované hodnota-s
 + finále), nic se nezapeklo. **Mandát kalibrace-4 ROZHODNUT (D25, 2026-07-27):**
 K5 bez mechanicky nulovaných slotů, scope K5/K7 na běžné uzly + vlastní metrika
 finále, K7/K2 znění v revizi (tým předloží balík ke schválení), obtížnost
-jednotná napříč 1–4p, Malone: řešitelnost bez hodnota-slotu. **Schvalovací balík
-nového znění brány PŘEDLOŽEN (2026-07-27):**
-[[../technika/kalibrace-4-brana-navrh-2026-07-27|technika/kalibrace-4-brana-navrh-2026-07-27.md]]
-— čeká na schválení uživatele (body 1–8). Klíčový nález doměření: doslovné P0a
-(K5 bez nulovaných slotů) je měřením NO-OP a gate <5 % je nedosažitelný žádnou
-redefinicí → rozhodovací varianty A–D. `prototyp-mvp.md` nezměněn.
+jednotná napříč 1–4p, Malone: řešitelnost bez hodnota-slotu. **Balík nového znění brány
+SCHVÁLEN (D26, 2026-07-27):** body 1–8, K5 = varianta D („mříž mrtvých
+rozhodnutí"), eskalace D22f uzavřeny.
+[[../technika/kalibrace-4-brana-navrh-2026-07-27|Balík]] je kanonické zadání;
+`prototyp-mvp.md` zapeče až re-měřicí session (prompt v části E, podmínky
+platnosti 0a–0d). **Míč: uživatel spustí re-měřicí session kalibrace-4.**
 
 ## Backlog
 
@@ -78,9 +78,9 @@ redefinicí → rozhodovací varianty A–D. `prototyp-mvp.md` nezměněn.
   znění brány.
 - ~~Mandát kalibrace-4 (P0–P2)~~ — **ROZHODNUTO 2026-07-27 (D25)**; balík
   z toho plynoucí viz výše (vč. procesní dělby „kdo vlastní K1" = bod 7 balíku).
-- ~~Eskalace z D22 (kalibrace-1, 2026-07-24)~~ — (1) K2 ko-metrika je bod 5
-  balíku; (2) ratifikace obrana-skrytých slotů a (3) pool-odchylka brody.lecka
-  jsou bod 8 balíku (část D).
+- ~~Eskalace z D22 (kalibrace-1, 2026-07-24)~~ — **UZAVŘENO D26 (2026-07-27):**
+  (1) K2 ko-metrika schválena jako bod 5 balíku; (2) obrana-skryté sloty
+  a (3) pool brody.lecka ratifikovány jako bod 8.
 
 - **D14 — Pivot resoluce na „slotový" systém (návrh uživatele 2026-07-22/23):**
   bez kostky; slova s 5 staty přiřazovaná do slotů situací se skrytými prahy
