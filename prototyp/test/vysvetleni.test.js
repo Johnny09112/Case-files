@@ -142,3 +142,75 @@ describe('vysvetli — důvody resoluce slotu (§5)', () => {
     expect(a.detail).toContain('zmenšenou ruku');
   });
 });
+
+const CTX_POSTIH = { ...CTX, postihy: { 'rozdrcena-noha': 'Rozdrcená noha', 'narazene-rameno': 'Naražené rameno', 'ochrnuta-ruka': 'Ochrnutá ruka' } };
+
+describe('vysvetli — postihy (§5)', () => {
+  it('penalty_added řekne za co, jaký tier a co postih dělá', () => {
+    const a = vsechny(vysvetli(log({ type: EVENT.PENALTY_ADDED, nodeIndex: 3, hrac_id: 'p1', postih_id: 'rozdrcena-noha', kategorie: 'zamkovy', tier: 'tezky', efekt: { druh: 'lock_slot_viditelnost', viditelnost: 'skryta' }, vyprsi_za: null, pricina: '≤1/4_PRUSVIH', aktivnich_po: 1 }), CTX_POSTIH))[0];
+    expect(a.misto).toBe(MISTO.SPIS);
+    expect(a.veta).toContain('Rozdrcená noha');
+    expect(a.veta).toContain('těžký');
+    expect(a.veta).toContain('zámkový');
+    expect(a.detail).toContain('skryté role');
+    expect(a.detail).toContain('do vyléčení');
+  });
+
+  it('penalty_expired a penalty_healed se liší důvodem a cenou', () => {
+    const anotace = vsechny(vysvetli(log(
+      { type: EVENT.PENALTY_EXPIRED, hrac_id: 'p1', postih_id: 'narazene-rameno', duvod: 'cas' },
+      { type: EVENT.PENALTY_HEALED, hrac_id: 'p1', postih_id: 'rozdrcena-noha', cena: 6 }
+    ), CTX_POSTIH));
+    expect(anotace[0].veta).toContain('Naražené rameno');
+    expect(anotace[0].veta).toContain('vypršel');
+    expect(anotace[1].veta).toContain('vyléčena v motelu za 6');
+  });
+
+  it('character_folded vysvětlí cap i to, že lehké se mažou a těžké zůstávají', () => {
+    const a = vsechny(vysvetli(log({ type: EVENT.CHARACTER_FOLDED, hrac_id: 'p1', kolo_od: 4, smazane_lehke: ['narazene-rameno'], pretrvavaji_tezke: ['rozdrcena-noha'] }), CTX_POSTIH))[0];
+    expect(a.veta).toContain('Bartoš');
+    expect(a.veta).toContain('třetí postih');
+    expect(a.detail).toContain('Naražené rameno');
+    expect(a.detail).toContain('Rozdrcená noha');
+  });
+
+  it('character_returned hlásí návrat do hry', () => {
+    const a = vsechny(vysvetli(log({ type: EVENT.CHARACTER_RETURNED, hrac_id: 'p1' }), CTX_POSTIH))[0];
+    expect(a.veta).toContain('Bartoš');
+    expect(a.veta).toContain('vrací');
+  });
+});
+
+describe('vysvetli — řetězec přes uzly (§7 test 4)', () => {
+  /** Postih vznikne v uzlu 3, auto-fail způsobí v uzlu 5 — odkaz musí ukázat zpátky. */
+  const events = log(
+    { type: EVENT.SITUATION_REVEALED, nodeIndex: 3, situace_id: 's1', typ: 'lokace', typ_mista: 'lokace', sloty: [slot()] },
+    { type: EVENT.PENALTY_ADDED, nodeIndex: 3, hrac_id: 'p1', postih_id: 'rozdrcena-noha', kategorie: 'zamkovy', tier: 'tezky', efekt: { druh: 'lock_slot_viditelnost', viditelnost: 'skryta' }, vyprsi_za: null, pricina: '≤1/4_PRUSVIH', aktivnich_po: 1 },
+    { type: EVENT.SLOT_RESOLVED, nodeIndex: 5, ...resolved({ zasah: false, duvod: 'postih_lock_viditelnost', postih_efekt: 'lock_slot_viditelnost', viditelnost: 'skryta', stat_hodnota: 0 }) }
+  );
+
+  it('zámkový auto-fail odkazuje na uzel, kde postih vznikl', () => {
+    const a = vsechny(vysvetli(events, CTX_POSTIH)).at(-1);
+    expect(a.veta).toContain('Rozdrcená noha');
+    expect(a.odkaz.seq).toBe(2);
+    expect(a.odkaz.popis).toContain('uzel 3');
+    expect(a.odkaz.popis).toContain('Brod u farmy');
+  });
+
+  it('lock_stitek řekne, že zbraň neudržíš, a taky odkáže', () => {
+    const s = log(
+      { type: EVENT.PENALTY_ADDED, nodeIndex: 2, hrac_id: 'p1', postih_id: 'ochrnuta-ruka', kategorie: 'zamkovy', tier: 'tezky', efekt: { druh: 'lock_stitek', stitek: 'GANGSTER' }, vyprsi_za: null, pricina: '≤1/4_PRUSVIH', aktivnich_po: 1 },
+      { type: EVENT.SLOT_RESOLVED, nodeIndex: 4, ...resolved({ karta_id: 'bouchacka', zasah: false, duvod: 'postih_lock_stitek', postih_efekt: 'lock_stitek', stitky: ['GANGSTER'], stat_hodnota: 0 }) }
+    );
+    const a = vsechny(vysvetli(s, CTX_POSTIH)).at(-1);
+    expect(a.veta).toContain('Ochrnutá ruka');
+    expect(a.odkaz.seq).toBe(1);
+  });
+
+  it('po vyléčení už další auto-fail na týž postih neodkazuje', () => {
+    const s = [...events, { seq: 4, nodeIndex: 6, type: EVENT.PENALTY_HEALED, hrac_id: 'p1', postih_id: 'rozdrcena-noha', cena: 6 },
+      { seq: 5, nodeIndex: 7, ...resolved({ zasah: false, duvod: 'postih_lock_viditelnost', postih_efekt: 'lock_slot_viditelnost', stat_hodnota: 0 }) }];
+    const a = vsechny(vysvetli(s, CTX_POSTIH)).at(-1);
+    expect(a.odkaz).toBeUndefined();
+  });
+});

@@ -69,6 +69,8 @@ function novaKniha(ctx, events, out) {
     rusi: /** @type {{typ: string, cil: string}|null} */ (null),
     /** nodeIndex → situace_id (pro popis odkazů). */
     situaceUzlu: /** @type {Map<number, string>} */ (new Map()),
+    /** hrac_id → aktivní trvalé postihy (pro řetězec: kde vznikly). */
+    aktivniPostihy: /** @type {Map<string, {postih_id: string, druh: string, seq: number, nodeIndex: number}[]>} */ (new Map()),
   };
 }
 
@@ -101,6 +103,48 @@ function nazevVeci(k, kartaId) {
 function jmenoHrace(k, hracId) {
   return k.ctx.jmena?.[hracId] ?? hracId ?? 'nikdo';
 }
+
+function nazevPostihu(k, postihId) {
+  return k.ctx.postihy?.[postihId] ?? postihId;
+}
+
+/** Popis uzlu pro zpětný odkaz: „uzel 3 — Brod u farmy". */
+function popisUzlu(k, nodeIndex) {
+  const situaceId = k.situaceUzlu.get(nodeIndex);
+  const label = situaceId ? (k.ctx.situace?.[situaceId] ?? situaceId) : null;
+  return label ? `uzel ${nodeIndex} — ${label}` : `uzel ${nodeIndex}`;
+}
+
+/** Co postih dělá, česky — uzavřený enum efektů (rules.POSTIH_EFEKTY). */
+function popisEfektu(efekt) {
+  switch (efekt?.druh) {
+    case 'hide_staty': return 'vlastník vidí názvy věcí, ne jejich staty';
+    case 'hide_telegraf': return 'vlastník nevidí telegraf příští situace — commituje naslepo';
+    case 'hide_viditelnost': return 'vlastník nevidí, které role jsou skryté';
+    case 'lock_stitek': return `co má štítek ${efekt.stitek}, vlastníkovi ve slotu propadne`;
+    case 'lock_slot_viditelnost': return `do ${efekt.viditelnost === 'skryta' ? 'skryté role' : 'viditelné role'} vlastník nic neprosadí`;
+    case 'lock_gamble': return 'tým nesmí použít gamble, dokud postih drží';
+    case 'ztrata_kreditu': return `týmu ubylo ${efekt.kolik ?? 1} kreditů`;
+    case 'ztrata_karty': return `vlastník odhodil ${efekt.kolik ?? 1} věcí z ruky`;
+    case 'ztrata_naklad': return `týmu ubyly ${efekt.kolik ?? 1} bedny nákladu`;
+    case 'ruka_minus': return `vlastník má o ${efekt.kolik ?? 1} menší ruku`;
+    default: return 'efekt neznámý';
+  }
+}
+
+/** Najde aktivní postih hráče podle druhu efektu (pro zpětný odkaz auto-failu). */
+function najdiPostih(k, hracId, druh) {
+  return (k.aktivniPostihy.get(hracId) ?? []).find((p) => p.druh === druh) ?? null;
+}
+
+/** Odebere postih z knihy (vypršel / vyléčen / smazán složením). */
+function odeberPostih(k, hracId, postihId) {
+  const seznam = k.aktivniPostihy.get(hracId);
+  if (!seznam) return;
+  k.aktivniPostihy.set(hracId, seznam.filter((p) => p.postih_id !== postihId));
+}
+
+const KATEGORIE_LABEL = { informacni: 'informační', zamkovy: 'zámkový', ztratovy: 'ztrátový' };
 
 /**
  * Handlery per typ události. Prázdné pole = událost vědomě BEZ anotace
@@ -168,10 +212,71 @@ const HANDLERS = {
           veta: `„${vec}" je zbraň ve viditelné roli — padá bez ohledu na staty.`,
           detail: `${kdo} · Telegraf to hlásil předem: zbraň na očích tady neprojde.`,
         }];
+      case 'postih_lock_stitek':
+      case 'postih_lock_viditelnost': {
+        const zdroj = najdiPostih(k, e.hrac_id, e.postih_efekt);
+        const nazev = zdroj ? nazevPostihu(k, zdroj.postih_id) : 'Postih';
+        const veta = e.duvod === 'postih_lock_stitek'
+          ? `${nazev} — zbraň v ruce neudržíš, „${vec}" propadá bez ohledu na staty.`
+          : `${nazev} — do ${e.viditelnost === 'skryta' ? 'skryté' : 'viditelné'} role nic neprosadíš, „${vec}" propadá.`;
+        return [{
+          ...zaklad,
+          veta,
+          detail: `${kdo} · Zámkový postih je tvrdé pravidlo nad staty, stejná třída jako štítek.`,
+          ...(zdroj ? { odkaz: { seq: zdroj.seq, popis: popisUzlu(k, zdroj.nodeIndex) } } : {}),
+        }];
+      }
       default:
         return [{ ...zaklad, veta: `Slot vyhodnocen (${e.duvod}).`, detail: kdo }];
     }
   },
+
+  [EVENT.PENALTY_ADDED]: (e, k) => {
+    // „ihned" postihy se jen provedou a zmizí — do knihy aktivních nepatří.
+    if (e.vyprsi_za !== 'ihned') {
+      const seznam = k.aktivniPostihy.get(e.hrac_id) ?? [];
+      seznam.push({ postih_id: e.postih_id, druh: e.efekt?.druh, seq: e.seq, nodeIndex: e.nodeIndex });
+      k.aktivniPostihy.set(e.hrac_id, seznam);
+    }
+    const trvani = e.tier === 'tezky' ? 'drží do vyléčení v motelu' : e.vyprsi_za === 'ihned' ? 'jednorázově' : `vyprší za ${e.vyprsi_za} kola`;
+    return [{
+      misto: MISTO.SPIS,
+      veta: `Za ${e.pricina}: ${jmenoHrace(k, e.hrac_id)} — ${nazevPostihu(k, e.postih_id)} (${e.tier === 'tezky' ? 'těžký' : 'lehký'}, ${KATEGORIE_LABEL[e.kategorie] ?? e.kategorie}).`,
+      detail: `${popisEfektu(e.efekt)}; ${trvani}. Aktivních postihů: ${e.aktivnich_po}.`,
+    }];
+  },
+
+  [EVENT.PENALTY_EXPIRED]: (e, k) => {
+    odeberPostih(k, e.hrac_id, e.postih_id);
+    return [{ misto: MISTO.SPIS, veta: `${nazevPostihu(k, e.postih_id)} (${jmenoHrace(k, e.hrac_id)}) vypršel.` }];
+  },
+
+  [EVENT.PENALTY_HEALED]: (e, k) => {
+    odeberPostih(k, e.hrac_id, e.postih_id);
+    return [{
+      misto: MISTO.SPIS,
+      veta: `${nazevPostihu(k, e.postih_id)} (${jmenoHrace(k, e.hrac_id)}) vyléčena v motelu za ${e.cena} kreditů.`,
+      detail: 'Těžké postihy se jinak než v motelu nezbavíš — složení maže jen lehké.',
+    }];
+  },
+
+  [EVENT.CHARACTER_FOLDED]: (e, k) => {
+    for (const id of e.smazane_lehke ?? []) odeberPostih(k, e.hrac_id, id);
+    return [{
+      misto: MISTO.SPIS,
+      veta: `${jmenoHrace(k, e.hrac_id)} se složil — třetí postih se nepřidává, postava kolo–dvě leží.`,
+      detail: [
+        `Smazáno (lehké): ${(e.smazane_lehke ?? []).map((id) => nazevPostihu(k, id)).join(', ') || 'nic'}`,
+        `Zůstává (těžké): ${(e.pretrvavaji_tezke ?? []).map((id) => nazevPostihu(k, id)).join(', ') || 'nic'}`,
+        'Složená postava necommituje — její sloty propadnou jako neobsazené.',
+      ].join(' · '),
+    }];
+  },
+
+  [EVENT.CHARACTER_RETURNED]: (e, k) => [{
+    misto: MISTO.SPIS,
+    veta: `${jmenoHrace(k, e.hrac_id)} se vrací do hry a zase committuje.`,
+  }],
 };
 
 /**
