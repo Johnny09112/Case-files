@@ -1,7 +1,7 @@
 # Stav projektu
 
 *Živý dokument. Udržuje `project-manager` — aktualizuj po každém větším kroku.
-Poslední aktualizace: 2026-07-26.*
+Poslední aktualizace: 2026-07-27.*
 
 ## Aktuální fáze
 
@@ -19,8 +19,12 @@ opačný, K5/K7 v mandátu nedosažitelné, drivery = Malone-nulované hodnota-s
 + finále), nic se nezapeklo. **Mandát kalibrace-4 ROZHODNUT (D25, 2026-07-27):**
 K5 bez mechanicky nulovaných slotů, scope K5/K7 na běžné uzly + vlastní metrika
 finále, K7/K2 znění v revizi (tým předloží balík ke schválení), obtížnost
-jednotná napříč 1–4p, Malone: řešitelnost bez hodnota-slotu. **Kalibrace-4 je
-odblokovaná — připravena ke spuštění.**
+jednotná napříč 1–4p, Malone: řešitelnost bez hodnota-slotu. **Schvalovací balík
+nového znění brány PŘEDLOŽEN (2026-07-27):**
+[[../technika/kalibrace-4-brana-navrh-2026-07-27|technika/kalibrace-4-brana-navrh-2026-07-27.md]]
+— čeká na schválení uživatele (body 1–8). Klíčový nález doměření: doslovné P0a
+(K5 bez nulovaných slotů) je měřením NO-OP a gate <5 % je nedosažitelný žádnou
+redefinicí → rozhodovací varianty A–D. `prototyp-mvp.md` nezměněn.
 
 ## Backlog
 
@@ -53,7 +57,7 @@ odblokovaná — připravena ke spuštění.**
 | **Kalibrace-2 lék: snížit viditelné kotvy běžných uzlů** | game-designer + content-generator | **uzavřeno 2026-07-26 (D24) — lék VYVRÁCEN měřením**, nic se nezapeklo; viz řádek kalibrace-3 |
 | **Kalibrace-3: selektivní revert kotev 4→3** — návrh 12 slotů (designer) → adversariální prověrka (kritik) → per-slot diagnostika + kontrafaktuální gate-měření 1000×2 přes CONTENT_DIR (facilitátor) | celé kolečko + playtest-facilitator | **hotovo 2026-07-26 (D24) — NEGATIVNÍ VÝSLEDEK**: žádná podmnožina mandátu gate nesplní (K1 špatný směr, K5≥13.6 %, K7≥40.5 % i při maximu); drivery mimo mandát (Malone-nulovaná hodnota, finále ~50 %). Report [[../technika/kalibrace-3-2026-07-26|technika/kalibrace-3-2026-07-26.md]]; mandát kalibrace-4 (P0–P4) eskalován na uživatele |
 | Pro technical-developer: do `sim/report.js` doplnit rozpady per-situace / per-slot / common-vs-finále / K5 viditelná-skrytá (v kalibraci-3 počítáno ad-hoc skriptem) | technical-developer | otevřeno — z kalibrace-3 2026-07-26 |
-| **Kalibrace-4 dle mandátu D25:** (1) balík nového znění brány Fáze 0 (K5 bez nulovaných slotů + scope běžné uzly, metrika finále, revize K7, K2 ko-metrika) → schválení uživatelem; (2) obsah: řešitelnost situací bez hodnota-slotu (P2); (3) engine: `improv_skryte` (P3), dorovnání obtížnosti 1–4p přes finále/Žár (P1), ruka 1p až po P1 (P4); (4) re-měření | celé kolečko + technical-developer | **otevřeno — mandát rozhodnut 2026-07-27 (D25)**, připraveno ke spuštění |
+| **Kalibrace-4 dle mandátu D25:** (1) balík nového znění brány Fáze 0 → schválení uživatelem; (2) obsah: řešitelnost situací bez hodnota-slotu (P2); (3) engine: `improv_skryte` (P3), dorovnání obtížnosti 1–4p přes finále/Žár (P1), ruka 1p až po P1 (P4); (4) re-měření | celé kolečko + technical-developer | **(1) HOTOVO 2026-07-27 — balík předložen:** [[../technika/kalibrace-4-brana-navrh-2026-07-27|technika/kalibrace-4-brana-navrh]] (designer → facilitátor baseline doměření 1000×2 → verdikt kritika „schválit rámec s úpravami"); **čeká na schválení uživatele (body 1–8)**. Kroky 2–4 = re-měřicí session dle startovacího promptu v části E balíku (learnabilita K7 a sjednocení měřicích cutů PRVNÍ) |
 | Volitelná obtížnost při startu runu (easy/normal/hard) | game-designer | **budoucí úkol (D25d)** — neřešit teď; až po lidské bráně |
 | **Monorepo (D23): sloučení kódového repa do `prototyp/`** — subtree se zachovanou historií, submodule zrušen, cesty na kořen, ADR-009, otisk verzeObsahu nezávislý na line endings | project-manager | **hotovo 2026-07-26** — 118/118 testů, sim smoke shodný s kalibrací-2, build+lint čisté; GitHub repo prototypu archivovat (viz plán); plán [[../technika/migrace-monorepo-plan-2026-07-26|technika/migrace-monorepo-plan]] |
 | Setup pluginů pro kódovou část (`prototyp/`): Superpowers (inženýrská disciplína), frontend-design (až UI — nakrmit estetikou z design dokumentu), security-guidance | uživatel (claude CLI) | po monorepu (D23) se instalují do tohoto repa — dělba platí: Superpowers jen pro práci v `prototyp/`, herně-designovou disciplínu drží naši agenti |
@@ -64,18 +68,19 @@ odblokovaná — připravena ke spuštění.**
 
 ## Otevřené otázky (čekají na uživatele)
 
-- ~~Mandát kalibrace-4 (P0–P2)~~ — **ROZHODNUTO 2026-07-27 (D25):** P0a vyjmout
-  nulované sloty z K5, P0b scope na běžné uzly + vlastní metrika finále,
-  P0c/K2 znění brány předloží tým jedním balíkem ke schválení, P1 obtížnost
-  jednotná 1–4p (interní dorovnání = delegovaná kalibrace), P2 řešitelnost
-  situací bez hodnota-slotu. Zbývá procesní: re-ratifikovat dělbu „kdo vlastní
-  K1" (engine vs. obsah) — navrhne tým v rámci kalibrace-4.
-- **Eskalace z D22 (kalibrace-1, 2026-07-24):** (1) ko-metrika K2 = drift míry
-  PRŮŠVIHŮ uzel3–4 vs. uzel1–2 — přidat do znění brány K2 v `prototyp-mvp.md`?
-  (zatím jen diagnostika v reportu enginu, gate ≥1,3× beze změny); (2) ratifikace
-  posunu u obrana-skrytých slotů (z „odvoditelný z telegrafu" na „levný
-  naslepo-slot + přeliv pokrytím"); (3) potvrzení pool-odchylky brody.lecka
-  (prilis-na-rane místo prach-do-oci kvůli stropu ≤7).
+- **SCHVÁLENÍ BALÍKU KALIBRACE-4 (předloženo 2026-07-27):**
+  [[../technika/kalibrace-4-brana-navrh-2026-07-27|technika/kalibrace-4-brana-navrh-2026-07-27.md]]
+  — 8 očíslovaných bodů (K5 varianty A–D — doslovné D25a je měřením no-op;
+  scope + K5f 60–80 %; K7 reframe podmíněný doměřením learnability; zamítnutí
+  ceny gamblu; K2 drift ≥1,3; K1 per-count + K6a ≤6; dělba K1 s povinným
+  kontrafaktuálním artefaktem; eskalace D22f). Verdikt kritika: schválit rámec
+  s úpravami, nic nezapékat před doměřením 3 věcí. Do schválení platí stávající
+  znění brány.
+- ~~Mandát kalibrace-4 (P0–P2)~~ — **ROZHODNUTO 2026-07-27 (D25)**; balík
+  z toho plynoucí viz výše (vč. procesní dělby „kdo vlastní K1" = bod 7 balíku).
+- ~~Eskalace z D22 (kalibrace-1, 2026-07-24)~~ — (1) K2 ko-metrika je bod 5
+  balíku; (2) ratifikace obrana-skrytých slotů a (3) pool-odchylka brody.lecka
+  jsou bod 8 balíku (část D).
 
 - **D14 — Pivot resoluce na „slotový" systém (návrh uživatele 2026-07-22/23):**
   bez kostky; slova s 5 staty přiřazovaná do slotů situací se skrytými prahy
@@ -138,6 +143,11 @@ odblokovaná — připravena ke spuštění.**
   zapečením měří kontrafaktuálně přes `CONTENT_DIR` na kopii `obsah/` ve
   scratchpadu; per-slot diagnostika PŘED zapečením zabránila spálené iteraci.
   Testy/commity za PM provádí playtest-facilitator (má Bash).
+- **2026-07-27 (balík kalibrace-4):** background agenti se ukončovali bez
+  doručených výsledků → spolehlivější jsou synchronní běhy (`run_in_background:
+  false`) s výstupem do souboru ve scratchpadu. Vedlejší efekt: měření i
+  finalizace běžely 2× nezávisle — závěry se shodly, dílčí čísla se lišila
+  (dvojí měřicí cut, viz část C balíku); sjednotí formalizovaný `report.js`.
 
 ## „Vyřešíme později" sliby
 

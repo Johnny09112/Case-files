@@ -36,5 +36,19 @@ designéra a remote/async sezení. Každou spáruj se signálem z šablony playt
   neodpovědělo ale, jestli je hra, kde se každý nutně zřídí, čitelná jako drsná komedie,
   nebo jako nefér. (Souvisí přímo s kolapsem výše — stejný kořen.)
 
+## Nové z kalibrace-4 baseline (2026-07-27, viz [[kalibrace-4-baseline]])
+
+- **Gamble s nízkou EV, brán ve ~40 % uzlů (est=2).** Sim: zlepšení stropu Δmax jen
+  0,07; realizované pásmo > pre-strop jen ~14 %. Bot ho bere jako rutinní hedge. →
+  Je „líznout záchranu" napínavý moment, nebo nudná daň, kterou hráči jen odklikávají?
+  Kdyby to lidi hráli jako otravný rerol, gamble potřebuje cenu (design), ne strop.
+- **Konfrontace = klimax, přežití 64–80 % (1p Malone nejtěžší 64 %, 4p Brody 80 %).**
+  Sim: reach ~95 %, přežití ploché. → Cítí se finále NAPÍNAVĚ (sázka existuje), nebo
+  je 80 % přežití antiklimatické u 4p? Sólo (64 %) je nejtěžší — je to zamýšlené?
+- **95–98 % proher padne VE finále, jen 2–5 % dřív.** Sim to čte jako zdravý dramatický
+  oblouk (hra se rozhoduje na klimaxu, ne atricí). → Ale cítí se prohra po skoro celém
+  runu jako DRAMA, nebo jako „nadarmo jsem hrál celý run"? (Váže se na kolaps-frustraci
+  výše — stejná otázka „drsná komedie vs. nefér".)
+
 Otevřené číselné páky, které se po lidské zpětné vazbě můžou hnout, jsou v
 [[sim-gate-findings]].

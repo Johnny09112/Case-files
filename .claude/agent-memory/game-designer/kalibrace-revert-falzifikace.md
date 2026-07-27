@@ -27,6 +27,19 @@ K1 klesne do pásma + uleví K5/K7" byla **falzifikována přímým měřením e
 **How to apply:** K1 3p/4p tlačit dolů výhradně přes finále/Žár/škálování počtem
 hráčů, NE přes běžné uzly. Než navrhnu cokoli k win-rate, ověř směr proti enginu —
 teoretická úvaha o „vynucených gamblech" (efekt A vs B) mě svedla špatným směrem.
-Návrh kalibrace-4 (redefinice K5 gate na „bez mechanicky nulovaných slotů" +
-scope na běžné uzly; Malone hodnota-slot; co-op škálování obtížnosti) je eskalace
-u uživatele. Viz [[design-era-kalibrace]].
+
+**Druhá instance téhož vzorce (kalibrace-4, 2026-07-27):** navrhl jsem K5 „vyřadit
+mechanicky nulované sloty z počtu zásahů" jako lék na Malone → **facilitátor měřením
+prokázal, že je to matematický NO-OP** (`(b)==(a)` do desetiny: nulovaný slot je
+garantovaná 0, kterou MAX už tak nezapočítává, takže jeho odečtení maximum nesníží).
+Nulace bije vrstvu LOOT (`max<4`), NE beznadějnou (`max≤1`). Navíc `<5 %` je
+nedosažitelné JAKOUKOLI redefinicí čitatele (min 10,8 % free-pass+common) — driver
+je broad struktura kotva 2–4 + šum ±2, ne Malone (76 % beznadějnosti s ním
+nesouvisí) ani finále (`max≤1`-rate common ≈ celek).
+
+**Zobecněné pravidlo:** než navrhnu redefinici metriky jako „lék", **ověř matematiku
+proti enginu / požádej facilitátora o kontrafaktuál** — teoretická redefinice může
+být no-op nebo mířit na špatný driver. Dvakrát mě teorie (efekt vs. měření) svedla.
+Poctivá cesta při doručení: přiznat no-op, předložit VARIANTY s doporučením, odchylku
+od doslovného mandátu označit jako rozhodovací bod uživatele, nikdy tiše nepřeklopit.
+Viz [[design-era-kalibrace]].
