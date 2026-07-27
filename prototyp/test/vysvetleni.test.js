@@ -122,7 +122,7 @@ describe('vysvetli — důvody resoluce slotu (§5)', () => {
     );
     const a = vsechny(vysvetli(events, CTX)).at(-1);
     expect(a.veta).toContain('Agent Malone');
-    expect(a.veta).toContain('hodnota');
+    expect(a.veta).toContain('hodnotu');
     expect(a.veta).toContain('0');
     expect(a.detail).toContain('celém runu');
   });
@@ -138,6 +138,7 @@ describe('vysvetli — důvody resoluce slotu (§5)', () => {
     const a = vsechny(vysvetli(log(resolved({ karta_id: null, hrac_id: null, stat_hodnota: null, zasah: false, duvod: 'neobsazeno' })), CTX))[0];
     expect(a.razitko).toBe('NEPROŠLO');
     expect(a.veta).toContain('neobsadil');
-    expect(a.veta).toContain('složená');
+    expect(a.detail).toContain('složená');
+    expect(a.detail).toContain('zmenšenou ruku');
   });
 });

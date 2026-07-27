@@ -33,6 +33,15 @@ export const STAT_LABEL = /** @type {Record<string, string>} */ ({
   nastroj: 'nástroj',
 });
 
+/** Staty ve 4. pádě — věty typu „chtělo to hodnotu 4" jinak drhnou. */
+export const STAT_LABEL_4 = /** @type {Record<string, string>} */ ({
+  utok: 'útok',
+  obrana: 'obranu',
+  hodnota: 'hodnotu',
+  improvizace: 'improvizaci',
+  nastroj: 'nástroj',
+});
+
 export const PRICINA_LABEL = /** @type {Record<string, string>} */ ({
   doruceno: 'náklad dojel do New Yorku',
   dosly_bedny: 'došly bedny',
