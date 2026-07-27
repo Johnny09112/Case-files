@@ -209,6 +209,10 @@ function effectiveDemand(signal, s, rng) {
   // Bod 3 (D22): telegraf hlásí „zbraň se ve skrytém slotu vyplatí" → informovaný
   // hráč committne zbraň i bez viditelné poptávky útoku (samostatná fidelita).
   if (signal.zbran_skryte && rng.next() < s.fidelita && !demand.includes('utok')) demand.push('utok');
+  // P3 (D25f): totéž pro skrytý improvizační slot — telegraf ho hlásí prózou
+  // („jedna skrytá ho zmate papírem"), takže informovaný hráč na něj committne
+  // improvizaci i bez viditelné poptávky. Bez toho byl slot naslepo.
+  if (signal.improv_skryte && rng.next() < s.fidelita && !demand.includes('improvizace')) demand.push('improvizace');
   return demand;
 }
 

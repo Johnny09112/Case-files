@@ -241,5 +241,12 @@ export function deriveTelegrafSignal(sloty, stitekParams, typSituace) {
   const chovani = stitekParams?.chovani_dle_typu?.[typSituace];
   const zbran_projde = chovani === 'vzdy_pass' ? 'ano' : 'jen_skryte';
   const zbran_skryte = sloty.some((s) => s.viditelnost === 'skryta' && slotHasStat(s, 'utok'));
-  return { trend, proti_srsti, zbran_projde, zbran_skryte };
+  // P3 (D25f, princip „odvoditelnost nebo přeliv" D22b): tentýž lék jako
+  // `zbran_skryte`, jen pro improvizaci. Próza telegrafu skrytou improvizační
+  // roli hlásí už dnes („jedna skrytá ho zmate papírem"), ale derivovaný signál
+  // ji nenesl — informovaný hráč tedy nemohl na skrytý slot reagovat commitem
+  // a slot byl naslepo. Bez této derivace by próza a strojový signál tvrdily
+  // každý něco jiného (porušení QA invariantu věrnosti, D19).
+  const improv_skryte = sloty.some((s) => s.viditelnost === 'skryta' && slotHasStat(s, 'improvizace'));
+  return { trend, proti_srsti, zbran_projde, zbran_skryte, improv_skryte };
 }
