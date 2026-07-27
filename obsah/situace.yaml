@@ -296,13 +296,13 @@ situace:
   - id: nadrazi-vypravci
     typ: npc
     svet: 1930
-    telegraf: "Na nádraží chce výpravčí nákladní list, který nemáte — chlap jako hora, co ale hrubému slovu ustoupí. Tři viditelné role jsou o síle, odsunutí závory a penězích do dlaně; jedna skrytá ho zmate papírem. Zbraň na očích neprojde."
+    telegraf: "Na nádraží chce výpravčí nákladní list, který nemáte — chlap jako hora, který ale ustoupí každému, kdo mluví dost nahlas. Tři viditelné role jsou o síle, odsunutí závory a penězích do dlaně; jedna skrytá ho zmate papírem. Tomuhle zbraň na očích pusu zavře — jen se pak o vás mluví po celé trati."
     text: >
       Výpravčí se rozkročil před vagonem a natáhl ruku po listu, který jste neměli.
       {kdo} na něj zatlačil hrubě s {VEC}, {kdo} odsunul závoru {VEC} a {kdo} mu
       podmázl dlaň {VEC}. Mezitím {kdo} podstrčil zmatený papír pomocí {VEC}.
     sloty:
-      - { role: "Zatlačit hrubě",  stat: utok,        kotva: 3, viditelnost: viditelna }
+      - { role: "Zatlačit hrubě",  stat: utok,        kotva: 3, viditelnost: viditelna, stitek_citlivy: GANGSTER }
       - { role: "Odsunout závoru", stat: nastroj,     kotva: 3, viditelnost: viditelna }
       - { role: "Podmáznout dlaň", stat: hodnota,     kotva: 3, viditelnost: viditelna }
       - { role: "Zmást papírem",   stat: improvizace, kotva: 3, viditelnost: skryta }
