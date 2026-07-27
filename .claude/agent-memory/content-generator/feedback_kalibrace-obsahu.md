@@ -77,3 +77,15 @@ a princip „flavor nesmí slibovat mechaniku, kterou pravidla neznají". v2 tag
   Řeš run-wide rozsahem (D20a) nebo ruš fight-relevantní stat.
 - **improvizace = univerzální flex** (nejvyšší demand i supply) NEŘEŠIT obsahem —
   je to sim watchlist (K4b/K5 „když nevíš, hraj improv").
+
+**Když obsah dostane za úkol dotlačit metriku brány (K1–K9) — fikce má přednost
+před číslem.** Zadání typu „chybí 0,03 driftu, přiřaď situacím fázi" se řeší
+fikční logikou; položku, kterou by fikce a číslo táhly proti sobě, nechávám
+**bez přiřazení**, nikdy ji neohnu. Kontrolní test návrhu: zůstaly v něm položky,
+které jdou proti číslu? Když ne, je to setříděná tabulka s dolepenou historkou.
+Do výstupu explicitně napsat, kde jsem si mohl pomoct a neudělal to.
+**Why:** designér to formuloval jako tvrdé omezení („nechci tabulku seřazenou
+dle PRŮŠVIH-rate s dolepenou historkou") a negativní doporučení označil za
+plnohodnotný výstup. **How to apply:** u každé kalibrační dávky obsahu; odhad
+dopadu na metriku dávej jako pásmo s tlumiči, ne jako bodové číslo, a napiš,
+že je to návrh k měření (měří se kontrafaktuálně přes `CONTENT_DIR`).
