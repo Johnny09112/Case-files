@@ -1,8 +1,10 @@
 # Fáze 2.1 — hot-seat UI na slotech + vysvětlující vrstva (návrh, 2026-07-27)
 
-*Spec k odsouhlasení. Vznikl brainstormingem s uživatelem 2026-07-27 po uzavření
-prověrky bota (D34/D35). **Nic z toho není implementované** — tenhle dokument je
-zadání, ne popis stavu.*
+*Vznikl brainstormingem s uživatelem 2026-07-27 po uzavření prověrky bota
+(D34/D35). **SCHVÁLENO po PM review 2026-07-27 (D36)** — dva nálezy review
+zapracovány (§5 události bez anotace, §8 pásma kolaps/hlas-z-auta), otázky §10
+rozhodnuty. **Nic z toho není implementované** — tenhle dokument je zadání,
+ne popis stavu.*
 
 *Umístění: `technika/` dle konvence projektu (stav.md odkazuje sem), ne
 `docs/superpowers/specs/` — nezakládám druhý strom dokumentace.*
@@ -149,6 +151,17 @@ znění patří do kódu vrstvy (úřední tón dle `prompty/protokol.md`).
 handler. Hlídá to test (§7) — přesně tahle díra by jinak vznikla u `postih_efekt`,
 který do enginu přibyl dnes (D35) a ve starším katalogu by prostě chyběl.
 
+**Události vědomě BEZ anotace** (z PM review 2026-07-27 — enum má 18 typů,
+katalog výše 14; zbylé čtyři musí mít v `vysvetli()` explicitní prázdný handler,
+ne propad do „neznámá"):
+
+| Událost | Proč bez anotace |
+|---|---|
+| `run_started` | setup obrazovka, není co vysvětlovat |
+| `commit` | akt hráče; učení nese `telegraf_derived` před ním |
+| `assignment` | akt hráče; dopad vysvětluje `slot_resolved` |
+| `assign_context` | čistě měřicí událost (ADR-010); fold ji čte jako vstup do účetní knihy (odhad pro `gamble`), sama anotaci nenese |
+
 ## 6. Tok dat
 
 ```
@@ -195,6 +208,11 @@ kolo `content-generator` → `protocol-humor-tester` → `design-critic`:
 - Placeholdery: `{jmeno}` (příjmení, kontrakt z `prototyp/CLAUDE.md`), `{uzel}`,
   `{veci}` (čtyři věci ve slotech — **ne jedna karta jako ve v2**), `{postih}`,
   `{bedny}`, `{naklad}`. `podminka`: `postih: ano|ne`, `bedna: ano|ne`.
+- **Z PM review 2026-07-27:** v2 sada měla navíc pásma `kolaps` a `hlas-z-auta`,
+  která výčet výše nezmiňoval. `kolaps` (= `character_folded`) ve v3 existuje
+  → šablona **musí být** i ve v3 sadě. `hlas-z-auta` závisí na proveditelnosti
+  v hot-seat UI (poznámka stav.md pro engine, bod c) — obsahové kolo rozhodne
+  a rozhodnutí zapíše, ticho není přípustná odpověď.
 - Tvrdý zákaz beze změny: šablona nesmí tvrdit nic, co mechanika nedala.
 
 ## 9. Rizika a odpovědi na ně
@@ -202,26 +220,24 @@ kolo `content-generator` → `protocol-humor-tester` → `design-critic`:
 | Riziko | Odpověď |
 |---|---|
 | **Zahlcení textem** — anotace u každé události je hodně čtení na 30minutový run se 4 hráči | Jedna věta na kotvu, čísla ve stálém sloupci, `detail` jen na rozkliknutí. Tempo měří první sezení; když bude vrstva ukecaná, škrtá se, ne přidává |
-| **Informační postihy v hot-seatu nejdou schovat** — `hide_telegraf` a `hide_staty` říkají „vlastník nevidí", ale u jedné obrazovky vidí celý stůl | **Otevřená otázka, viz §10.** Neřeším potichu |
+| **Informační postihy v hot-seatu nejdou schovat** — `hide_telegraf` a `hide_staty` říkají „vlastník nevidí", ale u jedné obrazovky vidí celý stůl | **Rozhodnuto: varianta (b) přeškrtnutí + čestnost, viz §10** |
 | Přestavba je největší kus UI práce zatím | Rozpad po fázích (§4.2) umožní stavět a ověřovat po částech |
 | Vrstva se rozejde s enginem | Testy 2 a 3 z §7 |
 
-## 10. Otevřené otázky (pro review)
+## 10. Otevřené otázky — ROZHODNUTO (PM review + uživatel, 2026-07-27, D36)
 
-1. **Informační postihy v hot-seatu.** `hide_telegraf` / `hide_staty` / 
-   `hide_viditelnost` degradují informaci *vlastníka*, ale hot-seat má jednu
-   obrazovku pro všechny. Varianty: (a) UI informaci schová všem, když ji nevidí
-   ten, kdo je na tahu (drží pravidlo, ale trestá i ostatní); (b) informace se
-   zobrazí přeškrtnutá s poznámkou „Kowalski tohle nevidí — nesmí podle toho
-   radit" (čestnostní pravidlo, drží fikci, nevynutitelné); (c) postihy se
-   v hot-seatu překlopí na mechanický efekt bez skrývání. **Doporučuji (b)** —
-   kooperativní hra u stolu na čestnosti stojí i jinde (tajné cíle) a (a) trestá
-   nesprávné hráče. Rozhodnout před stavbou `commit.js`.
-2. **Kdy zapnout anotace naplno.** Ukazovat celý katalog od prvního uzlu, nebo
-   první uzel odlehčit? **Doporučuji stavět „vše hned"** (§4.11 říká „průběžné")
-   a případné škrty odvodit z tempa prvního sezení — ladit hustotu textu od
-   stolu, bez dat, je hádání. Rozhodnutí tedy neblokuje stavbu; blokuje jen
-   otázka 1.
+1. **Informační postihy v hot-seatu — ROZHODNUTO: varianta (b).**
+   `hide_telegraf` / `hide_staty` / `hide_viditelnost` degradují informaci
+   *vlastníka*, ale hot-seat má jednu obrazovku pro všechny. Uživatel zvolil:
+   informace se zobrazí **přeškrtnutá s poznámkou** „Kowalski tohle nevidí —
+   nesmí podle toho radit" (čestnostní pravidlo, drží fikci; kooperativní hra
+   u stolu na čestnosti stojí i jinde — tajné cíle). Zamítnuté varianty:
+   (a) schovat všem — trestá nesprávné hráče; (c) překlopit na mechanický
+   efekt — měnil by pravidla oproti kalibrovaným číslům brány. `commit.js`
+   odblokován.
+2. **Kdy zapnout anotace naplno — ROZHODNUTO: vše hned** (§4.11 říká
+   „průběžné"); případné škrty se odvodí z tempa prvního sezení — ladit hustotu
+   textu od stolu, bez dat, je hádání.
 
 ## 11. Kritérium hotovo
 

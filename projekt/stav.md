@@ -73,6 +73,12 @@ volí nejlepší kartu na roli napříč týmem, takže 4p vybírá ze 12 karet 
 P1 kompenzoval jen prahy trati, ne obtížnost běžných uzlů. **P1 nebyl špatně
 spočítaný, byl spočítaný na špatném hráči.** Úprava neprovedena — je to další
 kalibrační kolo (viz backlog a otevřené otázky).
+**FÁZE 2.1 SCHVÁLENA PO PM REVIEW (D36, 2026-07-27):** návrh
+[[../technika/faze-2.1-navrh-2026-07-27|technika/faze-2.1-navrh-2026-07-27.md]]
+prošel review (fakta ověřena proti enginu, 2 nálezy zapracovány — události bez
+anotace, pásma kolaps/hlas-z-auta), otázky §10 rozhodnuty uživatelem (hot-seat
+hide = varianta b). Souběžně **schválen sweep `prahOffsetDlePoctu` (D37)** na
+K1 3p/4p + K6a. Další krok 2.1: implementační plán a stavba v `prototyp/`.
 
 *Průběh kalibrace-4 (historie):*
 [[../technika/kalibrace-4-brana-navrh-2026-07-27|Balík]] byl kanonické zadání.
@@ -119,8 +125,8 @@ variance doměřena (2sd = 3,22 < 6). Eskalace V1–V4 rozhodnuta uživatelem ja
 | ~~Další iterace kalibrace (z D29)~~ | — | **uzavřeno D33** — (1) `deriveTelegrafSignal` HOTOVO, (2) varianta C HOTOVO a zapečena, (3) K2 pooly změřeny a **nezapečeny** (drift 1,282, nekupuje gate a zhoršuje K5-D; enginová podpora `faze` zapečena inertní, návrh v `scratchpad/k2-faze-navrh.md`), (4) severita finále — bezpředmětné po D33 (K5f se gatuje pooled) |
 | **PROVĚRKA BOTA proti všem veřejným pravidlům** — dvakrát se ukázalo, že měřidlo bylo horší než hra (D30: bot ignoroval verdikt zbraně na obou osách; oprava přinesla víc než dvě kola ladění obsahu). Systematicky projít, co telegraf a `stitky.yaml` hlásí jako VEŘEJNÉ, a ověřit, že to kompetentní bot používá. Levné, a všechna čísla nesená do lidské brány na tom stojí. | technical-developer + PM | **HOTOVO 2026-07-27 (D34) — 8 nálezů, 4 velké**; report [[../technika/proverka-bota-2026-07-27|technika/proverka-bota-2026-07-27.md]]. Opravy NEPROVEDENY (mění všechna čísla brány → rozhodnutí uživatele, viz otevřené otázky) |
 | **Opravy z prověrky bota (N1–N8) + jedno re-měření** | technical-developer (+ engine) | **HOTOVO 2026-07-27 (D35)** — uživatel zvolil „vše + jedno re-měření"; 149 testů zelených, 6 bloků × 8000 runů. **K5 poprvé splněno (9,72 %), K2 drift 1,39** — a **K1 3p/4p + K6a nově breachnou** (co-op škálování se poprvé opravdu hraje) |
-| **Přeladit `prahOffsetDlePoctu` (K1 3p/4p + K6a)** — jediná páka bez dotyku obsahu; sweep je levný | game-designer + playtest-facilitator | **čeká na rozhodnutí uživatele** — je to další kalibrační kolo, které D33 vědomě zavřel |
-| **Fáze 2.1: vysvětlující vrstva pravidel v UI** — bez ní lidská brána selže na čitelnosti (metrika 6), ne na designu | kódový repo | **NÁVRH ZAPSÁN 2026-07-27** — [[../technika/faze-2.1-navrh-2026-07-27|technika/faze-2.1-navrh-2026-07-27.md]]; čeká na review PM (Fable), pak plán a stavba. Stavba NEZAČALA |
+| **Přeladit `prahOffsetDlePoctu` (K1 3p/4p + K6a)** — jediná páka bez dotyku obsahu; sweep je levný | game-designer + playtest-facilitator | **SCHVÁLENO (D37, 2026-07-27)** — běží souběžně s 2.1, neblokují se |
+| **Fáze 2.1: vysvětlující vrstva pravidel v UI** — bez ní lidská brána selže na čitelnosti (metrika 6), ne na designu | kódový repo | **NÁVRH SCHVÁLEN PO PM REVIEW (D36, 2026-07-27)** — [[../technika/faze-2.1-navrh-2026-07-27|technika/faze-2.1-navrh-2026-07-27.md]]; 2 nálezy zapracovány, §10 rozhodnuty (hide = b). Další krok: implementační plán (Superpowers) a stavba. Stavba NEZAČALA |
 | **v3 fallback šablony protokolu (~20)** — součást 2.1, běží paralelně s UI | content-generator + protocol-humor-tester | **zadání hotové** (§8 návrhu 2.1): v2 sada je nepoužitelná (pásma `uspech/za_cenu/selhani`, `{zraneni}`, jedna karta) |
 | **Fáze 3: LLM adaptér + test kvality českého humoru** — největší produktové riziko dle CLAUDE.md, simulace ho z principu neotestuje | kódový repo + protocol-humor-tester | **na řadě** — BLOKUJE volba poskytovatele (viz otevřené otázky) |
 | Obsahové vady mimo mandát P2 (z D29): viditelný utok-4 slot v NPC je ve 40 % instancí nesplnitelný (`rival-prepad`, `urednik-vaha`, `mesto-ulicka`); kombi `[nastroj, improvizace]` nesplnitelný nad práh 3 (`farmar-stodola`, `most-prohnila-prkna`) | content-generator | otevřeno — nepřibalovat k jiné iteraci, rozmazalo by měření |
@@ -146,13 +152,8 @@ variance doměřena (2sd = 3,22 < 6). Eskalace V1–V4 rozhodnuta uživatelem ja
   Steam trh je anglický.
 - ~~K5 zůstává nesplněné~~ — **VYŘEŠENO D35** (9,72 %, 6/6 bloků), bez dotyku
   Maloneho identity. ~Třetina přebytku byla chyba bota, ne Maloneho.
-- **K1 (3p/4p) a K6a — čeká na uživatele (D35).** Po opravě bota je týmová hra
-  příliš snadná (77,5 / 79,7 % proti stropu 70 %; spread 22,4 b. proti ≤6).
-  Jediná páka bez dotyku obsahu je přeladit `prahOffsetDlePoctu`; sweep je levný,
-  ale je to **další kalibrační kolo**, které D33 vědomě zavřel. Alternativa: vzít
-  to jako známý otevřený bod do lidské brány — s tím, že sólo hra je v pásmu
-  a týmová je snadná, což je u kooperativní hry méně nebezpečná odchylka než
-  opačná. Rozhodnutí patří uživateli.
+- ~~K1 (3p/4p) a K6a — čeká na uživatele (D35)~~ — **VYŘEŠENO D37 (2026-07-27):**
+  uživatel schválil sweep `prahOffsetDlePoctu` souběžně s fází 2.1.
 
 **Budoucí, neblokující:**
 

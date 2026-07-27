@@ -13,6 +13,29 @@ architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.m
 
 ## 2026-07-27
 
+- **D37 (ROZHODNUTÍ uživatele) — kalibrační kolo K1/K6a schváleno: sweep
+  `prahOffsetDlePoctu` souběžně s fází 2.1.** Řeší breach z D35 (K1 3p/4p
+  77,5/79,7 % nad stropem 70; K6a spread 22,4 b.) — týmová hra je po opravě
+  bota příliš snadná, protože co-op výběr karet napříč týmem se poprvé opravdu
+  hraje. Jediná páka bez dotyku obsahu; UI fáze 2.1 na kalibraci nestojí,
+  neblokují se navzájem. Vlastník: game-designer + playtest-facilitator.
+  Alternativa „vzít breach jako známou odchylku do lidské brány" zamítnuta —
+  sweep je levný a lidská brána má dostat čísla důvěryhodná i pro 3–4 hráče.
+- **D36 (PM review Fable + ROZHODNUTÍ uživatele) — návrh fáze 2.1 SCHVÁLEN
+  s výhradami; hot-seat informační postihy = varianta (b).** Review ověřilo
+  faktické kotvy návrhu proti enginu a kanonu (EVENT enum, pásma, v2 soubory,
+  v3 slovesa — vše sedí) a potvrdilo architekturu (čistá funkce nad logem dle
+  ADR-002/008, fold s účetní knihou pro řetězce přes uzly). Dva nálezy,
+  zapracovány do návrhu: (1) katalog §5 pokrýval 14 z 18 událostí enumu, ač §7
+  vyžaduje plné pokrytí — doplněna explicitní množina „vědomě bez anotace"
+  (`run_started`, `commit`, `assignment`, `assign_context`); (2) zadání v3
+  fallback šablon (§8) mlčelo o v2 pásmech `kolaps` a `hlas-z-auta` — kolaps
+  povinně do v3 sady, hlas-z-auta rozhodne obsahové kolo explicitně.
+  Uživatel k §10.1 zvolil **(b) přeškrtnutí + čestnostní pravidlo** („Kowalski
+  tohle nevidí — nesmí podle toho radit"); (a) trestá nesprávné hráče,
+  (c) by měnilo pravidla oproti kalibrovaným číslům. §10.2 dle doporučení:
+  anotace vše hned, škrty až podle tempa sezení. Stavba 2.1 odblokována —
+  další krok: implementační plán v `prototyp/` (Superpowers disciplína).
 - **D35 (ROZHODNUTÍ uživatele + provedení) — opravy N1–N8 zapracovány, brána
   přeměřena: dvě kritéria poprvé splněna, dvě rozbita v opačném směru.**
   Uživatel z variant zvolil **„vše + jedno re-měření"**. Zapracováno všech osm
