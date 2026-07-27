@@ -127,18 +127,21 @@ StS mapa s křížkujícím šerifem, kreditová ekonomika. Kanon = design-dokum
 a `technika/simulacni-brana-2026-07-22.md`).
 
 Go/No-Go je **dvoustupňové**:
-1. **v3 simulační brána — OTEVŘENÁ, běží kalibrace:** kritéria K1–K9 zafixována
-   (`prototyp-mvp.md` Fáze 0), engine na slotové resoluci. Kalibrace-1 (D22)
-   zapečena; kalibrace-2 opravila K4c (šum ±2); kalibrace-3 (D24) lék „snížit
-   viditelné kotvy" měřením vyvrátila — nic se nezapeklo, drivery jsou
-   hodnota-sloty nulované Malonem + finále. **Mandát kalibrace-4 rozhodnut (D25)
-   a balík nového znění brány SCHVÁLEN (D26, 2026-07-27):** K5 = varianta D
-   („mříž mrtvých rozhodnutí" — max≤1 před i po gamblu), K5f metrika finále,
-   K7 reframe podmíněný learnabilitou, K2 drift ≥1,3, K1 per-count + K6a ≤6,
-   dělba K1 s kontrafaktuálním otiskem; eskalace D22f uzavřeny. Kanon zadání =
-   `technika/kalibrace-4-brana-navrh-2026-07-27.md`; zapečení do
-   `prototyp-mvp.md` + P1–P4 + re-měření = samostatná re-měřicí session
-   (prompt v části E balíku).
+1. **v3 simulační brána — UZAVŘENA 2026-07-27 (D39), verdikt: JDE SE DÁL
+   se dvěma známými odchylkami.** Kritéria K1–K9 (`prototyp-mvp.md` Fáze 0),
+   engine na slotové resoluci; verdikt vždy z průměru přes bloky (D31), K6a
+   napříště na 2000 runů/buňka. **Splněno:** K5 varianta D 9,72 %, K1 pro 1p/2p,
+   K2 floor, K4d, K5f, K7, K8. **Nesplněno a vědomě nesené do lidské brány:**
+   K1 3p/4p (77,5 / 79,7 % proti stropu 70) a K6a (22,4 b. proti ≤6) — příčinou
+   je co-op škálování výběru karet, jediná páka bez dotyku obsahu
+   (`prahOffsetDlePoctu`) je proměřená a vyčerpaná (D38), záložní páka
+   `hraci[n].ruka` se aktivuje jen na nález lidské brány. **Kalibraci znovu
+   neotevírej** — další kolo je rozhodnutí uživatele, ne default.
+   Historie kalibrací: -1 (D22) zapečena · -2 opravila K4c (šum ±2) · -3 (D24)
+   lék „snížit viditelné kotvy" měřením vyvrátila · -4 (D26–D33) zapekla nové
+   znění brány (K5 varianta D, K5f, K2 drift degradován na diagnostiku) ·
+   prověrka bota (D34) + opravy (D35) zavřely K5 a otevřely K1 3p/4p a K6a ·
+   -5 (D38) sweep `prahOffsetDlePoctu` — negativní výsledek.
    Od **D23 (2026-07-26) monorepo** — kód v `prototyp/`, kalibrační smyčka
    v jednom repu; kandidátní obsah se měří kontrafaktuálně přes `CONTENT_DIR`
    před zapečením.
