@@ -13,6 +13,37 @@ architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.m
 
 ## 2026-07-27
 
+- **D39 (ROZHODNUTÍ PM, delegováno uživatelem) — výsledek sweepu přijat,
+  varianta (a): breach K1 3p/4p + K6a jde do lidské brány jako známá, vyčíslená
+  odchylka; nic se nezapéká, kalibrace se znovu neotevírá.** Podklad: D38
+  + [[../technika/kalibrace-5-sweep-prahoffset-2026-07-27|report kalibrace-5]].
+  Důvody: (1) **předregistrace musí vázat** — jediný průchozí kandidát A1
+  `{0,5,6,6}` leží v pásmu, které designér naslepo označil za „jinou hru"
+  (clamp prahů ≤3 = jednorázové události), a tempová diagnostika to potvrzuje
+  (léčka předběhne zátah, 82 % týmových runů ≥2 konfrontace proti 28 %);
+  zapéct A1 by znamenalo přepsat blind předregistraci post-hoc, přesně to, čemu
+  má bránit. (2) **A1 kupuje K1 za K2 drift** (1,39 → 1,28; 6/6 → 2/6) —
+  kritérium poprvé splněné v D35; mechanismus doložen (tvrdost se stěhuje
+  dopředu, K2 měří růst dozadu) a přes tuhle páku jsou K1 a K2 v přímém rozporu
+  — to je designová volba, ne kalibrační, a sim ji nerozsoudí (§7 reportu).
+  (3) **Týmové K1 je proxy z bota** (D34: chyby na obě strany) a lidská brána
+  ho stejně přeměří; „týmová hra snazší, než jsme chtěli" je u koop party hry
+  méně nebezpečná odchylka než opačná. Precedent D33/K5. (4) Kritická cesta je
+  2.1 → 3 → lidská brána (humor = největší produktové riziko); další kolo by ji
+  zdržovalo kvůli proxy metrice. **Nesouhlas s doporučením facilitátora (A1)
+  přiznán a zdůvodněn body 1–2**; jeho protiargument (K1 je o obtížnosti, K2
+  o pocitu) padá na tom, že A1 mění strukturu runu natolik, že by lidská brána
+  testovala jinou hru, než je navržená (stupňování ke konci je záměr).
+  **Doprovodná ustanovení:** (i) `hraci[n].ruka` (8/5/4/3) se zapisuje jako
+  **identifikovaná záložní páka** — aktivuje se JEN pokud lidská brána potvrdí
+  „týmová hra nudně snadná"; teď se neměří. (ii) Metodická poznámka z reportu
+  přijata: K6a gate ≤6 b. je při dávce 1000/buňka pod rozlišením měřidla —
+  případné budoucí měření K6a povinně na 2000/buňka; znění gate se nemění
+  (žádné další kolo se nechystá). (iii) Známá odchylka nesená do lidské brány,
+  doslovně: K1 3p/4p **77,5 / 79,7 %** (strop 70), K6a spread **22,4 b.**
+  (gate ≤6); 1p/2p v pásmu. (iv) `mozek-operace` (0 % splnění, mrtvá volba —
+  vedlejší nález D38) se řeší samostatným malým obsahovým kolem PŘED lidskou
+  bránou — hráč s nesplnitelným tajným cílem by kazil metriku hádky i reveal.
 - **D38 (NÁLEZ, ne rozhodnutí) — sweep `prahOffsetDlePoctu` proveden: K1 se
   koupit DÁ, ale jen za cenu K2 a v režimu, který předregistrace předem
   označila za „jiná hra". Páka je vyčerpaná; volba dalšího kroku je na
