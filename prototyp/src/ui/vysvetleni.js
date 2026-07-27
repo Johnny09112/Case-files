@@ -229,8 +229,8 @@ const CESTY_FRAZE = ['žádná cesta', 'jedna cesta', 'dvě cesty', 'tři cesty'
 const TYP_MISTA_PRAVIDLO = {
   npc: 'někdo se ti dívá do rukou — zbraň na očích neprojde',
   lokace: 'nikdo tě nešpehuje — zbraň projde i na očích',
-  zatah: 'zátah — zbraň projde, jiná cesta není',
-  truhla: 'bez resoluce, jen nález',
+  zatah: 'jiná cesta není — zbraň projde',
+  truhla: 'situace se neřeší — něco se jen najde',
   lecka: 'léčka — zbraň na očích neprojde',
   konfrontace: 'finále — zbraň projde',
 };

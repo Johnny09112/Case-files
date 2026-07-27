@@ -182,7 +182,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
     "anotace": [
       {
         "misto": "okraj",
-        "veta": "Cesta zvolena: zátah — zátah — zbraň projde, jiná cesta není.",
+        "veta": "Cesta zvolena: zátah — jiná cesta není — zbraň projde.",
       },
     ],
     "seq": 19,
@@ -472,7 +472,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
     "anotace": [
       {
         "misto": "okraj",
-        "veta": "Cesta zvolena: nález — bez resoluce, jen nález.",
+        "veta": "Cesta zvolena: nález — situace se neřeší — něco se jen najde.",
       },
     ],
     "seq": 47,
@@ -1173,7 +1173,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
     "anotace": [
       {
         "misto": "okraj",
-        "veta": "Cesta zvolena: nález — bez resoluce, jen nález.",
+        "veta": "Cesta zvolena: nález — situace se neřeší — něco se jen najde.",
       },
     ],
     "seq": 31,
@@ -1378,7 +1378,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
     "anotace": [
       {
         "misto": "okraj",
-        "veta": "Cesta zvolena: zátah — zátah — zbraň projde, jiná cesta není.",
+        "veta": "Cesta zvolena: zátah — jiná cesta není — zbraň projde.",
       },
     ],
     "seq": 51,
