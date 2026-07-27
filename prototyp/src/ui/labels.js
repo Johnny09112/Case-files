@@ -69,8 +69,8 @@ export const PRAH_LABEL = /** @type {Record<string, string>} */ ({
 /** Důvody pohybu kreditů (events.CREDIT_DUVOD). */
 export const CREDIT_DUVOD_LABEL = /** @type {Record<string, string>} */ ({
   truhla: 'nález v truhle',
-  hladce_loot: 'čistá práce (4/4)',
-  hladce: 'zvládnutý uzel (3/4)',
+  hladce_loot: 'čistá práce 4 ze 4',
+  hladce: 'zvládnutý uzel 3 ze 4',
   smena: 'směna věci v motelu',
   leceni: 'léčení v motelu',
   ztratovy_postih: 'ztrátový postih',

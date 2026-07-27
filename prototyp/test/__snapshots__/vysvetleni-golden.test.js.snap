@@ -16,7 +16,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
     "anotace": [
       {
         "misto": "okraj",
-        "veta": "Cesta zvolena: mesto-ulicka (člověk) — někdo se ti dívá do rukou — zbraň na očích neprojde.",
+        "veta": "Cesta zvolena: člověk — někdo se ti dívá do rukou — zbraň na očích neprojde.",
       },
     ],
     "seq": 3,
@@ -182,7 +182,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
     "anotace": [
       {
         "misto": "okraj",
-        "veta": "Cesta zvolena: zatah (zátah) — zátah — zbraň projde, jiná cesta není.",
+        "veta": "Cesta zvolena: zátah — zátah — zbraň projde, jiná cesta není.",
       },
     ],
     "seq": 19,
@@ -286,7 +286,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
       {
         "detail": "Optimální rozdělení TÉHOŽ commitu by dalo 2/4 (2/4 — s následky) — 1 zásah zůstal na stole.",
         "misto": "spis",
-        "veta": "Pásmo ≤1/4 — průšvih: 1 ze 4 slotů prošly. Náklad ztrácí 1 bednu (zbývá 5).",
+        "veta": "Pásmo ≤1/4 — průšvih: 1 ze 4 slotů prošel. Náklad ztrácí 1 bednu (zbývá 5).",
       },
     ],
     "seq": 29,
@@ -472,7 +472,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
     "anotace": [
       {
         "misto": "okraj",
-        "veta": "Cesta zvolena: truhla-utopenec (nález) — bez resoluce, jen nález.",
+        "veta": "Cesta zvolena: nález — bez resoluce, jen nález.",
       },
     ],
     "seq": 47,
@@ -533,7 +533,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
     "anotace": [
       {
         "misto": "okraj",
-        "veta": "Cesta zvolena: farmar-stodola (lokace) — nikdo tě nešpehuje — zbraň projde i na očích.",
+        "veta": "Cesta zvolena: lokace — nikdo tě nešpehuje — zbraň projde i na očích.",
       },
     ],
     "seq": 53,
@@ -773,7 +773,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
       {
         "detail": "Optimální rozdělení TÉHOŽ commitu by dalo 2/4 (2/4 — s následky) — 1 zásah zůstal na stole.",
         "misto": "spis",
-        "veta": "Pásmo ≤1/4 — průšvih: 1 ze 4 slotů prošly. Náklad ztrácí 1 bednu (zbývá 3).",
+        "veta": "Pásmo ≤1/4 — průšvih: 1 ze 4 slotů prošel. Náklad ztrácí 1 bednu (zbývá 3).",
       },
     ],
     "seq": 76,
@@ -884,7 +884,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
     "anotace": [
       {
         "misto": "okraj",
-        "veta": "Cesta zvolena: rival-prepad (člověk) — někdo se ti dívá do rukou — zbraň na očích neprojde.",
+        "veta": "Cesta zvolena: člověk — někdo se ti dívá do rukou — zbraň na očích neprojde.",
       },
     ],
     "seq": 3,
@@ -1008,7 +1008,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
     "anotace": [
       {
         "misto": "okraj",
-        "veta": "Kredity +2 (zvládnutý uzel (3/4)), zůstatek 2.",
+        "veta": "Kredity +2 (zvládnutý uzel 3 ze 4), zůstatek 2.",
       },
     ],
     "seq": 15,
@@ -1028,7 +1028,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
     "anotace": [
       {
         "misto": "okraj",
-        "veta": "Cesta zvolena: privoz-celnik (člověk) — někdo se ti dívá do rukou — zbraň na očích neprojde.",
+        "veta": "Cesta zvolena: člověk — někdo se ti dívá do rukou — zbraň na očích neprojde.",
       },
     ],
     "seq": 17,
@@ -1173,7 +1173,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
     "anotace": [
       {
         "misto": "okraj",
-        "veta": "Cesta zvolena: truhla-preklad (nález) — bez resoluce, jen nález.",
+        "veta": "Cesta zvolena: nález — bez resoluce, jen nález.",
       },
     ],
     "seq": 31,
@@ -1223,7 +1223,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
     "anotace": [
       {
         "misto": "okraj",
-        "veta": "Cesta zvolena: nadrazi-vypravci (člověk) — někdo se ti dívá do rukou — zbraň na očích neprojde.",
+        "veta": "Cesta zvolena: člověk — někdo se ti dívá do rukou — zbraň na očích neprojde.",
       },
     ],
     "seq": 36,
@@ -1378,7 +1378,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
     "anotace": [
       {
         "misto": "okraj",
-        "veta": "Cesta zvolena: zatah (zátah) — zátah — zbraň projde, jiná cesta není.",
+        "veta": "Cesta zvolena: zátah — zátah — zbraň projde, jiná cesta není.",
       },
     ],
     "seq": 51,
@@ -1493,7 +1493,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
       {
         "detail": "Optimální rozdělení TÉHOŽ commitu by dalo 2/4 (2/4 — s následky) — 1 zásah zůstal na stole.",
         "misto": "spis",
-        "veta": "Pásmo ≤1/4 — průšvih: 1 ze 4 slotů prošly. Náklad ztrácí 1 bednu (zbývá 4).",
+        "veta": "Pásmo ≤1/4 — průšvih: 1 ze 4 slotů prošel. Náklad ztrácí 1 bednu (zbývá 4).",
       },
     ],
     "seq": 62,
@@ -1638,7 +1638,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
       {
         "detail": "Optimální rozdělení TÉHOŽ commitu by dalo 3/4 (3/4 — hladce) — 2 zásahy zůstaly na stole.",
         "misto": "spis",
-        "veta": "Pásmo ≤1/4 — průšvih: 1 ze 4 slotů prošly. Náklad ztrácí 1 bednu (zbývá 3).",
+        "veta": "Pásmo ≤1/4 — průšvih: 1 ze 4 slotů prošel. Náklad ztrácí 1 bednu (zbývá 3).",
       },
     ],
     "seq": 76,
@@ -1773,7 +1773,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
       {
         "detail": "Optimální rozdělení TÉHOŽ commitu by dalo 2/4 (2/4 — s následky) — 1 zásah zůstal na stole.",
         "misto": "spis",
-        "veta": "Pásmo ≤1/4 — průšvih: 1 ze 4 slotů prošly. Náklad ztrácí 1 bednu (zbývá 2).",
+        "veta": "Pásmo ≤1/4 — průšvih: 1 ze 4 slotů prošel. Náklad ztrácí 1 bednu (zbývá 2).",
       },
     ],
     "seq": 89,

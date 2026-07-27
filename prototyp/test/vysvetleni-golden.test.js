@@ -31,11 +31,26 @@ describe('golden anotace nad reálným obsahem', () => {
   });
 
   it('žádná anotace nezůstane s nedosazeným id místo českého názvu', () => {
+    // Situace v obsahu nemají pole `nazev` (schéma obsah/situace.yaml), takže
+    // jejich label legitimně padá na syrové id — zapsaná a dočasná odchylka,
+    // viz technika/faze-2.1-plan-2026-07-27.md, sekce „Odchylky od návrhu",
+    // bod 3. Až situace `nazev` dostanou, tahle množina zmizí a výjimku
+    // půjde smazat.
+    const povoleneSituaceId = new Set(content.situace.map((s) => s.id));
+    // kebab-case token (jedna pomlčka stačí, např. „rozdrcena-noha" i „zatah"
+    // samotné by neprošlo jako token bez pomlčky) = nedosazené id v ctx.
+    const KEBAB_RE = /[a-z]+(?:-[a-z]+)+/g;
+
     const zaznamy = anotaceRunu({ seed: 7, players: hraci(4), pronasledovatelId: 'serif-brody' });
     for (const { anotace } of zaznamy) {
       for (const a of anotace) {
-        // kebab-case id (např. „rozdrcena-noha") ve větě = chybějící label v ctx
-        expect(a.veta).not.toMatch(/[a-z]+-[a-z]+-[a-z]+/);
+        for (const pole of [a.veta, a.detail ?? '']) {
+          for (const token of pole.match(KEBAB_RE) ?? []) {
+            if (!povoleneSituaceId.has(token)) {
+              throw new Error(`neočekávané syrové id "${token}" ve větě/detailu: ${pole}`);
+            }
+          }
+        }
         expect(a.veta).not.toContain('undefined');
         expect(a.detail ?? '').not.toContain('undefined');
       }

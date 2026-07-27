@@ -152,6 +152,20 @@ function fluktuaceNakladu(n) {
   return `ubylo ${n} beden nákladu`;
 }
 
+/** Skloňování „žádný ze 4 slotů neprošel / 1 prošel / 2–4 prošly" podle počtu zásahů. */
+function pocetSlotuProslo(n) {
+  if (n === 0) return 'žádný ze 4 slotů neprošel';
+  if (n === 1) return `${n} ze 4 slotů prošel`;
+  return `${n} ze 4 slotů prošly`;
+}
+
+/** Skloňování „ztrácí 1 bednu / 2 bedny / 5 beden" podle počtu (dnes vždy 1, viz rules.nakladPrusvihZtrata). */
+function pocetZtracenychBeden(n) {
+  if (n === 1) return `${n} bednu`;
+  if (n >= 2 && n <= 4) return `${n} bedny`;
+  return `${n} beden`;
+}
+
 /** Co postih dělá, česky — uzavřený enum efektů (rules.POSTIH_EFEKTY). */
 function popisEfektu(efekt, k) {
   switch (efekt?.druh) {
@@ -388,7 +402,7 @@ const HANDLERS = {
 
   [EVENT.BAND_RESOLVED]: (e) => [{
     misto: MISTO.SPIS,
-    veta: `Pásmo ${BAND_LABEL[e.pasmo] ?? e.pasmo}: ${e.zasahy} ze 4 slotů prošly.${e.naklad_ztrata > 0 ? ` Náklad ztrácí ${e.naklad_ztrata} bednu (zbývá ${e.zbyva_beden}).` : ''}`,
+    veta: `Pásmo ${BAND_LABEL[e.pasmo] ?? e.pasmo}: ${pocetSlotuProslo(e.zasahy)}.${e.naklad_ztrata > 0 ? ` Náklad ztrácí ${pocetZtracenychBeden(e.naklad_ztrata)} (zbývá ${e.zbyva_beden}).` : ''}`,
     detail: e.gap > 0
       ? `Optimální rozdělení TÉHOŽ commitu by dalo ${e.max_achievable_zasahy}/4 (${BAND_LABEL[e.max_achievable_band] ?? e.max_achievable_band}) — ${pocetZasahuZustalo(e.gap)} na stole.`
       : 'Z toho, co tým committnul, se líp rozdělit nedalo — tohle bylo nejlepší možné.',
@@ -415,10 +429,16 @@ const HANDLERS = {
       }];
     }
     if (e.volba) {
-      return [{
-        misto: MISTO.OKRAJ,
-        veta: `Cesta zvolena: ${k.ctx.situace?.[e.volba] ?? e.volba} (${TYP_MISTA_LABEL[e.typ_mista] ?? e.typ_mista}) — ${TYP_MISTA_PRAVIDLO[e.typ_mista] ?? 'typ místa je veřejný'}.`,
-      }];
+      // Situace bez `nazev` padají v ctx.situace na syrové id (§ odchylka 3):
+      // když se název neliší od id, není k dispozici — vynech ho, ať věta
+      // netrojí totéž slovo (typicky Zátah: id, typ i pravidlo znějí stejně).
+      const nazev = k.ctx.situace?.[e.volba];
+      const typ = TYP_MISTA_LABEL[e.typ_mista] ?? e.typ_mista;
+      const pravidlo = TYP_MISTA_PRAVIDLO[e.typ_mista] ?? 'typ místa je veřejný';
+      const veta = nazev && nazev !== e.volba
+        ? `Cesta zvolena: ${nazev} (${typ}) — ${pravidlo}.`
+        : `Cesta zvolena: ${typ} — ${pravidlo}.`;
+      return [{ misto: MISTO.OKRAJ, veta }];
     }
     const kolik = (e.nabidnuto ?? []).length;
     return [{
