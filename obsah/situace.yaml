@@ -119,7 +119,7 @@ situace:
     sloty:
       - { role: "Nedat na sobě znát", stat: obrana,  kotva: 4, viditelnost: viditelna }
       - { role: "Na přilepšenou",     stat: hodnota, kotva: 3, viditelnost: viditelna }
-      - { role: "Spravit, co třeba",  stat: nastroj, kotva: 4, viditelnost: viditelna }
+      - { role: "Spravit, co třeba",  stat: nastroj, kotva: 3, viditelnost: viditelna }
       - { role: "Kdyby tasil první",  stat: utok,    kotva: 3, viditelnost: skryta }
     pasmove_vysledky:
       hladce_loot: { loot: karta }
@@ -161,7 +161,7 @@ situace:
       mu nenápadně přilepšil {VEC}. Kdyby přeci jen čenichal dál, čekala {VEC}.
     sloty:
       - { role: "Zamotat hlavu",      stat: improvizace, kotva: 4, viditelnost: viditelna }
-      - { role: "Přesunout z očí",    stat: nastroj,     kotva: 4, viditelnost: viditelna }
+      - { role: "Přesunout z očí",    stat: nastroj,     kotva: 3, viditelnost: viditelna }
       - { role: "Přilepšit do dlaně", stat: hodnota,     kotva: 3, viditelnost: viditelna }
       - { role: "Kdyby čenichal dál", stat: utok,        kotva: 3, viditelnost: skryta }
     pasmove_vysledky:
@@ -200,7 +200,7 @@ situace:
       {VEC}. Kdyby úsměv zmizel, měl {kdo} pod stolem {VEC}.
     sloty:
       - { role: "Peníze na stůl",   stat: hodnota,     kotva: 4, viditelnost: viditelna }
-      - { role: "Uhlazená řeč",     stat: improvizace, kotva: 4, viditelnost: viditelna }
+      - { role: "Uhlazená řeč",     stat: improvizace, kotva: 3, viditelnost: viditelna }
       - { role: "Nedat se zastrašit", stat: obrana,    kotva: 3, viditelnost: viditelna }
       - { role: "Kdyby úsměv zmizel", stat: utok,      kotva: 3, viditelnost: skryta }
     pasmove_vysledky:
@@ -239,7 +239,7 @@ situace:
       s {VEC} a {kdo} nabídl něco navíc v podobě {VEC}. {kdo} přitom ani nemrkl za {VEC}.
     sloty:
       - { role: "Věrohodný list",   stat: improvizace, kotva: 4, viditelnost: viditelna }
-      - { role: "Dorazit razítko",  stat: nastroj,     kotva: 4, viditelnost: viditelna }
+      - { role: "Dorazit razítko",  stat: nastroj,     kotva: 3, viditelnost: viditelna }
       - { role: "Něco navíc",       stat: hodnota,     kotva: 3, viditelnost: viditelna }
       - { role: "Ani nemrknout",    stat: obrana,      kotva: 2, viditelnost: skryta }
     pasmove_vysledky:
@@ -302,7 +302,7 @@ situace:
       {kdo} na něj zatlačil hrubě s {VEC}, {kdo} odsunul závoru {VEC} a {kdo} mu
       podmázl dlaň {VEC}. Mezitím {kdo} podstrčil zmatený papír pomocí {VEC}.
     sloty:
-      - { role: "Zatlačit hrubě",  stat: utok,        kotva: 4, viditelnost: viditelna }
+      - { role: "Zatlačit hrubě",  stat: utok,        kotva: 3, viditelnost: viditelna }
       - { role: "Odsunout závoru", stat: nastroj,     kotva: 3, viditelnost: viditelna }
       - { role: "Podmáznout dlaň", stat: hodnota,     kotva: 3, viditelnost: viditelna }
       - { role: "Zmást papírem",   stat: improvizace, kotva: 3, viditelnost: skryta }
