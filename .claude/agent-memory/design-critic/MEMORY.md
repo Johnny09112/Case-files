@@ -2,3 +2,4 @@
 - [Kalibrace-1 lék audit](kalibrace-1-lek-audit.md) — prověrka léku K5/K7/K2 (2026-07-24): K1/K5 coupling, D21c pool porušen, půl K7 na enginu, 3 eskalace k uživateli
 - [Kalibrace-3 audit](kalibrace-3-audit.md) — 12 revertů (2026-07-26): mandátově čisté, ale K7/K5 možná nedosažitelné, „drž improv-4" sázka naslepo, K1 směr neověřen, K6a ignorován
 - [Kalibrace-4 audit](kalibrace-4-audit.md) — balík nové brány (D25, 2026-07-27): goalpost-tell = best-case gamble; nekřič vlk u poctivě držených bodů; K7 pojistka neměřená; dvojí cut
+- [K7 learnabilita verdikt](k7-learnabilita-verdikt.md) — gate ≥12 b. neprošel (9,1), ale byl mis-specifikovaný mnou; prahy z cizí osy vždy ověř proti jejímu headroomu

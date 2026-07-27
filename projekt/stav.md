@@ -22,9 +22,15 @@ finále, K7/K2 znění v revizi (tým předloží balík ke schválení), obtí�
 jednotná napříč 1–4p, Malone: řešitelnost bez hodnota-slotu. **Balík nového znění brány
 SCHVÁLEN (D26, 2026-07-27):** body 1–8, K5 = varianta D („mříž mrtvých
 rozhodnutí"), eskalace D22f uzavřeny.
-[[../technika/kalibrace-4-brana-navrh-2026-07-27|Balík]] je kanonické zadání;
-`prototyp-mvp.md` zapeče až re-měřicí session (prompt v části E, podmínky
-platnosti 0a–0d). **Míč: uživatel spustí re-měřicí session kalibrace-4.**
+[[../technika/kalibrace-4-brana-navrh-2026-07-27|Balík]] je kanonické zadání.
+**Re-měřicí session proběhla 2026-07-27 a ZASTAVILA SE na podmínce 0(c) (D27):**
+K7 learnabilita naměřena 9,1 / 10,3 b. proti gate ≥12 b. → dle mandátu se
+nepokračuje bez eskalace. Podmínky 0(a), 0(b), 0(d) hotové (report.js
+formalizován, dvojí měřicí cut vysvětlen, práh K5-D navržen), K6a variance
+doměřena (2sd = 3,22 < 6 → práh ≤6 b. je nad šumem). **Kroky 1–5 mandátu
+nezačaly — `prototyp-mvp.md` i `obsah/` jsou netknuté.** Verdikt a varianty
+V1–V4: [[../technika/kalibrace-4-2026-07-27|technika/kalibrace-4-2026-07-27.md]].
+**Míč: uživatel rozhodne V1–V4 (doporučení týmu V1).**
 
 ## Backlog
 
@@ -56,8 +62,8 @@ platnosti 0a–0d). **Míč: uživatel spustí re-měřicí session kalibrace-4.
 | **Pro engine — kalibrace-1 uzavření (signál = tento commit):** (1) reset `rules.kotvaBumpFrakce` 0.8→0; (2) rozšíření šumu pro K4c (model D15 kotva ± šum); (3) derivace telegraf_signal: pozitivně rozlišit „zbraň funguje ve skrytém slotu (stat=utok)" od „zbraň k ničemu" — druhá polovina léku K7 + párová podmínka telegraf-přepisů urednik-vaha/razitko (jinak próza/signál drift); (4) ověřit, že hide_* postih z uzlu N reálně degraduje commit uzlu N+1 (bez toho info-postihy nesnowbalují); (5) zvážit shlukování léček/zátahů/konfrontací do uzlů 3–4+ přes tempo Žáru (K2 cíl ≥1,3); (6) čisté re-měření 1000×2 (seedy 1–1000) dle akceptační brány, POVINNĚ: K1∈[45,70] ∧ K5 odděleně viditelná/skrytá ∧ K7≤20 % současně, per-situace take-rate před/po, K6a v rozpadu dle typu postihu (info-postihy vs. 1p/2p), pozor nadrazi-noc (2 skryté sloty, nejtvrdší offender; skrytých slotů je 20, ne 19) + doladění K8 | kódový repo (technical-developer) | **hotovo 2026-07-24 (kalibrace-2)** — body 1–4 zapracovány, 5 vědomě odloženo; re-měření 1000×2. **K4c OPRAVENO** (+2.4 ≤3). K5/K7 dál breach, K1/K5 coupling z D22(e) POTVRZEN (80 % neřešitelných slotů = viditelné); K1 3p/4p těsně >70, K6a regrese 11.8. Report [[../technika/kalibrace-2-2026-07-24|technika/kalibrace-2-2026-07-24.md]]; míč zpět u obsahu (řádek níže) |
 | **Kalibrace-2 lék: snížit viditelné kotvy běžných uzlů** | game-designer + content-generator | **uzavřeno 2026-07-26 (D24) — lék VYVRÁCEN měřením**, nic se nezapeklo; viz řádek kalibrace-3 |
 | **Kalibrace-3: selektivní revert kotev 4→3** — návrh 12 slotů (designer) → adversariální prověrka (kritik) → per-slot diagnostika + kontrafaktuální gate-měření 1000×2 přes CONTENT_DIR (facilitátor) | celé kolečko + playtest-facilitator | **hotovo 2026-07-26 (D24) — NEGATIVNÍ VÝSLEDEK**: žádná podmnožina mandátu gate nesplní (K1 špatný směr, K5≥13.6 %, K7≥40.5 % i při maximu); drivery mimo mandát (Malone-nulovaná hodnota, finále ~50 %). Report [[../technika/kalibrace-3-2026-07-26|technika/kalibrace-3-2026-07-26.md]]; mandát kalibrace-4 (P0–P4) eskalován na uživatele |
-| Pro technical-developer: do `sim/report.js` doplnit rozpady per-situace / per-slot / common-vs-finále / K5 viditelná-skrytá (v kalibraci-3 počítáno ad-hoc skriptem) | technical-developer | otevřeno — z kalibrace-3 2026-07-26 |
-| **Kalibrace-4 dle mandátu D25:** (1) balík nového znění brány Fáze 0 → schválení uživatelem; (2) obsah: řešitelnost situací bez hodnota-slotu (P2); (3) engine: `improv_skryte` (P3), dorovnání obtížnosti 1–4p přes finále/Žár (P1), ruka 1p až po P1 (P4); (4) re-měření | celé kolečko + technical-developer | **(1) HOTOVO 2026-07-27 — balík předložen:** [[../technika/kalibrace-4-brana-navrh-2026-07-27|technika/kalibrace-4-brana-navrh]] (designer → facilitátor baseline doměření 1000×2 → verdikt kritika „schválit rámec s úpravami"); **čeká na schválení uživatele (body 1–8)**. Kroky 2–4 = re-měřicí session dle startovacího promptu v části E balíku (learnabilita K7 a sjednocení měřicích cutů PRVNÍ) |
+| Pro technical-developer: do `sim/report.js` doplnit rozpady per-situace / per-slot / common-vs-finále / K5 viditelná-skrytá (v kalibraci-3 počítáno ad-hoc skriptem) | technical-developer | **hotovo 2026-07-27 (D27, podmínka 0a)** — ADR-010, událost `assign_context`, report přestavěn na záznamy; +19 testů (vč. tripwire shody odhadu s botem), 137 zelených. Sjednotilo dvojí měřicí cut |
+| **Kalibrace-4 dle mandátu D25:** (1) balík nového znění brány Fáze 0 → schválení uživatelem; (2) obsah: řešitelnost situací bez hodnota-slotu (P2); (3) engine: `improv_skryte` (P3), dorovnání obtížnosti 1–4p přes finále/Žár (P1), ruka 1p až po P1 (P4); (4) re-měření | celé kolečko + technical-developer | **(1) HOTOVO 2026-07-27 — balík předložen:** [[../technika/kalibrace-4-brana-navrh-2026-07-27|technika/kalibrace-4-brana-navrh]] (designer → facilitátor baseline doměření 1000×2 → verdikt kritika „schválit rámec s úpravami"); **SCHVÁLENO uživatelem 2026-07-27 (D26, body 1–8, K5 = varianta D)**. **Kroky 2–4 ZASTAVENY na podmínce 0(c) (D27, 2026-07-27):** K7 learnabilita 9,1 / 10,3 b. proti gate ≥12 b. → dle mandátu eskalace, varianty V1–V4 v [[../technika/kalibrace-4-2026-07-27|technika/kalibrace-4-2026-07-27.md]] §6. Podmínky 0(a)/0(b)/0(d) + K6a variance hotové; `prototyp-mvp.md` i `obsah/` netknuté |
 | Volitelná obtížnost při startu runu (easy/normal/hard) | game-designer | **budoucí úkol (D25d)** — neřešit teď; až po lidské bráně |
 | **Monorepo (D23): sloučení kódového repa do `prototyp/`** — subtree se zachovanou historií, submodule zrušen, cesty na kořen, ADR-009, otisk verzeObsahu nezávislý na line endings | project-manager | **hotovo 2026-07-26** — 118/118 testů, sim smoke shodný s kalibrací-2, build+lint čisté; GitHub repo prototypu archivovat (viz plán); plán [[../technika/migrace-monorepo-plan-2026-07-26|technika/migrace-monorepo-plan]] |
 | Setup pluginů pro kódovou část (`prototyp/`): Superpowers (inženýrská disciplína), frontend-design (až UI — nakrmit estetikou z design dokumentu), security-guidance | uživatel (claude CLI) | po monorepu (D23) se instalují do tohoto repa — dělba platí: Superpowers jen pro práci v `prototyp/`, herně-designovou disciplínu drží naši agenti |
@@ -68,7 +74,22 @@ platnosti 0a–0d). **Míč: uživatel spustí re-měřicí session kalibrace-4.
 
 ## Otevřené otázky (čekají na uživatele)
 
-- **SCHVÁLENÍ BALÍKU KALIBRACE-4 (předloženo 2026-07-27):**
+- **P-ROZHODNUTÍ: K7 learnabilita padla (D27, 2026-07-27) — varianty V1–V4.**
+  Gate ≥12 b. neprochází (9,1 / 10,3 b.) a **nad ~10,3 b. se na commit-ose
+  dostat nelze** bez rozbití blind-commitu (D15/D17). „Cena gamblu" je jako lék
+  aritmeticky vyloučená (i bez gamblu je mezera 8,1–10,5 b.). Kritik označil
+  vlastní podmínku za mis-specifikovanou (práh importován z K4c, kde nikdy
+  nevázal; testovala se hladina místo rozdílu rozdílů). **Doporučení týmu: V1**
+  — rozdělit na K7 (3′) `DiD ≥ −3 b.` (baseline ✅) a novou **K4d**
+  (`kompetentní − náhodný ≥ τ` ∧ `memorizační − kompetentní ≤ 3 b.` ∧ monotonie
+  fidelity; baseline ✅, ale 3p jen 1,9 b. nad prahem). Detail a varianty:
+  [[../technika/kalibrace-4-2026-07-27|technika/kalibrace-4-2026-07-27.md]] §6.
+  Vedlejší otázka k témuž rozhodnutí: **gamble je nezaznamenaná K1 páka**
+  (+4,1 b.; bez něj jsou všechny 4 county v pásmu) — tým nedoporučuje ji použít,
+  ale P1 o ní má vědět.
+
+- ~~SCHVÁLENÍ BALÍKU KALIBRACE-4~~ — **SCHVÁLENO 2026-07-27 jako D26**
+  (body 1–8, K5 = varianta D). Původní znění:
   [[../technika/kalibrace-4-brana-navrh-2026-07-27|technika/kalibrace-4-brana-navrh-2026-07-27.md]]
   — 8 očíslovaných bodů (K5 varianty A–D — doslovné D25a je měřením no-op;
   scope + K5f 60–80 %; K7 reframe podmíněný doměřením learnability; zamítnutí

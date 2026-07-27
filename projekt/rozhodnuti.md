@@ -13,6 +13,50 @@ architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.m
 
 ## 2026-07-27
 
+- **D27 (ZJIŠTĚNÍ, ne rozhodnutí) — podmínka platnosti 0(c) kalibrace-4 NEPROŠLA;
+  kalibrace zastavena a eskalována uživateli.** Mandát re-měřicí session zněl:
+  „gate ≥12 b.; pokud <12, reframe K7 padá a ‚cena gamblu' se vrací uživateli
+  jako P-rozhodnutí; dál nepokračuj bez eskalace." **Naměřeno 9,1 b.**
+  (kompetentní commit) / **10,3 b.** (optimální commit, fidelita 1,0), obojí
+  s gamble-politikou, 8000 runů na variantu. Kroky 1–5 mandátu (zapečení znění,
+  P2, P3, P1, re-měření) proto **NEZAČALY**; `prototyp-mvp.md` i `obsah/` jsou
+  netknuté. Gate se **tiše nesnížil** a K7 se neprohlašuje za splněnou.
+  Doprovodná zjištění, která mění výklad: (a) obava, kvůli které gate vznikl
+  („gamble trivializuje commit"), je **vyvrácena** — DiD ≈ 0 (−0,2 / +1,0 b.);
+  (b) „cena gamblu" je jako lék **aritmeticky vyloučená** — i v limitu nekonečně
+  drahého gamblu (běh bez gamblu) je mezera 8,1–10,5 b., pořád pod 12;
+  (c) commit-osa **nedegeneruje** na lookup tabulku (memorizační commit je
+  o 4,8 b. HORŠÍ než čtení telegrafu — analog vázající půlky K4c prochází);
+  (d) strop ~10,3 b. **není bug bota** — sweep fidelity telegrafu je agregátně
+  monotónní (61,6 → 64,5 → 67,0 → 68,2), přínos dokonalého čtení je +5,1 b.
+  u 1p a ≈0 u 2–4p (**saturace pokrytím** — designový nález na watchlist lidské
+  brány); (e) design-critic označil **vlastní** podmínku ≥12 b. za
+  mis-specifikovanou: práh je import z K4c, kde nikdy nevázal (naměřeno 64,7 b.
+  proti prahu 12), a vázající půlka K4c (`memorizační − kompetentní ≤3 b.`) se
+  přitom zahodila; navíc se testovala HLADINA, ač hypotéza byla o rozdílu
+  rozdílů. Varianty k rozhodnutí (V1–V4, doporučení V1 = rozdělit na K7 (3′)
+  DiD ≥ −3 b. a novou K4d s prahem odvozeným z perceptibilní konstanty τ) jsou
+  v [[../technika/kalibrace-4-2026-07-27|technika/kalibrace-4-2026-07-27.md]] §6.
+  **Míč u uživatele.**
+
+- **Hotovo bez blokace (podmínky 0a, 0b, 0d + doměření):**
+  (a) `sim/report.js` **formalizován** (ADR-010, nová událost `assign_context`,
+  137 testů; rozpady per-situace/per-slot/common-vs-finále, K5 tři varianty,
+  K7 klasifikace, K5f, K2 drift, K1 per-count, K6a variance; každé číslo nese
+  `definice`). (b) **Dvojí měřicí cut vysvětlen:** K5 17,3 vs. 18,4 = post- vs.
+  pre-gamble čtení `max_achievable_zasahy` (engine ho počítá až nad commitem
+  PO gamblu — kdo ho četl jako pre-gamble, měřil něco jiného, než tvrdil);
+  K5f 68,8 odpovídá kanonickému 1p 69,6, ale **76,6 se nepodařilo zreprodukovat**
+  žádnou legitimní definicí při 1p (nejblíž je 2p 77,4 — pravděpodobná záměna
+  počtu hráčů v ad-hoc skriptu; hypotéza, ne důkaz). (d) **K5 varianta D
+  změřena:** `expDead` 13,1 % (Malone 14,5–20,9 vs. Brody 6,6–11,8), návrh
+  prahu **≤10 %** odvozený z délky runu („nejvýš 0,5 mrtvého rozhodnutí na run"),
+  baseline ho NEPLNÍ a vázající je Malone → hlavní páka je P2. Navíc:
+  **K6a run-to-run variance** 8 bloků × 1000 seedů → sd spreadu 1,61 b.,
+  **2sd = 3,22 < 6**, takže práh K6a ≤6 b. je nad šumem (podmínka kritika
+  splněna). Kanonický baseline: K1 1p 59,1 / 2p 67,4 / 3p 70,7 / 4p 70,9,
+  K6a 11,8, K2 drift 1,14, K5f 3p Brody 81,6 (breach horní hrany).
+
 - **D26 schváleno — balík nového znění simulační brány Fáze 0 (body 1–8,
   K5 = varianta D).** Uživatel schválil
   [[../technika/kalibrace-4-brana-navrh-2026-07-27|technika/kalibrace-4-brana-navrh-2026-07-27.md]]
