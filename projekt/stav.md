@@ -29,15 +29,15 @@ per-count i K6a současně** (61,6 / 56,6 / 59,1 / 60,3 %, spread 5,0 b.).
 11,3 % (gate ≤10 %); obojí s hotovou diagnózou a identifikovaným lékem, nic
 se nesnížilo. Report:
 [[../technika/kalibrace-4-final-2026-07-27|technika/kalibrace-4-final-2026-07-27.md]].
-**Botí oprava PROVEDENA (D30, rozhodnutí uživatele)** — kompetentní bot nově
-respektuje veřejné pravidlo štítku GANGSTER na obou osách; gangster_auto_fail
-−70 %, K2 drift 1,18 → **1,26** a K5-D 11,3 → **10,7 %** bez zásahu do obsahu.
-**Zbývají dva gaty, oba blízko:** K2 drift 1,26 (chybí 0,04) a K5-D 10,7 %
-(chybí 0,7 b., vázající je výhradně Malone); marginálně K5f (2 konfigurace
-80,5–80,6 proti stropu 80). **Míč: další iterace** — (1) oprava
-`deriveTelegrafSignal` o slotové `stitek_citlivy`, (2) varianta C, (3) krokově
-podmíněné pooly pro K2, (4) severita finále pro K5f. Aktuální baseline: §6
-[[../technika/kalibrace-4-final-2026-07-27|reportu]].
+**Po D30 zapečeno dál (D31):** oprava  o slotovou
+výjimku a **varianta C** ( — slot pro zbraň; Brody nově plní
+K5-D u všech počtů), plus inertní enginová podpora pole .
+**METODICKÝ NÁLEZ (D31): seedy 1–1000 jsou příznivý blok** — verdikt se od teď
+bere z průměru přes bloky. Přes 6 bloků: **K5-D 10,58 (0/6 bloků v gate)**,
+**K2 drift 1,25 (1/6)**, K6a 4,68 ale 1 blok breachne, K2 floor robustní.
+Tagování  pro K2 změřeno a **NEZAPEČENO** — drift jen 1,282 a platí se
+za to zhoršením K5-D. **Míč u uživatele: K2 a K5-D jako P-rozhodnutí.**
+Detail: §7 [[../technika/kalibrace-4-final-2026-07-27|reportu]].
 
 *Průběh kalibrace-4 (historie):*
 [[../technika/kalibrace-4-brana-navrh-2026-07-27|Balík]] byl kanonické zadání.

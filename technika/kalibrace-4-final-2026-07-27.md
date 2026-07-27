@@ -237,8 +237,77 @@ staty. Gate tedy neměřil hru, ale botovu chybu.
 
 ---
 
+## 7. Iterace po D30 — a metodický nález, který mění výklad §1–§6
+
+### 7.1 Zapečeno
+
+- **`deriveTelegrafSignal` hlásí i slotovou výjimku** (`zbran_slot_vyjimka`).
+  Chováním neutrální, ale odblokovalo variantu C.
+- **Varianta C** — „Zatlačit hrubě" (`nadrazi-vypravci`) je `stitek_citlivy:
+  GANGSTER`. Slot byl matematicky nesplnitelný (kotva 3 chce ve 20 % instancí
+  `utok ≥5`, non-GANGSTER pětka neexistuje) a fikčně obrácený. Nabídka se
+  otevřela bez poklesu jediného prahu; cena je vestavěná v Žáru.
+  `nadrazi-vypravci` 29,4 → **22,1 %**; **Brody nově plní K5-D u všech počtů**.
+- **Enginová podpora `faze`** (krokové zúžení maso-poolu) s povinným fallbackem
+  a validací v loaderu. Zatím inertní — obsah tagy nemá (viz 7.3).
+
+### 7.2 METODICKÝ NÁLEZ: seedy 1–1000 jsou příznivý blok
+
+Celá kalibrace se dosud měřila na jednom bloku seedů. Doměření 6 disjunktních
+bloků ukázalo, že ten blok je **systematicky příznivější než průměr** — a u
+tenkých marží to rozhoduje o verdiktu:
+
+| metrika | gate | blok 1 (dosud hlášeno) | **mean přes 6 bloků** | bloků v gate |
+|---|---|---|---|---|
+| K2 drift | ≥ 1,3 | 1,27 | **1,250** (sd 0,040) | 1/6 |
+| K5-D `expDead` | ≤ 10 % | 10,4 | **10,583** (sd 0,146) | **0/6** |
+| K6a spread | ≤ 6 b. | 3,4–3,9 | **4,683** (sd 0,803, max 6,4) | 5/6 |
+| K2 floor | ≥ 20 % | 23,2 | **23,25** (sd 0,535) | 6/6 ✅ |
+
+**Co to znamená:**
+- **K5-D neprošlo ani v jednom bloku.** Dosud hlášené „10,4 %, chybí 0,4" bylo
+  blokové štěstí, ne stav systému.
+- **K6a prochází v průměru, ale ne robustně** — 1 blok ze 6 breachne.
+- Jediný robustní pass mezi tenkými gaty je **K2 floor**.
+- **Od teď se gate verdikt bere z průměru přes bloky, ne ze seedů 1–1000.**
+  Nástroje: `sim/k2-variance.js`, `sim/k5f-variance.js`.
+
+*(K1, K7 a K5f-podíl-proher mají marži tak velkou, že je tenhle nález neohrožuje.)*
+
+### 7.3 K2 přes `faze` — změřeno, NEZAPEČENO
+
+Content-generator navrhl fikčně ukotvené tagování (7 raná / 4 pozdní / 3 bez
+fáze) opřené o gradient venkov → město, který v obsahu prokazatelně je (téma
+je v `situace.yaml` doslova nadepsané „Venkovský strážník"). Explicitně odmítl
+snadný zisk: označit obě nádraží jako `rana` by drift hnalo na ~1,52, ale text
+je na žádný konec trasy neusazuje.
+
+Měření stejných 6 bloků, bez tagů → s tagy:
+
+| metrika | gate | bez `faze` | s `faze` |
+|---|---|---|---|
+| K2 drift | ≥ 1,3 | 1,250 | **1,282** (2/6 bloků) |
+| K5-D `expDead` | ≤ 10 % | 10,583 | **10,867 — HORŠÍ** |
+| K6a spread | ≤ 6 b. | 4,683 (sd 0,803) | 4,733 (sd **1,291** — méně stabilní) |
+
+**Verdikt: nezapékat.** Páka míří správným směrem (+0,032 driftu) a je fikčně
+poctivá, ale gate nedosáhne a **platí se za ni zhoršením K5-D**, což je druhý
+otevřený gate. Za tu cenu to není výhodný obchod. Návrh zůstává k dispozici
+v `scratchpad/k2-faze-navrh.md`, enginová podpora je zapečená a inertní.
+
+### 7.4 K5f — breach NENÍ šum, a je Brodyho
+
+Ověřeno 6 bloky per konfigurace: 4p Brody mean **80,78** (5/6 bloků nad
+stropem), 3p Brody **80,55** (4/6), 2p Brody 79,97 (3/6). **Všechny Malone
+konfigurace jsou pod stropem** (66,5–79,5). Vzorec je vázaný na pronásledovatele,
+ne na počet hráčů: Brody neruší žádný stat, takže tým jde do konfrontace s plným
+pokrytím a přežije ji častěji. Páka je **severita Brodyho konfrontace v obsahu**,
+ne tempo trati.
+
+---
+
 *Podklady měření (scratchpad 2026-07-27): `kal4-final/summary.{md,json}`,
-`cf-bot/`, `cf-bot2/` (oprava bota),
+`cf-bot/`, `cf-bot2/` (oprava bota), `cf-c/` (varianta C), `cf-k2/` (faze tagy),
 `kal4-baseline/`, `cf-a/`, `cf-b/`, `cf-b5/`, `cf-p3/`, `cf-p1/`,
 `kal4-learnabilita.{md,json}`, `kal4-variance/`. Kontrafaktuální artefakty
 k P2 doloženy dle change-controlu D26 bodu 6. Nástroje: `sim/report.js`,

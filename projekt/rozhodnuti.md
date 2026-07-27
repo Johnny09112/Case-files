@@ -13,6 +13,36 @@ architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.m
 
 ## 2026-07-27
 
+- **D31 (ZJIŠTĚNÍ) — seedy 1–1000 jsou příznivý blok; část dosavadních verdiktů
+  byla bloková, ne systémová. Dva gaty se vracejí jako P-rozhodnutí.**
+  Zapečeno: oprava `deriveTelegrafSignal` o slotovou výjimku (`zbran_slot_vyjimka`,
+  chováním neutrální) a **varianta C** — „Zatlačit hrubě" u `nadrazi-vypravci`
+  je `stitek_citlivy: GANGSTER`; slot byl matematicky nesplnitelný (kotva 3 chce
+  ve 20 % instancí `utok ≥5` a non-GANGSTER pětka v balíčku neexistuje) i fikčně
+  obrácený. Nabídka se otevřela bez poklesu jediného prahu, cena je vestavěná
+  v Žáru; `nadrazi-vypravci` 29,4 → 22,1 %, **Brody nově plní K5-D u všech
+  počtů**. Dále zapečena inertní enginová podpora pole `faze` (krokové zúžení
+  maso-poolu, povinný fallback + validace v loaderu).
+  **METODICKÝ NÁLEZ:** celá kalibrace se měřila na jednom bloku seedů a ten je
+  systematicky příznivější než průměr. Přes 6 disjunktních bloků:
+  **K5-D mean 10,58 — neprošlo ani v jednom bloku** (hlášené „10,4, chybí 0,4"
+  bylo blokové štěstí); **K2 drift mean 1,25** (1/6 bloků); **K6a mean 4,68, ale
+  1 blok ze 6 breachne** (max 6,4); K2 floor 23,25 je jediný robustní pass
+  mezi tenkými gaty. **Od teď se verdikt bere z průměru přes bloky.**
+  **K2 přes `faze` ZMĚŘENO A NEZAPEČENO:** fikčně poctivé tagování
+  (7 raná / 4 pozdní / 3 bez fáze, gradient venkov → město, který v obsahu
+  prokazatelně je) posune drift jen na 1,282 (2/6 bloků) a **platí se za to
+  zhoršením K5-D na 10,87** — za tu cenu to není výhodný obchod. Content-generator
+  přitom odmítl snadný zisk (obě nádraží jako `rana` → drift ~1,52), protože je
+  text na žádný konec trasy neusazuje; ten kompromis je k dispozici jako
+  uživatelská volba, ne jako tichý krok týmu.
+  **K5f breach NENÍ šum a je Brodyho:** 4p Brody mean 80,78 (5/6 bloků nad
+  stropem), 3p 80,55 (4/6); všechny Malone konfigurace pod stropem. Brody neruší
+  žádný stat → tým jde do konfrontace s plným pokrytím. Páka je severita
+  Brodyho konfrontace v obsahu.
+  Detail: §7 [[../technika/kalibrace-4-final-2026-07-27|reportu kalibrace-4]].
+  **Míč u uživatele: K2 a K5-D jako P-rozhodnutí (D26 bod 5 to předjímá).**
+
 - **D30 (rozhodnutí uživatele + provedeno) — opravena commit i assign heuristika
   kompetentního bota o veřejné pravidlo štítku GANGSTER.** Z nabídnutých cest
   („botí oprava + přeměření" / „dotáhnout bránu bez ní" / „paralelně lidská
