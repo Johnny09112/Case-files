@@ -25,8 +25,14 @@ import { estimateHitsVsKotva } from './estimate.js';
 // kompatibilitu importů (test/strategies.test.js).
 export { decideAssignment };
 
-/** @param {number} seed @param {typeof RULES} [rules] pro model šumu (kalibrace-2) */
-export function createStrategy(spec, seed, rules = RULES) {
+/**
+ * @param {number} seed
+ * @param {typeof RULES} [rules] pro model šumu (kalibrace-2)
+ * @param {object|null} [content] obsah — POUZE pro „vševědoucí" měřicí strategie
+ *   (commit `memorizacni` si z něj dohledá staty skrytých slotů dle id situace).
+ *   Běžné strategie ho nesmí použít: bot nesmí vědět nic, co hráč u stolu nevidí.
+ */
+export function createStrategy(spec, seed, rules = RULES, content = null) {
   const s = {
     commit: 'informovany',
     assign: 'kompetentni',
@@ -93,7 +99,15 @@ export function createStrategy(spec, seed, rules = RULES) {
         // degraduje commit uzlu N+1 (snowball K2), ne jen assign (hide_staty).
         const hrac = state.postavy.find((p) => p.id === plan.hrac_id);
         const slepy = hrac?.postihy?.some((x) => x.efekt?.druh === 'hide_telegraf') ?? false;
-        const demanded = slepy ? [] : effectiveDemand(signal, s, rng);
+        // MĚŘICÍ NÁSTROJ (K4c-analog na commit-ose, kalibrace-4): memorizační bot
+        // zná staty VŠECH slotů situace (i skrytých) dle jejího id — to je přesně
+        // to, co si hráč po pár runech zapamatuje a co telegraf neprozrazuje.
+        // Rozdíl memorizační − kompetentní měří, zda commit-osa po pár runech
+        // nezdegeneruje na lookup tabulku (nález kritika k D26 bodu 3).
+        const memo = s.commit === 'memorizacni' && content
+          ? (content.situace.find((x) => x.id === state.situace.id)?.sloty ?? []).flatMap((sl) => (Array.isArray(sl.stat) ? sl.stat : [sl.stat]))
+          : null;
+        const demanded = slepy ? [] : memo ?? effectiveDemand(signal, s, rng);
         const ruka = run.getHand(plan.hrac_id).slice();
         if (s.commit === 'nahodny') {
           // MĚŘICÍ NÁSTROJ (K7 gate 3, kalibrace-4): podlaha commit-learnability.

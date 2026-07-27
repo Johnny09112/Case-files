@@ -44,7 +44,13 @@ function zmer(spec, label) {
 const varianty = {
   kompetentni_s_gamblem: { ...PRESETY.kompetentni, commit: 'informovany', fidelita: 0.7, gamble: true },
   optimal_s_gamblem: { ...PRESETY.kompetentni, commit: 'informovany', fidelita: 1, gamble: true },
+  // Druhá (a u K4c JEDINÁ VÁZAJÍCÍ) půlka learnability: zdegeneruje commit-osa
+  // po pár runech na lookup tabulku? Gate-analog K4c: memorizační − kompetentní ≤ 3 b.
+  memorizacni_s_gamblem: { ...PRESETY.kompetentni, commit: 'memorizacni', gamble: true },
   random_s_gamblem: { ...PRESETY.kompetentni, commit: 'nahodny', gamble: true },
+  // Sanity: monotonie fidelity — víc informace nesmí škodit (nález kritika 3)
+  fidelita_03_s_gamblem: { ...PRESETY.kompetentni, commit: 'informovany', fidelita: 0.3, gamble: true },
+  fidelita_05_s_gamblem: { ...PRESETY.kompetentni, commit: 'informovany', fidelita: 0.5, gamble: true },
   // Kontrola: bez gamblu — ukazuje, zda gamble commit TRIVIALIZUJE (obava za gatem)
   kompetentni_bez_gamblu: { ...PRESETY.kompetentni, commit: 'informovany', fidelita: 0.7, gamble: false },
   optimal_bez_gamblu: { ...PRESETY.kompetentni, commit: 'informovany', fidelita: 1, gamble: false },
@@ -105,6 +111,16 @@ ${Object.entries(vysledky).map(([k, v]) => `| ${k} | ${v.celkem} | ${COUNTS.map(
 | optimální (fidelita 1,0) | **${optSGamblem.celkem} b.** | ${optBezGamblu.celkem} b. | ${out.plni_optimal ? '✅ PLNÍ' : '❌ NEPLNÍ'} |
 
 per count (optimal s gamblem): ${COUNTS.map((c) => `${c}p ${optSGamblem.per_count[`${c}p`]}`).join(' · ')}
+
+## Memorizace commitu (analog vázající půlky K4c: memorizační − kompetentní ≤ 3 b.)
+
+**${mezera('memorizacni_s_gamblem', 'kompetentni_s_gamblem').celkem} b.** —
+${mezera('memorizacni_s_gamblem', 'kompetentni_s_gamblem').celkem <= 3 ? '✅ commit-osa NEdegeneruje na lookup tabulku' : '❌ memorizace poráží čtení telegrafu → commit-osa je po pár runech tabulka'}
+per count: ${COUNTS.map((c) => `${c}p ${mezera('memorizacni_s_gamblem', 'kompetentni_s_gamblem').per_count[`${c}p`]}`).join(' · ')}
+
+## Monotonie fidelity (sanity — víc informace nesmí škodit)
+
+${['fidelita_03_s_gamblem', 'fidelita_05_s_gamblem', 'kompetentni_s_gamblem', 'optimal_s_gamblem'].map((k) => `- ${k}: celkem ${vysledky[k].celkem} | ${COUNTS.map((c) => `${c}p ${vysledky[k].per_count[`${c}p`]}`).join(' · ')}`).join('\n')}
 
 **Trivializuje gamble commit?** Gamble mění mezeru o **${out.gamble_meni_mezeru_o_b.optimal} b.** (optimal) /
 **${out.gamble_meni_mezeru_o_b.kompetentni} b.** (kompetentní). Kladné číslo = s gamblem je commit
