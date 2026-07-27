@@ -147,6 +147,10 @@ describe('vysvetli — kostra', () => {
     expect(vysvetli(events)).toBeInstanceOf(Map);
   });
 
+  it('registr handlerů je exportovaný (Task 4 proti němu testuje pokrytí enumu)', () => {
+    expect(TYPY_S_HANDLEREM).toContain(EVENT.RUN_STARTED);
+  });
+
   it('události vědomě bez anotace nic nevydají (§5 návrhu)', () => {
     const events = log(
       { type: EVENT.RUN_STARTED, pronasledovatel: 'agent-malone', rusi: null },
