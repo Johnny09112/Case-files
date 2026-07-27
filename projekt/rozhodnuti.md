@@ -13,6 +13,33 @@ architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.m
 
 ## 2026-07-27
 
+- **D28 schváleno — V1: K7 se rozděluje na DiD-pojistku a novou K4d; znění brány
+  ZAPEČENO do `prototyp-mvp.md`.** Uživatel po eskalaci D27 zvolil variantu V1.
+  Konkrétně: (a) **K7 (3′)** = `mezera(s gamblem) − mezera(bez gamblu) ≥ −3 b.`
+  per počet hráčů — tedy **rozdíl rozdílů**, ne hladina; hlídá přesně to, kvůli
+  čemu pojistka vznikla („gamble nesmí stlačit commit-rozhodnutí"), baseline
+  −0,2 / +1,0 ✅. (b) Nová **K4d** (learnabilita commit osy, patří k rodině K4,
+  ne pod gamble): `kompetentní − náhodný ≥ τ` ∧ `memorizační − kompetentní ≤ 3 b.`
+  ∧ **monotonie fidelity**. (c) **τ = perceptibilní konstanta projektu = 6 b.**,
+  **sdílená s K6a**, kde slouží jako STROP — zjemnit K4d tedy znamená zpřísnit
+  K6a a naopak, takže se práh nedá ohnout, aby prošel. Baseline K4d: 9,1 ✅ /
+  −4,8 ✅ / monotonie ✅, ale **3p jen 7,9 b.** (1,9 b. nad prahem) — není to
+  komfortní pass a 3p zůstává na watchlistu. Starý gate „≥12 b." se tímto ruší
+  jako mis-specifikovaný (viz D27e), **ne jako sleva**: nahrazuje ho pojistka,
+  která měří hypotézu, a floor odvozený z konstanty s opačným směrem.
+  **Zapečeno současně** (D26 v plném rozsahu + D28): K1 per-count, K2 drift,
+  K4c s varováním o přenositelnosti prahu, K5 = varianta D s prahem
+  **expDead ≤ 10 %** (derivace: ~5 běžných uzlů na run → „nejvýš 0,5 mrtvého
+  rozhodnutí na run"; baseline 13,1 % NEPLNÍ), K5f, K6a ≤6 b. (doloženo nad
+  šumem), scope K5/K7/K4d jen na běžné uzly, change-control K1 s povinným
+  kontrafaktuálním whole-gate artefaktem. Consistency-check proběhl:
+  mechaniky/čísla/odkazy/rozsah **beze nálezu**; dva drobné terminologické
+  nálezy („hedge" je anglicismus bez protějšku v design-dokumentu; K5 se dala
+  splést s „nevyhnutelně špatným slotem" dle §4.3 — druhý opraven přímo
+  v zapékaném textu). **Brána je nyní poctivě NESPLNĚNÁ v 5 bodech** (K2 drift
+  1,14 · K1 3p/4p · K6a 11,8 · K5-D 13,1 % · K5f 3p Brody 81,6) — to je vstupní
+  zadání kroků P2/P3/P1, ne vada brány.
+
 - **D27 (ZJIŠTĚNÍ, ne rozhodnutí) — podmínka platnosti 0(c) kalibrace-4 NEPROŠLA;
   kalibrace zastavena a eskalována uživateli.** Mandát re-měřicí session zněl:
   „gate ≥12 b.; pokud <12, reframe K7 padá a ‚cena gamblu' se vrací uživateli

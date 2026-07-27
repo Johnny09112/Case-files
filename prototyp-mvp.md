@@ -24,19 +24,41 @@ odblokuje stavbu a vstup do lidské brány. Plné odůvodnění a botí detaily 
 
 | # | Metrika | GATE práh | Pozn. |
 |---|---|---|---|
-| **K1** | % DORUČENO (cíle-driven i kompetentní bot) | **45–70 % — FIXOVÁNO (D21, po run-1)** | Run-1 baseline 84,5–88 % (2026-07-23); ladí se proti pevnému cíli. Náklad zůstává fail-condition, konsolidace do Žáru se reviduje po kalibraci (bedny-0 dnes <1 % proher, D21b). |
-| **K2** | přírůstek postihů/uzel (lehký 1, těžký 2,3) | uzel 3–4 ≥ **1,3×** uzel 1–2 | + korelace info-postih zátěž vs. pásmo (síla smyčky). Hlavní dataviz. |
+| **K1** | % DORUČENO (cíle-driven i kompetentní bot), **per počet hráčů** | **každý z 1p/2p/3p/4p ∈ [45, 70] % — FIXOVÁNO (D21, per-count explicitně D26)** | Ne průměr, ne reference 4p — **žádný počet nesmí být mimo pásmo**. Baseline 59,1 / 67,4 / 70,7 / 70,9 → **3p a 4p breachují nahoru**. K1 je **sdílená metrika**, vlastnictví dle páky (engine: šum, ruce, parametry Žáru; obsah: kotvy, keying, pronásledovatelé, postihy, finále) — viz change-control pod tabulkou. Náklad zůstává fail-condition (bedny-0 <1 % proher, D21b). |
+| **K2** | snowball: **drift míry PRŮŠVIHŮ** uzel 3–4 vs. 1–2 | `PRŮŠVIH-rate(3–4) / PRŮŠVIH-rate(1–2)` **≥ 1,3** ∧ `PRŮŠVIH-rate(3–4)` **≥ 20 %** | **Baseline 1,14× NEPLNÍ** — musí se vyrobit obsahem (D22d), nedosažitelnost = P-rozhodnutí, ne tichá sleva. Poměr POČTU postihů je jen **diagnostika** (cap 2 ho saturuje, snowball ukázat neumí). Ordinál se počítá **bez vložených léček/konfrontací**; varianta „se vším" je diagnostika. Mechanismus-diagnostika: korelace info-postih zátěž vs. pásmo. |
 | **K3** | medián uzlu 1. překročení prahu Zátah | **∈ {3,4}** | čísla Žáru resetují (per-pásmo PRŮŠVIH + hlučné karty). |
 | **K4a** | max win-rate fixní přiřazovací heuristiky | **≤ 80 %** | |
 | **K4b** | dominance stat-monokultury commitu | žádná; rozpětí statů ≤ ~10 b. | kotvy 2–4 nesmí být předvídatelné. |
-| **K4c** | learnabilita | kompetentní − random **≥ 12 b.** A memorizační − kompetentní **≤ 3 b.** | **GATE svázaná s noise-modelem:** pád nejdřív spustí „oprav šum", pak teprve „zahoď design". Memorizační bot memorizuje **stabilní kotvy per situace-ID**; šum je **per-instance IID uniform ±2, clamp do [0, stat-max]** (±1→±2 rozšířeno kalibrací-2 2026-07-24, minimální celé číslo plnící gate). |
-| **K5** | frekvence vynuceného pásma (oracle na committnutých kartách) | **max ≤1/4 (beznadějné) < 5 %** | Vrstvy „max<4/4: 30–50 %" a „max≤2/4: 10–20 %" = **diagnostika k pozorování**, ne gate. |
-| **K6a** | rozpětí win-rate mezi 1–4p | **≤ 10 b.** | parita obtížnosti. |
+| **K4c** | learnabilita **přiřazovací osy** | kompetentní − random **≥ 12 b.** A memorizační − kompetentní **≤ 3 b.** | **GATE svázaná s noise-modelem:** pád nejdřív spustí „oprav šum", pak teprve „zahoď design". Memorizační bot memorizuje **stabilní kotvy per situace-ID**; šum je **per-instance IID uniform ±2, clamp do [0, stat-max]** (±1→±2 rozšířeno kalibrací-2 2026-07-24, minimální celé číslo plnící gate). **Pozor (D27):** vázala vždy druhá půlka; první má na této ose ~5× vatu (naměřeno 64,7 b. proti prahu 12) — proto se **nesmí přenášet na jiné osy jako absolutní číslo**. |
+| **K4d** | learnabilita **commit osy** (D27/V1) | kompetentní − náhodný **≥ τ** ∧ memorizační − kompetentní **≤ 3 b.** ∧ **monotonie fidelity** (win-rate neklesající v `p`) | **τ = perceptibilní konstanta projektu = 6 b.** — táž, kterou K6a používá jako STROP. Sdílení je záměrné: zjemnit K4d znamená zpřísnit K6a a naopak, takže se práh nedá ohnout, aby prošel. Vše per počet hráčů. Baseline: 9,1 ✅ / −4,8 ✅ / agregátně monotónní ✅ — ale **3p jen 7,9 b.** (1,9 b. nad prahem), není to komfortní pass. „commit-optimal" nemůže znamenat víc než dokonalé čtení telegrafu — commit je naslepo (D15/D17), commit-oracle neexistuje. |
+| **K5** | **„mříž mrtvých rozhodnutí"** (varianta D, D26): podíl běžných uzlů, kde `max≤1` platí PŘED gamblem **i po něm** | `expDead` **≤ 10 %** per počet hráčů × pronásledovatel | **Realistická gamble-politika:** hráč řídí volbu ruky i nahrazovanou kartu (max přes obojí), **neřídí líz** (uniformní průměr) — best-case líz je zamítnutý („gamble jako deus ex machina"). Derivace prahu: run má ~5 běžných uzlů → 10 % = **nejvýš 0,5 mrtvého rozhodnutí na run** (anekdota, ne norma). **Baseline 13,1 % NEPLNÍ**; vázající je Malone (14,5–20,9 vs. Brody 6,6–11,8) → hlavní páka je P2. `strictDead` („ani jeden líz nepomůže", baseline 8,0 %) a stará `max≤1` = **diagnostika**; free-pass čtení nulovaných slotů je součást definice (týká se jen `rusi.typ = stat`, tedy Malona — Brodyho štítek-rušení sloty neznemožňuje, jen zvedá Žár). **Nezaměňovat s „nevyhnutelně špatným slotem" (design §4.3), který je ZÁMĚR** — ten měří diagnostická vrstva `max<4`. K5 negatuje jen uzel, kde nepomůže **nic**: ani commit, ani záchrana. |
+| **K5f** | tvrdost finále (D26 bod 2) | **% přežití konfrontace ∈ [60, 80] %** per počet hráčů × pronásledovatel ∧ **≥ 90 % proher padne ve finále** | Finále (`zatah`/`lecka`/`konfrontace`) je z K5/K7 **vyňato** — pro klimax jsou „dá se vyhnout risku?" špatné otázky, správná je „nezabíjí tě moc často?". Přežití = run po střetu pokračuje. Baseline: 1p 69,6 · 2p 77,4 · 3p 79,5 · 4p 79,1, proher ve finále 97,2 ✅; **breach 3p Brody 81,6 %**. K5f je hlavní **dial P1** — 3p/4p se má PŘITÍŽIT k ~65 %. |
+| **K6a** | rozpětí win-rate mezi 1–4p | **≤ 6 b.** | Zpřísněno z ≤10 (D26 bod 5). **Baseline 11,8 b. NEPLNÍ** — zavře až P1. Práh je **doložen nad šumem**: 8 bloků × 1000 seedů → sd spreadu 1,61 b., **2sd = 3,22 < 6** (D27). |
 | **K6c** | run-agregovaný pasažér | žádný hráč pod podlahou příspěvku | swing agregovaný přes run, ne per-situace. |
 | **K6b** | konflikt týmové optimum vs. cíl hráče | **diagnostika**, soft floor „zřetelně > 0" | proxy „je se o čem hádat"; sim měří existenci sporu, ne hádku. |
-| **K7** | gamble: take-rate / kdy / EV | ≤ 20 % / ≥ 80 % při odhadu ≤2/4 / EV<0 při ≥3/4 | **EV se měří per počet hráčů** (líz 1/2 pro 1p/2p/4p, 1/3 pro 3p ne-držitele). |
+| **K7** | gamble: **záchranný** (odhad ≤1) vs. **hedge** (odhad =2) | **(1)** `take_záchranný` **≥ 80 %** ∧ **(2)** podíl uzlů se záchranným gamblem **≤ 15 %** ∧ **(3′)** `mezera(s gamblem) − mezera(bez gamblu)` **≥ −3 b.** ∧ **(4)** take při odhadu ≥3 **≈ 0 %** | Starý strop ≤20 % padl: bot gambluje deterministicky iff odhad ≤2, takže byl **z definice referenční strategie nedosažitelný** (mis-specifikace, ne přísnost). „Záchranný" popisuje committnutou POZICI, ne donucení gamblovat (§4.4 opt-in drží). **(3′) je DiD, ne hladina** (D27/V1): hlídá, že gamble nestlačí commit-rozhodnutí — hladinovou otázku „nese commit dost?" vlastní **K4d**, ne K7. Baseline: 100 % ✅ · 12,5 % ✅ · −0,2/+1,0 ✅ · 0 % ✅. Diagnostika: podíl uzlů hedge 30–50 % (baseline 40,5 %) — pozor, **to je podíl uzlů, ne take-rate** (ten je ~100 %). EV per počet hráčů (líz 1/2, u 3p ne-držitele 1/3). |
 | **K8** | ekonomika | medián **7–9** kreditů; **<30 %** runů si koupí vše; směna i léčení každé **≥25 %** motelů | test tieru must-heal vs. rideable. |
 | **K9** | mechanické cíle (per držící hráč) | každý **5–95 %** | v3 cíle čekají na **event-log spec technical-developera** (přepis z injury-měn). |
+
+**Scope metrik (D26 bod 2):** **K5, K7 a K4d se počítají JEN nad běžnými uzly**
+(typ `npc` / `lokace`). Finálové střety (`zatah` / `lecka` / `konfrontace`) jsou
+z nich vyňaty a měří se **K5f**. K1, K6a, K5f a příčiny proher jsou run-level
+(bucket nemají). Každé číslo v reportu nese `definice` — bez toho se dvojí
+měřicí cut nedá sjednotit (nález D27: `band_resolved.max_achievable_zasahy` je
+**post-gamble**, ne pre-gamble, což byl zdroj rozdílu 17,3 vs. 18,4 %).
+
+**Change-control K1 (D26 bod 6, tvrdá podmínka):** změna KTERÉKOLI páky hýbající
+K1 se měří proti **celé bráně současně** (K1 ∧ K5 ∧ K7 ∧ K5f) a **kontrafaktuálně
+přes `CONTENT_DIR` PŘED zapečením**. Podmínkou zapečení je doložený
+kontrafaktuální whole-gate report v kalibračním reportu v `technika/`;
+kontroluje PM. Bez artefaktu se nezapéká. *(Důvod: čistý hand-off „K1 vlastní
+jen engine" z D22e byl kalibrací-3 falzifikován — K1 pohání i finále a
+akumulace postihů, tedy obsah.)*
+
+**Co brána dnes NEPLNÍ** (stav 2026-07-27, D27 — vstupní zadání kalibrace-4,
+ne vada brány): **K2 drift** 1,14 proti ≥1,3 · **K1 3p/4p** 70,7/70,9 proti
+stropu 70 · **K6a** 11,8 proti ≤6 · **K5 (D)** 13,1 % proti ≤10 % ·
+**K5f 3p Brody** 81,6 % proti stropu 80.
 
 **Předpoklady simu (D19):** commit **naslepo**; **kotvy 2–4** (práh 0 zakázán),
 **šum uniform ±2 s clampem do [0, stat-max]** (od kalibrace-2 2026-07-24); kombinovaný slot = „oba staty ≥ kotva" (střídmě). **Telegraf:
@@ -44,7 +66,8 @@ signál (`trend`, `proti_srsti`, `zbraň_projde`) derivuje engine ze slotů**, p
 lidský rendering s QA invariantem věrnosti; **fidelita telegrafu `p` = sweep knob.**
 Sdílený standardní balík ~40 (líz patří lízajícímu); prémiový osobní loadout je
 post-MVP. **Botí strategie:** commit informovaný/naivní/stat-monokultury (+ **commit-fázový
-model pro postih `hide_telegraf`** — bot committne bez trendu); přiřazení
+model pro postih `hide_telegraf`** — bot committne bez trendu; + `nahodny`
+a `memorizacni` commit jako **měřicí nástroje** K4d, ne herní strategie); přiřazení
 oracle/kompetentní/greedy/random/cíle-driven/memorizační; info-postih = ε-greedy
 přiřazení (gap informovaný vs. postižený = síla postihu jako −X); ekonomika
 vždy-léčit/vždy-směnit/adaptivní. **Event-log spec vlastní technical-developer**

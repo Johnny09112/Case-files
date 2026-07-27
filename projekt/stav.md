@@ -74,7 +74,12 @@ V1–V4: [[../technika/kalibrace-4-2026-07-27|technika/kalibrace-4-2026-07-27.md
 
 ## Otevřené otázky (čekají na uživatele)
 
-- **P-ROZHODNUTÍ: K7 learnabilita padla (D27, 2026-07-27) — varianty V1–V4.**
+- ~~P-ROZHODNUTÍ: K7 learnabilita padla (D27) — varianty V1–V4~~ —
+  **ROZHODNUTO 2026-07-27 (D28): V1.** K7 (3′) = DiD ≥ −3 b.; nová **K4d**
+  s prahem **τ = 6 b. sdíleným s K6a** (tam strop, tady floor — nedá se ohnout).
+  Znění brány **ZAPEČENO** do `prototyp-mvp.md`. Watchlist: **3p** je na K4d
+  jen 1,9 b. nad prahem a je to potřetí problémový count (breach K1 i K5f).
+  Původní znění eskalace:
   Gate ≥12 b. neprochází (9,1 / 10,3 b.) a **nad ~10,3 b. se na commit-ose
   dostat nelze** bez rozbití blind-commitu (D15/D17). „Cena gamblu" je jako lék
   aritmeticky vyloučená (i bez gamblu je mezera 8,1–10,5 b.). Kritik označil
