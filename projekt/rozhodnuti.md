@@ -13,6 +13,39 @@ architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.m
 
 ## 2026-07-27
 
+- **D29 (VÝSLEDEK kalibrace-4) — 7 z 9 gatů splněno, brána Fáze 0 stále
+  NESPLNĚNA; nic se nesnížilo.** Provedeny kroky P2, P3, P1 mandátu D25/D26;
+  re-měření 1000×2×4 (8000 runů) proti zapečenému znění. Report:
+  [[../technika/kalibrace-4-final-2026-07-27|technika/kalibrace-4-final-2026-07-27.md]].
+  **NOVĚ SPLNĚNO:** (a) **K1 per-count** — 61,6 / 56,6 / 59,1 / 60,3 %,
+  breach žádný (bylo 3p 70,7 a 4p 70,9); (b) **K6a spread 11,8 → 5,0 b.**,
+  a pass není artefakt jednoho bloku — 6 disjunktních bloků dává mean 4,35,
+  sd 0,43, max 5,0. Obojí zařídilo **P1**: nová per-count páka
+  `zar.prahOffsetDlePoctu` (sólo plná trať, tým zkrácená o 2) — jediná páka,
+  která nesahá na obtížnost běžných uzlů (falzifikace kalibrace-3). Zamítnuta
+  měřením alternativa „násobič tempa Žáru": přírůstky jsou 1–2, takže krok je
+  skok o 100 % (K1 4p 75,5 → 45,6 bez ničeho mezi tím).
+  **P4 (ruka 1p 8→9) ZRUŠENO jako bezpředmětné** — 1p je po P1 nejvyšší ze všech
+  počtů (61,6 %), zvětšení ruky by rozbilo K6a.
+  **ZŮSTÁVÁ NESPLNĚNO (vstup další iterace, ne sleva):** K2 drift **1,18**
+  proti ≥1,3 a K5 varianta D **11,3 %** proti ≤10 %; marginálně K5f
+  4p Brody 80,1 (0,1 b. nad stropem, uvnitř šumu).
+  **Diagnózy hotové:** (1) K2 — PRŮŠVIH-rate se mezi situacemi liší 3,8×
+  (10,1–38,6 %), ale situace se losují rovnoměrně; krokově podmíněné pooly
+  (tvrdé pozdě, měkké brzy) by drift zvedly bez sáhnutí na kotvy — směr D22d,
+  vyžaduje engine + `mista.yaml`, neprovedeno. (2) K5-D — vázající je **výhradně
+  Malone** (11,5–17,8 % vs. Brody 5,8–10,3 %, který gate u 2p/3p/4p plní);
+  další lék je varianta C (`stitek_citlivy: GANGSTER` na „Zatlačit hrubě"),
+  blokovaná tím, že `deriveTelegrafSignal` slotové `stitek_citlivy` ignoruje.
+  **Nálezy mimo mandát:** viditelný utok-4 slot v NPC je ve 40 % instancí
+  nesplnitelný (non-GANGSTER `utok ≥5` = 0 karet ze 40) — týká se `rival-prepad`,
+  `urednik-vaha`, `mesto-ulicka`, což jsou zároveň nejtvrdší situace ve hře;
+  kombi `[nastroj, improvizace]` je nesplnitelný nad práh 3; a **kompetentní bot
+  ignoruje `zbran_projde`** (107 z 204 propadů útočného slotu v `nadrazi-vypravci`
+  je `gangster_auto_fail`) — bot je tam hloupější než kompetentní člověk, takže
+  K5/K1 jsou o tuhle chybu pesimistické. Oprava = změna referenční strategie
+  → re-baseline všeho, tedy rozhodnutí, ne údržba.
+
 - **D28 schváleno — V1: K7 se rozděluje na DiD-pojistku a novou K4d; znění brány
   ZAPEČENO do `prototyp-mvp.md`.** Uživatel po eskalaci D27 zvolil variantu V1.
   Konkrétně: (a) **K7 (3′)** = `mezera(s gamblem) − mezera(bez gamblu) ≥ −3 b.`
