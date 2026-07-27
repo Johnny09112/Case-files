@@ -129,6 +129,31 @@ export const RULES = {
     prahy: { zatah: 4, lecka: 7, konfrontace: 10 },
     /** Přežití konfrontace → Žár klesá na tuto hodnotu (prahy se znovu nabijí). */
     poPrezitiKonfrontace: 3,
+    /**
+     * P1 (D25d/D26 bod 5): tempo Žáru per počet hráčů — JEDINÁ per-count páka,
+     * která nesahá na obtížnost běžných uzlů (falzifikace kalibrace-3).
+     *
+     * Kořen nerovnosti je co-op škálování: víc hráčů = víc karet = větší pokrytí
+     * = snazší běžné uzly. Srovnávat se to smí jen tlakem na FINÁLE — a tempo
+     * Žáru je přesně to, co rozhoduje, jak brzy tým na finále narazí. Fikce
+     * drží: víc lidí v autě = víc hluku, víc svědků, dřív si vás všimnou.
+     *
+     * Operacionalizace: **posun prahů trati**, ne násobič přírůstku. Násobič se
+     * v P1 sweepu ukázal jako nepoužitelně hrubý — přírůstky Žáru jsou 1–2, takže
+     * `ceil(1 × 1,25) = 2` je skok o 100 % a tempa 1,25 a 1,5 dávají identické
+     * výsledky (K1 4p spadlo 75,5 → 45,6 bez čehokoli mezi tím). Posun prahu
+     * o 1 je nejjemnější krok, který trať dovoluje.
+     *
+     * `prahOffsetDlePoctu[n]` se ODEČÍTÁ od všech prahů (zatah/lecka/konfrontace)
+     * → víc hráčů narazí na finále dřív. Fikce: víc lidí v autě = víc hluku,
+     * víc svědků, dřív si vás všimnou.
+     *
+     * Kalibrace-4 (P1 sweep 2026-07-27): sólo hraje na plnou trať, tým na
+     * zkrácenou. Monotónní varianta {0,1,2,2} dává spread 6,9 b.; {0,2,2,2}
+     * dává 3,1 b. — rozdíl mezi 2p a 4p je v běžných uzlech menší než rozdíl
+     * mezi sólem a jakýmkoli týmem, takže se trať krátí jednorázově „od dvou".
+     */
+    prahOffsetDlePoctu: { 1: 0, 2: 2, 3: 2, 4: 2 },
   },
 };
 

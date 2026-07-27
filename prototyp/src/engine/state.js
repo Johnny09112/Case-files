@@ -442,7 +442,11 @@ export function createRun({ seed, content, rules, players, pronasledovatelId }) 
   }
 
   function updateThresholds() {
-    for (const [nazev, prah] of Object.entries(rules.zar.prahy)) {
+    // P1 (D25d): prahy trati se per počet hráčů posouvají dolů — jediná
+    // per-count páka, která nesahá na obtížnost běžných uzlů.
+    const offset = rules.zar.prahOffsetDlePoctu?.[players.length] ?? 0;
+    for (const [nazev, prahBase] of Object.entries(rules.zar.prahy)) {
+      const prah = Math.max(1, prahBase - offset);
       if (heat >= prah && !firedThresholds.has(nazev)) {
         firedThresholds.add(nazev);
         if (nazev === 'zatah') zatahPending = true;
