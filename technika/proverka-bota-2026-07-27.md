@@ -239,6 +239,85 @@ kalibraci vědomě zavřel.
 
 ---
 
+# ČÁST II — opravy a re-měření (2026-07-27, D35)
+
+Uživatel rozhodl **„vše + jedno re-měření"**. Opraveno N1–N8, doplněno 9 testů
+(149 zelených, lint čistý), golden snapshoty vědomě přepsány.
+
+## Co se opravilo a jak
+
+| # | Oprava | Kde |
+|---|---|---|
+| N1 | Zámkové postihy jako AUTO-FAIL (ne zákaz přiřazení — u 1p by nemuselo existovat legální rozdělení). `hide_viditelnost`: vlastník u SVÝCH karet nedohlédne na auto-fail. Nový důvod `postih_lock_*` + pole `postih_efekt` (vysvětlující vrstva). Oracle i `assign_context` zámky nesou, jinak by padl invariant „reálné ≤ max" a tripwire ADR-010. | `resolve.js`, `state.js`, `report.js`, `assign.js` |
+| N2 | Commit pokrývá ROLE telegrafu (jedna karta na slot), zbytek kvóty na generalistu. Fidelita se aplikuje **per roli**. | `strategies.js` |
+| N3 | Commit zná run-wide rušený stat (Malone) i vlastní `lock_stitek` — mrtvou kartu vůbec necommittne. | `strategies.js` |
+| N4 | Model Žáru: pokuta za hlučnou kartu ve statových bodech, dvojnásobná u prahu. Zná `hlucnost_zar`, Brodyho ×2 i per-count posun prahů. | `strategies.js` |
+| N5 | `hide_staty` degraduje jen karty postiženého hráče (prohození pozic), ne celé přiřazení. | `strategies.js` |
+| N6 | Gamble nahrazuje kartu s nejmenším příspěvkem (odhad vs. kotva bez ní), ne s nejnižším součtem statů. | `strategies.js` |
+| N7/N8 | Volba cesty preferuje místo, kde zbraň projde, drží-li tým zbraň; motel je volná opce (zajíždí se i pro směnu). | `strategies.js` |
+
+Regresní sondy po opravě: `audit-postihy.js` hlásí **0 tichých porušení** (dřív
+840 + 1716); minutí úniku gamblem 4,9 → 3,1 %; zbytečně placený Žár (horní mez)
+51,5 → 29 %, a podíl vynuceného hluku vzrostl 1,3 → 7,6 % (zbylé hlučné karty
+jsou častěji skutečně bez alternativy).
+
+## Re-měření brány — 6 bloků × 8000 runů (48 000 runů)
+
+Verdikt se dle metodiky D31 bere z **průměru přes bloky**, ne ze seedů 1–1000.
+
+| metrika | kalibrace-4 (D33) | po opravách (průměr 6 bloků) | gate | verdikt |
+|---|---|---|---|---|
+| **K5 varianta D** | 10,58 % (0/6 bloků v gate) | **9,72 %** (9,5–9,9; **6/6 v gate**) | ≤10 % | **✅ POPRVÉ SPLNĚNO** |
+| **K2 drift** | 1,25 (1/6) | **1,39** (1,34–1,45; 6/6 ≥1,3) | ≥1,3 (dnes diagnostika) | ✅ |
+| K2 pozdní PRŮŠVIH floor | — | 20,3 % (19,9–21,3; 5/6) | ≥20 % | ⚠️ jeden blok 19,9 |
+| **K1 per-count** | 61,6 / 56,6 / 59,1 / 60,3 | **57,3 / 67,1 / 77,5 / 79,7** | každý ∈ [45,70] % | **❌ 3p a 4p breach, 6/6 bloků** |
+| **K6a spread** | 4,7 b. | **22,4 b.** (20,3–24,0) | ≤6 b. | **❌** |
+
+Dvě brány, které nešlo splnit, padly hned. Dvě, které držely, se rozbily —
+**v opačném směru: týmová hra je teď příliš snadná.**
+
+## Diagnóza obratu: co-op škálování se poprvé opravdu hraje
+
+Není to nová vada obsahu. Je to vlastnost, kterou starý bot neuměl využít:
+
+- Starý commit vybíral **každý hráč zvlášť** podle plochého součtu poptávaných
+  statů. Přidat hráče znamenalo přidat karty, ale ne lepší pokrytí rolí.
+- Nový commit vybírá **nejlepšího kandidáta na roli napříč týmem**. 1p vybírá
+  4 karty z ruky 8; 4p vybírá 4 karty ze **12** (4 ruce po 3). Čím víc hráčů,
+  tím větší šance, že se na každou roli najde specialista.
+
+Měřitelně, PRŮŠVIH na běžných uzlech (blok 1): 1p 25,4 % (Malone) / 17,3 %
+(Brody) → 4p 19,0 % / 13,1 %. Monotónně klesá s počtem hráčů — a **P1 na
+obtížnost běžných uzlů záměrně nesahá** (posouvá jen prahy trati), takže tuhle
+mezeru nikdy nekompenzoval. P1 byl kalibrován (D29) proti botovi, který výhodu
+týmu neuměl vybrat; s kompetentním týmem je nerovnost větší, než na co je
+`prahOffsetDlePoctu` páka stavěná.
+
+Jinak řečeno: **P1 nebyl špatně spočítaný, byl spočítaný na špatném hráči.**
+
+## Co to znamená pro bránu
+
+Poctivé shrnutí, bez zaokrouhlování ve prospěch projektu:
+
+1. **Měřidlo je poprvé kompetentní** — a hned ukázalo, že hra pro 3–4 hráče je
+   pro kompetentní tým snadná (≈78–80 % DORUČENO proti stropu 70 %).
+2. **K5, na kterém D33 vědomě ustoupil, je splněné** a Maloneho identity se to
+   nedotklo (zákaz D25e drží).
+3. **K2 se poprvé měří s plnou postihovou tíhou** a drift bez potíží prochází —
+   potvrzuje hypotézu z části I, že se dřív měřil mechanismus z ~29 % nezapojený.
+4. **K1/K6a vyžadují rozhodnutí, ne tichou úpravu.** Nabízí se jediná páka, která
+   nesahá na obsah: přeladit `prahOffsetDlePoctu` (dnes {1:0, 2:2, 3:2, 4:2}).
+   Je to jeden knob a sweep je levný — ale je to **další kalibrační kolo**, tedy
+   přesně to, co D33 zavřel. Proto to nedělám bez zadání.
+
+*Reprodukce (dávky jsou deterministické, výstupy jdou do ignorovaného `prototyp/logs/`):*
+
+```bash
+cd prototyp && for s in 1 1001 2001 3001 4001 5001; do node sim/run.js --runs 1000 --players 1,2,3,4 --pursuer agent-malone,serif-brody --strategy kompetentni --seed $s --out logs/d34-blok$s; done
+```
+
+---
+
 *Křížové odkazy: [[kalibrace-4-final-2026-07-27|technika/kalibrace-4-final-2026-07-27.md]]
 (čísla, proti kterým se poměřuje) · [[kritik-verdikt-k2-k5d-2026-07-27|technika/kritik-verdikt-k2-k5d]]
 (D32, který prověrku zadal) · [[../projekt/rozhodnuti|projekt/rozhodnuti.md]] D30, D33.*

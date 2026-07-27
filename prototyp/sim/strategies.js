@@ -18,7 +18,7 @@
 
 import { createRng } from '../src/engine/rng.js';
 import { RULES } from '../src/engine/rules.js';
-import { decideAssignment, randomMapping } from './assign.js';
+import { decideAssignment } from './assign.js';
 import { estimateHitsVsKotva } from './estimate.js';
 
 // Přiřazovací heuristiky žijí v `assign.js` (ADR-010) — re-export drží zpětnou
@@ -46,24 +46,49 @@ export function createStrategy(spec, seed, rules = RULES, content = null) {
   const rng = createRng((seed ^ 0x9e3779b9) >>> 0);
   // Model šumu, který „zná" memorizační bot (rozsah + clamp) — musí sedět s enginem.
   const noise = { sumRozsah: rules.sumRozsah, statMax: rules.statMax };
+  // Parametry štítku jsou VEŘEJNÁ pravidla (telegraf hlásí verdikt zbraně doslova,
+  // `stitky.yaml` je vede jako strojový zdroj pravdy) — na rozdíl od statů skrytých
+  // slotů je smí číst každá strategie, nejen „vševědoucí" měřicí meze.
+  const gangsterParams = content?.stitky?.find((x) => x.id === 'GANGSTER')?.parametry ?? null;
+  const stitekChovani = gangsterParams?.chovani_dle_typu ?? null;
+  const zarZaGangster = gangsterParams?.hlucnost_zar ?? rules.zar.zaGangster;
 
   return {
     spec: s,
 
     /* -------- mapa -------- */
+    /**
+     * D34/N7: typ nabídnutého místa je VEŘEJNÝ a mechanicky významný — u `lokace`
+     * (a Zátahu) zbraň projde všude, u `npc` ve viditelné roli auto-failuje
+     * (obsah/stitky.yaml `chovani_dle_typu`). Bot dřív losoval, přestože 32,4 %
+     * nabídek obsahovalo dva různé typy. Preference je úzká a odvoditelná: držím-li
+     * zbraň, jdu tam, kde není mrtvá. Jinak dál losuji (jiná veřejná informace
+     * o obsahu uzlu na mapě není — telegraf se ukazuje až po volbě).
+     */
     pickRoute(state) {
       const n = state.nabidka.nabidnuto;
+      const maZbran = state.postavy.some((p) => p.ruka.some((k) => k.stitek === 'GANGSTER'));
+      if (maZbran && stitekChovani) {
+        const pratelske = n.filter((x) => stitekChovani[x.typ_mista] === 'vzdy_pass');
+        if (pratelske.length > 0 && pratelske.length < n.length) return pratelske[rng.int(pratelske.length)].ref;
+      }
       return n[rng.int(n.length)].ref;
     },
 
     /* -------- motel -------- */
+    /**
+     * D34/N8: zajížďka do motelu je VOLNÁ OPCE — nestojí uzel ani Žár
+     * (`motelChoice('ukryt')` → `leaveMotel` → tytéž cesty). Adaptivní bot přesto
+     * zajel jen při těžkém postihu a ≥6 kreditech, takže si sám zamykal směnu
+     * karty za 3 kredity, kterou by uvnitř provedl. Zajet je nikdy horší než minout.
+     */
     pickMotelOffer(state) {
       const maTezky = state.postavy.some((p) => p.postihy.some((x) => x.tier === 'tezky'));
       if (s.econ === 'hoard') return 'dal';
       if (s.econ === 'lecit' || s.econ === 'adaptivni') {
-        if (maTezky && state.kredity >= 6) return 'ukryt';
+        if (maTezky && state.kredity >= rules.kredity.leceniTezkeho) return 'ukryt';
       }
-      if (s.econ === 'smenit' && state.kredity >= 3) return 'ukryt';
+      if ((s.econ === 'smenit' || s.econ === 'adaptivni') && state.kredity >= rules.kredity.smenaKarty) return 'ukryt';
       return 'dal';
     },
 
@@ -93,6 +118,34 @@ export function createStrategy(spec, seed, rules = RULES, content = null) {
     commit(state, run) {
       const signal = state.situace.signal;
       const out = [];
+      // D34/N3: rušený stat je VEŘEJNÝ od startu runu (pronasledovatele.yaml:
+      // „hráči to vědí od startu"). Přiřazení ho respektovalo, commit ne — bot
+      // proti Malonovi vybíral karty podle statu, který je zaručeně 0.
+      const rusi = state.pronasledovatel?.rusi ?? null;
+      // D34/N4: cena hlučné karty v Žáru. `hlucnost_zar` je v stitky.yaml, Brodyho
+      // zdvojnásobení je jeho veřejné run-wide pravidlo, prahy jsou vyznačené na
+      // trati (prototyp-mvp.md §Mapa). Bot dřív Žár nečetl vůbec, přestože hlučné
+      // hraní tvoří 58 % jeho přírůstku a překračuje přes polovinu všech prahů.
+      const brodyX2 = rusi?.typ === 'stitek' && rusi.cil === 'GANGSTER';
+      const cenaZaru = (k) => (k.stitek === 'GANGSTER'
+        ? zarZaGangster * (brodyX2 ? 2 : 1)
+        : (k.staty.utok ?? 0) >= rules.zar.hlucnyUtokPrah ? rules.zar.zaHlucnyUtok : 0);
+      const prahOffset = rules.zar.prahOffsetDlePoctu?.[state.postavy.length] ?? 0;
+      const dalsiPrah = Object.values(rules.zar.prahy)
+        .map((p) => Math.max(1, p - prahOffset))
+        .filter((p) => p > state.zar)
+        .sort((a, b) => a - b)[0] ?? Infinity;
+      /**
+       * Pokuta za hluk ve STATOVÝCH bodech (měřítko `commitScore`). Není to
+       * resoluční číslo, ale váha v botí heuristice — proto žije tady, ne v RULES
+       * (ADR-003). Kalibrace: u prahu ať bot obětuje i silnou kartu, jinak jen
+       * rozhodne remízu mezi srovnatelnými kandidáty.
+       */
+      const hlukPokuta = (k) => {
+        const cena = cenaZaru(k);
+        if (cena === 0) return 0;
+        return state.zar + cena >= dalsiPrah ? cena * 2 : cena * 0.5;
+      };
       // Kolik GANGSTER věcí má smysl committnout (kalibrace-4, nález D29).
       // Verdikt zbraně je VEŘEJNÉ pravidlo — telegraf ho hlásí doslova („zbraň
       // na očích neprojde") a `stitky.yaml` ho vede jako veřejné, takže se
@@ -109,40 +162,91 @@ export function createStrategy(spec, seed, rules = RULES, content = null) {
       let zbraniPovoleno = signal.zbran_projde === 'ano'
         ? Infinity
         : (signal.zbran_skryte ? 1 : 0) + (signal.zbran_slot_vyjimka ? 1 : 0);
+
+      /** Zbylé karty a kvóty per hráč; committuje se z nich napříč týmem. */
+      const zbyva = new Map();
+      const kvota = new Map();
       for (const plan of state.situace.commitPlan) {
-        // Bod 4 (D22): hráč s hide_telegraf z minulého uzlu NEVIDÍ telegraf →
-        // committne naivně (bez trendu i bez skryté-zbraně) → info-postih
-        // degraduje commit uzlu N+1 (snowball K2), ne jen assign (hide_staty).
-        const hrac = state.postavy.find((p) => p.id === plan.hrac_id);
-        const slepy = hrac?.postihy?.some((x) => x.efekt?.druh === 'hide_telegraf') ?? false;
-        // MĚŘICÍ NÁSTROJ (K4c-analog na commit-ose, kalibrace-4): memorizační bot
-        // zná staty VŠECH slotů situace (i skrytých) dle jejího id — to je přesně
-        // to, co si hráč po pár runech zapamatuje a co telegraf neprozrazuje.
-        // Rozdíl memorizační − kompetentní měří, zda commit-osa po pár runech
-        // nezdegeneruje na lookup tabulku (nález kritika k D26 bodu 3).
-        const memo = s.commit === 'memorizacni' && content
-          ? (content.situace.find((x) => x.id === state.situace.id)?.sloty ?? []).flatMap((sl) => (Array.isArray(sl.stat) ? sl.stat : [sl.stat]))
-          : null;
-        const demanded = slepy ? [] : memo ?? effectiveDemand(signal, s, rng);
-        const ruka = run.getHand(plan.hrac_id).slice();
-        if (s.commit === 'nahodny') {
-          // MĚŘICÍ NÁSTROJ (K7 gate 3, kalibrace-4): podlaha commit-learnability.
-          // Committne náhodné karty bez ohledu na telegraf — rozdíl win-rate proti
-          // `informovany` (obojí s gamble-politikou) měří, kolik rozhodnutí commit
-          // ještě nese. Kdyby gamble commit trivializoval, mezera by zmizela.
-          const michana = rng.shuffle(ruka.slice());
+        zbyva.set(plan.hrac_id, run.getHand(plan.hrac_id).slice());
+        kvota.set(plan.hrac_id, plan.pocet);
+      }
+      const vezmi = (hracId, karta) => {
+        out.push({ characterId: hracId, cardId: karta.id });
+        kvota.set(hracId, kvota.get(hracId) - 1);
+        zbyva.set(hracId, zbyva.get(hracId).filter((x) => x.id !== karta.id));
+        if (karta.stitek === 'GANGSTER') zbraniPovoleno -= 1;
+      };
+
+      // MĚŘICÍ NÁSTROJ (K7 gate 3, kalibrace-4): podlaha commit-learnability.
+      // Committne náhodné karty bez ohledu na telegraf — rozdíl win-rate proti
+      // `informovany` (obojí s gamble-politikou) měří, kolik rozhodnutí commit
+      // ještě nese. Kdyby gamble commit trivializoval, mezera by zmizela.
+      if (s.commit === 'nahodny') {
+        for (const plan of state.situace.commitPlan) {
+          const michana = rng.shuffle(zbyva.get(plan.hrac_id).slice());
           for (let i = 0; i < plan.pocet; i++) out.push({ characterId: plan.hrac_id, cardId: michana[i].id });
-          continue;
         }
-        // Slepý hráč (hide_telegraf) verdikt zbraně NEVIDÍ — nesmí ho tedy ani
-        // použít. Info-postih tím bije i sem, ne jen do trendu.
-        const skore = (k) => commitScore(k, demanded, s) + (!slepy && zbraniPovoleno <= 0 && k.stitek === 'GANGSTER' ? -100 : 0);
-        ruka.sort((a, b) => skore(b) - skore(a));
-        for (let i = 0; i < plan.pocet; i++) {
-          const karta = ruka[i];
-          out.push({ characterId: plan.hrac_id, cardId: karta.id });
-          if (karta.stitek === 'GANGSTER') zbraniPovoleno -= 1;
+        run.commitCards(out);
+        return;
+      }
+
+      // Bod 4 (D22): hráč s hide_telegraf z minulého uzlu NEVIDÍ telegraf →
+      // committne naivně (bez trendu, bez skryté-zbraně i bez verdiktu zbraně) →
+      // info-postih degraduje commit uzlu N+1 (snowball K2), ne jen assign.
+      // Slepí jdou první: hrají svoje naslepo, tým pak pokrývá role kolem nich.
+      for (const plan of state.situace.commitPlan) {
+        const hrac = state.postavy.find((p) => p.id === plan.hrac_id);
+        if (!(hrac?.postihy?.some((x) => x.efekt?.druh === 'hide_telegraf') ?? false)) continue;
+        const ruka = zbyva.get(plan.hrac_id).slice().sort((a, b) => statSum(b) - statSum(a));
+        for (let i = 0; i < plan.pocet && i < ruka.length; i++) vezmi(plan.hrac_id, ruka[i]);
+      }
+
+      /**
+       * D34/N2: telegraf jmenuje ROLE, ne pytel statů. Bot dosud sečetl poptávané
+       * staty a každou kartu oboudil součtem — takže mohl committnout čtyři karty
+       * silné v témže statu a na zbylé role nezbylo nic (kontrafaktuál: kandidáti
+       * K5-D 13,1 → 9,6 %, PRŮŠVIH proxy 15,3 → 11,2 %). Nově dostane každá role
+       * svého nejlepšího kandidáta a teprve zbytek kvóty jde na generalistu —
+       * což je zároveň odpověď na „jedna skrytá čeká na nejhorší" (`proti_srsti`).
+       */
+      const role = commitRoles(signal, s, rng, content, state.situace.id);
+      /**
+       * Karta, která je pro svého vlastníka předem mrtvá, se nemá vůbec
+       * committnout: zamčený štítek (D34/N1 — „po bouchačce radši nesáhneš")
+       * auto-failuje ve VŠECH slotech a hráč to o sobě ví. Verdikt zbraně
+       * z telegrafu (`zbraniPovoleno`) je totéž o krok dřív.
+       */
+      const mrtvaKarta = (k, hracId) => {
+        const z = zamkyPostavy(state, hracId);
+        if (k.stitek && z?.stitky.includes(k.stitek)) return true;
+        return zbraniPovoleno <= 0 && k.stitek === 'GANGSTER';
+      };
+      const skoreRole = (k, hracId, staty) => Math.min(...staty.map((st) => statSNaRusenim(k, st, rusi)))
+        - hlukPokuta(k) + (mrtvaKarta(k, hracId) ? -100 : 0);
+      const skoreGeneralista = (k, hracId) => statSum(k) / rules.staty.length
+        - hlukPokuta(k) + (mrtvaKarta(k, hracId) ? -100 : 0);
+      const nejlepsi = (skoreFn) => {
+        let best = null;
+        for (const [hracId, karty] of zbyva) {
+          if ((kvota.get(hracId) ?? 0) <= 0) continue;
+          for (const k of karty) {
+            const sc = skoreFn(k, hracId);
+            if (best == null || sc > best.sc) best = { sc, hracId, karta: k };
+          }
         }
+        return best;
+      };
+      const zbyvaKvota = () => [...kvota.values()].reduce((a, b) => a + b, 0);
+      for (const staty of role) {
+        if (zbyvaKvota() <= 0) break;
+        const best = nejlepsi((k, hracId) => skoreRole(k, hracId, staty));
+        if (!best) break;
+        vezmi(best.hracId, best.karta);
+      }
+      while (zbyvaKvota() > 0) {
+        const best = nejlepsi(skoreGeneralista);
+        if (!best) break;
+        vezmi(best.hracId, best.karta);
       }
       run.commitCards(out);
     },
@@ -154,7 +258,7 @@ export function createStrategy(spec, seed, rules = RULES, content = null) {
         const locked = state.postavy.some((p) => p.postihy.some((x) => x.efekt?.druh === 'lock_gamble'));
         if (!locked && odhadZeStavu(state, noise) <= 2) {
           const owner = chooseGambleHand(state);
-          const replaced = weakestCommittedId(state);
+          const replaced = nejmeneUzitecnaId(state, noise);
           if (owner && replaced) {
             run.gamble({ handOwnerId: owner, replacedCardId: replaced });
             state = run.getState();
@@ -165,7 +269,8 @@ export function createStrategy(spec, seed, rules = RULES, content = null) {
       const sloty = state.situace.odhaleno.sloty;
       const committed = state.situace.committed;
       const goalByHrac = Object.fromEntries(state.postavy.map((p) => [p.id, p.cil?.id ?? null]));
-      const postizen = state.postavy.some((p) => p.postihy.some((x) => x.efekt?.druh === 'hide_staty'));
+      const maEfekt = (hracId, druh) =>
+        state.postavy.find((p) => p.id === hracId)?.postihy?.some((x) => x.efekt?.druh === druh) ?? false;
       const opts = {
         strat: s.assign,
         committed,
@@ -175,9 +280,25 @@ export function createStrategy(spec, seed, rules = RULES, content = null) {
         typSituace: state.situace.typ,
         goalByHrac,
         rng,
+        // D34/N1: zámkové postihy vlastníka karty (engine je nově vynucuje) a
+        // slepota na ikony viditelnosti — obojí per KARTU, ne per tým.
+        zamkyKaret: committed.map((c) => zamkyPostavy(state, c.hrac_id)),
+        slepiNaViditelnost: committed.map((c) => maEfekt(c.hrac_id, 'hide_viditelnost')),
         ...noise,
       };
-      const mapping = postizen && rng.next() < s.epsilon ? randomMapping(committed.length, sloty.length, rng) : decideAssignment(opts);
+      let mapping = decideAssignment(opts);
+      // D34/N5: `hide_staty` degraduje jen karty POSTIŽENÉHO hráče („vlastník vidí
+      // názvy věcí, ne jejich staty"). Dřív stačil jeden postižený a bot ε-greedy
+      // randomizoval CELÉ přiřazení včetně karet hráčů, kteří vidí normálně — chyba
+      // rostoucí s počtem hráčů, tedy mířící rovnou do K6a. Prohození dvou pozic
+      // drží platnou permutaci a lokalizuje škodu na tápajícího hráče.
+      const slepiIdx = committed.map((c, i) => (maEfekt(c.hrac_id, 'hide_staty') ? i : -1)).filter((i) => i >= 0);
+      for (const i of slepiIdx) {
+        if (rng.next() >= s.epsilon) continue;
+        const j = rng.int(mapping.length);
+        mapping = mapping.slice();
+        [mapping[i], mapping[j]] = [mapping[j], mapping[i]];
+      }
       const list = mapping.map((slotIdx, cardIdx) => ({ slotIndex: sloty[slotIdx].slot_index, cardId: committed[cardIdx].karta.id }));
       run.assignToSlots(list);
       run.confirmNode();
@@ -195,6 +316,7 @@ function odhadZeStavu(state, noise) {
     rusi: state.pronasledovatel?.rusi ?? null,
     stitekParams: state.situace.stitekParams ?? null,
     typSituace: state.situace.typ,
+    zamkyKaret: state.situace.committed.map((c) => zamkyPostavy(state, c.hrac_id)),
     ...noise,
   });
 }
@@ -207,11 +329,55 @@ function chooseGambleHand(state) {
   return plne[0]?.id ?? null;
 }
 
-/** Nejslabší committnutá karta (nejnižší součet statů) → nahradí ji gamble. */
-function weakestCommittedId(state) {
+/**
+ * Kterou committnutou kartu gamble nahradí (D34/N6).
+ *
+ * Dřív to byla karta s nejnižším SOUČTEM statů — jenže po odhalení slotů zní
+ * správná otázka „která karta v nejlepším rozdělení nic neuhraje". To je často
+ * karta s vysokým součtem (hodnota 5 proti Malonovi, zbraň bez skrytého slotu).
+ * Bot proto trefil nejlepší nahrazovanou pozici jen v 86,5 % gamblů a ve 4,9 %
+ * minul únik z „mříže mrtvých rozhodnutí" (max≤1 → ≥2), což je přesně veličina
+ * měřená K5 variantou D.
+ *
+ * Kritérium je veřejné: kolik zásahů vs. KOTVĚ tým uhraje, když kartu vynecháme
+ * (prázdné místo). Nejmenší ztráta = nejméně užitečná karta. Per-instance šum
+ * ani prahy do toho nevstupují.
+ */
+function nejmeneUzitecnaId(state, noise) {
   const c = state.situace.committed;
   if (c.length === 0) return null;
-  return c.reduce((a, b) => (statSum(a.karta) <= statSum(b.karta) ? a : b)).karta.id;
+  const spolecne = {
+    sloty: state.situace.odhaleno.sloty,
+    rusi: state.pronasledovatel?.rusi ?? null,
+    stitekParams: state.situace.stitekParams ?? null,
+    typSituace: state.situace.typ,
+    ...noise,
+  };
+  let nej = null;
+  for (let i = 0; i < c.length; i++) {
+    const bezNi = c.filter((_, j) => j !== i);
+    const hits = estimateHitsVsKotva({
+      committed: bezNi,
+      zamkyKaret: bezNi.map((x) => zamkyPostavy(state, x.hrac_id)),
+      ...spolecne,
+    });
+    // Remízu láme nižší součet statů — zachovává dřívější chování tam, kde je
+    // příspěvek karet stejný, takže se nemění nic, co se měnit nemusí.
+    const klic = { hits, sum: statSum(c[i].karta) };
+    if (nej == null || klic.hits > nej.hits || (klic.hits === nej.hits && klic.sum < nej.sum)) {
+      nej = { ...klic, id: c[i].karta.id };
+    }
+  }
+  return nej.id;
+}
+
+/** Aktivní zámkové postihy hráče ve tvaru pro `resolveSlot` (D34/N1). */
+function zamkyPostavy(state, hracId) {
+  const p = state.postavy.find((x) => x.id === hracId);
+  if (!p) return null;
+  const stitky = p.postihy.filter((x) => x.efekt?.druh === 'lock_stitek').map((x) => x.efekt.stitek);
+  const viditelnosti = p.postihy.filter((x) => x.efekt?.druh === 'lock_slot_viditelnost').map((x) => x.efekt.viditelnost);
+  return stitky.length === 0 && viditelnosti.length === 0 ? null : { stitky, viditelnosti };
 }
 
 /* ================= commit heuristiky ================= */
@@ -220,28 +386,45 @@ function statSum(k) {
   return Object.values(k.staty).reduce((a, b) => a + b, 0);
 }
 
-/** Efektivní poptávka statů z telegrafu (fidelita p → občas špatný signál). */
-function effectiveDemand(signal, s, rng) {
-  const staty = ['utok', 'obrana', 'hodnota', 'improvizace', 'nastroj'];
-  if (s.commit === 'monokultura') return [s.monoStat];
-  if (s.commit === 'naivni') return [];
-  // informovany: trend viditelných statů, zašuměný fidelitou
-  const trend = signal.trend.flatMap((t) => (Array.isArray(t.stat) ? t.stat : [t.stat]));
-  const demand = rng.next() < s.fidelita ? [...trend] : [staty[rng.int(staty.length)]]; // špatný odhad
-  // Bod 3 (D22): telegraf hlásí „zbraň se ve skrytém slotu vyplatí" → informovaný
-  // hráč committne zbraň i bez viditelné poptávky útoku (samostatná fidelita).
-  if (signal.zbran_skryte && rng.next() < s.fidelita && !demand.includes('utok')) demand.push('utok');
-  // P3 (D25f): totéž pro skrytý improvizační slot — telegraf ho hlásí prózou
-  // („jedna skrytá ho zmate papírem"), takže informovaný hráč na něj committne
-  // improvizaci i bez viditelné poptávky. Bez toho byl slot naslepo.
-  if (signal.improv_skryte && rng.next() < s.fidelita && !demand.includes('improvizace')) demand.push('improvizace');
-  return demand;
+const STATY = ['utok', 'obrana', 'hodnota', 'improvizace', 'nastroj'];
+
+/** Hodnota statu s ohledem na run-wide rušení pronásledovatelem (D34/N3). */
+function statSNaRusenim(k, stat, rusi) {
+  if (rusi && rusi.typ === 'stat' && rusi.cil === stat) return 0;
+  return k.staty[stat] ?? 0;
 }
 
-function commitScore(k, demanded, s) {
-  if (s.commit === 'naivni') return statSum(k);
-  if (demanded.length === 0) return statSum(k);
-  return demanded.reduce((a, stat) => a + (k.staty[stat] ?? 0), 0);
+/**
+ * ROLE, které chce commit pokrýt — jedna položka = jeden slot, hodnota = staty,
+ * které ten slot žádá (kombi slot má dva). Nahrazuje dřívější plochou „poptávku"
+ * (D34/N2): telegraf je seznam rolí, ne pytel statů.
+ *
+ * Fidelita p se aplikuje PER ROLI: s pravděpodobností p ji hráč přečte správně,
+ * jinak si domyslí náhodný stat. Skryté role (`zbran_skryte`, `improv_skryte`)
+ * si drží vlastní hod jako dosud — telegraf je hlásí prózou, ne výčtem.
+ */
+function commitRoles(signal, s, rng, content, situaceId) {
+  if (s.commit === 'naivni') return [];
+  if (s.commit === 'monokultura') return [[s.monoStat]];
+  // MĚŘICÍ NÁSTROJ (K4c-analog na commit-ose, kalibrace-4): memorizační bot zná
+  // staty VŠECH slotů situace (i skrytých) dle jejího id — to je přesně to, co si
+  // hráč po pár runech zapamatuje a co telegraf neprozrazuje. Rozdíl memorizační
+  // − kompetentní měří, zda commit-osa nezdegeneruje na lookup tabulku.
+  if (s.commit === 'memorizacni' && content) {
+    const sloty = content.situace.find((x) => x.id === situaceId)?.sloty ?? [];
+    return sloty.map((sl) => (Array.isArray(sl.stat) ? sl.stat : [sl.stat]));
+  }
+  const role = signal.trend.map((t) => {
+    const staty = Array.isArray(t.stat) ? t.stat : [t.stat];
+    return rng.next() < s.fidelita ? staty : [STATY[rng.int(STATY.length)]];
+  });
+  // Bod 3 (D22): telegraf hlásí „zbraň se ve skrytém slotu vyplatí" → informovaný
+  // hráč committne zbraň i bez viditelné poptávky útoku (samostatná fidelita).
+  if (signal.zbran_skryte && rng.next() < s.fidelita) role.push(['utok']);
+  // P3 (D25f): totéž pro skrytý improvizační slot — telegraf ho hlásí prózou
+  // („jedna skrytá ho zmate papírem"). Bez toho byl slot naslepo.
+  if (signal.improv_skryte && rng.next() < s.fidelita) role.push(['improvizace']);
+  return role;
 }
 
 /* Přiřazovací heuristiky (decideAssignment, randomMapping, goalBias) se

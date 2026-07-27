@@ -13,6 +13,35 @@ architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.m
 
 ## 2026-07-27
 
+- **D35 (ROZHODNUTÍ uživatele + provedení) — opravy N1–N8 zapracovány, brána
+  přeměřena: dvě kritéria poprvé splněna, dvě rozbita v opačném směru.**
+  Uživatel z variant zvolil **„vše + jedno re-měření"**. Zapracováno všech osm
+  nálezů D34 (detail a rozpad v [[../technika/proverka-bota-2026-07-27|reportu]],
+  část II), +9 testů (149 zelených), golden snapshoty vědomě přepsány.
+  **Operacionalizace N1 = AUTO-FAIL, ne zákaz přiřazení:** zákaz je u 1p
+  neproveditelný (`lock_slot_viditelnost: skryta` + 4 karty jednoho hráče +
+  skrytý slot = žádné legální rozdělení), auto-fail je vždy proveditelný, čte se
+  u stolu stejně a degraduje agency, ne číslo. Nový důvod `postih_lock_*` + pole
+  `postih_efekt` pro vysvětlující vrstvu; zámky nese oracle i `assign_context`,
+  jinak by padl invariant „reálné ≤ max" a tripwire ADR-010.
+  **Re-měření (6 bloků × 8000 runů, verdikt z průměru dle D31):**
+  **K5 varianta D 10,58 → 9,72 % (6/6 bloků v gate) — POPRVÉ SPLNĚNO**, a to
+  bez dotyku Maloneho identity (D25e drží). **K2 drift 1,25 → 1,39** (6/6 ≥1,3),
+  což potvrzuje hypotézu D34/N1, že se dřív měřil mechanismus z ~29 % nezapojený;
+  floor ≥20 % prochází v 5/6 blocích (jeden 19,9 %). Naopak **K1 per-count
+  57,3 / 67,1 / 77,5 / 79,7 % → 3p a 4p breachnou strop 70 % v 6/6 blocích**
+  a **K6a spread 4,7 → 22,4 b.** (gate ≤6).
+  **Diagnóza obratu:** není to nová vada obsahu, ale co-op škálování, které starý
+  bot neuměl vybrat. Starý commit vybíral každý hráč zvlášť plochým součtem;
+  nový vybírá nejlepšího kandidáta na roli napříč týmem, takže 4p vybírá 4 karty
+  z 12, kdežto 1p z 8. PRŮŠVIH na běžných uzlech klesá monotónně s počtem hráčů
+  (1p 25,4 % → 4p 19,0 % u Malonea) a **P1 na obtížnost běžných uzlů záměrně
+  nesahá** — kompenzoval jen prahy trati. **P1 nebyl špatně spočítaný, byl
+  spočítaný na špatném hráči.**
+  **Úprava NEPROVEDENA:** nabízí se jediná páka bez dotyku obsahu — přeladit
+  `prahOffsetDlePoctu` ({1:0, 2:2, 3:2, 4:2}) — ale je to další kalibrační kolo,
+  tedy přesně to, co D33 vědomě zavřel. Rozhodnutí je uživatelovo, ne PM.
+
 - **D34 (NÁLEZ, ne rozhodnutí) — prověrka bota proti veřejným pravidlům: bot není
   kompetentní model hráče; 8 nálezů, 4 měřitelně velké.** Backlog bod (a) z D32/D33
   proveden nad 2000 runy (250 seedů × 1–4p × oba pronásledovatele) čistě

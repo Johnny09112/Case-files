@@ -26,15 +26,17 @@ import { decideAssignment } from './assign.js';
  * @param {string|null} [p.typSituace]
  * @param {number} [p.sumRozsah] model šumu (RULES.sumRozsah)
  * @param {number} [p.statMax] RULES.statMax
+ * @param {({stitky?: string[], viditelnosti?: string[]}|null)[]} [p.zamkyKaret] zámkové
+ *   postihy vlastníka každé karty (D34/N1) — hráč své postihy zná, tak s nimi počítá
  * @returns {number} 0–4
  */
-export function estimateHitsVsKotva({ committed, sloty, rusi = null, stitekParams = null, typSituace = null, sumRozsah = 1, statMax = 5 }) {
-  const map = decideAssignment({ strat: 'memorizacni', committed, sloty, rusi, stitekParams, typSituace, sumRozsah, statMax });
+export function estimateHitsVsKotva({ committed, sloty, rusi = null, stitekParams = null, typSituace = null, sumRozsah = 1, statMax = 5, zamkyKaret = null }) {
+  const map = decideAssignment({ strat: 'memorizacni', committed, sloty, rusi, stitekParams, typSituace, sumRozsah, statMax, zamkyKaret });
   let hits = 0;
   map.forEach((slotPos, cardIdx) => {
     const slot = sloty[slotPos];
     // Proti KOTVĚ, ne proti prahu — bot per-instance šum nevidí.
-    if (resolveSlot({ karta: committed[cardIdx].karta, slot: { ...slot, prah: slot.kotva }, rusi, stitekParams, typSituace }).zasah) hits += 1;
+    if (resolveSlot({ karta: committed[cardIdx].karta, slot: { ...slot, prah: slot.kotva }, rusi, stitekParams, typSituace, zamky: zamkyKaret?.[cardIdx] ?? null }).zasah) hits += 1;
   });
   return hits;
 }

@@ -105,13 +105,33 @@ function statValue(karta, stat, rusi) {
  * @param {{typ: string, cil: string}} [p.rusi] rušení pronásledovatele (run-wide)
  * @param {{chovani_dle_typu: object}} [p.stitekParams] parametry štítku GANGSTER (obsah)
  * @param {string} [p.typSituace] npc|lokace|zatah|lecka|konfrontace
+ * @param {{stitky?: string[], viditelnosti?: string[]}} [p.zamky] aktivní ZÁMKOVÉ
+ *   postihy VLASTNÍKA karty (D34/N1) — `lock_stitek` a `lock_slot_viditelnost`
  * @returns {{zasah: boolean, stat_hodnota: number|number[], duvod: string,
- *   stitek_efekt: string|null, pronasledovatel_efekt: object|null}}
+ *   stitek_efekt: string|null, pronasledovatel_efekt: object|null,
+ *   postih_efekt: string|null}}
  */
-export function resolveSlot({ karta, slot, rusi = null, stitekParams = null, typSituace = null }) {
+export function resolveSlot({ karta, slot, rusi = null, stitekParams = null, typSituace = null, zamky = null }) {
   // Prázdný slot (žádná committnutá karta — složení) vždy padne.
   if (!karta) {
-    return { zasah: false, stat_hodnota: null, duvod: 'neobsazeno', stitek_efekt: null, pronasledovatel_efekt: null };
+    return { zasah: false, stat_hodnota: null, duvod: 'neobsazeno', stitek_efekt: null, pronasledovatel_efekt: null, postih_efekt: null };
+  }
+
+  // ZÁMKOVÉ POSTIHY (D34/N1) — tvrdé pravidlo nad staty, stejná třída jako štítek.
+  // Do 2026-07-27 je engine NEVYNUCOVAL (`assignToSlots` nekontroloval nic), takže
+  // třetina udělovaných postihů byla mechanicky no-op — viz technika/proverka-bota.
+  // Operacionalizace = AUTO-FAIL, ne zákaz přiřazení: zákaz je u 1p neproveditelný
+  // (`lock_slot_viditelnost: skryta` + 4 karty jednoho hráče + skrytý slot = žádné
+  // legální rozdělení). Auto-fail je vždy proveditelný, čte se u stolu stejně
+  // („co dáš do skryté role, se nepovede") a degraduje AGENCY, ne číslo — což je
+  // přesně definice postihu v obsah/postihy.yaml.
+  if (zamky) {
+    if (karta.stitek && zamky.stitky?.includes(karta.stitek)) {
+      return { zasah: false, stat_hodnota: 0, duvod: 'postih_lock_stitek', stitek_efekt: null, pronasledovatel_efekt: null, postih_efekt: 'lock_stitek' };
+    }
+    if (zamky.viditelnosti?.includes(slot.viditelnost)) {
+      return { zasah: false, stat_hodnota: 0, duvod: 'postih_lock_viditelnost', stitek_efekt: null, pronasledovatel_efekt: null, postih_efekt: 'lock_slot_viditelnost' };
+    }
   }
   const rusiTohoto =
     rusi && rusi.typ === 'stat' && slotStaty(slot).includes(rusi.cil) ? rusi : null;
@@ -123,7 +143,7 @@ export function resolveSlot({ karta, slot, rusi = null, stitekParams = null, typ
   if (maStitek && !vyjimka && stitekParams && typSituace) {
     const chovani = stitekParams.chovani_dle_typu?.[typSituace];
     if (chovani === 'viditelna_role_selze' && slot.viditelnost === 'viditelna') {
-      return { zasah: false, stat_hodnota: 0, duvod: 'gangster_auto_fail', stitek_efekt: 'auto_fail', pronasledovatel_efekt };
+      return { zasah: false, stat_hodnota: 0, duvod: 'gangster_auto_fail', stitek_efekt: 'auto_fail', pronasledovatel_efekt, postih_efekt: null };
     }
     // 'vzdy_pass' nebo skrytá role → štítek se ignoruje, hodnotí se dle statu.
   }
@@ -137,6 +157,7 @@ export function resolveSlot({ karta, slot, rusi = null, stitekParams = null, typ
       duvod: zasah ? 'proslo' : rusiTohoto ? 'stat_zrusen' : 'kombi_neuplny',
       stitek_efekt: null,
       pronasledovatel_efekt,
+      postih_efekt: null,
     };
   }
 
@@ -148,6 +169,7 @@ export function resolveSlot({ karta, slot, rusi = null, stitekParams = null, typ
     duvod: zasah ? 'proslo' : rusiTohoto ? 'stat_zrusen' : 'nizky_stat',
     stitek_efekt: null,
     pronasledovatel_efekt,
+    postih_efekt: null,
   };
 }
 
@@ -172,14 +194,17 @@ export function bandFromHits(zasahy) {
  * @param {{typ: string, cil: string}} [rusi]
  * @param {{chovani_dle_typu: object}} [stitekParams]
  * @param {string} [typSituace]
+ * @param {({stitky?: string[], viditelnosti?: string[]}|null)[]} [zamkyKaret] zámkové
+ *   postihy vlastníka KAŽDÉ karty (index sdílený s `karty`); bez nich by oracle
+ *   sliboval zásahy, které postih auto-failuje, a padl by invariant „reálné ≤ max".
  * @returns {number} max_achievable_zasahy (0–4)
  */
-export function maxAchievableZasahy(karty, sloty, rusi = null, stitekParams = null, typSituace = null) {
+export function maxAchievableZasahy(karty, sloty, rusi = null, stitekParams = null, typSituace = null, zamkyKaret = null) {
   let max = 0;
   for (const perm of permutace([0, 1, 2, 3])) {
     let zasahy = 0;
     for (let i = 0; i < 4; i++) {
-      const r = resolveSlot({ karta: karty[perm[i]], slot: sloty[i], rusi, stitekParams, typSituace });
+      const r = resolveSlot({ karta: karty[perm[i]], slot: sloty[i], rusi, stitekParams, typSituace, zamky: zamkyKaret?.[perm[i]] ?? null });
       if (r.zasah) zasahy += 1;
     }
     if (zasahy > max) max = zasahy;

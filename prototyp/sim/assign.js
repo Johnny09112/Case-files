@@ -62,35 +62,42 @@ function goalBias(karta, slot, goalId) {
  *
  * @param {object} p {strat, committed:[{hrac_id,karta}], sloty, rusi, stitekParams, typSituace, goalByHrac, rng}
  */
-export function decideAssignment({ strat, committed, sloty, rusi = null, stitekParams = null, typSituace = null, goalByHrac = {}, rng = null, sumRozsah = 1, statMax = 5 }) {
+export function decideAssignment({ strat, committed, sloty, rusi = null, stitekParams = null, typSituace = null, goalByHrac = {}, rng = null, sumRozsah = 1, statMax = 5, zamkyKaret = null, slepiNaViditelnost = null }) {
   const karty = committed.map((c) => c.karta);
   const M = karty.length;
   if (strat === 'random') return randomMapping(M, sloty.length, rng);
 
-  const passVsPrah = (k, slot) => (resolveSlot({ karta: k, slot, rusi, stitekParams, typSituace }).zasah ? 1 : 0);
+  // Zámkové postihy vlastníka karty (D34/N1) — hráč své vlastní postihy ZNÁ,
+  // takže se slotu, kde by karta auto-failovala, kompetentní hráč vyhne.
+  const zamkyKarty = (i) => zamkyKaret?.[i] ?? null;
+  const passVsPrah = (k, slot, i) => (resolveSlot({ karta: k, slot, rusi, stitekParams, typSituace, zamky: zamkyKarty(i) }).zasah ? 1 : 0);
   const rawStat = (k, slot) => {
     const staty = Array.isArray(slot.stat) ? slot.stat : [slot.stat];
     return Math.min(...staty.map((st) => (rusi?.typ === 'stat' && rusi.cil === st ? 0 : k.staty[st] ?? 0)));
   };
-  /** Padne věc v tomto slotu na tvrdé pravidlo štítku bez ohledu na staty? */
-  const autoFail = (k, slot) => !resolveSlot({ karta: k, slot: { ...slot, prah: -99 }, rusi, stitekParams, typSituace }).zasah;
+  /** Padne věc v tomto slotu na tvrdé pravidlo (štítek / zámkový postih) bez ohledu na staty? */
+  const autoFail = (k, slot, i) => !resolveSlot({ karta: k, slot: { ...slot, prah: -99 }, rusi, stitekParams, typSituace, zamky: zamkyKarty(i) }).zasah;
   /**
-   * Skóre KOMPETENTNÍHO hráče: jako `rawStat`, ale zná veřejné pravidlo štítku
-   * (kalibrace-4, nález D29). Zbraň ve viditelné roli NPC padne bez ohledu na
-   * staty — dřív ji `rawStat` s útokem 5 hodnotil jako ideální kandidátku
-   * a bot ji tam cpal. `greedy` zůstává naivní schválně: je to detektor K4a
-   * („max win-rate fixní přiřazovací heuristiky"), ne model kompetence.
+   * Skóre KOMPETENTNÍHO hráče: jako `rawStat`, ale zná veřejná tvrdá pravidla
+   * (kalibrace-4, nález D29; zámkové postihy D34/N1). Zbraň ve viditelné roli NPC
+   * padne bez ohledu na staty — dřív ji `rawStat` s útokem 5 hodnotil jako ideální
+   * kandidátku a bot ji tam cpal. `greedy` zůstává naivní schválně: je to detektor
+   * K4a („max win-rate fixní přiřazovací heuristiky"), ne model kompetence.
+   *
+   * `hide_viditelnost` (D34/N1): postižený hráč NEVIDÍ ikony viditelnosti slotů,
+   * takže u SVÝCH karet nemůže auto-fail dopředu odhadnout — hodnotí je syrovým
+   * statem. Tím postih poprvé mechanicky kouše (dřív byl no-op).
    */
-  const kompetentniStat = (k, slot) => (autoFail(k, slot) ? -1 : rawStat(k, slot));
+  const kompetentniStat = (k, slot, i) => (slepiNaViditelnost?.[i] ? rawStat(k, slot) : autoFail(k, slot, i) ? -1 : rawStat(k, slot));
   // Memorizační bot ZNÁ kotvu (ne per-instance šum) → maximalizuje OČEKÁVANÝ počet
   // zásahů: P(stat ≥ clamp(kotva+šum, 0, statMax)) přes šum uniform v {−R…+R}.
   // Model se počítá ze STEJNÉHO rozsahu + clampu jako engine (kalibrace-2) — jinak
   // by byl bot mis-kalibrovaný a K4c gate by měřil artefakt. GANGSTER auto-fail
   // se promítne jako nulová hodnota přes resolveSlot ve viditelné roli.
   const R = sumRozsah;
-  const expectedPass = (k, slot) => {
-    const auto = resolveSlot({ karta: k, slot: { ...slot, prah: -99 }, rusi, stitekParams, typSituace });
-    if (!auto.zasah) return 0; // GANGSTER auto-fail (prošel by i s prahem −99, jinak zásah)
+  const expectedPass = (k, slot, i) => {
+    const auto = resolveSlot({ karta: k, slot: { ...slot, prah: -99 }, rusi, stitekParams, typSituace, zamky: zamkyKarty(i) });
+    if (!auto.zasah) return 0; // GANGSTER / zámkový postih auto-fail (prošel by i s prahem −99)
     const stat = rawStat(k, slot);
     let hits = 0;
     for (let sv = -R; sv <= R; sv++) {
@@ -101,6 +108,7 @@ export function decideAssignment({ strat, committed, sloty, rusi = null, stitekP
   };
 
   if (strat === 'greedy') {
+    // `greedy` je detektor K4a — schválně naivní (zná jen syrové staty).
     const zbyleSloty = sloty.map((_, i) => i);
     const mapping = new Array(M);
     for (let cardIdx = 0; cardIdx < M; cardIdx++) {
@@ -116,8 +124,8 @@ export function decideAssignment({ strat, committed, sloty, rusi = null, stitekP
   const base = strat === 'oracle' ? passVsPrah : strat === 'memorizacni' ? expectedPass : kompetentniStat;
   const scoreFn =
     strat === 'cile'
-      ? (k, slot, i) => kompetentniStat(k, slot) + goalBias(k, slot, goalByHrac[committed[i].hrac_id])
-      : (k, slot) => base(k, slot);
+      ? (k, slot, i) => kompetentniStat(k, slot, i) + goalBias(k, slot, goalByHrac[committed[i].hrac_id])
+      : (k, slot, i) => base(k, slot, i);
 
   let bestMap = null;
   let bestScore = -Infinity;

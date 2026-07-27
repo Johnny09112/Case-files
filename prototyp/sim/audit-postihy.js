@@ -1,9 +1,16 @@
 /**
- * Přímá sonda: vynucuje engine zámkové/viditelnostní postihy?
- * Hrajeme runy, hlídáme uzly, kde měl hráč aktivní lock_stitek / lock_slot_viditelnost,
- * a počítáme, kolikrát engine PŘESTO přijal přiřazení, které postih zakazuje.
+ * Přímá sonda: vynucuje engine zámkové postihy? (D34/N1)
  *
- * Použití: `node sim/audit-postihy.js`. Nenulový výstup = postih je no-op.
+ * Do 2026-07-27 NE — `lock_stitek` a `lock_slot_viditelnost` byly no-opy
+ * (sonda tehdy naměřila 840 + 1716 tichých porušení). Od opravy je operacionalizace
+ * AUTO-FAIL: přiřazení se nezakazuje (u 1p by nemuselo existovat legální
+ * rozdělení), ale slot padne s důvodem `postih_lock_*`.
+ *
+ * Sonda proto hlídá REGRESI: každé přiřazení karty pod aktivním zámkem musí být
+ * označené odpovídajícím důvodem. Nenulové „TICHÝCH PORUŠENÍ" = postih se zase
+ * někde ztratil.
+ *
+ * Použití: `node sim/audit-postihy.js`.
  */
 
 import { playRun, loadContent } from './run.js';
@@ -38,14 +45,23 @@ for (const players of [1, 2, 3, 4]) {
           pridej(e.hrac_id, { postih_id: e.postih_id, efekt: e.efekt });
         }
         if ((e.type === 'penalty_expired' || e.type === 'penalty_healed')) uber(e.hrac_id, e.postih_id);
+        // „Složení" maže LEHKÉ postihy bez události penalty_expired (state.js
+        // foldCharacter) — bez tohohle by sonda hlásila falešná porušení.
+        if (e.type === 'character_folded') for (const id of e.smazane_lehke ?? []) uber(e.hrac_id, id);
         if (e.type === 'situation_revealed') slotyUzlu.set(e.nodeIndex, e.sloty);
         if (e.type === 'slot_resolved' && e.hrac_id) {
           const aktivni = zamky.get(e.hrac_id) ?? [];
           if (aktivni.length === 0) continue;
           uzluSLockem += 1;
           for (const z of aktivni) {
-            if (z.efekt.druh === 'lock_stitek' && (e.stitky ?? []).includes(z.efekt.stitek)) porusenoStitek += 1;
-            if (z.efekt.druh === 'lock_slot_viditelnost' && e.viditelnost === z.efekt.viditelnost) porusenoViditelnost += 1;
+            const dotcenoStitkem = z.efekt.druh === 'lock_stitek' && (e.stitky ?? []).includes(z.efekt.stitek);
+            const dotcenoViditelnosti = z.efekt.druh === 'lock_slot_viditelnost' && e.viditelnost === z.efekt.viditelnost;
+            // Zámek musí být VIDĚT ve výsledku slotu. Pozor na pořadí pravidel:
+            // štítek se vyhodnocuje dřív, takže `lock_slot_viditelnost` může být
+            // přebité `lock_stitek` — to je korektní, ne tiché porušení.
+            const oznaceno = e.postih_efekt != null;
+            if (dotcenoStitkem && e.postih_efekt !== 'lock_stitek') porusenoStitek += 1;
+            if (dotcenoViditelnosti && !oznaceno) porusenoViditelnost += 1;
           }
         }
       }
@@ -54,8 +70,8 @@ for (const players of [1, 2, 3, 4]) {
 }
 
 console.log(`slot_resolved u hráče s aktivním zámkovým postihem: ${uzluSLockem}`);
-console.log(`z toho PORUŠENÍ lock_stitek (zakázaná zbraň přesto přiřazena): ${porusenoStitek}`);
-console.log(`z toho PORUŠENÍ lock_slot_viditelnost (zakázaná viditelnost slotu): ${porusenoViditelnost}`);
+console.log(`TICHÁ PORUŠENÍ lock_stitek (zamčená karta zahrána bez označení): ${porusenoStitek}`);
+console.log(`TICHÁ PORUŠENÍ lock_slot_viditelnost (zamčená viditelnost bez označení): ${porusenoViditelnost}`);
 console.log(porusenoStitek + porusenoViditelnost > 0
-  ? 'ZÁVĚR: engine zámkové postihy NEVYNUCUJE — jsou to no-opy.'
-  : 'ZÁVĚR: engine je vynucuje (nebo se situace nevyskytla).');
+  ? 'ZÁVĚR: REGRESE — engine zámkové postihy někde nevynucuje.'
+  : 'ZÁVĚR: engine zámkové postihy vynucuje (každý dotčený slot nese postih_efekt).');

@@ -322,6 +322,10 @@ export function createRun({ seed, content, rules, players, pronasledovatelId }) 
       ruce: characters.map((c) => ({
         hrac_id: c.id,
         slozena: c.slozena,
+        // Zámkové postihy (D34/N1) mění, co je pro KTERÉHO hráče dosažitelné —
+        // bez nich by post-hoc report počítal K5/K7 nad jinou hrou, než bot hrál
+        // (a padl by tripwire shody odhadu s gamble-politikou, ADR-010).
+        zamky: zamkyHrace(c),
         karty: c.ruka.map((k) => ({
           karta_id: k.id,
           staty: { ...k.staty },
@@ -335,6 +339,21 @@ export function createRun({ seed, content, rules, players, pronasledovatelId }) 
 
   function hasEfekt(c, druh) {
     return c.postihy.some((p) => p.efekt?.druh === druh);
+  }
+  /**
+   * Aktivní ZÁMKOVÉ postihy hráče ve tvaru, kterému rozumí `resolveSlot`
+   * (D34/N1). Do 2026-07-27 se nikde nečetly — `lock_stitek`
+   * a `lock_slot_viditelnost` byly no-opy.
+   * @param {object} c postava
+   */
+  function zamkyHrace(c) {
+    const stitky = c.postihy.filter((p) => p.efekt?.druh === 'lock_stitek').map((p) => p.efekt.stitek);
+    const viditelnosti = c.postihy.filter((p) => p.efekt?.druh === 'lock_slot_viditelnost').map((p) => p.efekt.viditelnost);
+    return stitky.length === 0 && viditelnosti.length === 0 ? null : { stitky, viditelnosti };
+  }
+  /** Zámky vlastníka pro každou committnutou kartu (index sdílený s `committed`). */
+  function zamkyCommitu() {
+    return situ.committed.map((c) => zamkyHrace(findCharacter(c.hrac_id)));
   }
   function rukaMinus(c) {
     return c.postihy.filter((p) => p.efekt?.druh === 'ruka_minus').reduce((a, p) => a + (p.efekt.kolik ?? 1), 0);
@@ -513,7 +532,8 @@ export function createRun({ seed, content, rules, players, pronasledovatelId }) 
         continue;
       }
       const karta = kartaById.get(a.karta_id);
-      const r = resolveSlot({ karta, slot, rusi, stitekParams: gangsterParams, typSituace: situ.typ });
+      const zamky = zamkyHrace(findCharacter(a.hrac_id));
+      const r = resolveSlot({ karta, slot, rusi, stitekParams: gangsterParams, typSituace: situ.typ, zamky });
       if (r.zasah) zasahy += 1;
       vysledky.push({ hrac_id: a.hrac_id, zasah: r.zasah, slot_index: slot.slot_index });
       log.append(EVENT.SLOT_RESOLVED, nodeSeq, {
@@ -528,6 +548,7 @@ export function createRun({ seed, content, rules, players, pronasledovatelId }) 
         stitky: karta.stitek ? [karta.stitek] : [],
         stitek_efekt: r.stitek_efekt,
         pronasledovatel_efekt: r.pronasledovatel_efekt,
+        postih_efekt: r.postih_efekt,
         zasah: r.zasah,
         duvod: r.duvod,
       });
@@ -537,8 +558,12 @@ export function createRun({ seed, content, rules, players, pronasledovatelId }) 
     const pasmo = bandFromHits(zasahy);
     // Oracle nad committnutými (doplněnými na 4 „prázdnými" sloty, které vždy padnou).
     const committedKarty = situ.committed.map((c) => c.karta);
-    while (committedKarty.length < rules.slotu) committedKarty.push(null);
-    const maxZasahy = maxAchievableZasahy(committedKarty, sloty, rusi, gangsterParams, situ.typ);
+    const committedZamky = zamkyCommitu();
+    while (committedKarty.length < rules.slotu) {
+      committedKarty.push(null);
+      committedZamky.push(null);
+    }
+    const maxZasahy = maxAchievableZasahy(committedKarty, sloty, rusi, gangsterParams, situ.typ, committedZamky);
 
     // Náklad: PRŮŠVIH bere bednu.
     let naklad_ztrata = 0;

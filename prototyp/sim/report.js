@@ -56,12 +56,19 @@ function doplnNull(karty) {
   return out;
 }
 
+/** Totéž pro pole zámků — index musí zůstat sdílený s kartami. */
+function doplnNullZamky(zamky) {
+  const out = zamky.slice();
+  while (out.length < RULES.slotu) out.push(null);
+  return out;
+}
+
 /**
  * Free-pass varianta oracle: nulovaný slot se počítá jako auto-splněný (tým
  * neviníme za by-design nemožný slot). `resolve.js` se NEUPRAVUJE — free-pass je
  * metrická konvence, ne pravidlo hry.
  */
-function maxAchievableFreePass(karty, sloty, rusi, stitekParams, typSituace) {
+function maxAchievableFreePass(karty, sloty, rusi, stitekParams, typSituace, zamkyKaret = null) {
   const zbyle = sloty.filter((s) => !jeNulovanySlot(s, rusi));
   const bonus = sloty.length - zbyle.length;
   if (zbyle.length === 0) return sloty.length;
@@ -76,7 +83,7 @@ function maxAchievableFreePass(karty, sloty, rusi, stitekParams, typSituace) {
     for (const i of idx) {
       if (pouzite.has(i)) continue;
       pouzite.add(i);
-      const r = resolveSlot({ karta: karty[i], slot: zbyle[pos], rusi, stitekParams, typSituace });
+      const r = resolveSlot({ karta: karty[i], slot: zbyle[pos], rusi, stitekParams, typSituace, zamky: zamkyKaret?.[i] ?? null });
       rek(pouzite, pos + 1, hits + (r.zasah ? 1 : 0));
       pouzite.delete(i);
     }
@@ -191,13 +198,19 @@ function nodeRecord(n, { rusi, ordVse, ordUzlu, infoPostihy }) {
   const maCtx = n.ctx != null;
   const stitekParams = maCtx ? { chovani_dle_typu: { [typ]: n.ctx.stitek_chovani } } : null;
   const commitPre = (n.commit ?? []).map(kartaZLogu);
+  // Zámkové postihy vlastníka každé committnuté karty (D34/N1). Engine je od
+  // 2026-07-27 vynucuje jako auto-fail, takže bez nich by report počítal K5/K7
+  // nad jinou hrou, než bot hrál — a padl by tripwire shody odhadu (ADR-010).
+  const zamkyDleHrace = new Map((n.ctx?.ruce ?? []).map((r) => [r.hrac_id, r.zamky ?? null]));
+  const zamkyCommitu = (n.commit ?? []).map((c) => zamkyDleHrace.get(c.hrac_id) ?? null);
+  const zamkyDoplnene = doplnNullZamky(zamkyCommitu);
 
   // maxPre: oracle nad commitem PŘED gamblem (band_resolved nese post-gamble).
   const maxPre = sloty.length === RULES.slotu && n.commit
-    ? maxAchievableZasahy(doplnNull(commitPre), sloty, rusi, stitekParams, typ)
+    ? maxAchievableZasahy(doplnNull(commitPre), sloty, rusi, stitekParams, typ, zamkyDoplnene)
     : null;
   const maxPreFreePass = sloty.length === RULES.slotu && n.commit
-    ? maxAchievableFreePass(doplnNull(commitPre), sloty, rusi, stitekParams, typ)
+    ? maxAchievableFreePass(doplnNull(commitPre), sloty, rusi, stitekParams, typ, zamkyDoplnene)
     : null;
 
   const odhad = maCtx && n.commit && commitPre.length > 0
@@ -209,11 +222,12 @@ function nodeRecord(n, { rusi, ordVse, ordUzlu, infoPostihy }) {
         typSituace: typ,
         sumRozsah: RULES.sumRozsah,
         statMax: RULES.statMax,
+        zamkyKaret: zamkyCommitu,
       })
     : null;
 
   const d = maCtx && maxPre != null && maxPre <= 1
-    ? variantaD({ commitPre, sloty, rusi, stitekParams, typ, ctx: n.ctx })
+    ? variantaD({ commitPre, sloty, rusi, stitekParams, typ, ctx: n.ctx, zamky: zamkyCommitu })
     : null;
 
   return {
@@ -274,20 +288,25 @@ function nodeRecord(n, { rusi, ordVse, ordUzlu, infoPostihy }) {
  * Vrací `expDead = 1 − pEscape` (GATE) a `strictDead` (tvrdý floor, diagnostika).
  * Počítá se KONTRAFAKTUÁLNĚ — nezávisle na tom, zda bot gamble skutečně vzal.
  */
-function variantaD({ commitPre, sloty, rusi, stitekParams, typ, ctx }) {
+function variantaD({ commitPre, sloty, rusi, stitekParams, typ, ctx, zamky = null }) {
   if (!ctx.gamble_dostupny) return { expDead: 1, strictDead: 1, pEscape: 0 };
-  const ruce = (ctx.ruce ?? []).map((h) => ({ hrac_id: h.hrac_id, karty: h.karty.map(kartaZLogu) }));
+  const ruce = (ctx.ruce ?? []).map((h) => ({ hrac_id: h.hrac_id, karty: h.karty.map(kartaZLogu), zamky: h.zamky ?? null }));
   const base = doplnNull(commitPre);
+  const baseZamky = doplnNullZamky(zamky ?? []);
 
   // Tabulka (nahrazovaná pozice × líznutá karta) → max. `maxAchievable` nezávisí
   // na tom, ze které ruky karta pochází, tak ji počítáme jen jednou (§4.4 spec).
+  // Karta z gamblu patří TOMU, z čí ruky se lízla → nese jeho zámky, ne zámky
+  // nahrazované karty (D34/N1). Klíč cache proto nese i vlastníka.
   const cache = new Map();
-  const maxPoNahrade = (ci, karta) => {
-    const key = `${ci}|${karta.id}`;
+  const maxPoNahrade = (ci, karta, zamkyRuky) => {
+    const key = `${ci}|${karta.id}|${zamkyRuky ? JSON.stringify(zamkyRuky) : ''}`;
     if (cache.has(key)) return cache.get(key);
     const karty = base.slice();
     karty[ci] = karta;
-    const v = maxAchievableZasahy(karty, sloty, rusi, stitekParams, typ);
+    const zamkyKaret = baseZamky.slice();
+    zamkyKaret[ci] = zamkyRuky;
+    const v = maxAchievableZasahy(karty, sloty, rusi, stitekParams, typ, zamkyKaret);
     cache.set(key, v);
     return v;
   };
@@ -296,7 +315,7 @@ function variantaD({ commitPre, sloty, rusi, stitekParams, typ, ctx }) {
   for (let ci = 0; ci < commitPre.length; ci++) {
     for (const ruka of ruce) {
       if (ruka.karty.length === 0) continue;
-      const zachrani = ruka.karty.filter((k) => maxPoNahrade(ci, k) >= 2).length;
+      const zachrani = ruka.karty.filter((k) => maxPoNahrade(ci, k, ruka.zamky) >= 2).length;
       const p = zachrani / ruka.karty.length;
       if (p > pEscape) pEscape = p;
     }

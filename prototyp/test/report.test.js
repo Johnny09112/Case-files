@@ -275,7 +275,10 @@ describe('report.js — degradace, determinismus, per-slot', () => {
     const s = fin.perSlot[klice[0]];
     expect(s.fail_rate).not.toBeNull();
     const duvody = new Set(Object.values(fin.perSlot).flatMap((x) => Object.keys(x.rozpad_duvodu)));
-    expect([...duvody].every((d) => ['nizky_stat', 'kombi_neuplny', 'stat_zrusen', 'gangster_auto_fail', 'neobsazeno'].includes(d))).toBe(true);
+    // Uzavřený výčet důvodů propadu; `postih_lock_*` přibyly s D34/N1 (engine
+    // začal vynucovat zámkové postihy — do té doby byly no-opy).
+    expect([...duvody].every((d) => ['nizky_stat', 'kombi_neuplny', 'stat_zrusen', 'gangster_auto_fail',
+      'postih_lock_stitek', 'postih_lock_viditelnost', 'neobsazeno'].includes(d))).toBe(true);
     // součet důvodů == počet failů
     for (const x of Object.values(fin.perSlot)) {
       const suma = Object.values(x.rozpad_duvodu).reduce((a, b) => a + b, 0);

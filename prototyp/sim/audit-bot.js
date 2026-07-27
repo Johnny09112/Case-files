@@ -327,14 +327,15 @@ for (const nazev of ['zatah', 'lecka', 'konfrontace']) {
 }
 R.push(`- z toho dle pronásledovatele: ${[...S.zar.prekroceniDlePursuer].map(([k, v]) => `${k} ${v}`).join(' · ')}\n`);
 
-R.push(`## 2. Postihy, které engine ani bot nevynucuje (lock_stitek / lock_slot_viditelnost / hide_viditelnost)`);
-R.push(`- přidaných postihů celkem: ${S.postihy.celkem}, z toho INERTNÍCH: **${S.postihy.inertni}** (${pct(S.postihy.inertni, S.postihy.celkem)} %)`);
+R.push(`## 2. Zastoupení zámkových a viditelnostních postihů (lock_stitek / lock_slot_viditelnost / hide_viditelnost)`);
+R.push(`- přidaných postihů celkem: ${S.postihy.celkem}, z toho tohoto druhu: **${S.postihy.inertni}** (${pct(S.postihy.inertni, S.postihy.celkem)} %)`);
+R.push(`  *(do D34 byly VŠECHNY mechanicky no-op — dnes je engine vynucuje, hlídá \`sim/audit-postihy.js\`)*`);
 R.push(`- rozpad: ${[...S.postihy.dleId].sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k} ${v}`).join(' · ')}\n`);
 
-R.push(`## 3. hide_staty — bot randomizuje CELÉ přiřazení, i cizí karty`);
+R.push(`## 3. hide_staty — jak často je vůbec ve hře (od D34 degraduje jen karty postiženého)`);
 R.push(`- uzlů s aktivním hide_staty: ${S.hideStaty.uzluSAktivnim} / ${S.hideStaty.uzlu} (${pct(S.hideStaty.uzluSAktivnim, S.hideStaty.uzlu)} %), z toho u 2–4p: ${S.hideStaty.vicehracSAktivnim}\n`);
 
-R.push(`## 4. Volba cesty — bot losuje, typ místa je přitom veřejný`);
+R.push(`## 4. Volba cesty — kolik nabídek vůbec nese rozhodnutí (typ místa je veřejný)`);
 R.push(`- nabídek na mapě: ${S.mapa.nabidek}, z toho se dvěma RŮZNÝMI typy místa: ${S.mapa.smisenychTypu} (${pct(S.mapa.smisenychTypu, S.mapa.nabidek)} %)\n`);
 
 R.push(`## 5. Commit — kontrafaktuál nad stejným stavem (${S.commit.uzlu} uzlů)`);

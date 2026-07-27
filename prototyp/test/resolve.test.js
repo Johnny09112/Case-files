@@ -152,6 +152,51 @@ describe('resolveSlot — pronásledovatel ruší stat run-wide', () => {
   });
 });
 
+/* ---------- zámkové postihy (D34/N1) ---------- */
+
+describe('resolveSlot — zámkové postihy vlastníka karty', () => {
+  const viditelny = { slot_index: 0, stat: 'utok', prah: 2, viditelnost: 'viditelna' };
+  const skryty = { slot_index: 1, stat: 'utok', prah: 2, viditelnost: 'skryta' };
+  const zbran = vec('bouchacka', { utok: 5 }, 'GANGSTER');
+
+  it('lock_stitek: zamčený štítek auto-failuje bez ohledu na staty', () => {
+    const r = resolveSlot({ karta: zbran, slot: skryty, zamky: { stitky: ['GANGSTER'], viditelnosti: [] } });
+    expect(r.zasah).toBe(false);
+    expect(r.duvod).toBe('postih_lock_stitek');
+    expect(r.postih_efekt).toBe('lock_stitek');
+  });
+
+  it('lock_stitek se netýká věci bez štítku', () => {
+    const r = resolveSlot({ karta: vec('klic', { utok: 5 }), slot: skryty, zamky: { stitky: ['GANGSTER'], viditelnosti: [] } });
+    expect(r.zasah).toBe(true);
+  });
+
+  it('lock_slot_viditelnost: zamčená viditelnost auto-failuje, druhá projde', () => {
+    const zamky = { stitky: [], viditelnosti: ['skryta'] };
+    expect(resolveSlot({ karta: vec('klic', { utok: 5 }), slot: skryty, zamky }).duvod).toBe('postih_lock_viditelnost');
+    expect(resolveSlot({ karta: vec('klic', { utok: 5 }), slot: viditelny, zamky }).zasah).toBe(true);
+  });
+
+  it('bez zámků se chování NEMĚNÍ (postih_efekt je null)', () => {
+    const r = resolveSlot({ karta: vec('klic', { utok: 5 }), slot: skryty });
+    expect(r.zasah).toBe(true);
+    expect(r.postih_efekt).toBe(null);
+  });
+
+  it('oracle zámky vidí — nesmí slibovat zásah, který postih auto-failuje', () => {
+    const sloty = [
+      { slot_index: 0, stat: 'utok', prah: 2, viditelnost: 'viditelna' },
+      { slot_index: 1, stat: 'obrana', prah: 2, viditelnost: 'viditelna' },
+      { slot_index: 2, stat: 'hodnota', prah: 2, viditelnost: 'viditelna' },
+      { slot_index: 3, stat: 'nastroj', prah: 2, viditelnost: 'skryta' },
+    ];
+    const karty = [zbran, vec('stit', { obrana: 5 }), vec('penize', { hodnota: 5 }), vec('naradi', { nastroj: 5 })];
+    expect(maxAchievableZasahy(karty, sloty)).toBe(4);
+    const zamky = [{ stitky: ['GANGSTER'], viditelnosti: [] }, null, null, null];
+    expect(maxAchievableZasahy(karty, sloty, null, null, null, zamky)).toBe(3);
+  });
+});
+
 /* ---------- pásmo z počtu zásahů ---------- */
 
 describe('bandFromHits', () => {
