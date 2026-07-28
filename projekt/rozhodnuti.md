@@ -13,6 +13,62 @@ architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.m
 
 ## 2026-07-28
 
+- **D43 (kolo `muj-den`, schváleno uživatelem) — kandidát V-3 PROŠEL měřením,
+  ZAPEČENÍ ESKALOVÁNO NA UŽIVATELE; a OPRAVA ZDŮVODNĚNÍ v D42.**
+  Kolo `game-designer` (návrh + předregistrace naslepo) → `playtest-facilitator`
+  (kontrafaktuál, ~124k runů). Commit měřicí části `a7b1e32`, report
+  [[../technika/muj-den-kontrafaktual-2026-07-28|technika/muj-den-kontrafaktual-2026-07-28.md]].
+  **Diagnóza:** vada je v METRICE, ne v prahu. Zásoba slotů na hráče je
+  32,1 / 18,4 / 12,3 / 9,1 (1p–4p), takže aby 1p spadl pod 95 %, musel by práh
+  ležet kolem 12–14 — ve 4p je ale maximum ~9. **Žádný plochý počítací práh
+  nesedne všem počtům**, což je tentýž tvar jako proměřené zamítnutí `>= 2`
+  u `schovana-bouchacka`, jen dokazatelný předem. Per-count práh (enginová
+  práce, precedent drahé páky D38) i konjunkt `a doruceno` designér **zamítl**:
+  `doruceno` sice srazí nepodmíněnou míru, ale podmíněně nechá 96–99 %, tj.
+  vyrobí horší „bod za výhru" než zamítnutý kandidát C z D42.
+  **Kandidát V-3:** `podil_slotu_splnil_pct >= 50 a sloty_vlastnika_celkem >= 5`,
+  bez `doruceno`. Ze čtyř sweepovaných řezů (50/60/67/75) prošel **jediný, a to
+  všemi** předregistrovanými kritérii: nepodmíněně v pásmu u všech čtyř počtů,
+  podmíněně 68–76 %, λ=3 čtení ≤ 80 %, normalizovaná divergence 0,86 / 0,93 /
+  0,94 (práh ≥ 0,7), guard-kill ≤ 0,7 %. 4p baseline dnešního `muj-den` = 91,4 %,
+  uvnitř predikce 85–93 % → **diagnóza potvrzena**. Regrese nulová (mimo blok
+  `cile` a `verzeObsahu` nula rozdílů, K9 zbylých sedmi cílů bit po bitu
+  totožná); golden snapshot 3 vložené řádky, všechny `nahrazena_hrac_id`.
+  **Korekce mechanismu (facilitátor vůči designérovi):** podíl závislost na
+  počtu hráčů neodstranil, **obrátil ji** — průměrný podíl je téměř plochý
+  (47,1 / 51,9 / 54,6 / 55,0 %), ale rozptyl klesá jako 1/√n, takže práh blízko
+  průměru je v sólu nejtěžší a ve 4p nejlehčí. Predikce designéra i kritika měly
+  pořadí 1p↔4p obráceně. Věta „vada je v metrice" platí ve svém důsledku,
+  ne v mechanismu.
+  **PROČ SE NEZAPEKLO (dvě podmínky, obě mimo dosah simulace):** (1) **K6b
+  tempo** — cíl je nově živý v 80–89 % uzlů (dnes 21,7–57,5 %); skutečný konflikt
+  s týmovým optimem roste jen z 1,8–9,1 na 7,6–19,6 % uzlů, ale *živý ≠ sporný*
+  a jestli je to hádka nebo zdržení, simulace nezjistí. (2) **UI ukazatel
+  „prošlo X / propadlo Y" je předpoklad zapečení, ne příslušenství** — cíl se
+  dnes hráči ukazuje jen na startu, podíl by byl neřiditelný (metrika 6,
+  čitelnost, tedy přesně to, na čem má lidská brána stát). Fallbacky
+  předregistrované designérem: **A** škrtnout `muj-den` a otevřít kolo na
+  `o-vlasek`, **B** nést breach do lidské brány jako známou odchylku (precedent
+  D33/K5).
+  **OPRAVA D42 (retrakce, doložená):** zdůvodnění „divergence 41,8–52,9 % =
+  cíl je osobní", které jsem zapsal do `cile.yaml` i do D42, **NEPLATÍ**. Strop
+  divergence při nezávislosti je `1 − p^m − (1−p)^m`, takže je funkcí marginální
+  míry — **saturovaný cíl nemůže divergovat** a absolutní číslo samo osobnost
+  nedokazuje; navíc to bylo min–max přes počty, ne per počet. **Verdikt o
+  `schovana-bouchacka` po normalizaci STOJÍ** (0,77 / 0,91 / 0,93 stropu, nad
+  prahem 0,7) a **zamítnutí B/C stojí a fortiori** (0,00 / kladný strop = 0,00).
+  Poznámka v `obsah/cile.yaml` opravena na doložené znění. Důkaz, že na
+  absolutním čísle nešlo stavět: `plny-zasah` raw 2,8 % vs. `muj-den` raw 21,1 %
+  — po normalizaci (0,03 vs. 0,73) je pořadí **obrácené**.
+  **Nález, který přesahuje toto kolo:** kritérium „normalizovaná divergence
+  ≥ 0,7", kterým jsme měřili kandidáta, **nikdo neaplikoval na zapečenou sadu** —
+  a po aplikaci jsou `plny-zasah` (0,00/0,01/0,03) a `kupecke-slovo`
+  (0,20/0,35/0,49) **týmové cíle**, `bez-jizvy` na hraně (0,71/0,66/0,65).
+  Tj. z osmi „tajných osobních cílů" jsou dva prokazatelně neosobní.
+  Doprovodně opraven **potvrzený bug parseru** (`parseValue` nechával `0.6`
+  řetězcem → `evalCondition` přes `Number()` → `podminka: "cokoli >= 0.6"`
+  procházela loaderem i testy a byla **vždy pravda**); divergence má nově
+  **trvalý sloupec v `sim/report.js`** (dosud se v repu vůbec neměřila).
 - **D42 (kolo `mozek-operace` dle D39(iv), ROZHODNUTÍ PM z měření) — cíl
   ŠKRTNUT a nahrazen `schovana-bouchacka`; sada cílů je nově 8/8 mechanická.**
   Kolo `game-designer` + `content-generator` (diagnóza, nezávisle) →

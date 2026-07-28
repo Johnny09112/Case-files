@@ -6,3 +6,4 @@
 - [K2/K5-D P-rozhodnutí verdikt](k2-k5d-p-rozhodnuti-verdikt.md) — 2026-07-27: D25e × K5-D je nesplnitelná dvojice, oba gaty pod prahem vnímatelnosti, doporučeno jít na lidskou bránu
 - [Fallback v3 verdikt](fallback-v3-verdikt.md) — 2026-07-27: zapéct s výhradami (7 oprav), arbitráže a–e, 2 otevřená rozhodnutí (kolaps timing, sólo plurál)
 - [mozek-operace audit](mozek-operace-audit.md) — 2026-07-28: V-A „strůjce" roztrhán (8 nálezů), protinávrh GANGSTER_skryta, K9 maskuje cíle automatické-při-výhře
+- [muj-den V-3 audit](muj-den-v3-audit.md) — 2026-07-28: diagnóza platí, preregistrace ne; divergence-null jako nástroj; V-3 nemění rozhodnutí, jen obtížnost
