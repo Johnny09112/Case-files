@@ -29,11 +29,23 @@ function anotaceSlotu(anotace, nodeIndex, events) {
  * na syrové id jen když v obsahu chybí. Stejný vzorec jako `nazevSituace`
  * v `commit.js` a `popisPostihu` v `okraj.js`: každá obrazovka si drží
  * vlastní bezpečný převod, ať o `content` nikdy nezávisí na jiném souboru.
- * @param {{situace?: {id: string, nazev?: string}[]}} [content]
+ *
+ * Vložená setkání (léčka/konfrontace) nejsou v poolu `situace.yaml`, ale
+ * u pronásledovatele — engine jim dává id `${pronasledovatel.id}-lecka` /
+ * `-konfrontace` (`state.js` `startSituation`). Bez druhé větve by nadpis
+ * obrazovky pro ně padal na syrové id (např. „serif-brody-konfrontace").
+ * @param {{situace?: {id: string, nazev?: string}[],
+ *   pronasledovatele?: {id: string, lecka?: {nazev?: string}, konfrontace?: {nazev?: string}}[]}} [content]
  * @param {{id: string}} situace
  */
 function nazevSituace(content, situace) {
-  return content?.situace?.find((/** @type {any} */ s) => s.id === situace.id)?.nazev ?? situace.id;
+  const zPoolu = content?.situace?.find((/** @type {any} */ s) => s.id === situace.id)?.nazev;
+  if (zPoolu) return zPoolu;
+  for (const p of content?.pronasledovatele ?? []) {
+    if (situace.id === `${p.id}-lecka`) return p.lecka?.nazev ?? situace.id;
+    if (situace.id === `${p.id}-konfrontace`) return p.konfrontace?.nazev ?? situace.id;
+  }
+  return situace.id;
 }
 
 /**

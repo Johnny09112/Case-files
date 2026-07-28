@@ -429,9 +429,10 @@ const HANDLERS = {
       }];
     }
     if (e.volba) {
-      // Situace bez `nazev` padají v ctx.situace na syrové id (§ odchylka 3):
-      // když se název neliší od id, není k dispozici — vynech ho, ať věta
-      // netrojí totéž slovo (typicky Zátah: id, typ i pravidlo znějí stejně).
+      // Obsah bez pole `nazev` padá v ctx.situace na syrové id: když se název
+      // neliší od id, není k dispozici — vynech ho, ať věta netrojí totéž slovo.
+      // Od 2026-07-28 mají všechny situace `nazev`, větev je pojistka pro
+      // kandidátní obsah měřený přes CONTENT_DIR.
       const nazev = k.ctx.situace?.[e.volba];
       const typ = TYP_MISTA_LABEL[e.typ_mista] ?? e.typ_mista;
       const pravidlo = TYP_MISTA_PRAVIDLO[e.typ_mista] ?? 'typ místa je veřejný';
@@ -488,11 +489,34 @@ const HANDLERS = {
 export const TYPY_S_HANDLEREM = Object.keys(HANDLERS);
 
 /**
+ * Vložená setkání (léčka/konfrontace) nežijí v poolu `obsah/situace.yaml`, ale
+ * u pronásledovatele (`obsah/pronasledovatele.yaml`) — engine jim dává id
+ * `${pronasledovatel.id}-lecka` / `${pronasledovatel.id}-konfrontace`
+ * (`startSituation` v `src/engine/state.js`). Bez téhle mapy by na ně `situace`
+ * mapa v `ctxZObsahu()` neměla žádný záznam a labely by padaly na syrové id.
+ * Klíče mají tvar `<id>-lecka`/`<id>-konfrontace`, který se nemůže srazit
+ * s žádným id z `situace.yaml` (ta jsou samostatná kebab-case jména míst).
+ * @param {object[]} pronasledovatele obsah pronasledovatele.yaml
+ * @returns {Record<string,string>}
+ */
+function situaceVlozenychSetkani(pronasledovatele) {
+  return Object.fromEntries(
+    pronasledovatele.flatMap((p) => [
+      [`${p.id}-lecka`, p.lecka?.nazev ?? `${p.id}-lecka`],
+      [`${p.id}-konfrontace`, p.konfrontace?.nazev ?? `${p.id}-konfrontace`],
+    ])
+  );
+}
+
+/**
  * Postaví kontext labelů z validovaného obsahu — jediné místo, kde se z id
  * dělají české názvy (používá ho golden test i app.js).
  *
- * `situace` nemá v obsahu pole `nazev` (schéma obsah/situace.yaml), takže label
- * padá na id; až obsah název dostane, opraví se věty samy.
+ * `situace` dostala pole `nazev` 2026-07-28 (spolu s v3 fallback sadou), takže
+ * label je český název místa; fallback na id zůstává pro obsah bez názvu.
+ * Mapa dál doplňuje vložená setkání pronásledovatele (léčka/konfrontace) —
+ * bez nich by nadpisy obrazovek i titulky listů protokolu pro ně padaly na
+ * syrové id (viz `situaceVlozenychSetkani`).
  *
  * @param {object} content výstup parseContent()
  * @param {Record<string,string>} [jmena] hrac_id → celé jméno postavy
@@ -505,7 +529,7 @@ export function ctxZObsahu(content, jmena = {}) {
     veci: mapa(content.veci, 'nazev'),
     postihy: mapa(content.postihy, 'nazev'),
     pronasledovatele: mapa(content.pronasledovatele, 'nazev'),
-    situace: mapa(content.situace, 'nazev'),
+    situace: { ...situaceVlozenychSetkani(content.pronasledovatele), ...mapa(content.situace, 'nazev') },
     stitky: mapa(content.stitky, 'nazev'),
     cile: Object.fromEntries(content.cile.map((c) => [c.id, { text: c.text }])),
   };

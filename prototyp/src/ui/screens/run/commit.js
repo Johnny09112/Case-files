@@ -34,11 +34,23 @@ function poznamkaCestnosti(jmena, co) {
  * Český název situace z obsahu (od 2026-07-28 má `obsah/situace.yaml` pole
  * `nazev`) — fallback na syrové id, jen když v obsahu chybí (starý/nekompletní
  * obsah, ne běžný stav).
- * @param {{postihy?: any[], situace?: {id: string, nazev?: string}[], stitky?: any[]}} [content]
+ *
+ * Vložená setkání (léčka/konfrontace) nejsou v poolu `situace.yaml`, ale
+ * u pronásledovatele — engine jim dává id `${pronasledovatel.id}-lecka` /
+ * `-konfrontace` (`state.js` `startSituation`). Bez druhé větve by nadpis
+ * obrazovky pro ně padal na syrové id (např. „serif-brody-konfrontace").
+ * @param {{postihy?: any[], situace?: {id: string, nazev?: string}[], stitky?: any[],
+ *   pronasledovatele?: {id: string, lecka?: {nazev?: string}, konfrontace?: {nazev?: string}}[]}} [content]
  * @param {{id: string}} situace
  */
 function nazevSituace(content, situace) {
-  return content?.situace?.find((/** @type {any} */ s) => s.id === situace.id)?.nazev ?? situace.id;
+  const zPoolu = content?.situace?.find((/** @type {any} */ s) => s.id === situace.id)?.nazev;
+  if (zPoolu) return zPoolu;
+  for (const p of content?.pronasledovatele ?? []) {
+    if (situace.id === `${p.id}-lecka`) return p.lecka?.nazev ?? situace.id;
+    if (situace.id === `${p.id}-konfrontace`) return p.konfrontace?.nazev ?? situace.id;
+  }
+  return situace.id;
 }
 
 /**

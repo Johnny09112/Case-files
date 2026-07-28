@@ -16,7 +16,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
     "anotace": [
       {
         "misto": "okraj",
-        "veta": "Cesta zvolena: člověk — někdo se ti dívá do rukou — zbraň na očích neprojde.",
+        "veta": "Cesta zvolena: Slepá ulička v Bronxu (člověk) — někdo se ti dívá do rukou — zbraň na očích neprojde.",
       },
     ],
     "seq": 3,
@@ -182,7 +182,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
     "anotace": [
       {
         "misto": "okraj",
-        "veta": "Cesta zvolena: zátah — jiná cesta není — zbraň projde.",
+        "veta": "Cesta zvolena: Zátah na páté silnici (zátah) — jiná cesta není — zbraň projde.",
       },
     ],
     "seq": 19,
@@ -533,7 +533,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
     "anotace": [
       {
         "misto": "okraj",
-        "veta": "Cesta zvolena: lokace — nikdo tě nešpehuje — zbraň projde i na očích.",
+        "veta": "Cesta zvolena: Statkářova stodola (lokace) — nikdo tě nešpehuje — zbraň projde i na očích.",
       },
     ],
     "seq": 53,
@@ -884,7 +884,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
     "anotace": [
       {
         "misto": "okraj",
-        "veta": "Cesta zvolena: člověk — někdo se ti dívá do rukou — zbraň na očích neprojde.",
+        "veta": "Cesta zvolena: Zátaras u Verony (člověk) — někdo se ti dívá do rukou — zbraň na očích neprojde.",
       },
     ],
     "seq": 3,
@@ -1028,7 +1028,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
     "anotace": [
       {
         "misto": "okraj",
-        "veta": "Cesta zvolena: člověk — někdo se ti dívá do rukou — zbraň na očích neprojde.",
+        "veta": "Cesta zvolena: Přívoz přes Hudson (člověk) — někdo se ti dívá do rukou — zbraň na očích neprojde.",
       },
     ],
     "seq": 17,
@@ -1223,7 +1223,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
     "anotace": [
       {
         "misto": "okraj",
-        "veta": "Cesta zvolena: člověk — někdo se ti dívá do rukou — zbraň na očích neprojde.",
+        "veta": "Cesta zvolena: Překladiště v Syracuse (člověk) — někdo se ti dívá do rukou — zbraň na očích neprojde.",
       },
     ],
     "seq": 36,
@@ -1378,7 +1378,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
     "anotace": [
       {
         "misto": "okraj",
-        "veta": "Cesta zvolena: zátah — jiná cesta není — zbraň projde.",
+        "veta": "Cesta zvolena: Zátah na páté silnici (zátah) — jiná cesta není — zbraň projde.",
       },
     ],
     "seq": 51,
