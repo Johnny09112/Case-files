@@ -85,22 +85,39 @@ export function initApp(root) {
     for (const u of S.udalosti) {
       if (u.seq <= S.lastSeq) continue;
       S.lastSeq = u.seq;
-      // Uzel bez resoluce (mapa, motel, truhla) sekci protokolu nedělá — jakmile
-      // přijde událost jiného uzlu, starý buffer se zahodí.
-      if (S.bufferUzlu.length > 0 && S.bufferUzlu[0].nodeIndex !== u.nodeIndex) S.bufferUzlu = [];
-      S.bufferUzlu.push(u);
+      // Hranice uzlu: po `confirmNode()` umí engine ve STEJNÉM příkazu stihnout
+      // nakročit do dalšího uzlu (finishSituation → nextStep → offerRoutes),
+      // takže událost jiného nodeIndexu může dorazit dřív, než se k rozpracované
+      // situaci dostane `flushUzel()` volané až po příkazu (viz `prikaz()`).
+      // Uzel proto zkus uzavřít TEĎ (řez uvnitř `flushUzel()` proběhne, jen
+      // když v bufferu je `band_resolved`) a teprve pak buffer zahoď — pro
+      // uzly bez resoluce (mapa, motel, truhla) `flushUzel()` nic neudělá,
+      // takže výslovné vyprázdnění zůstává nutné.
+      if (S.bufferUzlu.length > 0 && S.bufferUzlu[0].nodeIndex !== u.nodeIndex) {
+        flushUzel();
+        S.bufferUzlu = [];
+      }
       if (u.type === EVENT.RUN_ENDED) {
+        // `run_ended` sdílí nodeIndex s posledním uzlem (engine ho před koncem
+        // běhu nezvyšuje, viz `nextStep`) — hranice o řádek výš se proto
+        // nespustí a poslední uzel by jinak zůstal neuzavřený. Uzavři ho tady
+        // explicitně PŘED přidáním sekce finále, ať pořadí v `S.protokol`
+        // zůstane chronologické (poslední list, pak Uzavření spisu).
+        flushUzel();
+        S.bufferUzlu = [];
         S.konec = u;
         S.protokol.push({ cislo: null, titulek: u.vysledek === 'DORUCENO' ? 'Uzavření spisu — DORUČENO' : 'Odložení spisu — NEVYŘEŠENO', odstavce: zapisFinale(u, S.vyber) });
+        continue;
       }
+      S.bufferUzlu.push(u);
     }
   }
 
   /**
    * Řez uzlu: až doběhne celá resoluce (band_resolved + důsledky), složí sekci
-   * protokolu a strčí ji do fronty výsledků. Volá se PO příkazu, ne uvnitř
-   * `sync` — postihy a Žár se logují až za `band_resolved`, a kdyby se řezalo
-   * na ní, odstavec by o postihu nevěděl.
+   * protokolu a strčí ji do fronty výsledků. Bez `band_resolved` v bufferu je
+   * no-op (uzly bez resoluce — mapa, motel, truhla — sekci nedělají) a buffer
+   * NEVYPRÁZDNÍ, aby volající vždy věděl, jestli řez skutečně proběhl.
    */
   function flushUzel() {
     const udalosti = S.bufferUzlu;
@@ -116,7 +133,18 @@ export function initApp(root) {
     S.bufferUzlu = [];
   }
 
-  /** Obal příkazu enginu: provede, synchronizuje log, uzavře uzel, překreslí. */
+  /**
+   * Obal příkazu enginu: provede, synchronizuje log, uzavře uzel, překreslí.
+   *
+   * `sync()` už sama uzel uzavírá na hranici nodeIndexu i při `run_ended`
+   * (viz komentáře tam). Tohle volání navíc zachytává případ, kdy resoluce
+   * (`band_resolved`) doběhne, ale žádná událost s jiným nodeIndexem v tomtéž
+   * příkazu nepřijde — typicky `nextStep()` po posledním uzlu před motelem
+   * nabídne `motel_offer` BEZ logované události (na rozdíl od `offerRoutes`,
+   * která loguje `map_move`). Bez téhle druhé šance by takový uzel zůstal
+   * viset v bufferu neuzavřený až do příští hranice. Je to bezpečný no-op,
+   * pokud `sync()` uzel už uzavřela (buffer je pak prázdný).
+   */
   function prikaz(/** @type {() => void} */ fn) {
     try {
       fn();
