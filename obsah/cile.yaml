@@ -21,6 +21,8 @@
 #                  pocet_slotu_splnil / _selhal   — sloty, kde vlastníkova karta prošla/ne
 #                  commitnute_stitky.GANGSTER_viditelna — kolikrát dal vlastník GANGSTER
 #                                                   do VIDITELNÉ role (auto-fail past)
+#                  commitnute_stitky.GANGSTER_skryta   — kolikrát dal vlastník GANGSTER
+#                                                   do SKRYTÉ role (tam zbraň funguje)
 #                  gamble_pouzit                  — počet gamble čerpajících z ruky vlastníka
 #                  postihy_utrpene.pocet/.lehke/.tezke — postihy utržené vlastníkem
 #                  slozeni_krat                   — kolikrát byl vlastník „složen"
@@ -37,7 +39,11 @@
 # do-posledniho-dechu) ani ČISTOU PASIVITU (zrušeno obetni-beranek jako „nehraj
 # silně"). Proto většina cílů podmíněna `doruceno` (tým musí uspět) a míří na
 # AKTIVNÍ volbu přiřazení slotu, ne na nehraní. Žádné dva cíle nesdílí podmínku.
-# Cílový počet pro MVP: 8 (převážně mechanické; textové jen tam, kde nesou reveal).
+# Cílový počet pro MVP: 8 — a od 2026-07-28 je sada 8/8 MECHANICKÁ. `overeni_typ:
+# textovy` zůstává v schématu, ale žádný cíl ho nedrží: textový cíl je splnitelný
+# jen tak daleko, kam sahá kontrakt promptu a fallback sady (ta osobu jmenuje výhradně
+# jako příjemce postihu, ne jako jednajícího) — viz patička. Než někdo textový cíl
+# vrátí, musí nejdřív doložit, že vstup promptu tu informaci vůbec nese.
 
 cile:
   - id: cista-ruka
@@ -91,8 +97,32 @@ cile:
     podminka: "postihy_utrpene.tezke == 0 a doruceno"
     body: 2
 
-  - id: mozek-operace
-    text: "Polda tě v protokolu označí za mozek celé operace."
-    overeni: "Protokol obsahuje formulaci připisující vlastníkovi plán nebo velení operace."
-    overeni_typ: textovy
-    body: 3
+  - id: schovana-bouchacka
+    text: "Aspoň jednou ať tvoje železo zapracuje tam, kam nikdo nevidí — a náklad přesto dojede."
+    overeni: "Vlastník aspoň jednou přiřadil věc se štítkem GANGSTER do skryté role a run skončil DORUČENO."
+    overeni_typ: mechanicky
+    podminka: "commitnute_stitky.GANGSTER_skryta >= 1 a doruceno"
+    body: 2
+    poznamka: "ZAPEČENO 2026-07-28 kontrafaktuálem (~290k runů, průměr přes 4 bloky, technika/mozek-operace-kontrafaktual-2026-07-28.md). Předregistrovaná pásma naslepo: 1p 70–90 %, 4p 23–47 %. Naměřeno 81,5 / 30,0 % incidenčně a 89,5 / 35,7 % s kanonickým biasem — obě čtení v pásmu. Práh >= 2 proměřen a ZAMÍTNUT (4p 4,9 %, pod K9 floor). Divergence verdiktu mezi hráči 41,8–52,9 % = cíl je skutečně osobní. VÝHRADA facilitátora: ve 4p přijde ~78 % splnění (28,0 z 35,7 b.) zadarmo z týmově optimálního přiřazení, vlastní páka držitele je jen +8 až +11 b. Cíl je dobrý, ne skvělý — kdyby se sada někdy protřepávala, tohle je kandidát na ostřejší podmínku."
+
+# ─────────────────────────────────────────────────────────────────────────────
+# HISTORIE ŠKRTNUTÝCH CÍLŮ (nemazat — ať se nenavrhují znovu)
+#
+# mozek-operace (škrtnuto 2026-07-28, nahrazeno cílem schovana-bouchacka)
+#   text: "Polda tě v protokolu označí za mozek celé operace."
+#   overeni: "Protokol obsahuje formulaci připisující vlastníkovi plán nebo velení
+#             operace."  ·  overeni_typ: textovy  ·  body: 3
+#   Důvod: STRUKTURÁLNĚ NESPLNITELNÝ, ne jen slabý.
+#     1) Prompt (prompty/protokol.md) drží osoby jako „podezřelý A–D" a jména do
+#        vstupu nejdou → cíl, který se pozná podle jména v protokolu, se textovou
+#        cestou nikdy neuzavře.
+#     2) Fallback sada jmenuje osobu ({jmeno}) výhradně jako PŘÍJEMCE postihu /
+#        složeného / navráceného a hlavička jí zakazuje naznačovat zavinění —
+#        jediné místo, kde engine osobu určí, je zároveň jediné, kde jí nesmí
+#        připsat jednání.
+#     3) Naměřených 0 % ve sweepu D38 nebylo balancem, ale artefaktem
+#        `overeni_typ: textovy` — simulátor textové cíle z metrik vynechává.
+#   Poučení: než se napíše textový cíl, musí se doložit, že vstup promptu tu
+#   informaci vůbec nese. Jinak je to cíl na náladu modelu = porušení principu
+#   „mechanika rozhoduje, AI vypráví".
+# ─────────────────────────────────────────────────────────────────────────────

@@ -90,7 +90,8 @@ Lest-specifika, prokleté karty — je MRTVÝ spolu s kostkovým modelem, D14–
   variant) a posun od reportu ke **komentáři a verdiktu**.
 
 **Cíl (a jakýkoli obsah) vázaný na TEXT protokolu je splnitelný jen tak, jak daleko
-sahá kontrakt promptu a fallback sady** (diagnóza `mozek-operace`, 2026-07-28):
+sahá kontrakt promptu a fallback sady** (diagnóza `mozek-operace`, 2026-07-28 —
+uzavřeno téhož dne výměnou za `schovana-bouchacka`, sada cílů je teď 8/8 mechanická):
 - Prompt osoby drží jako „podezřelý A–D" a jména do něj NEjdou → cíl, který má hráč
   poznat podle jména, se textovou cestou nikdy neuzavře.
 - Fallback sada jmenuje osobu (`{jmeno}`) VÝHRADNĚ jako příjemce postihu / složeného /
@@ -102,6 +103,29 @@ sahá kontrakt promptu a fallback sady** (diagnóza `mozek-operace`, 2026-07-28)
 - Náhradu hledej v METRIKÁCH, které ještě žádný cíl nedrží, a preferuj tu, co otevírá
   NOVOU osu rozhodování (např. mapová odbočka do motelu — všech 7 stávajících cílů
   míří jen na přiřazení slotu).
+
+**Osobní cíl musí mít DIVERGENCI VERDIKTU mezi hráči, jinak je to týmový cíl
+v přestrojení** (nález kontrafaktuálu 2026-07-28, ~290k runů):
+- Můj instinkt „nová osa rozhodování" mě svedl ke kandidátům nad
+  `kredity_utracene_za` (odbočka do motelu, handl u silnice). Obě PADLY na pásmech
+  a měly **0,00 % divergenci** ve ~150k runech: `events.js` u kreditů nefiltruje
+  `hrac_id`, takže je to metrika TÝMOVÁ. Cíl, který má u všech hráčů vždy stejný
+  verdikt, nedává důvod hádat se o konkrétní přiřazení (design §4.10) = mrtvý cíl.
+  **How to apply:** než navrhnu cíl, ověřím v `events.js`, že metrika je opravdu
+  per-postava; a do zadání měření vždy přidám divergenci jako kritérium vedle
+  míry splnění. Vítězný `schovana-bouchacka` má 41,8–52,9 %.
+- **Pásma si nech předregistrovat naslepo a nes výhradu facilitátora do `poznamka`.**
+  I schválený cíl může být „dobrý, ne skvělý" (u schovana-bouchacka přijde ve 4p
+  ~78 % splnění zadarmo z týmově optimálního přiřazení). Zapsat to je levnější než
+  to příští session znovu měřit.
+- **Práh volit z měření, ne od oka:** `>= 2` u téhož cíle spadl na 4,9 % ve 4p (pod
+  K9 floor). Ostřejší podmínka se v co-opu škáluje mnohem hůř, než vypadá.
+
+**Škrtnuté položky obsahu patří do KOMENTÁŘOVÉ PATIČKY souboru, ne do commitu.**
+Kořenový CLAUDE.md („škrtnuté nápady nemaž — přesuň do historie s důvodem"). Vzor:
+patička `obsah/cile.yaml` u `mozek-operace`. Uvést text původní položky, datum,
+věcný důvod a POUČENÍ, ať se nápad nenavrhne znovu. Pozor při editaci: patička
+musí zůstat na KONCI souboru, i když se škrtaná položka nahrazuje uprostřed seznamu.
 
 **Když obsah dostane za úkol dotlačit metriku brány (K1–K9) — fikce má přednost
 před číslem.** Zadání typu „chybí 0,03 driftu, přiřaď situacím fázi" se řeší

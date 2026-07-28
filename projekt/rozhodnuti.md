@@ -13,6 +13,48 @@ architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.m
 
 ## 2026-07-28
 
+- **D42 (kolo `mozek-operace` dle D39(iv), ROZHODNUTÍ PM z měření) — cíl
+  ŠKRTNUT a nahrazen `schovana-bouchacka`; sada cílů je nově 8/8 mechanická.**
+  Kolo `game-designer` + `content-generator` (diagnóza, nezávisle) →
+  `playtest-facilitator` (kontrafaktuál přes `CONTENT_DIR`).
+  **Diagnóza — obě poloviny, v tomto pořadí:** (1) 0 % ve sweepu D38 bylo
+  **artefaktem měřidla** — `events.js:342` vrací textovému cíli
+  `splnen: null, body: 0`, a `report.js` ho přesto nechával ve jmenovateli K9
+  (falešný breach); (2) pod tím ale byla **skutečná strukturální
+  nesplnitelnost**: `prompty/protokol.md:21-22,68` drží osoby jako „podezřelý
+  A–D" (jména do promptu nejdou), `:23-27,35-36` zakazuje modelu vymyslet, co
+  nepadlo z mechaniky, a v 28 v3 fallback šablonách je `{jmeno}` v 9 šablonách
+  **výhradně jako příjemce postihu** — hlavička `fallback-sablony.yaml:17-22`
+  osobě naznačit zavinění výslovně zakazuje. Jediné místo, kde engine osobu
+  určí, je zároveň jediné, kde jí nesmí připsat jednání. Cíl by navíc po fázi 3
+  udělal arbitrem 3 bodů **náladu LLM** = porušení „mechanika rozhoduje".
+  **Rozhodnuto měřením, ne vkusem:** agenti se rozešli v náhradě, tak se
+  proměřili všichni tři kandidáti (~290k runů, průměr přes 4 bloky, D31) proti
+  **naslepo předregistrovaným** pásmům (1p 70–90 %, 4p 23–47 % podmíněně
+  doručením; > 92 % u obou = škrt bez náhrady).
+  **A `schovana-bouchacka` prošel** (81,5 / 30,0 % incidenčně, 89,5 / 35,7 %
+  s biasem — v pásmu v obou čteních), **B `noc-v-motelu` (13,0 / 25,0) i
+  C `handl-u-silnice` (87,5 / 90,9) padly** a navíc mají **exaktně nulovou
+  divergenci verdiktu mezi hráči** (0,00 % ve ~150k runech), protože
+  `events.js:175-178` nefiltruje `hrac_id` → `kredity_utracene_za` je týmová
+  metrika a B/C jsou týmové cíle v přestrojení za osobní (§4.10 chce důvod
+  hádat se o KONKRÉTNÍ přiřazení). A má divergenci 41,8–52,9 %, tj. v pásmu
+  skutečně osobních cílů. Práh `>= 2` proměřen a zamítnut (4p 4,9 %, pod K9
+  floor). **Regresní rozpočet dodržen nulově a doložen bitově** — `summary.json`
+  přes base/A/B/C se liší jediným klíčem `verzeObsahu`; K1/K2/K5/K5D/K5f/K6a/
+  K6c/K7/K8 beze změny. Enginová část (metrika `commitnute_stitky.GANGSTER_skryta`
+  + hygiena K9 v reportu) je aditivní, 233 testů zelených, commit `6e422dd`.
+  **Poctivá výhrada zapsaná do obsahu:** ve 4p přijde ~78 % splnění A zadarmo
+  z týmově optimálního přiřazení, vlastní páka držitele je +8 až +11 b. — cíl
+  je dobrý, ne skvělý. Report:
+  [[../technika/mozek-operace-kontrafaktual-2026-07-28|technika/mozek-operace-kontrafaktual-2026-07-28.md]].
+  **Tři nálezy MIMO mandát tohoto kola** (nepřibaleny, jdou do backlogu /
+  na uživatele): (i) hygiena měřidla odkryla pod falešným breachem **skutečný
+  breach K9 u `muj-den`** — nepodmíněně 99,4 / 98,3 / 96,0 % pro 1p/2p/3p,
+  dosud maskovaný agregátem přes počty; (ii) `plny-zasah` je s ~1 % divergence
+  už dnes prakticky týmový cíl; (iii) `kredity_utracene_za` je počítána týmově,
+  ač ji `technika/architektura.md` §2.2 ř. 141 vede jako per-hráč metriku —
+  **neopraveno záměrně**, je to nález, ne úklid.
 - **D41 (PM review + ROZHODNUTÍ PM) — fáze 2.1 PŘIJATA a sloučena do `main`;
   kritérium hotovo §11 ověřeno včetně smoke testu v prohlížeči.** Stavba
   proběhla na větvi `faze-2.1` (TDD po 12 taskech, review opravy po každém).

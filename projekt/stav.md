@@ -108,8 +108,25 @@ anotace mapy nově jmenuje místo. 231 testů zelených, lint čistý.
 dokončena (vč. `protocol-fill.js` na v3 — task 6), PM review potvrdilo §11:
 231/231 testů + lint nezávislým během, smoke test celé smyčky v prohlížeči
 (commit → přiřazení → výsledek s anotacemi, protokol klepe, konzole čistá).
-Sloučeno do `main` (možnost 1, bez PR), větev smazána. **Míč: fáze 3 (blokuje
-LLM poskytovatel), kolo `mozek-operace`, LIDSKÁ BRÁNA (odblokována 2.1).**
+Sloučeno do `main` (možnost 1, bez PR), větev smazána.
+**KOLO `mozek-operace` UZAVŘENO (D42, 2026-07-28) — cíl škrtnut, sada je nově
+8/8 mechanická.** Diagnóza (designer + generátor nezávisle) našla obě poloviny:
+0 % ve sweepu D38 byl artefakt měřidla (textový cíl → `splnen: null`, a přesto
+ve jmenovateli K9), ale pod tím **skutečná strukturální nesplnitelnost** —
+prompt drží osoby jako „podezřelý A–D" a fallback sada smí osobu jmenovat
+výhradně jako příjemce postihu, ne jako jednajícího. Náhrada rozhodnuta
+**měřením, ne vkusem** (agenti se rozešli): ~290k runů přes `CONTENT_DIR`,
+naslepo předregistrovaná pásma. **`schovana-bouchacka` prošel** (81,5 / 30,0 %
+incidenčně, 89,5 / 35,7 % s biasem, divergence 41,8–52,9 % = cíl je skutečně
+osobní); kandidáti na kreditech padli — `kredity_utracene_za` je počítána
+týmově, takže dávala **nulovou divergenci mezi hráči** = týmový cíl
+v přestrojení. Regrese doložena bitově (jediný rozdíl `verzeObsahu`),
+233 testů zelených. **Vedlejší nález, který si žádá rozhodnutí: `muj-den`
+breachuje K9** (nepodmíněně 96–99 % pro 1p–3p) — hygiena reportu ho odkryla
+pod dosavadním falešným breachem. Report:
+[[../technika/mozek-operace-kontrafaktual-2026-07-28|technika/mozek-operace-kontrafaktual-2026-07-28.md]].
+**Míč: fáze 3 (blokuje LLM poskytovatel), `muj-den` (K9), LIDSKÁ BRÁNA
+(odblokována 2.1).**
 
 *Průběh kalibrace-4 (historie):*
 [[../technika/kalibrace-4-brana-navrh-2026-07-27|Balík]] byl kanonické zadání.
@@ -157,7 +174,10 @@ variance doměřena (2sd = 3,22 < 6). Eskalace V1–V4 rozhodnuta uživatelem ja
 | **PROVĚRKA BOTA proti všem veřejným pravidlům** — dvakrát se ukázalo, že měřidlo bylo horší než hra (D30: bot ignoroval verdikt zbraně na obou osách; oprava přinesla víc než dvě kola ladění obsahu). Systematicky projít, co telegraf a `stitky.yaml` hlásí jako VEŘEJNÉ, a ověřit, že to kompetentní bot používá. Levné, a všechna čísla nesená do lidské brány na tom stojí. | technical-developer + PM | **HOTOVO 2026-07-27 (D34) — 8 nálezů, 4 velké**; report [[../technika/proverka-bota-2026-07-27|technika/proverka-bota-2026-07-27.md]]. Opravy NEPROVEDENY (mění všechna čísla brány → rozhodnutí uživatele, viz otevřené otázky) |
 | **Opravy z prověrky bota (N1–N8) + jedno re-měření** | technical-developer (+ engine) | **HOTOVO 2026-07-27 (D35)** — uživatel zvolil „vše + jedno re-měření"; 149 testů zelených, 6 bloků × 8000 runů. **K5 poprvé splněno (9,72 %), K2 drift 1,39** — a **K1 3p/4p + K6a nově breachnou** (co-op škálování se poprvé opravdu hraje) |
 | **Přeladit `prahOffsetDlePoctu` (K1 3p/4p + K6a)** — jediná páka bez dotyku obsahu; sweep je levný | game-designer + playtest-facilitator | **HOTOVO 2026-07-27 (D38) — páka VYČERPÁNA, nic nezapečeno.** Průchozí kandidát existuje (`{1:0,2:5,3:6,4:6}`: K1 6/6, K6a 6,03), ale platí se jím K2 drift (1,28, 2/6) a leží v režimu, který předregistrace předem zakázala (clamp prahů). Report [[../technika/kalibrace-5-sweep-prahoffset-2026-07-27|technika/kalibrace-5-sweep-prahoffset]]; **uzavřeno D39 = varianta (a)**, breach jde do lidské brány jako známá odchylka |
-| Mrtvá volba: cíl `mozek-operace` má 0 % splnění ve všech variantách včetně baseline (vedlejší nález D38) | content-generator + game-designer | otevřeno — **dle D39(iv) vyřešit samostatným malým kolem PŘED lidskou bránou** (diagnóza → oprava či výměna cíle → kontrafaktuál přes CONTENT_DIR); nepřibalovat k jiné iteraci |
+| Mrtvá volba: cíl `mozek-operace` má 0 % splnění ve všech variantách včetně baseline (vedlejší nález D38) | content-generator + game-designer + playtest-facilitator | **HOTOVO 2026-07-28 (D42)** — cíl byl strukturálně nesplnitelný (nejen slabý), škrtnut do patičky `cile.yaml` s poučením; nahrazen `schovana-bouchacka` (`GANGSTER_skryta >= 1 a doruceno`, 2 b.) vybraným kontrafaktuálem ~290k runů proti naslepo předregistrovaným pásmům. Sada je nově **8/8 mechanická**. Report [[../technika/mozek-operace-kontrafaktual-2026-07-28\|technika/mozek-operace-kontrafaktual-2026-07-28.md]] |
+| **`muj-den` breachuje K9** — nepodmíněně 99,4 / 98,3 / 96,0 % pro 1p/2p/3p (gate 5–95 %). Odkryto hygienou reportu v D42; dosud maskováno agregátem přes počty (D39 hlásil 95,4 %) a falešným breachem textového cíle | game-designer | otevřeno — **nový nález, není součástí známé odchylky D39.** Práh 3 už má SIM-TUNE poznámku „možná per-count práh"; oprava je obsahová (práh cíle), ne kalibrační. Rozhodnout před lidskou bránou, nebo vědomě nést jako druhou vyčíslenou odchylku |
+| Cíl `plny-zasah` je s ~1 % divergence verdiktu mezi hráči prakticky týmový (vedlejší nález D42) | game-designer | otevřeno, nízká priorita — nepřibalovat k jiné iteraci |
+| `kredity_utracene_za` engine počítá **týmově** (`events.js:175-178` nefiltruje `hrac_id`), ač ji `technika/architektura.md` §2.2 ř. 141 vede jako per-hráč metriku | technical-developer | otevřeno — v D42 **neopraveno záměrně** (je to nález, ne úklid). Dokud platí, nelze na kreditech postavit osobní cíl; oprava by otevřela ekonomickou osu hádky, po které nikdo zatím nevolal |
 | **Fáze 2.1: vysvětlující vrstva pravidel v UI** — bez ní lidská brána selže na čitelnosti (metrika 6), ne na designu | kódový repo | **HOTOVO A PŘIJATO 2026-07-28 (D41)** — návrh D36 → plán (12 tasků TDD) → stavba na větvi `faze-2.1` → PM review (231 testů + lint nezávisle, smoke test celé smyčky v prohlížeči, §11 splněno) → merge do `main`. Spec: [[../technika/faze-2.1-navrh-2026-07-27|technika/faze-2.1-navrh-2026-07-27.md]] |
 | **v3 fallback šablony protokolu (~20)** — součást 2.1, běží paralelně s UI | content-generator + protocol-humor-tester + design-critic | **HOTOVO A ZAPEČENO 2026-07-28 (D40)** — 28 šablon v `prompty/fallback-sablony.yaml`, v2 sada v `obsah/archiv-v2/`; `kolaps` přepsán na v3 sémantiku + nové pásmo `navrat`, `hlas_z_auta` zamítnut (engine událost nemá). Situace dostaly pole `nazev` (15 + 4 u pronásledovatelů) — anotace mapy nově jmenuje místo. 231 testů zelených, 4 golden snapshoty rebasovány (otisk obsahu + jméno místa) |
 | ~~Zbytek fáze 2.1 po zapečení sady: protocol-fill.js na v3~~ | — | **ZASTARALÉ — hotovo v tasku 6 stavby** (modul i test čtou živou v3 sadu); zbyl jen řádek níže |
