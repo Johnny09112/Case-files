@@ -11,6 +11,7 @@ import { pohledMotelu } from './motel.js';
 import { pohledCommitu } from './commit.js';
 import { pohledPrirazeni } from './assign.js';
 import { pohledVysledku } from './vysledek.js';
+import { vysledekLabel, PRICINA_LABEL } from '../../labels.js';
 
 /**
  * @param {{S: object, st: object, content: object, rules: object,
@@ -26,6 +27,7 @@ export function obrazovkaRun(ctx) {
   else if (st.faze === 'motel_offer' || st.faze === 'motel') obsah = pohledMotelu(ctx);
   else if (st.faze === 'commit') obsah = pohledCommitu(ctx);
   else if (st.faze === 'assign' || st.faze === 'confirm') obsah = pohledPrirazeni(ctx);
+  else if (st.faze === 'ended') obsah = pohledUzavreniSpisu(ctx);
   else obsah = h('p', { class: 'napoveda' }, `Fáze „${st.faze}" nemá obrazovku — to je chyba UI, ne hry.`);
 
   return h('div', { class: 'plocha' }, okrajSpisu(ctx), h('main', { class: 'list' }, obsah));
@@ -87,6 +89,43 @@ function pohledBriefing(ctx) {
       'footer',
       { class: 'formular-paticka' },
       h('button', { class: 'tlacitko tlacitko-hlavni', onclick: () => akce.vyraz() }, 'Vyrazit na trasu')
+    )
+  );
+}
+
+/* ================= ended (přechod na obrazovku konce) ================= */
+
+/**
+ * Fázi `ended` engine nastaví ihned po konci runu (dojezd / došlé bedny /
+ * prohraná konfrontace) — za normálního toku ji hráč nevidí, protože `app.js`
+ * přepne na samostatnou obrazovku konce, jakmile se vyprázdní fronta výsledků
+ * (`S.fronta`). Pokud přesto na okamžik projde sem (fronta se ještě
+ * nevyprázdnila, ale engine už fázi přepnul), ukaž klidnou přechodovou
+ * hlášku — ne chybu.
+ */
+function pohledUzavreniSpisu(ctx) {
+  const { st } = ctx;
+  const vysledek = st.vysledek;
+
+  return h(
+    'div',
+    {},
+    h(
+      'header',
+      { class: 'spis-hlavicka' },
+      h('p', { class: 'formular-popisek' }, 'Spis se uzavírá'),
+      h('h1', {}, vysledek ? vysledekLabel(vysledek.vysledek) : 'Uzavření spisu')
+    ),
+    h(
+      'section',
+      { class: 'formular-blok' },
+      h(
+        'p',
+        { class: 'napoveda' },
+        vysledek
+          ? `Příčina: ${PRICINA_LABEL[vysledek.pricina] ?? vysledek.pricina}. Závěr protokolu se připravuje na další obrazovce.`
+          : 'Závěr protokolu se připravuje na další obrazovce.'
+      )
     )
   );
 }

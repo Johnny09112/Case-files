@@ -1,18 +1,24 @@
 // @ts-check
 /**
  * Volba cesty (StS páteř). Typ místa je VEŘEJNÁ informace (D34/N7) — hráč před
- * commitem ví, jestli tam projde zbraň. Telegraf se ukáže až po volbě (fáze
- * commit); mapa ho neprozrazuje.
+ * commitem zná obecné pravidlo místa pro zbraň. Telegraf se ukáže až po volbě
+ * (fáze commit) a teprve on řekne přesný verdikt pro konkrétní roli — mapa
+ * ho neprozrazuje (ani slotové výjimky ze štítku).
  */
 import { h } from '../../dom.js';
 import { TYP_MISTA_LABEL } from '../../labels.js';
 
-/** Co typ místa znamená pro zbraň — plyne z obsah/stitky.yaml chovani_dle_typu. */
+/**
+ * Co typ místa obecně znamená pro zbraň — plyne z obsah/stitky.yaml
+ * chovani_dle_typu. Je to jen hrubé pravidlo místa: konkrétní situace může
+ * mít slotovou výjimku (`stitek_citlivy`), kterou mapa záměrně neprozrazuje —
+ * tu odhalí až telegraf před commitem.
+ */
 function pravidloTypu(content, typ) {
   const chovani = content.stitky.find((/** @type {any} */ s) => s.id === 'GANGSTER')?.parametry?.chovani_dle_typu?.[typ];
-  if (chovani === 'vzdy_pass') return 'zbraň tu projde i na očích';
-  if (chovani === 'viditelna_role_selze') return 'zbraň ve viditelné roli tu propadne';
-  return 'bez resoluce — jen nález';
+  if (chovani === 'vzdy_pass') return 'obecně: zbraň tu projde i na očích';
+  if (chovani === 'viditelna_role_selze') return 'obecně: zbraň ve viditelné roli tu propadá — přesný verdikt padne až v telegrafu před commitem';
+  return 'obecně: bez resoluce zbraně, jen nález';
 }
 
 /**
