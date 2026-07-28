@@ -511,6 +511,19 @@ button.karta:hover:not(:disabled) {
   color: var(--inkoust-slaby);
 }
 
+/* informační postih, varianta (b): informace je vidět, ale přeškrtnutá */
+.skryto-postihem {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.cestnost {
+  border-left: 3px solid var(--cervena);
+  padding-left: 0.6rem;
+  font-size: 0.78rem;
+  color: var(--cervena-tmava);
+}
+
 .karta-hlucna {
   font-size: 0.68rem;
   letter-spacing: 0.08em;
