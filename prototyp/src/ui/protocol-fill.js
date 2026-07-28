@@ -1,16 +1,18 @@
 // @ts-check
 /**
- * Výběr a dosazení fallback šablon protokolu
+ * Výběr a dosazení v3 fallback šablon protokolu
  * (prompty/fallback-sablony.yaml v kořeni monorepa — schéma v hlavičce souboru).
  *
  * Čistý modul bez DOM a bez herní logiky (architektura §2.4): dostává hotové
- * výsledky z událostí enginu (`node_resolved`, `run_ended`) a jen z nich skládá
+ * události jednoho uzlu z logu enginu (`situation_revealed`, `slot_resolved`,
+ * `band_resolved`, `penalty_added`, `character_folded`) a jen z nich skládá
  * text. Náhoda výběru šablon je UI záležitost — vstřikuje se přes `rand`
  * (v testech deterministická, v aplikaci Math.random; engine se jí nedotýká).
  *
  * Kontrakt {jmeno} (CLAUDE.md): dosazuje se PŘÍJMENÍ postavy — poslední slovo
  * pole `jmeno` z obsah/postavy.yaml.
  */
+import { EVENT } from '../engine/events.js';
 
 /**
  * Workaround chyby obsahu (nahlášeno do design repa 2026-07-22):
@@ -31,20 +33,6 @@ export function opravUvozovkySablon(yamlText) {
     })
     .join('\n');
 }
-
-/** Mapování pásma hodu z události enginu na pásmo šablony. */
-export const PASMO_HODU = /** @type {const} */ ({
-  uspech: 'uspech',
-  uspech_za_cenu: 'za_cenu',
-  selhani: 'selhani',
-});
-
-/** Pásmo úvodní šablony pro speciální druhy setkání. */
-export const PASMO_DRUHU = /** @type {const} */ ({
-  zatah: 'zatah',
-  lecka: 'lecka',
-  konfrontace: 'konfrontace',
-});
 
 /** Nouzová věta, kdyby pro kombinaci neexistovala žádná šablona. */
 export const NOUZOVY_ZAZNAM =
@@ -79,18 +67,6 @@ export function frazeBeden(n) {
 }
 
 /**
- * Popis zranění pro {zraneni}. Zatím obecný placeholder („zranění blíže
- * neurčené"), obarvený tvrdostí uzlu, byla-li při hodu aplikována; konkrétní
- * popisy dodá až LLM vrstva (fáze 3).
- * @param {string|null|undefined} tvrdostAplikovana bedna | zar | zraneni | null
- */
-export function popisZraneni(tvrdostAplikovana) {
-  if (tvrdostAplikovana === 'zraneni') return 'zranění vícečetné, blíže neurčené';
-  if (tvrdostAplikovana === 'zar') return 'zranění blíže neurčené, utrpěné za značného rozruchu';
-  return 'zranění blíže neurčené';
-}
-
-/**
  * Dosadí hodnoty do placeholderů {klic}. Neznámé placeholdery nechává být
  * (šablona smí zmínit jen to, co jí `podminka` zaručuje — chybějící hodnota
  * je chyba šablony, ne dosazení).
@@ -103,15 +79,22 @@ export function dosad(text, hodnoty) {
   );
 }
 
+/** Úvodní šablona dle typu místa (jen vložená/speciální setkání ji mají). */
+export const PASMO_UVODU = /** @type {Record<string, string>} */ ({
+  zatah: 'zatah',
+  lecka: 'lecka',
+  konfrontace: 'konfrontace',
+});
+
 /**
- * Sedí šablona na stav hodu? Klíč vynechaný v `podminka` = „jakkoli";
- * uvedený klíč musí odpovídat (`ano` ⇔ true).
- * @param {{podminka?: {zraneni?: string, bedna?: string}}} sablona
- * @param {{zraneni?: boolean, bedna?: boolean}} stav
+ * Sedí šablona na stav situace? Klíč vynechaný v `podminka` = „jakkoli";
+ * uvedený klíč musí odpovídat (`ano` ⇔ true). v3 klíče: postih, bedna.
+ * @param {{podminka?: {postih?: string, bedna?: string}}} sablona
+ * @param {{postih?: boolean, bedna?: boolean}} stav
  */
 export function sedi(sablona, stav) {
   const p = sablona.podminka ?? {};
-  for (const klic of /** @type {const} */ (['zraneni', 'bedna'])) {
+  for (const klic of /** @type {const} */ (['postih', 'bedna'])) {
     if (p[klic] != null && (p[klic] === 'ano') !== Boolean(stav?.[klic])) return false;
   }
   return true;
@@ -123,7 +106,7 @@ export function sedi(sablona, stav) {
  *
  * @param {object[]} sablony seznam z fallback-sablony.yaml
  * @param {() => number} [rand] zdroj náhody [0,1) — v testech deterministický
- * @returns {(pasmo: string, stav?: {zraneni?: boolean, bedna?: boolean}) =>
+ * @returns {(pasmo: string, stav?: {postih?: boolean, bedna?: boolean}) =>
  *   {id: string|null, text: string}}
  */
 export function createVyberSablon(sablony, rand = Math.random) {
@@ -143,76 +126,78 @@ export function createVyberSablon(sablony, rand = Math.random) {
 }
 
 /**
- * Složí odstavce protokolu jednoho uzlu z události `node_resolved`.
+ * Složí odstavce protokolu jedné SITUACE z jejích událostí (v3).
  *
- * Pořadí: úvod speciálního setkání (Zátah/léčka/konfrontace) → hlasy z auta
- * (zasáhly před hody) → hody v pořadí u stolu → kolapsy.
+ * Pořadí: úvod vloženého setkání (Zátah/léčka/konfrontace) → pásmový odstavec
+ * (nese všechny čtyři věci ve slotech) → kolapsy. Nic, co mechanika nedala:
+ * počty beden i postih se DOSAZUJÍ z událostí.
  *
- * @param {object} udalost node_resolved (payload dle architektura.md §2.2)
- * @param {{kolapsy?: {postava: string}[],
- *   hlasy?: {postava: string}[]}} extra kolapsy = character_down události uzlu;
- *   hlasy = volby hlasu z auta zaznamenané UI vrstvou (engine je neloguje)
- * @param {{jmena: Record<string, string>}} ctx postavaId → celé jméno
+ * @param {object[]} udalosti události jednoho uzlu z logu enginu
+ * @param {{jmena: Record<string,string>, veci: Record<string,string>,
+ *   situace: Record<string,string>, postihy: Record<string,string>}} ctx
  * @param {ReturnType<typeof createVyberSablon>} vyber
  * @returns {string[]} hotové odstavce
  */
-export function zapisUzlu(udalost, extra, ctx, vyber) {
+export function zapisSituace(udalosti, ctx, vyber) {
+  const odhaleni = udalosti.find((u) => u.type === EVENT.SITUATION_REVEALED);
+  const pasmoUdalost = udalosti.find((u) => u.type === EVENT.BAND_RESOLVED);
+  const sloty = udalosti.filter((u) => u.type === EVENT.SLOT_RESOLVED);
+  const postihy = udalosti.filter((u) => u.type === EVENT.PENALTY_ADDED);
+  const kolapsy = udalosti.filter((u) => u.type === EVENT.CHARACTER_FOLDED);
+  const uzel = ctx.situace?.[odhaleni?.situace_id] ?? odhaleni?.situace_id ?? 'neznámý úsek';
+
   /** @type {string[]} */
   const odstavce = [];
-  const uzel = udalost.nazev ?? udalost.uzel;
-  const ztracenoCelkem = udalost.hody.reduce(
-    (soucet, h) => soucet + h.bedny_ztracene_timto_hodem,
-    0
-  );
-  // Zůstatek nákladu PŘED uzlem; per hod se odečítá, ať {naklad} sedí v čase.
-  let zbyva = udalost.zbyvaBeden + ztracenoCelkem;
 
-  const pasmoDruhu = PASMO_DRUHU[udalost.druh];
-  if (pasmoDruhu) {
-    odstavce.push(dosad(vyber(pasmoDruhu).text, { uzel }));
-  }
+  const pasmoUvodu = PASMO_UVODU[odhaleni?.typ_mista];
+  if (pasmoUvodu) odstavce.push(dosad(vyber(pasmoUvodu).text, { uzel }));
 
-  for (const hlas of extra?.hlasy ?? []) {
+  if (pasmoUdalost) {
+    const postih = postihy[0] ?? null;
+    // Hlavní postava odstavce: postižený, jinak vlastník prvního propadlého
+    // slotu, jinak vlastník prvního slotu — nikdy „undefined".
+    const hlavni = postih?.hrac_id
+      ?? sloty.find((s) => !s.zasah && s.hrac_id)?.hrac_id
+      ?? sloty.find((s) => s.hrac_id)?.hrac_id
+      ?? null;
+    const stav = { postih: postih != null, bedna: (pasmoUdalost.naklad_ztrata ?? 0) > 0 };
     odstavce.push(
-      dosad(vyber('hlas_z_auta').text, { jmeno: prijmeni(ctx.jmena[hlas.postava]), uzel })
-    );
-  }
-
-  for (const hod of udalost.hody) {
-    zbyva -= hod.bedny_ztracene_timto_hodem;
-    const stav = {
-      zraneni: hod.zraneni_pridana > 0,
-      bedna: hod.bedny_ztracene_timto_hodem > 0,
-    };
-    const sablona = vyber(PASMO_HODU[hod.pasmo], stav);
-    odstavce.push(
-      dosad(sablona.text, {
-        jmeno: prijmeni(ctx.jmena[hod.postava]),
+      dosad(vyber(pasmoUdalost.pasmo, stav).text, {
+        jmeno: hlavni ? prijmeni(ctx.jmena?.[hlavni] ?? hlavni) : 'neznámý',
         uzel,
-        karta: hod.karta.nazev,
-        bedny: frazeBeden(hod.bedny_ztracene_timto_hodem),
-        naklad: frazeBeden(zbyva),
-        zraneni: popisZraneni(hod.tvrdost_aplikovana),
+        veci: seznamVeci(sloty, ctx),
+        postih: postih ? (ctx.postihy?.[postih.postih_id] ?? postih.postih_id) : '',
+        bedny: frazeBeden(pasmoUdalost.naklad_ztrata ?? 0),
+        naklad: frazeBeden(pasmoUdalost.zbyva_beden ?? 0),
       })
     );
   }
 
-  for (const kolaps of extra?.kolapsy ?? []) {
+  for (const kolaps of kolapsy) {
     odstavce.push(
-      dosad(vyber('kolaps').text, { jmeno: prijmeni(ctx.jmena[kolaps.postava]), uzel })
+      dosad(vyber('kolaps').text, { jmeno: prijmeni(ctx.jmena?.[kolaps.hrac_id] ?? kolaps.hrac_id), uzel })
     );
   }
 
   return odstavce;
 }
 
+/** Čtyři věci ve slotech jako česká výčtová fráze („A“, „B“, „C“ a „D“). */
+function seznamVeci(sloty, ctx) {
+  const nazvy = sloty
+    .sort((a, b) => a.slot_index - b.slot_index)
+    .map((s) => (s.karta_id ? `„${ctx.veci?.[s.karta_id] ?? s.karta_id}“` : 'nic'));
+  if (nazvy.length <= 1) return nazvy[0] ?? 'nic';
+  return `${nazvy.slice(0, -1).join(', ')} a ${nazvy.at(-1)}`;
+}
+
 /**
  * Závěrečný odstavec spisu z události `run_ended`.
- * @param {object} udalost run_ended ({vysledek, zbyvaBeden, …})
+ * @param {object} udalost run_ended ({vysledek, zbyva_beden, …})
  * @param {ReturnType<typeof createVyberSablon>} vyber
  * @returns {string[]}
  */
 export function zapisFinale(udalost, vyber) {
   const pasmo = udalost.vysledek === 'DORUCENO' ? 'finale_doruceno' : 'finale_nevyreseno';
-  return [dosad(vyber(pasmo).text, { naklad: frazeBeden(udalost.zbyvaBeden) })];
+  return [dosad(vyber(pasmo).text, { naklad: frazeBeden(udalost.zbyva_beden ?? 0) })];
 }
