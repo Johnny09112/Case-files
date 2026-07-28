@@ -22,6 +22,12 @@
  * anotace nese.
  *
  * Žádná herní logika — jen render snapshotu enginu (architektura §2.4).
+ *
+ * **Invariant dat:** `S.fronta[0].udalosti` obsahuje POUZE události jednoho
+ * konkrétního uzlu (ten s `nodeIndex` položky). Tato funkce filtruje pouze
+ * podle typu; všechny sekce (sloty, pásmo, důsledky) spoléhají na tuto garantii.
+ * Pokud volající (viz task 12) předá širší výřez logu, obranná filtrace podle
+ * `nodeIndex` zajistí, že cizí Žár, postihy či gamble se do renderu nedostanou.
  */
 import { h } from '../../dom.js';
 import { vyklepej } from '../../typewriter.js';
@@ -29,18 +35,28 @@ import { MISTO } from '../../vysvetleni.js';
 import { EVENT } from '../../../engine/events.js';
 
 /**
- * @param {{S: object, akce: Record<string, any>, anotace: Map<number, object[]>}} ctx
+ * @param {{S: object, st: object, akce: Record<string, any>, anotace: Map<number, object[]>}} ctx
+ *   - S stav aplikace (S.fronta[0] je položka s `udalosti` z JEDNOHO uzlu)
+ *   - st snapshot enginu (obsahuje `nodeIndex` aktuálního uzlu)
+ *   - akce callbacky UI
+ *   - anotace mapa seq → anotace z vysvětlující vrstvy
  */
 export function pohledVysledku(ctx) {
-  const { S, akce, anotace } = ctx;
+  const { S, st, akce, anotace } = ctx;
   const polozka = S.fronta[0];
   const { udalosti, sekce } = polozka;
   const prvni = (/** @type {any} */ u) => (anotace.get(u.seq) ?? [])[0];
 
-  const sloty = udalosti.filter((/** @type {any} */ u) => u.type === EVENT.SLOT_RESOLVED);
-  const pasmo = udalosti.find((/** @type {any} */ u) => u.type === EVENT.BAND_RESOLVED);
+  // Obranná filtracja: propusť jen události z aktuálního uzlu.
+  // Události bez nodeIndex propusť (tichý filtr bez varování).
+  // Viz invariant výše: S.fronta[0].udalosti by měly být jen z jednoho uzlu,
+  // ale filtrujeme zde pro případ, že volající pošle širší výřez.
+  const jeBezpecu = (/** @type {any} */ u) => u.nodeIndex === undefined || u.nodeIndex === st.nodeIndex;
+
+  const sloty = udalosti.filter((/** @type {any} */ u) => jeBezpecu(u) && u.type === EVENT.SLOT_RESOLVED);
+  const pasmo = udalosti.find((/** @type {any} */ u) => jeBezpecu(u) && u.type === EVENT.BAND_RESOLVED);
   const dusledky = udalosti.filter((/** @type {any} */ u) =>
-    [EVENT.ZAR_MOVE, EVENT.CREDIT_FLOW, EVENT.PENALTY_ADDED, EVENT.PENALTY_EXPIRED, EVENT.PENALTY_HEALED, EVENT.CHARACTER_FOLDED, EVENT.CHARACTER_RETURNED, EVENT.GAMBLE].includes(u.type)
+    jeBezpecu(u) && [EVENT.ZAR_MOVE, EVENT.CREDIT_FLOW, EVENT.PENALTY_ADDED, EVENT.PENALTY_EXPIRED, EVENT.PENALTY_HEALED, EVENT.CHARACTER_FOLDED, EVENT.CHARACTER_RETURNED, EVENT.GAMBLE].includes(u.type)
   );
 
   const protokol = h('div', { class: 'protokol-list' });
