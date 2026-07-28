@@ -5,7 +5,7 @@
  */
 import { h } from '../dom.js';
 import { vyklepej } from '../typewriter.js';
-import { DRUH_LABEL, PRICINA_LABEL, vysledekLabel } from '../labels.js';
+import { PRICINA_LABEL, vysledekLabel } from '../labels.js';
 
 /**
  * @param {{S: object, content: object, akce: Record<string, any>}} ctx
@@ -33,7 +33,7 @@ export function obrazovkaKonec(ctx) {
     h(
       'header',
       { class: 'spis-hlavicka' },
-      h('p', { class: 'formular-popisek' }, `spisová značka ${S.seed} · uzlů ${vysledek.pocetUzlu} · ${PRICINA_LABEL[vysledek.pricina] ?? vysledek.pricina}`),
+      h('p', { class: 'formular-popisek' }, `spisová značka ${S.seed} · uzlů ${vysledek.pocet_uzlu} · ${PRICINA_LABEL[vysledek.pricina] ?? vysledek.pricina}`),
       h('h1', {}, 'Uzavření spisu'),
       h(
         'div',
@@ -53,8 +53,7 @@ export function obrazovkaKonec(ctx) {
           h(
             'h3',
             { class: 'formular-popisek' },
-            `List ${sekce.cislo} — ${sekce.titulek}`,
-            DRUH_LABEL[sekce.druh] ? ` (${DRUH_LABEL[sekce.druh]})` : ''
+            `List ${sekce.cislo} — ${sekce.titulek}`
           ),
           sekce.odstavce.map((/** @type {string} */ o) => h('p', { class: 'protokol-odstavec' }, o))
         )

@@ -1,48 +1,50 @@
 // @ts-check
 /**
- * Řízení obrazovek hot-seat UI (architektura §2.4, §6): UI je nejtenčí vrstva —
- * drží jen stav prezentace (jaká obrazovka, co už bylo vyklepáno), veškerý
- * herní stav žije v enginu a UI je re-render nad jeho snapshotem.
+ * Řízení obrazovek hot-seat UI v3 (architektura §2.4, §6): UI je nejtenčí
+ * vrstva — drží jen stav PREZENTACE (jaká obrazovka, co je vybráno, co už bylo
+ * vyklepáno), veškerý herní stav žije v enginu a UI je re-render nad jeho
+ * snapshotem.
  *
  * Náhoda v UI vrstvě (seed bez zadání, losování šablon) smí používat
  * Math.random — deterministický musí být jen engine (ADR-002).
  */
-import { load } from 'js-yaml';
-
-// v2 UI (dočasně odpojené, viz main.js) — v2 obsah žije v obsah/archiv-v2/;
-// fáze 2.1 tyto importy přepíše na v3 obsah v kořeni monorepa.
-import kartyYaml from '../../../obsah/archiv-v2/karty.yaml?raw';
-import uzlyYaml from '../../../obsah/archiv-v2/uzly.yaml?raw';
-import cileYaml from '../../../obsah/archiv-v2/cile.yaml?raw';
-import pronasledovateleYaml from '../../../obsah/archiv-v2/pronasledovatele.yaml?raw';
+import veciYaml from '../../../obsah/veci.yaml?raw';
+import situaceYaml from '../../../obsah/situace.yaml?raw';
+import postihyYaml from '../../../obsah/postihy.yaml?raw';
+import mistaYaml from '../../../obsah/mista.yaml?raw';
+import stitkyYaml from '../../../obsah/stitky.yaml?raw';
+import pronasledovateleYaml from '../../../obsah/pronasledovatele.yaml?raw';
+import cileYaml from '../../../obsah/cile.yaml?raw';
 import postavyYaml from '../../../obsah/postavy.yaml?raw';
 import sablonyYaml from '../../../prompty/fallback-sablony.yaml?raw';
+import { load } from 'js-yaml';
 
 import { parseContent } from '../content/loader.js';
 import { RULES } from '../engine/rules.js';
 import { createRun } from '../engine/state.js';
 import { EVENT } from '../engine/events.js';
-import { effectiveStrength, noisyHeat } from '../engine/resolve.js';
 
-import { createVyberSablon, zapisUzlu, zapisFinale, opravUvozovkySablon } from './protocol-fill.js';
+import { createVyberSablon, zapisSituace, zapisFinale, opravUvozovkySablon } from './protocol-fill.js';
+import { vysvetli, ctxZObsahu } from './vysvetleni.js';
 import { obrazovkaSetup } from './screens/setup.js';
-import { obrazovkaRun } from './screens/run.js';
+import { obrazovkaRun } from './screens/run/index.js';
 import { obrazovkaKonec } from './screens/end.js';
 import { h } from './dom.js';
 
 /** @param {HTMLElement} root */
 export function initApp(root) {
   const content = parseContent({
-    karty: kartyYaml,
-    uzly: uzlyYaml,
-    cile: cileYaml,
+    veci: veciYaml,
+    situace: situaceYaml,
+    postihy: postihyYaml,
+    mista: mistaYaml,
+    stitky: stitkyYaml,
     pronasledovatele: pronasledovateleYaml,
+    cile: cileYaml,
+    postavy: postavyYaml,
   });
-  /** @type {{id: string, jmeno: string, flavor: string}[]} */
-  const postavy = load(postavyYaml).postavy;
   const sablony = load(opravUvozovkySablon(sablonyYaml)).sablony;
 
-  /** Stav UI vrstvy (prezentace, ne hra). */
   const S = novyStav();
 
   function novyStav() {
@@ -53,64 +55,69 @@ export function initApp(root) {
       /** @type {number|null} */ seed: null,
       /** @type {Record<string, string>} */ jmena: {},
       vyber: createVyberSablon(sablony, Math.random),
-      /** Hotové sekce protokolu: {cislo, druh, titulek, odstavce[]}. */
+      /** Kompletní log (pro obrazovky, které hledají událost podle seq). */
+      udalosti: /** @type {object[]} */ ([]),
+      /** Anotace vysvětlující vrstvy: seq → Anotace[]. */
+      anotace: /** @type {Map<number, object[]>} */ (new Map()),
+      /** Hotové sekce protokolu: {cislo, titulek, odstavce[]}. */
       protokol: /** @type {any[]} */ ([]),
-      /** Fronta výsledků uzlů k zobrazení: {udalost, checks, sekce, vyklepano}. */
+      /** Fronta výsledků k zobrazení: {nodeIndex, udalosti, sekce, vyklepano}. */
       fronta: /** @type {any[]} */ ([]),
+      /** Události rozpracovaného uzlu (řez dělá band_resolved, viz flushUzel). */
+      bufferUzlu: /** @type {object[]} */ ([]),
       lastSeq: 0,
       briefing: false,
       /** @type {string|null} */ odkrytyCil: null,
-      /** Hlasy z auta aktuálního uzlu — engine je neloguje, eviduje UI. */
-      hlasyUzlu: /** @type {any[]} */ ([]),
-      bufferChecks: /** @type {any[]} */ ([]),
-      bufferKolapsy: /** @type {any[]} */ ([]),
+      /** Commit: hrac_id → vybraná id karet. */
+      commitVyber: /** @type {Record<string, string[]>} */ ({}),
+      /** Assign: co je vybráno a co kam přiřazeno. */
+      assignVyber: { karta: /** @type {string|null} */ (null), sloty: /** @type {Record<number, string>} */ ({}) },
       /** @type {any|null} */ konec: null,
       finaleVyklepano: false,
     };
   }
 
-  /** Zpracuje nové události z logu enginu do sekcí protokolu a fronty výsledků. */
+  /** Nasype nové události do bufferu uzlu a přepočítá anotace. */
   function sync() {
     if (!S.run) return;
-    for (const udalost of S.run.getEvents()) {
-      if (udalost.seq <= S.lastSeq) continue;
-      S.lastSeq = udalost.seq;
-      if (udalost.type === EVENT.CHECK_RESOLVED) {
-        S.bufferChecks.push(udalost);
-      } else if (udalost.type === EVENT.CHARACTER_DOWN) {
-        S.bufferKolapsy.push(udalost);
-      } else if (udalost.type === EVENT.NODE_RESOLVED) {
-        const odstavce = zapisUzlu(
-          udalost,
-          { kolapsy: S.bufferKolapsy, hlasy: S.hlasyUzlu },
-          { jmena: S.jmena },
-          S.vyber
-        );
-        const sekce = {
-          cislo: S.protokol.length + 1,
-          druh: udalost.druh,
-          titulek: udalost.nazev ?? udalost.uzel,
-          odstavce,
-        };
-        S.protokol.push(sekce);
-        S.fronta.push({ udalost, checks: S.bufferChecks, sekce, vyklepano: false });
-        S.bufferChecks = [];
-        S.bufferKolapsy = [];
-        S.hlasyUzlu = [];
-      } else if (udalost.type === EVENT.RUN_ENDED) {
-        S.konec = udalost;
-        S.protokol.push({
-          cislo: null,
-          druh: 'finale',
-          titulek: udalost.vysledek === 'DORUCENO' ? 'Uzavření spisu — DORUČENO' : 'Odložení spisu — NEVYŘEŠENO',
-          odstavce: zapisFinale(udalost, S.vyber),
-        });
+    S.udalosti = S.run.getEvents();
+    S.anotace = vysvetli(S.udalosti, ctxZObsahu(content, S.jmena));
+    for (const u of S.udalosti) {
+      if (u.seq <= S.lastSeq) continue;
+      S.lastSeq = u.seq;
+      // Uzel bez resoluce (mapa, motel, truhla) sekci protokolu nedělá — jakmile
+      // přijde událost jiného uzlu, starý buffer se zahodí.
+      if (S.bufferUzlu.length > 0 && S.bufferUzlu[0].nodeIndex !== u.nodeIndex) S.bufferUzlu = [];
+      S.bufferUzlu.push(u);
+      if (u.type === EVENT.RUN_ENDED) {
+        S.konec = u;
+        S.protokol.push({ cislo: null, titulek: u.vysledek === 'DORUCENO' ? 'Uzavření spisu — DORUČENO' : 'Odložení spisu — NEVYŘEŠENO', odstavce: zapisFinale(u, S.vyber) });
       }
     }
   }
 
-  /** Obal příkazu enginu: provede, synchronizuje log, překreslí. @param {() => void} fn */
-  function prikaz(fn) {
+  /**
+   * Řez uzlu: až doběhne celá resoluce (band_resolved + důsledky), složí sekci
+   * protokolu a strčí ji do fronty výsledků. Volá se PO příkazu, ne uvnitř
+   * `sync` — postihy a Žár se logují až za `band_resolved`, a kdyby se řezalo
+   * na ní, odstavec by o postihu nevěděl.
+   */
+  function flushUzel() {
+    const udalosti = S.bufferUzlu;
+    if (!udalosti.some((u) => u.type === EVENT.BAND_RESOLVED)) return;
+    const ctxProtokolu = ctxZObsahu(content, S.jmena);
+    const sekce = {
+      cislo: S.protokol.length + 1,
+      titulek: ctxProtokolu.situace[udalosti.find((u) => u.type === EVENT.SITUATION_REVEALED)?.situace_id] ?? `uzel ${udalosti[0].nodeIndex}`,
+      odstavce: zapisSituace(udalosti, ctxProtokolu, S.vyber),
+    };
+    S.protokol.push(sekce);
+    S.fronta.push({ nodeIndex: udalosti[0].nodeIndex, udalosti, sekce, vyklepano: false });
+    S.bufferUzlu = [];
+  }
+
+  /** Obal příkazu enginu: provede, synchronizuje log, uzavře uzel, překreslí. */
+  function prikaz(/** @type {() => void} */ fn) {
     try {
       fn();
     } catch (chyba) {
@@ -118,6 +125,7 @@ export function initApp(root) {
       console.error(chyba);
     }
     sync();
+    flushUzel();
     render();
   }
 
@@ -142,7 +150,7 @@ export function initApp(root) {
       const zadany = S.setup.seedText.trim();
       S.seed = zadany === '' ? Math.floor(Math.random() * 0xffffffff) : Number(zadany) >>> 0;
       const players = S.setup.vybrane.map((id) => {
-        const p = postavy.find((x) => x.id === id);
+        const p = content.postavy.find((/** @type {any} */ x) => x.id === id);
         return { id: p.id, jmeno: p.jmeno };
       });
       S.jmena = Object.fromEntries(players.map((p) => [p.id, p.jmeno]));
@@ -164,24 +172,69 @@ export function initApp(root) {
       render();
     },
 
-    /* --- příkazy enginu --- */
-    zvolCestu(/** @type {string} */ id) {
-      prikaz(() => S.run.chooseRoute(id));
+    /* --- mapa a motel --- */
+    zvolCestu(/** @type {string} */ ref) {
+      prikaz(() => S.run.chooseRoute(ref));
     },
-    zahraj(/** @type {string} */ postavaId, /** @type {string} */ kartaId) {
-      prikaz(() => S.run.playCard(postavaId, kartaId));
+    motelVolba(/** @type {'ukryt'|'dal'} */ volba) {
+      prikaz(() => S.run.motelChoice(volba));
     },
-    hlasuj(/** @type {string} */ postavaId, /** @type {string} */ volba, /** @type {string} */ cil) {
+    zaplat(/** @type {object} */ objednavka) {
+      prikaz(() => S.run.spendCredits(objednavka));
+    },
+    opustMotel() {
+      prikaz(() => S.run.leaveMotel());
+    },
+
+    /* --- commit --- */
+    prepniKartu(/** @type {string} */ hracId, /** @type {string} */ kartaId) {
+      const vybrane = S.commitVyber[hracId] ?? [];
+      const i = vybrane.indexOf(kartaId);
+      if (i >= 0) vybrane.splice(i, 1);
+      else vybrane.push(kartaId);
+      S.commitVyber[hracId] = vybrane;
+      render();
+    },
+    commitni() {
+      const list = Object.entries(S.commitVyber).flatMap(([characterId, karty]) =>
+        karty.map((cardId) => ({ characterId, cardId }))
+      );
       prikaz(() => {
-        S.run.chooseVoice(postavaId, { volba, cil });
-        S.hlasyUzlu.push({ postava: postavaId, volba, cil });
+        S.run.commitCards(list);
+        S.commitVyber = {};
+        S.assignVyber = { karta: null, sloty: {} };
       });
     },
-    potvrd() {
-      prikaz(() => S.run.confirmNode());
+
+    /* --- assign a gamble --- */
+    vyberKartu(/** @type {string} */ kartaId) {
+      S.assignVyber.karta = S.assignVyber.karta === kartaId ? null : kartaId;
+      render();
     },
-    rider(/** @type {string} */ postavaId, /** @type {string} */ volba) {
-      prikaz(() => S.run.chooseRider(postavaId, volba));
+    prirad(/** @type {number} */ slotIndex) {
+      if (!S.assignVyber.karta) return;
+      S.assignVyber.sloty[slotIndex] = S.assignVyber.karta;
+      S.assignVyber.karta = null;
+      render();
+    },
+    zrusPrirazeni(/** @type {number} */ slotIndex) {
+      delete S.assignVyber.sloty[slotIndex];
+      render();
+    },
+    gambluj(/** @type {string} */ hracId, /** @type {string} */ kartaId) {
+      prikaz(() => {
+        S.run.gamble({ handOwnerId: hracId, replacedCardId: kartaId });
+        // Vyměněná věc už ve slotech být nesmí — přiřazení se resetuje.
+        S.assignVyber = { karta: null, sloty: {} };
+      });
+    },
+    vyhodnot() {
+      const list = Object.entries(S.assignVyber.sloty).map(([slotIndex, cardId]) => ({ slotIndex: Number(slotIndex), cardId }));
+      prikaz(() => {
+        S.run.assignToSlots(list);
+        S.run.confirmNode();
+        S.assignVyber = { karta: null, sloty: {} };
+      });
     },
 
     /* --- tok obrazovek --- */
@@ -211,21 +264,11 @@ export function initApp(root) {
     /** @type {HTMLElement} */
     let el;
     if (S.obrazovka === 'setup') {
-      el = obrazovkaSetup({ postavy, setup: S.setup, akce });
+      el = obrazovkaSetup({ postavy: content.postavy, setup: S.setup, akce });
     } else if (S.obrazovka === 'konec') {
       el = obrazovkaKonec({ S, content, akce });
     } else {
-      const st = S.run.getState();
-      el = obrazovkaRun({
-        S,
-        st,
-        content,
-        rules: RULES,
-        akce,
-        legalni: (postavaId) => S.run.getLegalPlays(postavaId),
-        efektivniSila: (karta, druh) => effectiveStrength(karta, druh, st.pronasledovatel.id),
-        cenaHlucne: noisyHeat(st.pronasledovatel.id, RULES),
-      });
+      el = obrazovkaRun({ S, st: S.run.getState(), content, rules: RULES, akce, anotace: S.anotace });
     }
     root.replaceChildren(el);
   }
