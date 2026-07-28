@@ -5,9 +5,10 @@
  *
  * Čistý modul bez DOM a bez herní logiky (architektura §2.4): dostává hotové
  * události jednoho uzlu z logu enginu (`situation_revealed`, `slot_resolved`,
- * `band_resolved`, `penalty_added`, `character_folded`) a jen z nich skládá
- * text. Náhoda výběru šablon je UI záležitost — vstřikuje se přes `rand`
- * (v testech deterministická, v aplikaci Math.random; engine se jí nedotýká).
+ * `band_resolved`, `penalty_added`, `character_folded`, `character_returned`)
+ * a jen z nich skládá text. Náhoda výběru šablon je UI záležitost — vstřikuje
+ * se přes `rand` (v testech deterministická, v aplikaci Math.random; engine
+ * se jí nedotýká).
  *
  * Kontrakt {jmeno} (CLAUDE.md): dosazuje se PŘÍJMENÍ postavy — poslední slovo
  * pole `jmeno` z obsah/postavy.yaml.
@@ -129,8 +130,16 @@ export function createVyberSablon(sablony, rand = Math.random) {
  * Složí odstavce protokolu jedné SITUACE z jejích událostí (v3).
  *
  * Pořadí: úvod vloženého setkání (Zátah/léčka/konfrontace) → pásmový odstavec
- * (nese všechny čtyři věci ve slotech) → kolapsy. Nic, co mechanika nedala:
- * počty beden i postih se DOSAZUJÍ z událostí.
+ * (nese všechny čtyři věci ve slotech) → kolapsy → návraty (návrat je
+ * poslední, protože ho `tickPenalties()` v enginu vyhodnocuje až PO
+ * vyhodnocení situace, tedy chronologicky za kolapsy). Nic, co mechanika
+ * nedala: počty beden i postih se DOSAZUJÍ z událostí.
+ *
+ * {jmeno} smí padnout jen tam, kde engine osobu skutečně určil (příjemce
+ * postihu, složení, návrat) — NIKDY jako fallback na vlastníka propadlého
+ * slotu: propadlý slot nemusí mít viníka (může být neobsazený, viz `sedi`
+ * dokumentace šablon), takže by protokol tvrdil jméno, které mechanika
+ * nedala.
  *
  * @param {object[]} udalosti události jednoho uzlu z logu enginu
  * @param {{jmena: Record<string,string>, veci: Record<string,string>,
@@ -144,6 +153,7 @@ export function zapisSituace(udalosti, ctx, vyber) {
   const sloty = udalosti.filter((u) => u.type === EVENT.SLOT_RESOLVED);
   const postihy = udalosti.filter((u) => u.type === EVENT.PENALTY_ADDED);
   const kolapsy = udalosti.filter((u) => u.type === EVENT.CHARACTER_FOLDED);
+  const navraty = udalosti.filter((u) => u.type === EVENT.CHARACTER_RETURNED);
   const uzel = ctx.situace?.[odhaleni?.situace_id] ?? odhaleni?.situace_id ?? 'neznámý úsek';
 
   /** @type {string[]} */
@@ -154,16 +164,12 @@ export function zapisSituace(udalosti, ctx, vyber) {
 
   if (pasmoUdalost) {
     const postih = postihy[0] ?? null;
-    // Hlavní postava odstavce: postižený, jinak vlastník prvního propadlého
-    // slotu, jinak vlastník prvního slotu — nikdy „undefined".
-    const hlavni = postih?.hrac_id
-      ?? sloty.find((s) => !s.zasah && s.hrac_id)?.hrac_id
-      ?? sloty.find((s) => s.hrac_id)?.hrac_id
-      ?? null;
     const stav = { postih: postih != null, bedna: (pasmoUdalost.naklad_ztrata ?? 0) > 0 };
     odstavce.push(
       dosad(vyber(pasmoUdalost.pasmo, stav).text, {
-        jmeno: hlavni ? prijmeni(ctx.jmena?.[hlavni] ?? hlavni) : 'neznámý',
+        // {jmeno} JEN z příjemce postihu — mechanika jinak žádnou osobu
+        // neurčila (viz JSDoc výše i hlavička fallback-sablony.yaml).
+        ...(postih ? { jmeno: prijmeni(ctx.jmena?.[postih.hrac_id] ?? postih.hrac_id) } : {}),
         uzel,
         veci: seznamVeci(sloty, ctx),
         postih: postih ? (ctx.postihy?.[postih.postih_id] ?? postih.postih_id) : '',
@@ -176,6 +182,12 @@ export function zapisSituace(udalosti, ctx, vyber) {
   for (const kolaps of kolapsy) {
     odstavce.push(
       dosad(vyber('kolaps').text, { jmeno: prijmeni(ctx.jmena?.[kolaps.hrac_id] ?? kolaps.hrac_id), uzel })
+    );
+  }
+
+  for (const navrat of navraty) {
+    odstavce.push(
+      dosad(vyber('navrat').text, { jmeno: prijmeni(ctx.jmena?.[navrat.hrac_id] ?? navrat.hrac_id), uzel })
     );
   }
 
