@@ -51,12 +51,12 @@ export function pohledVysledku(ctx) {
   // Události bez nodeIndex propusť (tichý filtr bez varování).
   // Viz invariant výše: S.fronta[0].udalosti by měly být jen z jednoho uzlu,
   // ale filtrujeme zde pro případ, že volající pošle širší výřez.
-  const jeBezpecu = (/** @type {any} */ u) => u.nodeIndex === undefined || u.nodeIndex === st.nodeIndex;
+  const jeZTohotoUzlu = (/** @type {any} */ u) => u.nodeIndex === undefined || u.nodeIndex === st.nodeIndex;
 
-  const sloty = udalosti.filter((/** @type {any} */ u) => jeBezpecu(u) && u.type === EVENT.SLOT_RESOLVED);
-  const pasmo = udalosti.find((/** @type {any} */ u) => jeBezpecu(u) && u.type === EVENT.BAND_RESOLVED);
+  const sloty = udalosti.filter((/** @type {any} */ u) => jeZTohotoUzlu(u) && u.type === EVENT.SLOT_RESOLVED);
+  const pasmo = udalosti.find((/** @type {any} */ u) => jeZTohotoUzlu(u) && u.type === EVENT.BAND_RESOLVED);
   const dusledky = udalosti.filter((/** @type {any} */ u) =>
-    jeBezpecu(u) && [EVENT.ZAR_MOVE, EVENT.CREDIT_FLOW, EVENT.PENALTY_ADDED, EVENT.PENALTY_EXPIRED, EVENT.PENALTY_HEALED, EVENT.CHARACTER_FOLDED, EVENT.CHARACTER_RETURNED, EVENT.GAMBLE].includes(u.type)
+    jeZTohotoUzlu(u) && [EVENT.ZAR_MOVE, EVENT.CREDIT_FLOW, EVENT.PENALTY_ADDED, EVENT.PENALTY_EXPIRED, EVENT.PENALTY_HEALED, EVENT.CHARACTER_FOLDED, EVENT.CHARACTER_RETURNED, EVENT.GAMBLE].includes(u.type)
   );
 
   const protokol = h('div', { class: 'protokol-list' });
