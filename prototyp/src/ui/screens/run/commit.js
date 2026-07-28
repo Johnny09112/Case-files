@@ -132,7 +132,7 @@ export function pohledCommitu(ctx) {
         'div',
         { class: 'panel-postavy vyrazena' },
         h('h3', {}, p.jmeno, ' ', h('span', { class: 'razitko razitko-male' }, 'složen')),
-        h('p', { class: 'napoveda' }, `necommittuje, vrací se za ${p.kolDoNavratu} · jeho sloty propadnou jako neobsazené`)
+        h('p', { class: 'napoveda' }, `necommittuje, vrací se za ${p.kolDoNavratu} · sloty jsou týmové — propadne stejný počet slotů jako neobsazené, ne jeho`)
       );
     }
     return h(

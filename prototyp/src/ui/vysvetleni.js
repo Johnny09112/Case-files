@@ -14,7 +14,7 @@
  *
  * Volá se nad PREFIXEM logu při hře i nad CELÝM logem po runu — jedna definice.
  */
-import { EVENT, deriveGoalMetrics } from '../engine/events.js';
+import { EVENT, ZAR_DUVOD, deriveGoalMetrics } from '../engine/events.js';
 import {
   STAT_LABEL, STAT_LABEL_4, znamenko, BAND_LABEL, KATEGORIE_LABEL,
   ZAR_DUVOD_LABEL, PRAH_LABEL, CREDIT_DUVOD_LABEL, PRICINA_LABEL, TYP_MISTA_LABEL,
@@ -119,9 +119,14 @@ function nazevPostihu(k, postihId) {
   return k.ctx.postihy?.[postihId] ?? postihId;
 }
 
-/** Štítek je vzácná značka na věci (obsah/stitky.yaml) — id je VELKÝMI, label ho lidsky pojmenuje. */
+/**
+ * Štítek je vzácná značka na věci (obsah/stitky.yaml) — id je VELKÝMI, label ho
+ * lidsky pojmenuje. Bez `content` (nebo když v něm štítek s daným id není)
+ * padá na obecné slovo, NIKDY ne na syrové VELKÝMI id — stejný vzorec jako
+ * `nazevStitku` v `commit.js` a `assign.js` (nález review Minor B).
+ */
 function nazevStitku(k, stitekId) {
-  return k.ctx.stitky?.[stitekId] ?? stitekId;
+  return k.ctx.stitky?.[stitekId] ?? 'štítek';
 }
 
 /** Popis uzlu pro zpětný odkaz: „uzel 3 — Brod u farmy". */
@@ -366,7 +371,7 @@ const HANDLERS = {
       detail: [
         `Smazáno (lehké): ${(e.smazane_lehke ?? []).map((id) => nazevPostihu(k, id)).join(', ') || 'nic'}`,
         `Zůstává (těžké): ${(e.pretrvavaji_tezke ?? []).map((id) => nazevPostihu(k, id)).join(', ') || 'nic'}`,
-        'Složená postava necommituje — její sloty propadnou jako neobsazené.',
+        'Sloty jsou týmové, ne vlastníkovy — složení jen sníží počet committnutých karet, propadne stejný počet slotů jako neobsazené.',
       ].join(' · '),
     }];
   },
@@ -408,11 +413,33 @@ const HANDLERS = {
       : 'Z toho, co tým committnul, se líp rozdělit nedalo — tohle bylo nejlepší možné.',
   }],
 
-  [EVENT.ZAR_MOVE]: (e) => [{
-    misto: MISTO.OKRAJ,
-    veta: `Šerif postoupil o ${Math.abs(e.delta)} na ${e.nova_pozice} — ${ZAR_DUVOD_LABEL[e.duvod] ?? e.duvod}.${e.prah_prekrocen ? ` Tím překročil práh ${PRAH_LABEL[e.prah_prekrocen] ?? e.prah_prekrocen}.` : ''}`,
-    ...(e.delta < 0 ? { detail: 'Žár klesl — prahy se znovu nabíjejí.' } : {}),
-  }],
+  [EVENT.ZAR_MOVE]: (e, k) => {
+    const duvodVeta = ZAR_DUVOD_LABEL[e.duvod] ?? e.duvod;
+    const prahVeta = e.prah_prekrocen ? ` Tím překročil práh ${PRAH_LABEL[e.prah_prekrocen] ?? e.prah_prekrocen}.` : '';
+    // Delta je podepsaná (state.js changeHeat) — záporná typicky u přežité
+    // konfrontace (Žár klesne na poPrezitiKonfrontace). Věta musí odpovídat
+    // směru pohybu, ne vždy tvrdit „postoupil" (nález review C2).
+    if (e.delta < 0) {
+      return [{
+        misto: MISTO.OKRAJ,
+        veta: `Žár klesl o ${Math.abs(e.delta)} na ${e.nova_pozice} — ${duvodVeta}.${prahVeta}`,
+        detail: 'Žár klesl, šerifova pozornost opadla — prahy se znovu nabíjejí.',
+      }];
+    }
+    // hlucne_GANGSTER: run_started (kniha.rusi) říká, jestli aktivní
+    // pronásledovatel ruší štítek GANGSTER — to je Brody, který jeho Žár
+    // run-wide zdvojnásobuje (obsah/pronasledovatele.yaml, state.js
+    // `brodyGangster`). Bez tohohle rozlišení hráč neví, proč je to jednou
+    // +1 a jindy +2 (nález review I6).
+    const zdvojeno = e.duvod === ZAR_DUVOD.HLUCNE_GANGSTER && k.rusi?.typ === 'stitek' && k.rusi?.cil === 'GANGSTER';
+    const doplnek = zdvojeno
+      ? `, dokud je aktivní ${k.pronasledovatel ?? 'tenhle pronásledovatel'}, štítek ${nazevStitku(k, k.rusi.cil)} se počítá dvojnásob`
+      : '';
+    return [{
+      misto: MISTO.OKRAJ,
+      veta: `Šerif postoupil o ${e.delta} na ${e.nova_pozice} — ${duvodVeta}${doplnek}.${prahVeta}`,
+    }];
+  },
 
   [EVENT.CREDIT_FLOW]: (e) => [{
     misto: MISTO.OKRAJ,

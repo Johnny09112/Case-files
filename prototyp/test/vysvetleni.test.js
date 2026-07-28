@@ -71,7 +71,8 @@ const CTX = {
   jmena: { p1: 'Vincenc Bartoš', p2: 'Frank Kowalski' },
   veci: { svara: 'Sochor', klic: 'Francouzský klíč', bouchacka: 'Bouchačka' },
   situace: { 's1': 'Brod u farmy' },
-  pronasledovatele: { 'agent-malone': 'Agent Malone' },
+  pronasledovatele: { 'agent-malone': 'Agent Malone', 'serif-brody': 'Okresní šerif Brody' },
+  stitky: { GANGSTER: 'Gangster' },
 };
 
 describe('vysvetli — odhalení prahů (jádro učení, §5)', () => {
@@ -88,7 +89,14 @@ describe('vysvetli — odhalení prahů (jádro učení, §5)', () => {
   it('u skrytého slotu a slotové výjimky to řekne v detailu', () => {
     const anotace = vsechny(vysvetli(log({ type: EVENT.SITUATION_REVEALED, situace_id: 's1', typ: 'npc', typ_mista: 'npc', sloty: [slot({ viditelnost: 'skryta', stitek_citlivy: 'GANGSTER' })] }), CTX));
     expect(anotace[0].detail).toContain('skrytá role');
-    expect(anotace[0].detail).toContain('GANGSTER');
+    expect(anotace[0].detail).toContain('Gangster');
+  });
+
+  it('bez popisku v ctx padá štítek na obecné slovo, nikdy na syrové VELKÝMI id (nález review Minor B)', () => {
+    const ctxBezStitku = { ...CTX, stitky: undefined };
+    const anotace = vsechny(vysvetli(log({ type: EVENT.SITUATION_REVEALED, situace_id: 's1', typ: 'npc', typ_mista: 'npc', sloty: [slot({ viditelnost: 'skryta', stitek_citlivy: 'GANGSTER' })] }), ctxBezStitku));
+    expect(anotace[0].detail).toContain('štítek');
+    expect(anotace[0].detail).not.toContain('GANGSTER');
   });
 });
 
@@ -279,6 +287,45 @@ describe('vysvetli — telegraf, pásmo, Žár, mapa, gamble, konec (§5)', () =
     expect(anotace[0].veta).toContain('o 2');
     expect(anotace[0].veta).toContain('práh Zátahu');
     expect(anotace[1].veta).toContain('zbraň');
+  });
+
+  it('zar_move se zápornou deltou hlásí pokles, ne postup (nález review C2)', () => {
+    // Přežití konfrontace srazí Žár dolů (state.js changeHeat s poPrezitiKonfrontace
+    // - heat) — delta je záporná a věta o tom nesmí tvrdit, že šerif postoupil.
+    const a = vsechny(vysvetli(log(
+      { type: EVENT.ZAR_MOVE, delta: -7, duvod: 'konfrontace_prezita', nova_pozice: 3, prah_prekrocen: null }
+    ), CTX))[0];
+    expect(a.misto).toBe(MISTO.OKRAJ);
+    expect(a.veta).toContain('klesl');
+    expect(a.veta).toContain('o 7');
+    expect(a.veta).toContain('na 3');
+    expect(a.veta).not.toContain('postoupil');
+    expect(a.detail).toContain('klesl');
+  });
+
+  it('zar_move u hlucne_GANGSTER doplní, že aktivní pronásledovatel počítá štítek dvojnásob (nález review I6)', () => {
+    const events = log(
+      { type: EVENT.RUN_STARTED, pronasledovatel: 'serif-brody', rusi: { typ: 'stitek', cil: 'GANGSTER' } },
+      { type: EVENT.ZAR_MOVE, delta: 2, duvod: 'hlucne_GANGSTER', nova_pozice: 5, prah_prekrocen: null }
+    );
+    const a = vsechny(vysvetli(events, CTX)).at(-1);
+    expect(a.veta).toContain('o 2');
+    expect(a.veta).toContain('zbraň v akci');
+    expect(a.veta).toContain('Okresní šerif Brody');
+    expect(a.veta).toContain('Gangster');
+    expect(a.veta).toContain('dvojnásob');
+  });
+
+  it('zar_move u hlucne_GANGSTER bez rušení štítku dvojnásob nevymýšlí', () => {
+    // Aktivní pronásledovatel ruší jiný stat (Malone → hodnota), takže zdvojení
+    // se v logu neprokazuje — věta ho nesmí tvrdit.
+    const events = log(
+      { type: EVENT.RUN_STARTED, pronasledovatel: 'agent-malone', rusi: { typ: 'stat', cil: 'hodnota' } },
+      { type: EVENT.ZAR_MOVE, delta: 1, duvod: 'hlucne_GANGSTER', nova_pozice: 2, prah_prekrocen: null }
+    );
+    const a = vsechny(vysvetli(events, CTX)).at(-1);
+    expect(a.veta).toContain('zbraň v akci');
+    expect(a.veta).not.toContain('dvojnásob');
   });
 
   it('map_move rozlišuje nabídku, volbu i odbočku do motelu', () => {

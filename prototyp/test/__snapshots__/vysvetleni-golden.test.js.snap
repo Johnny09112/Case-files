@@ -141,7 +141,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
     "anotace": [
       {
         "misto": "okraj",
-        "veta": "Šerif postoupil o 2 na 2 — zbraň v akci.",
+        "veta": "Šerif postoupil o 2 na 2 — zbraň v akci, dokud je aktivní Okresní šerif Brody, štítek Gangster se počítá dvojnásob.",
       },
     ],
     "seq": 15,
@@ -1782,7 +1782,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "Smazáno (lehké): nic · Zůstává (těžké): Otřes mozku, Otřes mozku · Složená postava necommituje — její sloty propadnou jako neobsazené.",
+        "detail": "Smazáno (lehké): nic · Zůstává (těžké): Otřes mozku, Otřes mozku · Sloty jsou týmové, ne vlastníkovy — složení jen sníží počet committnutých karet, propadne stejný počet slotů jako neobsazené.",
         "misto": "spis",
         "veta": "Vincenc Bartoš se složil — třetí postih se nepřidává, postava kolo–dvě leží.",
       },
