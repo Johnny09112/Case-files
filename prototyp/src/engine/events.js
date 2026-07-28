@@ -123,7 +123,7 @@ export function deriveGoalMetrics(events, hracId) {
     doruceno: false,
     pocet_slotu_splnil: 0,
     pocet_slotu_selhal: 0,
-    commitnute_stitky: { GANGSTER_viditelna: 0 },
+    commitnute_stitky: { GANGSTER_viditelna: 0, GANGSTER_skryta: 0 },
     gamble_pouzit: 0,
     postihy_utrpene: { pocet: 0, lehke: 0, tezke: 0 },
     slozeni_krat: 0,
@@ -143,8 +143,9 @@ export function deriveGoalMetrics(events, hracId) {
         if (e.hrac_id === hracId) {
           if (e.zasah) m.pocet_slotu_splnil += 1;
           else m.pocet_slotu_selhal += 1;
-          if (e.viditelnost === 'viditelna' && (e.stitky ?? []).includes('GANGSTER')) {
-            m.commitnute_stitky.GANGSTER_viditelna += 1;
+          if ((e.stitky ?? []).includes('GANGSTER')) {
+            if (e.viditelnost === 'viditelna') m.commitnute_stitky.GANGSTER_viditelna += 1;
+            else if (e.viditelnost === 'skryta') m.commitnute_stitky.GANGSTER_skryta += 1;
           }
         }
         break;
@@ -200,7 +201,7 @@ const METRIC_SPEC = {
   gamble_pouzit: { leaf: true },
   slozeni_krat: { leaf: true },
   bedny_ztracene_vlastni: { leaf: true },
-  commitnute_stitky: { keys: ['GANGSTER_viditelna'] },
+  commitnute_stitky: { keys: ['GANGSTER_viditelna', 'GANGSTER_skryta'] },
   postihy_utrpene: { keys: ['pocet', 'lehke', 'tezke'] },
   kredity_utracene_za: { keys: ['leceni', 'smena'] },
   pasma_dosazena: { bandKeys: true },

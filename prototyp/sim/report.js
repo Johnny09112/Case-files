@@ -658,17 +658,33 @@ function pasmaMetriky(uzly) {
   };
 }
 
+/**
+ * Míra splnění per cíl (podklad K9: mechanické cíle 5–95 %).
+ *
+ * Textové cíle (`overeni_typ: textovy`) engine principiálně NEboduje — `scoreGoals`
+ * jim vrací `splnen: null` (posoudí člověk z protokolu). Dřív padly do stejného
+ * výčtu jako 0 %, což vyrábělo **falešný breach K9**: měřidlo hlásilo nález o hře
+ * tam, kde jen chyběla bodovací cesta. Nově se hlásí `mereno: false` a do
+ * jmenovatele K9 nepatří.
+ */
 function cileMetriky(runy) {
   const acc = {};
   for (const r of runy) {
     for (const c of r.cile) {
       const id = c.cil_id ?? c.cil;
-      (acc[id] ??= { celkem: 0, splneno: 0 });
+      (acc[id] ??= { celkem: 0, splneno: 0, textovy: false });
       acc[id].celkem += 1;
+      if (c.textovy === true || c.splnen === null) acc[id].textovy = true;
       if (c.splnen === true) acc[id].splneno += 1;
     }
   }
-  return Object.fromEntries(Object.entries(acc).sort(([a], [b]) => a.localeCompare(b)).map(([id, v]) => [id, pct(v.splneno, v.celkem)]));
+  return Object.fromEntries(
+    Object.entries(acc)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([id, v]) => [id, v.textovy
+        ? { mereno: false, n: v.celkem, splneno_pct: null, duvod: 'textový cíl — hodnotí člověk z protokolu, do K9 se nepočítá' }
+        : { mereno: true, n: v.celkem, splneno_pct: pct(v.splneno, v.celkem) }])
+  );
 }
 
 /** Per-situace rozpad — nahrazuje ad-hoc skript kalibrace-3. */
@@ -773,7 +789,7 @@ export function renderSummaryMd(meta, fin) {
   radky.push(`- **Pásma** (common): ${BANDY.map((b) => `${b} ${h(fin.k6c_pasma.common[b])}`).join(' · ')}`);
   radky.push(`- **Viditelnost slotů** (fail-rate): viditelná ${h(fin.viditelnost.viditelna.fail_rate)} % · skrytá ${h(fin.viditelnost.skryta.fail_rate)} %`);
   radky.push(`- **Ekonomika:** medián kreditů ${h(fin.ekonomika.kredit_median)} · Žár ${h(fin.ekonomika.zar_median)} · uzlů ${h(fin.ekonomika.uzlu_median)}`);
-  radky.push(`- **Cíle:** ${Object.entries(fin.cile).map(([id, v]) => `${id} ${h(v)}`).join(' · ') || '—'}`);
+  radky.push(`- **Cíle** (K9 5–95 %, textové mimo jmenovatel): ${Object.entries(fin.cile).map(([id, v]) => `${id} ${v.mereno ? h(v.splneno_pct) : 'neměřeno (textový)'}`).join(' · ') || '—'}`);
   radky.push('');
   return radky.join('\n');
 }

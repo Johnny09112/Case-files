@@ -66,5 +66,23 @@ designéra a remote/async sezení. Každou spáruj se signálem z šablony playt
   72,5 → 53,7 %). Je to správně (těžší hra), nebo se cíle stanou nedosažitelnými?
   Sim to nerozsoudí — neví, jaká míra splnění je zábavná.
 
+## Nové z kola `mozek-operace` (2026-07-28, viz [[mozek-operace-kontrafaktual]])
+
+- **Vznikne o jediný skrytý slot v uzlu skutečně spor?** Sim doložila, že bot
+  s cílem `schovana-bouchacka` tam zbraň dá (+8 až +11 b. proti botu bez biasu),
+  a že ~78 % splnění ve 4p přijde zadarmo z týmově optimálního přiřazení.
+  Neví ale, jestli se o to dva lidi pohádají — a jestli má cíl dost tření,
+  když ho tým často splní sám od sebe.
+- **Udělá reveal „já měl schovanou bouchačku" na konci runu něco?** Sim umí
+  obodovat splnění, ne reakci.
+- **Pochopí hráč, PROČ cíl splnil?** (metrika 6, čitelnost) — cíl se váže na
+  přiřazení, ne na výsledek slotu; vysvětlující vrstva to musí unést.
+- **Je „nová osa hádky" (odbočit do motelu vs. hnát náklad dál) dobrá?**
+  Kandidáti B/C byli odmítnuti kvůli exaktní týmovosti (divergence 0,00 %),
+  NE proto, že by ta osa byla špatná. Kdyby lidi po ekonomické ose volali,
+  potřebuje **per-hráč atribuci `kredity_utracene_za`**, ne jiný cíl.
+- **Je `muj-den` (96–99 % pro 1p–3p) u stolu vnímán jako mrtvý bod zdarma?**
+  Breach K9 je prokázán; jestli to hráče ruší, ne.
+
 Otevřené číselné páky, které se po lidské zpětné vazbě můžou hnout, jsou v
 [[sim-gate-findings]].

@@ -37,6 +37,14 @@ nedosažitelné JAKOUKOLI redefinicí čitatele (min 10,8 % free-pass+common) �
 je broad struktura kotva 2–4 + šum ±2, ne Malone (76 % beznadějnosti s ním
 nesouvisí) ani finále (`max≤1`-rate common ≈ celek).
 
+**Ověřovací povinnost platí OBĚMA směry (2026-07-28, kolo `mozek-operace`):** kritik
+označil jako KRITICKÝ nález, že změna tajného cíle / `goalBias` znovuotevírá kalibraci
+(K1/K5/K6a). Falzifikoval jsem to jedním pohledem do kódu — gate běží botem, který cíle
+ignoruje, takže bias se do gate-metrik nepropíše. **How to apply:** nálezy kritika neber
+jako fakt o enginu, dokud je nedoložíš kódem; ale tentýž pohled do kódu obvykle *potvrdí*
+jeho zbytek (tam mi našel chybnou pravděpodobnost i prázdný tie-break). Doruč obojí:
+co přijímám a co odmítám **s citací místa v kódu**.
+
 **Zobecněné pravidlo:** než navrhnu redefinici metriky jako „lék", **ověř matematiku
 proti enginu / požádej facilitátora o kontrafaktuál** — teoretická redefinice může
 být no-op nebo mířit na špatný driver. Dvakrát mě teorie (efekt vs. měření) svedla.

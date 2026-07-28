@@ -5,45 +5,23 @@ metadata:
   type: feedback
 ---
 
-Kalibrace z první plné sady obsahu MVP (schváleno 2026-07-22, po auditu design-critic).
+**Trvalé principy (přežily pivot v2→v3; zbytek v2 kalibrace — tagová textura,
+Lest-specifika, prokleté karty — je MRTVÝ spolu s kostkovým modelem, D14–D19):**
 
-**Pravidla, která platí i příště:**
+1. **Flavor nesmí slibovat mechaniku, kterou pravidla neznají** (princip „viditelná
+   pravidla"). Když píšu nový efekt do textu, musí mít oporu v resolučním systému,
+   jinak „text lže".
+   **Why:** kritik to označil jako blokující (B3). **How to apply:** u každé položky
+   si ověř, že popsaný důsledek odpovídá tomu, co engine skutečně dělá.
 
-1. **Flavor karty nesmí slibovat mechaniku, kterou pravidla neznají** (princip
-   „viditelná pravidla"). Např. „bedny vypadnou", „náklad zůstane na břehu" jsou
-   OK jen proto, že je teď kryjí ridery tagů. Když píšu nový efekt do textu, musí
-   mít oporu v resolučním systému, jinak „text lže".
-   **Why:** kritik to označil jako blokující (B3). **How to apply:** u každé karty
-   si ověř, že popsaný důsledek odpovídá rideru jejího tagu z prototyp-mvp.md.
-
-2. **U Lesti míchej aktivní klam s pasivním převlekem.** Humor Lesti konverguje na
-   jednu pointu „převlek/nikdo nekontroluje" (kolárek, konve, rakev, mašle) — max
-   ~2 pasivní, zbytek aktivní klam (hraná role, přípitek, kázání).
-   **Why:** kritik K1 + tón. **How to apply:** při 8 kartách tagu hlídej, ať se
-   neopakuje jedna šablona vtipu víc než 2×.
-
-3. **Tagová textura je MECHANICKÁ (ridery), ne jen vypravěčská.** Násilí = síla za
-   Žár (nejvyšší síly, všechny hlučné); Úplatek = odhoď 1 bednu → povýš selhání na
-   5–7; Útěk = selhání ztratí bednu místo zranění; Lest = nekrytá variance (žádný
-   rider). Distribuce sil a hlučnost tomu musí sloužit.
-   **How to apply:** Násilí drž silově nahoře (víc 3, víc hlučných); Lest naopak
-   nesmí být současně nejvíc favorizovaná (+2) a nejmíň postihovaná (−2) na uzlech.
-
-4. **Textové cíle jen tam, kde nesou reveal.** Zbytek = mechanické proxy nad
-   metrikami event logu. Nový cíl nesmí odměňovat sebe-vyřazení ani čistou pasivitu
-   a nesmí duplikovat podmínku jiného cíle.
+2. **Textové cíle jen tam, kde nesou reveal — a jen když EXISTUJE vrstva, která je
+   umí naplnit.** Zbytek = mechanické proxy nad metrikami event logu. Nový cíl nesmí
+   odměňovat sebe-vyřazení ani čistou pasivitu a nesmí duplikovat podmínku jiného cíle.
    **Why:** kritik D3/D4/D5; simulační brána umí bodovat jen mechanické.
 
-5. **Prokleté karty musí fungovat sólo a bez AI** — žádné „vynecháš uzel/nehodíš
-   si". Řeš přes modifikátor hodu (±X, hlučná), ne přes změnu struktury tahu.
-
----
-
-**POZOR — pivot v3 (2026-07-23, D14–D19):** body 1–5 výše vznikly pro v2 KOSTKOVÝ
-model (tagy Násilí/Lest/Úplatek/Útěk, síla 1–3, ridery, afinity). **Tahle mechanika
-je MRTVÁ.** Trvá z nich jen TÓN (suchý dobový humor, kontrast úřední řeči a absurdity)
-a princip „flavor nesmí slibovat mechaniku, kterou pravidla neznají". v2 tag-textura
-(bod 3) a Lest-specifika (bod 2) už neplatí.
+3. **Obsah musí fungovat sólo a bez AI.** Sólo hráč committuje všechny 4 karty sám —
+   každou podmínku cíle testuj na 1p i 4p, jinak si nevšimneš, že v sólu je
+   nesplnitelná nebo naopak jednostranně vynutitelná (= skrytá sebe-sabotáž).
 
 **v3 kalibrace (slotový model, věci s 5 staty vs. skryté prahy):**
 - **Komedie plyne z VĚCI VE ŠPATNÉM SLOTU**, ne z pointy. Design věcí tak, aby měly
@@ -110,6 +88,20 @@ a princip „flavor nesmí slibovat mechaniku, kterou pravidla neznají". v2 tag
   vysvětlující vrstva a próza situace, je protokol třetí převyprávění téhož a hráč
   ho přestane číst. Lék jsou kvóty (výčet věcí a otvírák počtem nejvýš u poloviny
   variant) a posun od reportu ke **komentáři a verdiktu**.
+
+**Cíl (a jakýkoli obsah) vázaný na TEXT protokolu je splnitelný jen tak, jak daleko
+sahá kontrakt promptu a fallback sady** (diagnóza `mozek-operace`, 2026-07-28):
+- Prompt osoby drží jako „podezřelý A–D" a jména do něj NEjdou → cíl, který má hráč
+  poznat podle jména, se textovou cestou nikdy neuzavře.
+- Fallback sada jmenuje osobu (`{jmeno}`) VÝHRADNĚ jako příjemce postihu / složeného /
+  navráceného, a hlavička jí zakazuje naznačovat zavinění (oběť je arbitrární).
+  Jediné místo, kde engine osobu určí, je tedy jediné místo, kde jí nesmím připsat
+  jednání. Cíle typu „polda tě označí za X" jsou proto strukturálně mrtvé.
+- **Než napíšu textový cíl, projdu Formát vstupu promptu a zeptám se: nese vstup tu
+  informaci?** Když ne, je to cíl na náladu modelu = porušení „mechanika rozhoduje".
+- Náhradu hledej v METRIKÁCH, které ještě žádný cíl nedrží, a preferuj tu, co otevírá
+  NOVOU osu rozhodování (např. mapová odbočka do motelu — všech 7 stávajících cílů
+  míří jen na přiřazení slotu).
 
 **Když obsah dostane za úkol dotlačit metriku brány (K1–K9) — fikce má přednost
 před číslem.** Zadání typu „chybí 0,03 driftu, přiřaď situacím fázi" se řeší

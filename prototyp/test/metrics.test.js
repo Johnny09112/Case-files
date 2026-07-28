@@ -110,6 +110,30 @@ describe('deriveGoalMetrics — v3', () => {
     expect(deriveGoalMetrics(log, 'p2').commitnute_stitky.GANGSTER_viditelna).toBe(0);
   });
 
+  it('počítá GANGSTER do SKRYTÉ role zvlášť od viditelné', () => {
+    const log = unlogNode(1, {
+      pasmo: '3/4_HLADCE',
+      zasahy: 3,
+      slotHrac: [
+        { hrac: 'p1', zasah: true, stitky: ['GANGSTER'] }, // slot 0 = viditelná
+        { hrac: 'p2', zasah: true },
+        { hrac: 'p2', zasah: true },
+        { hrac: 'p1', zasah: false, stitky: ['GANGSTER'] }, // slot 3 = skrytá
+      ],
+    });
+    const m1 = deriveGoalMetrics(log, 'p1');
+    expect(m1.commitnute_stitky).toEqual({ GANGSTER_viditelna: 1, GANGSTER_skryta: 1 });
+    // Skrytá role se počítá bez ohledu na to, jestli slot prošel (metrika je
+    // o PŘIŘAZENÍ, ne o výsledku), a hráči bez štítku nic nepřičítá.
+    expect(deriveGoalMetrics(log, 'p2').commitnute_stitky).toEqual({ GANGSTER_viditelna: 0, GANGSTER_skryta: 0 });
+  });
+
+  it('parser přijme GANGSTER_skryta jako platný podklíč', () => {
+    const ast = parseCondition('commitnute_stitky.GANGSTER_skryta >= 1 a doruceno');
+    expect(evalCondition(ast, { commitnute_stitky: { GANGSTER_skryta: 1 }, doruceno: true })).toBe(true);
+    expect(evalCondition(ast, { commitnute_stitky: { GANGSTER_skryta: 0 }, doruceno: true })).toBe(false);
+  });
+
   it('atribuuje ztracené bedny hráči s propadlým slotem v PRŮŠVIHu', () => {
     const log = unlogNode(1, {
       pasmo: '≤1/4_PRUSVIH',

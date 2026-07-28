@@ -1,5 +1,6 @@
 # Paměť — playtest-facilitator
 
+- [Kontrafaktuál `mozek-operace`](mozek-operace-kontrafaktual.md) — A vyhrála, B/C týmové (divergence 0,00 %), brána invariantní vůči sadě cílů (2026-07-28)
 - [Kalibrace-5 sweep prahOffset](kalibrace-5-sweep-prahoffset.md) — A1 {0,5,6,6} spraví K1 6/6, K6a 6,03 na hraně, cena = K2 drift; páka nemonotonní nad off 6 (2026-07-27)
 - [Kalibrace-4 baseline](kalibrace-4-baseline.md) — K7 strop ~40% zvolených, K5 „vyloučit nulované"=invariant beze změny, ~88% proher ve finále, K2 drift baseline 1,16× (2026-07-27)
 - [Kalibrace-3 per-slot](kalibrace-3-per-slot.md) — improv-4 mis-target, hodnota/malone driver, common/finále 50/50, revert nutný≠dostačující (2026-07-26)
