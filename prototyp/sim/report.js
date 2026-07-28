@@ -23,7 +23,7 @@
  * - Přežití „konfrontace" ≠ přežití „jakéhokoli finále" — obě.
  */
 
-import { EVENT, BAND, END_PRICINA } from '../src/engine/events.js';
+import { EVENT, BAND, END_PRICINA, deriveGoalMetrics, parseCondition, evalCondition } from '../src/engine/events.js';
 import { resolveSlot, maxAchievableZasahy } from '../src/engine/resolve.js';
 import { RULES } from '../src/engine/rules.js';
 import { estimateHitsVsKotva } from './estimate.js';
@@ -92,13 +92,59 @@ function maxAchievableFreePass(karty, sloty, rusi, stitekParams, typSituace, zam
   return Math.min(sloty.length, max + bonus);
 }
 
+/* ================= divergence verdiktu mezi hráči ================= */
+
+/** Cache naparsovaných podmínek — `parseCondition` je jinak ~8× na run. */
+const astCache = new Map();
+function astProPodminku(podminka) {
+  if (!astCache.has(podminka)) astCache.set(podminka, parseCondition(podminka));
+  return astCache.get(podminka);
+}
+
+/**
+ * Vyhodnotí KAŽDÝ mechanický cíl pro KAŽDOU postavu runu (bez ohledu na to, kdo
+ * ho drží) → podklad pro divergenci verdiktu.
+ *
+ * **Proč to tu je (D42 → 2026-07-28).** Divergence odděluje osobní cíl od
+ * „týmového cíle v přestrojení" (kandidáti `noc-v-motelu` / `handl-u-silnice`
+ * měli exaktně 0,00 %, protože `kredity_utracene_za` nefiltruje `hrac_id`).
+ * V D42 se počítala jednorázovým skriptem mimo repo, takže nebyla srovnatelná
+ * mezi koly — od teď je to trvalý sloupec.
+ *
+ * **Absolutní divergenci nelze číst bez marginální míry.** Při nezávislých
+ * verdiktech s mírou `p` a `m` hráči je horní mez `1 − p^m − (1−p)^m`; pro
+ * p = 0,96 a m = 3 je to 11,5 %, takže „nízká divergence" u saturovaného cíle
+ * nedokazuje týmovost. Report proto vedle raw hlásí i `null` (strop) a
+ * normalizovanou hodnotu `raw / strop`.
+ *
+ * @param {object[]} events @param {object[]} cile obsah `cile.yaml`
+ * @returns {Record<string, {splneno: number, hracu: number}>|null}
+ */
+function verdiktyVsechCilu(events, cile) {
+  const start = events.find((e) => e.type === EVENT.RUN_STARTED);
+  const hraci = (start?.cile ?? []).map((c) => c.hrac_id);
+  if (hraci.length === 0) return null;
+  const metrikyHrace = hraci.map((id) => deriveGoalMetrics(events, id));
+  /** @type {Record<string, {splneno: number, hracu: number}>} */
+  const out = {};
+  for (const cil of cile) {
+    if (cil.overeni_typ === 'textovy' || !cil.podminka) continue;
+    const ast = astProPodminku(cil.podminka);
+    let splneno = 0;
+    for (const m of metrikyHrace) if (evalCondition(ast, m)) splneno += 1;
+    out[cil.id] = { splneno, hracu: hraci.length };
+  }
+  return out;
+}
+
 /* ================= sběr záznamů z jednoho runu ================= */
 
 /**
  * Rozloží event log jednoho runu na `{run, uzly}`.
  * @param {object[]} events kompletní log runu (včetně `run_ended`)
+ * @param {{cile?: object[]}} [opts] `cile` zapne měření divergence verdiktu
  */
-export function collectRunStats(events) {
+export function collectRunStats(events, opts = {}) {
   const start = events.find((e) => e.type === EVENT.RUN_STARTED) ?? {};
   const konec = events[events.length - 1];
   const rusi = start.rusi ?? null;
@@ -180,6 +226,7 @@ export function collectRunStats(events) {
       konecnyZar: konec.konecny_zar,
       kredity: konec.kredity_zbytek,
       cile: konec.cile ?? [],
+      verdiktyCilu: opts.cile ? verdiktyVsechCilu(events, opts.cile) : null,
       dosahlKonfrontace: konfrontace !== null,
       prezilKonfrontaci: konfrontace ? konfrontace.pasmo !== BAND.PRUSVIH : null,
       dosahlFinale: uzly.some((u) => u.bucket === 'finale'),
@@ -678,13 +725,59 @@ function cileMetriky(runy) {
       if (c.splnen === true) acc[id].splneno += 1;
     }
   }
+  const div = divergenceMetriky(runy);
   return Object.fromEntries(
     Object.entries(acc)
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([id, v]) => [id, v.textovy
         ? { mereno: false, n: v.celkem, splneno_pct: null, duvod: 'textový cíl — hodnotí člověk z protokolu, do K9 se nepočítá' }
-        : { mereno: true, n: v.celkem, splneno_pct: pct(v.splneno, v.celkem) }])
+        : { mereno: true, n: v.celkem, splneno_pct: pct(v.splneno, v.celkem), ...(div[id] ? { divergence: div[id] } : {}) }])
   );
+}
+
+/**
+ * Divergence verdiktu mezi hráči, **per počet hráčů**, raw i normalizovaná.
+ *
+ * `raw` = % runů, kde by se verdikt téhož cíle mezi postavami lišil (jedna má
+ * splněno, jiná ne). `marginalni_pct` = průměrná míra splnění přes všechny
+ * postavy (ne jen držitele). `null_strop_pct` = 1 − p^m − (1−p)^m, tj. maximum
+ * při NEZÁVISLÝCH verdiktech; `normalizovana` = raw / strop.
+ *
+ * Čti obojí: normalizovaná měří strukturu (je cíl vůbec osobní?), absolutní
+ * měří, jestli u stolu vůbec nastane rozdílný verdikt. 1p se nevykazuje —
+ * divergence je tam z definice 0.
+ */
+function divergenceMetriky(runy) {
+  const sVerdikty = runy.filter((r) => r.verdiktyCilu != null);
+  if (sVerdikty.length === 0) return {};
+  const idcka = new Set();
+  for (const r of sVerdikty) for (const id of Object.keys(r.verdiktyCilu)) idcka.add(id);
+
+  const out = {};
+  for (const id of [...idcka].sort()) {
+    const perCount = {};
+    for (const [m, list] of [...groupBy(sVerdikty, (r) => r.pocetHracu)].sort((a, b) => a[0] - b[0])) {
+      if (m < 2) continue;
+      const zaznamy = list.map((r) => r.verdiktyCilu[id]).filter(Boolean);
+      if (zaznamy.length === 0) continue;
+      const raw = pct(zaznamy.filter((z) => z.splneno > 0 && z.splneno < z.hracu).length, zaznamy.length);
+      const p = prumer(zaznamy.map((z) => z.splneno / z.hracu));
+      const strop = p == null ? null : (1 - p ** m - (1 - p) ** m) * 100;
+      perCount[`${m}p`] = {
+        raw_pct: raw,
+        marginalni_pct: round(p * 100, 1),
+        null_strop_pct: round(strop, 1),
+        normalizovana: raw == null || strop == null || strop < 0.05 ? null : round(raw / strop, 2),
+      };
+    }
+    if (Object.keys(perCount).length > 0) {
+      out[id] = {
+        per_count: perCount,
+        definice: 'raw = % runů s rozdílným verdiktem mezi postavami; null_strop = 1−p^m−(1−p)^m při marginální míře p a m hráčích; normalizovana = raw/strop (≥0,7 ≈ strukturálně osobní cíl)',
+      };
+    }
+  }
+  return out;
 }
 
 /** Per-situace rozpad — nahrazuje ad-hoc skript kalibrace-3. */
@@ -790,6 +883,13 @@ export function renderSummaryMd(meta, fin) {
   radky.push(`- **Viditelnost slotů** (fail-rate): viditelná ${h(fin.viditelnost.viditelna.fail_rate)} % · skrytá ${h(fin.viditelnost.skryta.fail_rate)} %`);
   radky.push(`- **Ekonomika:** medián kreditů ${h(fin.ekonomika.kredit_median)} · Žár ${h(fin.ekonomika.zar_median)} · uzlů ${h(fin.ekonomika.uzlu_median)}`);
   radky.push(`- **Cíle** (K9 5–95 %, textové mimo jmenovatel): ${Object.entries(fin.cile).map(([id, v]) => `${id} ${v.mereno ? h(v.splneno_pct) : 'neměřeno (textový)'}`).join(' · ') || '—'}`);
+  const sDiv = Object.entries(fin.cile).filter(([, v]) => v.divergence);
+  if (sDiv.length > 0) {
+    radky.push('- **Divergence verdiktu** (raw % / normalizovaná; norm. ≥0,7 ≈ osobní cíl):');
+    for (const [id, v] of sDiv) {
+      radky.push(`  - ${id}: ${Object.entries(v.divergence.per_count).map(([k, d]) => `${k} ${h(d.raw_pct)} % / ${h(d.normalizovana)}`).join(' · ')}`);
+    }
+  }
   radky.push('');
   return radky.join('\n');
 }

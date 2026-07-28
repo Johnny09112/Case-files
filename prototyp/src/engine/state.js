@@ -874,6 +874,11 @@ export function createRun({ seed, content, rules, players, pronasledovatelId }) 
       const ci = situ.committed.findIndex((c) => c.karta.id === replacedCardId);
       if (ci < 0) throw new Error(`Karta „${replacedCardId}" není mezi committnutými.`);
       const nahrazena = situ.committed[ci].karta;
+      // Gamble přepisuje i VLASTNICTVÍ slotu — nahrazená karta se už nikdy
+      // nevyhodnotí, takže původní vlastník slot ztrácí. Bez téhle atribuce
+      // by ztracený slot nebyl v logu nikde a metrika `sloty_vlastnika_celkem`
+      // by šla obejít („nech odgamblovat moji odsouzenou kartu").
+      const nahrazenaHracId = situ.committed[ci].hrac_id;
       discardPile.push(nahrazena);
       situ.committed[ci] = { hrac_id: handOwnerId, karta: tazena };
       situ.gambleUsed = true;
@@ -882,6 +887,7 @@ export function createRun({ seed, content, rules, players, pronasledovatelId }) 
         zbyvajici_v_ruce: zbyvajici,
         tazena: tazena.id,
         nahrazena: nahrazena.id,
+        nahrazena_hrac_id: nahrazenaHracId,
         do_slotu: null,
       });
     },

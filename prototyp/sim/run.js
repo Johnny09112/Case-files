@@ -104,7 +104,9 @@ export function runBatch({ content, players, pronasledovatelId, spec, strategyLa
   for (let i = 0; i < runs; i++) {
     const seed = seedOd + i;
     const log = playRun({ seed, content, rules, players: hraci, pronasledovatelId, spec });
-    const stats = collectRunStats(log);
+    // `cile` zapíná trvalý sloupec divergence verdiktu (report.js) — vyhodnotí
+    // KAŽDÝ cíl pro KAŽDOU postavu, ne jen držitele.
+    const stats = collectRunStats(log, { cile: content.cile });
     addRun(vlastni, stats);
     if (agg) addRun(agg, stats);
     if (events) for (const e of log) jsonl.push(JSON.stringify(e));

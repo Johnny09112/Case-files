@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>muj-den — kontrafaktuál 2026-07-28</title>
+<style>
+  html { background: #f9f9f7; }
+  body { margin: 0; padding: 24px; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .viz-root {
+    color-scheme: light;
+    --surface-1: #fcfcfb;
+    --page: #f9f9f7;
+    --text-primary: #0b0b0b;
+    --text-secondary: #52514e;
+    --muted: #898781;
+    --grid: #e1e0d9;
+    --axis: #c3c2b7;
+    --band: rgba(42,120,214,0.07);
+    --border: rgba(11,11,11,0.10);
+    --series-1: #2a78d6;
+    --series-2: #eb6834;
+    --series-3: #1baf7a;
+    --series-4: #eda100;
+    --series-5: #e87ba4;
+    --critical: #d03b3b;
+  }
+  @media (prefers-color-scheme: dark) {
+    html:where(:not([data-theme="light"])) { background: #0d0d0d; }
+    :root:where(:not([data-theme="light"])) .viz-root {
+      color-scheme: dark;
+      --surface-1: #1a1a19;
+      --page: #0d0d0d;
+      --text-primary: #ffffff;
+      --text-secondary: #c3c2b7;
+      --muted: #898781;
+      --grid: #2c2c2a;
+      --axis: #383835;
+      --band: rgba(57,135,229,0.12);
+      --border: rgba(255,255,255,0.10);
+      --series-1: #3987e5;
+      --series-2: #d95926;
+      --series-3: #199e70;
+      --series-4: #c98500;
+      --series-5: #d55181;
+      --critical: #d03b3b;
+    }
+  }
+  .viz-root { max-width: 860px; margin: 0 auto; color: var(--text-primary); }
+  figure { margin: 0 0 40px; background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px; padding: 20px 20px 16px; }
+  figcaption { font-size: 13px; color: var(--text-secondary); margin-top: 10px; line-height: 1.5; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  .lede { font-size: 13px; color: var(--text-secondary); margin: 0 0 24px; }
+  .title { font-size: 15px; font-weight: 600; margin: 0 0 2px; }
+  .sub { font-size: 12.5px; color: var(--text-secondary); margin: 0 0 14px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 12.5px; color: var(--text-secondary); margin: 0 0 12px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .swatch { width: 11px; height: 11px; border-radius: 2px; display: inline-block; }
+  svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .grid line { stroke: var(--grid); stroke-width: 1; }
+  .axis line, .axis path { stroke: var(--axis); stroke-width: 1; }
+  .tick { font-size: 11.5px; fill: var(--muted); font-variant-numeric: tabular-nums; }
+  .dlabel { font-size: 11.5px; font-weight: 600; fill: var(--text-secondary); font-variant-numeric: tabular-nums; }
+  .bandlabel { font-size: 11px; fill: var(--muted); }
+  details { margin-top: 12px; font-size: 12.5px; color: var(--text-secondary); }
+  summary { cursor: pointer; color: var(--text-secondary); }
+  table { border-collapse: collapse; margin-top: 10px; font-size: 12.5px; font-variant-numeric: tabular-nums; }
+  th, td { padding: 4px 10px 4px 0; text-align: right; border-bottom: 1px solid var(--grid); }
+  th:first-child, td:first-child { text-align: left; }
+  #tip { position: fixed; pointer-events: none; opacity: 0; transition: opacity .08s; background: var(--surface-1);
+         border: 1px solid var(--border); border-radius: 6px; padding: 7px 10px; font-size: 12.5px; color: var(--text-primary);
+         box-shadow: 0 2px 10px rgba(0,0,0,.16); z-index: 9; font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<div class="viz-root">
+  <h1>Cíl <code>muj-den</code> — kontrafaktuál kandidáta V-3 (2026-07-28)</h1>
+  <p class="lede">Bot <code>kompetentni</code> (incidenční čtení), nepodmíněně = báze K9. Průměr přes 4 disjunktní bloky × 1000 seedů × 2 pronásledovatele. Prokázáno simulací; o zábavnosti to neříká nic.</p>
+
+  <figure>
+    <p class="title">Jen řez „půlka" leží celý uvnitř předregistrovaného pásma</p>
+    <p class="sub">Míra splnění podle počtu hráčů. Modrý pruh = předregistrované pásmo přijetí 20–70 %; čárkovaně strop brány K9 (95 %).</p>
+    <div class="legend" id="leg1"></div>
+    <svg id="c1" viewBox="0 0 760 400" role="img" aria-label="Míra splnění cíle podle počtu hráčů pro dnešní práh a čtyři kandidátní řezy"></svg>
+    <figcaption><strong>Čtení:</strong> dnešní práh <code>&gt;= 3</code> (modrá) je nad stropem K9 u 1p–3p — cíl je bod zdarma. Řezy 60/67/75 padají pod dolní hranu u sólo hry. Řez 50 % je jediný, jehož všechny čtyři body leží uvnitř pásma — ale u 3p/4p jen 2,8–3,1 bodu pod horní hranou.</figcaption>
+    <details><summary>Tabulka hodnot (%)</summary>
+      <table id="t1"></table>
+    </details>
+  </figure>
+
+  <figure>
+    <p class="title">Normalizovaná divergence: <code>plny-zasah</code> a <code>kupecke-slovo</code> jsou týmové, dnešní <code>muj-den</code> ne</p>
+    <p class="sub">Pozorovaná divergence verdiktu ÷ strop při nezávislosti <code>1 − p<sup>m</sup> − (1−p)<sup>m</sup></code>, 4 hráči. Hodnota 1,0 = verdikty hráčů jsou navzájem nezávislé (plně osobní cíl), 0 = všem vyjde vždy totéž (týmový cíl).</p>
+    <svg id="c2" viewBox="0 0 760 330" role="img" aria-label="Normalizovaná divergence verdiktu pro osm cílů a kandidáta V-3"></svg>
+    <figcaption><strong>Retrakce D42:</strong> absolutní divergence se nedá číst bez marginální míry. Dnešní <code>muj-den</code> má raw jen 21,1 %, ale při míře splnění 91,8 % je fyzický strop 28,9 % — normalizovaně 0,73, tedy strukturálně osobní cíl, jen saturovaný.</figcaption>
+    <details><summary>Tabulka hodnot (4 hráči)</summary>
+      <table id="t2"></table>
+    </details>
+  </figure>
+</div>
+<div id="tip" role="status" aria-live="polite"></div>
+
+<script>
+const S = (i) => getComputedStyle(document.querySelector('.viz-root')).getPropertyValue('--series-' + i).trim();
+const tip = document.getElementById('tip');
+function showTip(e, html) { tip.innerHTML = html; tip.style.opacity = 1; tip.style.left = (e.clientX + 14) + 'px'; tip.style.top = (e.clientY - 10) + 'px'; }
+function hideTip() { tip.style.opacity = 0; }
+const NS = 'http://www.w3.org/2000/svg';
+const el = (n, a = {}) => { const x = document.createElementNS(NS, n); for (const k in a) x.setAttribute(k, a[k]); return x; };
+
+/* ---------- graf 1: čára přes počty hráčů ---------- */
+const POCTY = ['1 hráč', '2 hráči', '3 hráči', '4 hráči'];
+const RADY = [
+  { jm: 'dnešní práh ≥ 3 sloty', slot: 1, v: [99.4, 98.3, 96.0, 91.4] },
+  { jm: 'řez 50 % („půlka")',    slot: 2, v: [43.8, 61.3, 66.9, 67.2] },
+  { jm: 'řez 60 % („tři z pěti")', slot: 3, v: [17.8, 30.2, 39.4, 43.0] },
+  { jm: 'řez 67 % („dvě ze tří")', slot: 4, v: [6.8, 16.5, 25.3, 28.1] },
+  { jm: 'řez 75 % („tři ze čtyř")', slot: 5, v: [1.5, 5.9, 11.0, 15.2] },
+];
+(function () {
+  const svg = document.getElementById('c1');
+  const L = 46, R = 190, T = 16, B = 44, W = 760, H = 400;
+  const x = (i) => L + i * ((W - L - R) / (POCTY.length - 1));
+  const y = (v) => T + (100 - v) / 100 * (H - T - B);
+
+  // pásmo přijetí (recesivní podklad, ne série)
+  svg.appendChild(el('rect', { x: L - 8, y: y(70), width: W - L - R + 16, height: y(20) - y(70), fill: 'var(--band)' }));
+  const bl = el('text', { x: L - 8 + 6, y: y(70) + 14, class: 'bandlabel' }); bl.textContent = 'pásmo přijetí 20–70 %'; svg.appendChild(bl);
+
+  const g = el('g', { class: 'grid' });
+  for (let v = 0; v <= 100; v += 20) {
+    g.appendChild(el('line', { x1: L - 8, x2: W - R + 8, y1: y(v), y2: y(v) }));
+    const t = el('text', { x: L - 14, y: y(v) + 4, class: 'tick', 'text-anchor': 'end' }); t.textContent = v; svg.appendChild(t);
+  }
+  svg.appendChild(g);
+  // strop K9
+  svg.appendChild(el('line', { x1: L - 8, x2: W - R + 8, y1: y(95), y2: y(95), stroke: 'var(--critical)', 'stroke-width': 1.5, 'stroke-dasharray': '5 4' }));
+  const k9 = el('text', { x: W - R + 12, y: y(95) - 6, class: 'bandlabel', fill: 'var(--critical)' }); k9.textContent = 'strop K9 = 95 %'; svg.appendChild(k9);
+
+  const ax = el('g', { class: 'axis' });
+  ax.appendChild(el('line', { x1: L - 8, x2: W - R + 8, y1: y(0), y2: y(0) }));
+  svg.appendChild(ax);
+  POCTY.forEach((p, i) => { const t = el('text', { x: x(i), y: y(0) + 22, class: 'tick', 'text-anchor': 'middle' }); t.textContent = p; svg.appendChild(t); });
+
+  const leg = document.getElementById('leg1');
+  const tab = document.getElementById('t1');
+  tab.innerHTML = '<tr><th>série</th>' + POCTY.map((p) => '<th>' + p + '</th>').join('') + '</tr>';
+
+  RADY.forEach((r) => {
+    const c = S(r.slot);
+    const d = r.v.map((v, i) => (i ? 'L' : 'M') + x(i) + ' ' + y(v)).join(' ');
+    svg.appendChild(el('path', { d, fill: 'none', stroke: c, 'stroke-width': 2, 'stroke-linejoin': 'round' }));
+    r.v.forEach((v, i) => {
+      // 2px prstenec v barvě plochy — značky se překrývají s čarou i mezi sebou
+      svg.appendChild(el('circle', { cx: x(i), cy: y(v), r: 5, fill: c, stroke: 'var(--surface-1)', 'stroke-width': 2 }));
+      const hit = el('circle', { cx: x(i), cy: y(v), r: 16, fill: 'transparent' });
+      hit.addEventListener('mousemove', (e) => showTip(e, '<b>' + r.jm + '</b><br>' + POCTY[i] + ': ' + v.toFixed(1).replace('.', ',') + ' %'));
+      hit.addEventListener('mouseleave', hideTip);
+      svg.appendChild(hit);
+    });
+    const lab = el('text', { x: x(POCTY.length - 1) + 12, y: y(r.v[3]) + 4, class: 'dlabel' });
+    lab.textContent = r.v[3].toFixed(1).replace('.', ',') + ' % · ' + r.jm;
+    svg.appendChild(lab);
+    const sp = document.createElement('span');
+    sp.innerHTML = '<i class="swatch" style="background:' + c + '"></i>' + r.jm;
+    leg.appendChild(sp);
+    tab.innerHTML += '<tr><td>' + r.jm + '</td>' + r.v.map((v) => '<td>' + v.toFixed(1).replace('.', ',') + '</td>').join('') + '</tr>';
+  });
+})();
+
+/* ---------- graf 2: normalizovaná divergence (4p) ---------- */
+const DIV = [
+  { jm: 'hazarder', raw: 77.7, marg: 20.6, strop: 60.1, n: 1.29 },
+  { jm: 'V-3 řez 50 % (kandidát)', raw: 74.4, marg: 66.8, strop: 78.9, n: 0.94, kand: true },
+  { jm: 'schovana-bouchacka', raw: 63.9, marg: 25.4, strop: 68.6, n: 0.93 },
+  { jm: 'dve-jizvy', raw: 62.7, marg: 25.0, strop: 68.0, n: 0.92 },
+  { jm: 'cista-ruka', raw: 68.6, marg: 52.2, strop: 87.4, n: 0.79 },
+  { jm: 'muj-den (dnes)', raw: 21.1, marg: 91.8, strop: 28.9, n: 0.73, dnes: true },
+  { jm: 'bez-jizvy', raw: 54.9, marg: 59.4, strop: 84.9, n: 0.65 },
+  { jm: 'kupecke-slovo', raw: 38.0, marg: 32.1, strop: 77.7, n: 0.49 },
+  { jm: 'plny-zasah', raw: 2.8, marg: 50.8, strop: 87.5, n: 0.03 },
+];
+(function () {
+  const svg = document.getElementById('c2');
+  const L = 176, R = 58, T = 10, B = 34, W = 760, H = 330;
+  const rowH = (H - T - B) / DIV.length;
+  const xmax = 1.35;
+  const x = (v) => L + (v / xmax) * (W - L - R);
+
+  const g = el('g', { class: 'grid' });
+  for (let v = 0; v <= 1.2; v += 0.3) {
+    g.appendChild(el('line', { x1: x(v), x2: x(v), y1: T, y2: T + DIV.length * rowH }));
+    const t = el('text', { x: x(v), y: T + DIV.length * rowH + 20, class: 'tick', 'text-anchor': 'middle' });
+    t.textContent = v.toFixed(1).replace('.', ',');
+    svg.appendChild(t);
+  }
+  svg.appendChild(g);
+  // práh osobnosti 0,7 — stavová čára, nese popisek (nikdy jen barvu)
+  svg.appendChild(el('line', { x1: x(0.7), x2: x(0.7), y1: T - 2, y2: T + DIV.length * rowH + 2, stroke: 'var(--critical)', 'stroke-width': 1.5, 'stroke-dasharray': '5 4' }));
+  const pl = el('text', { x: x(0.7), y: T + DIV.length * rowH + 20, class: 'bandlabel', fill: 'var(--critical)', 'text-anchor': 'middle' });
+  pl.textContent = 'práh 0,7'; svg.appendChild(pl);
+
+  const tab = document.getElementById('t2');
+  tab.innerHTML = '<tr><th>cíl</th><th>raw %</th><th>marg. míra %</th><th>strop %</th><th>norm.</th></tr>';
+
+  DIV.forEach((d, i) => {
+    const yTop = T + i * rowH + 5;
+    const h = rowH - 12;
+    const barva = d.kand ? S(2) : d.dnes ? S(1) : S(3);
+    const r = el('rect', { x: L, y: yTop, width: Math.max(2, x(d.n) - L), height: h, fill: barva, rx: 4 });
+    r.addEventListener('mousemove', (e) => showTip(e, '<b>' + d.jm + '</b><br>raw ' + d.raw.toFixed(1).replace('.', ',') + ' %<br>marginální míra ' + d.marg.toFixed(1).replace('.', ',') + ' %<br>strop při nezávislosti ' + d.strop.toFixed(1).replace('.', ',') + ' %<br><b>normalizovaně ' + d.n.toFixed(2).replace('.', ',') + '</b>'));
+    r.addEventListener('mouseleave', hideTip);
+    svg.appendChild(r);
+    const lab = el('text', { x: L - 10, y: yTop + h / 2 + 4, class: 'dlabel', 'text-anchor': 'end' });
+    lab.textContent = d.jm; svg.appendChild(lab);
+    const val = el('text', { x: x(d.n) + 8, y: yTop + h / 2 + 4, class: 'dlabel' });
+    val.textContent = d.n.toFixed(2).replace('.', ','); svg.appendChild(val);
+    tab.innerHTML += '<tr><td>' + d.jm + '</td><td>' + d.raw.toFixed(1).replace('.', ',') + '</td><td>' + d.marg.toFixed(1).replace('.', ',') + '</td><td>' + d.strop.toFixed(1).replace('.', ',') + '</td><td>' + d.n.toFixed(2).replace('.', ',') + '</td></tr>';
+  });
+})();
+</script>
+</body>
+</html>

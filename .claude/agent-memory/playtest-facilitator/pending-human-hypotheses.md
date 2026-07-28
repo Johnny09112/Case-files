@@ -82,7 +82,24 @@ designéra a remote/async sezení. Každou spáruj se signálem z šablony playt
   NE proto, že by ta osa byla špatná. Kdyby lidi po ekonomické ose volali,
   potřebuje **per-hráč atribuci `kredity_utracene_za`**, ne jiný cíl.
 - **Je `muj-den` (96–99 % pro 1p–3p) u stolu vnímán jako mrtvý bod zdarma?**
-  Breach K9 je prokázán; jestli to hráče ruší, ne.
+  Breach K9 je prokázán; jestli to hráče ruší, ne. (Návrh nápravy proměřen —
+  viz níže.)
+
+## Nové z kola `muj-den` → podíl (2026-07-28, viz [[muj-den-kontrafaktual]])
+
+- **Pochopí a uřídí hráč PODÍL?** Cíl „ať projde půlka tvých věcí" je řiditelný,
+  jen když hra během runu ukazuje průběžné „prošlo X / propadlo Y" — dnes se cíl
+  zobrazuje jen na startu. Bez toho je to metrika 6 (čitelnost) v přímém ohrožení.
+  **Předpoklad zapečení, ne příslušenství.**
+- **Je „cíl živý v 85 % uzlů" zajímavější rozhodování, nebo jen delší uzly?**
+  Sim: živost vzroste z 21,7–57,5 % na 80–89 % uzlů držitele, ale skutečný konflikt
+  s týmovým optimem jen z 1,8–9,1 % na 7,6–19,6 %. Kolik z toho je hádka, neví.
+  **Tohle je jediný důvod, proč doporučení končí eskalací na uživatele.**
+- **Udělá reveal „byl to můj den" při ~61 % úspěšnosti něco?** Čísla o revealu
+  neříkají nic.
+- **Je sólo hráč ochoten přijmout, že je pro něj cíl nejtěžší?** Podíl obrací
+  obtížnost: 1p 43,8 % vs. 4p 67,2 %. Sim neví, jestli to sólista pocítí jako
+  nefér, nebo to vůbec nepozná (nemá s čím srovnávat).
 
 Otevřené číselné páky, které se po lidské zpětné vazbě můžou hnout, jsou v
 [[sim-gate-findings]].

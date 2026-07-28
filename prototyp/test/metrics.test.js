@@ -38,6 +38,16 @@ describe('parseCondition — v3 metriky', () => {
   it('odmítne neznámé pásmo v závorce česky', () => {
     expect(() => parseCondition('pasma_dosazena["9/9_NEEXISTUJE"] >= 1')).toThrow(/pásmo/i);
   });
+
+  // Regrese k tiché pasti: desetinný literál se dřív vrátil jako řetězec a
+  // `evalCondition` ho protáhl přes Number() → podmínka byla VŽDY pravda.
+  it('odmítne neceločíselnou hodnotu (dřív tiše prošla a byla vždy pravda)', () => {
+    expect(() => parseCondition('podil_slotu_splnil_pct >= 0.6')).toThrow(/neceločíselná/i);
+    expect(() => parseCondition('pocet_slotu_splnil >= 2.5')).toThrow(/neceločíselná/i);
+    expect(() => parseCondition('pocet_slotu_splnil >= 1e3')).toThrow(/neceločíselná/i);
+    expect(() => parseCondition('podil_slotu_splnil_pct >= 60')).not.toThrow();
+    expect(() => parseCondition('pocet_slotu_splnil >= -1')).not.toThrow();
+  });
 });
 
 describe('evalCondition', () => {
@@ -148,6 +158,63 @@ describe('deriveGoalMetrics — v3', () => {
     });
     expect(deriveGoalMetrics(log, 'p1').bedny_ztracene_vlastni).toBe(1);
     expect(deriveGoalMetrics(log, 'p2').bedny_ztracene_vlastni).toBe(1);
+  });
+
+  it('podíl: jmenovatel je splnil+selhal, celá procenta, guard na nule', () => {
+    const log = [
+      ...unlogNode(1, {
+        pasmo: '3/4_HLADCE',
+        zasahy: 3,
+        slotHrac: [
+          { hrac: 'p1', zasah: true },
+          { hrac: 'p1', zasah: true },
+          { hrac: 'p1', zasah: false },
+          { hrac: 'p2', zasah: true },
+        ],
+      }),
+      { seq: 999, type: EVENT.RUN_ENDED, nodeIndex: 1, vysledek: 'DORUCENO' },
+    ];
+    const m1 = deriveGoalMetrics(log, 'p1');
+    expect(m1.sloty_vlastnika_celkem).toBe(3);
+    expect(m1.podil_slotu_splnil_pct).toBe(67); // 2/3 = 66,67 → celé procento
+    // Hráč bez jediného slotu: jmenovatel 0 → podíl 0, ne NaN a ne dělení nulou.
+    const m3 = deriveGoalMetrics(log, 'p3');
+    expect(m3.sloty_vlastnika_celkem).toBe(0);
+    expect(m3.podil_slotu_splnil_pct).toBe(0);
+  });
+
+  it('podíl: odgamblovaný slot zůstává v jmenovateli původního vlastníka', () => {
+    // Gamble přepisuje vlastnictví slotu — p1 o slot přišel a jeho karta se
+    // nikdy nevyhodnotila. Bez téhle větve by šlo podíl vylepšit tím, že tým
+    // utratí (sdílený) gamble na moji odsouzenou kartu.
+    const log = [
+      ...unlogNode(1, {
+        pasmo: '2/4_S_NASLEDKY',
+        zasahy: 2,
+        slotHrac: [
+          { hrac: 'p1', zasah: true },
+          { hrac: 'p2', zasah: true },
+          { hrac: 'p2', zasah: false },
+          { hrac: 'p2', zasah: false },
+        ],
+      }),
+      { seq: 900, type: EVENT.GAMBLE, nodeIndex: 1, ci_ruka: 'p2', tazena: 'k', nahrazena: 'j', nahrazena_hrac_id: 'p1', do_slotu: null },
+      { seq: 999, type: EVENT.RUN_ENDED, nodeIndex: 1, vysledek: 'DORUCENO' },
+    ];
+    const m1 = deriveGoalMetrics(log, 'p1');
+    expect(m1.pocet_slotu_splnil).toBe(1);
+    expect(m1.pocet_slotu_selhal).toBe(0);
+    expect(m1.sloty_vlastnika_celkem).toBe(2); // 1 vyhodnocený + 1 odgamblovaný
+    expect(m1.podil_slotu_splnil_pct).toBe(50);
+    // Hráči, který gamble zahrál z vlastní ruky, se cizí smazaný slot nepřičítá.
+    expect(deriveGoalMetrics(log, 'p2').sloty_vlastnika_celkem).toBe(3);
+  });
+
+  it('parser přijme podíl i jmenovatel jako platné metriky', () => {
+    const ast = parseCondition('podil_slotu_splnil_pct >= 60 a sloty_vlastnika_celkem >= 5');
+    expect(evalCondition(ast, { podil_slotu_splnil_pct: 60, sloty_vlastnika_celkem: 5 })).toBe(true);
+    expect(evalCondition(ast, { podil_slotu_splnil_pct: 59, sloty_vlastnika_celkem: 9 })).toBe(false);
+    expect(evalCondition(ast, { podil_slotu_splnil_pct: 100, sloty_vlastnika_celkem: 4 })).toBe(false);
   });
 
   it('počítá postihy (tier), gamble a složení per hráč', () => {

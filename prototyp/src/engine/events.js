@@ -115,6 +115,12 @@ export const BAND_LABELS = [BAND.LOOT, BAND.HLADCE, BAND.NASLEDKY, BAND.PRUSVIH]
  * (sdílená vina za „rozděl nejméně špatně"); ztrátový postih `ztrata_naklad`
  * se připíše postiženému. Personalizuje cíl kupecke-slovo.
  *
+ * ENGINE (jmenovatel `sloty_vlastnika_celkem`): počítá i sloty, o které vlastník
+ * přišel GAMBLEM. Gamble přepisuje i vlastnictví slotu (`state.js`: `situ.committed[ci]
+ * = { hrac_id: handOwnerId, … }`) a nahrazená karta se nikdy nevyhodnotí — bez
+ * započtení by byl podíl soukromou pákou na sdílený zdroj („utraťte gamble na moji
+ * odsouzenou kartu, ať mi nekazí poměr").
+ *
  * @param {object[]} events kompletní log runu (včetně run_ended)
  * @param {string} hracId
  */
@@ -123,6 +129,8 @@ export function deriveGoalMetrics(events, hracId) {
     doruceno: false,
     pocet_slotu_splnil: 0,
     pocet_slotu_selhal: 0,
+    sloty_vlastnika_celkem: 0,
+    podil_slotu_splnil_pct: 0,
     commitnute_stitky: { GANGSTER_viditelna: 0, GANGSTER_skryta: 0 },
     gamble_pouzit: 0,
     postihy_utrpene: { pocet: 0, lehke: 0, tezke: 0 },
@@ -134,6 +142,8 @@ export function deriveGoalMetrics(events, hracId) {
 
   /** nodeIndex → sloty [{hrac_id, zasah}] pro atribuci pásma a viny. */
   const slotyUzlu = new Map();
+  /** Sloty vlastníka smazané gamblem (committnutá karta nahrazena) — viz hlavička. */
+  let odgamblovaneSloty = 0;
 
   for (const e of events) {
     switch (e.type) {
@@ -169,6 +179,7 @@ export function deriveGoalMetrics(events, hracId) {
         break;
       case EVENT.GAMBLE:
         if (e.ci_ruka === hracId) m.gamble_pouzit += 1;
+        if (e.nahrazena_hrac_id === hracId) odgamblovaneSloty += 1;
         break;
       case EVENT.CHARACTER_FOLDED:
         if (e.hrac_id === hracId) m.slozeni_krat += 1;
@@ -182,6 +193,14 @@ export function deriveGoalMetrics(events, hracId) {
         break;
     }
   }
+  // Bezrozměrné čtení téhož: podíl místo počtu. Počítací metriky škálují se
+  // zásobou slotů na hráče (~28 / 14 / 9,3 / 7 pro 1–4p), takže žádný plochý
+  // práh nad nimi nesedne všem počtům; podíl tuhle závislost odstraňuje.
+  // Celá procenta jsou záměr: `parseValue` neceločíselné literály odmítá.
+  m.sloty_vlastnika_celkem = m.pocet_slotu_splnil + m.pocet_slotu_selhal + odgamblovaneSloty;
+  m.podil_slotu_splnil_pct = m.sloty_vlastnika_celkem === 0
+    ? 0
+    : Math.round((100 * m.pocet_slotu_splnil) / m.sloty_vlastnika_celkem);
   return m;
 }
 
@@ -198,6 +217,8 @@ const METRIC_SPEC = {
   doruceno: { leaf: true },
   pocet_slotu_splnil: { leaf: true },
   pocet_slotu_selhal: { leaf: true },
+  sloty_vlastnika_celkem: { leaf: true },
+  podil_slotu_splnil_pct: { leaf: true },
   gamble_pouzit: { leaf: true },
   slozeni_krat: { leaf: true },
   bedny_ztracene_vlastni: { leaf: true },
@@ -264,7 +285,7 @@ export function parseCondition(vyraz) {
         if (!OPERATORS.includes(op)) {
           throw new Error(`neznámý operátor „${op}" ve výrazu „${vyraz}" (povolené: ${OPERATORS.join(', ')})`);
         }
-        return { metrika: assertMetric(metrika, vyraz), op, hodnota: parseValue(raw) };
+        return { metrika: assertMetric(metrika, vyraz), op, hodnota: parseValue(raw, vyraz) };
       }
       throw new Error(`nesrozumitelný člen „${term}" ve výrazu „${vyraz}" (očekávám „metrika operátor hodnota" nebo holou metriku)`);
     });
@@ -294,11 +315,25 @@ function assertMetric(name, vyraz) {
   return name;
 }
 
-/** @param {string} raw @returns {number|boolean|string} */
-function parseValue(raw) {
+/**
+ * Hodnota na pravé straně porovnání.
+ *
+ * POZOR na tichou past (opraveno 2026-07-28): neceločíselný literál se dřív vrátil
+ * jako ŘETĚZEC, který `evalCondition` u `>=`/`<=`/`>`/`<` protáhl přes `Number()` —
+ * `podminka: "cokoli >= 0.6"` tedy prošla loaderem i testy a byla **vždy pravda**
+ * (`Number(45) >= Number("0.6")`). Všechny v3 metriky jsou celočíselné (i procentní
+ * `podil_slotu_splnil_pct`), takže desetinný literál je vždy chyba autora obsahu —
+ * a musí spadnout hlasitě, ne se tvářit jako designový nález „cíl se plní na 100 %".
+ *
+ * @param {string} raw @param {string} [vyraz] @returns {number|boolean|string}
+ */
+function parseValue(raw, vyraz = raw) {
   if (raw === 'true') return true;
   if (raw === 'false') return false;
   if (/^-?\d+$/.test(raw)) return Number(raw);
+  if (/^[-+]?(\d+\.\d*|\.\d+|\d+)([eE][-+]?\d+)?$/.test(raw)) {
+    throw new Error(`neceločíselná hodnota „${raw}" ve výrazu „${vyraz}" — v3 metriky jsou celočíselné (procenta piš jako celé číslo, např. 60)`);
+  }
   return raw;
 }
 

@@ -31,13 +31,20 @@ kandidáti žili jen ve scratchpadu přes `CONTENT_DIR`.
   (např. „slot musel projít"), ne práh počtu.
 - **`kredity_utracene_za` dělá z cíle týmový cíl v přestrojení — exaktně.**
   Divergence verdiktu mezi hráči: kandidáti B `noc-v-motelu` a C `handl-u-silnice`
-  **0,00 %** (`events.js:175–178` nefiltruje `hrac_id`), A 41,8–52,9 %. Referenční
-  pásmo osobních cílů: hazarder 53–69, cista-ruka 43–56, bez-jizvy 38–46.
-  **Vedlejší: `plny-zasah` je s ~1 % už dnes prakticky týmový cíl.**
+  **0,00 %** (`events.js` v `deriveGoalMetrics` nefiltruje `hrac_id` u
+  `credit_flow`). Zamítnutí B/C **drží i po normalizaci** (0,00 / kladný strop).
+  ⚠ **ČÁSTEČNĚ RETRAHOVÁNO 2026-07-28** (viz [[muj-den-kontrafaktual]]): čísla
+  „A 41,8–52,9 %" a „referenční pásmo osobních cílů" jsou min–max **přes počty
+  hráčů** a jako důkaz osobnosti neplatí — absolutní divergence je funkce
+  marginální míry (strop `1 − p^m − (1−p)^m`). Používej **normalizovanou**
+  divergenci ze `sim/report.js`. Verdikt o A drží (norm. 0,77 / 0,91 / 0,93).
+  **Vedlejší: `plny-zasah` je s norm. 0,00–0,03 exaktně týmový cíl.**
 - **Hygiena měřidla odkryla pod falešným breachem skutečný:** `muj-den` je
-  nepodmíněně 99,4 / 98,3 / 96,0 % pro 1p/2p/3p → **breach K9 (5–95 %)**,
-  dosud maskovaný agregátem přes počty (D39 hlásil 95,4). Nezávislý na kandidátech,
-  patří game-designerovi (jeho poznámka SIM-TUNE o per-count prahu je potvrzena).
+  nepodmíněně 99,4 / 98,3 / 96,0 % pro 1p/2p/3p (+ 91,4 % ve 4p, doměřeno
+  2026-07-28) → **breach K9 (5–95 %)**, dosud maskovaný agregátem přes počty
+  (D39 hlásil 95,4). Řešeno samostatným kolem → [[muj-den-kontrafaktual]];
+  poznámka SIM-TUNE o **per-count prahu** byla naopak designérem zamítnuta
+  (per-count práh = text cíle závislý na sestavě).
 - **B je los, ne rozhodnutí:** směna se povede v 88–92 % doručených runů, takže
   vzácnost B (13–26 % podm.) je celá `P(těžký postih ∧ 6 kreditů v motelu)`.
   Bot `adaptivni` už dnes utrácí maximálně → incidenční číslo je zároveň STROP;
