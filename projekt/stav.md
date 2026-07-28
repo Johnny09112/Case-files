@@ -140,8 +140,27 @@ neplatilo (strop je funkcí marginální míry, saturovaný cíl nemůže diverg
 verdikt o `schovana-bouchacka` po normalizaci **stojí**, poznámka v obsahu
 opravena. Report:
 [[../technika/muj-den-kontrafaktual-2026-07-28|technika/muj-den-kontrafaktual-2026-07-28.md]].
-**Míč: rozhodnutí o zapečení `muj-den`, fáze 3 (blokuje LLM poskytovatel),
-LIDSKÁ BRÁNA (odblokována 2.1).**
+**UZAVŘENO ROZHODNUTÍM UŽIVATELE (D44): varianta B — `muj-den` se NEZAPÉKÁ**
+a jde do lidské brány jako **druhá vyčíslená odchylka** vedle K1 3p/4p + K6a
+(D39). V-3 je proměřený a připravený k zapečení, pokud si ho brána vyžádá;
+UI ukazatel „prošlo X / propadlo Y" se do té doby nestaví. Nález „2 z 8 cílů
+nejsou osobní" se nese do brány taktéž. **Ladění cílů se zastavuje** — tři kola
+za sebou byla hranice návratnosti a otázka „dělá reveal tajných cílů u stolu
+vůbec něco?" je mimo dosah simulace.
+**KRITICKÁ CESTA JE VOLNÁ. Míč: fáze 3 (blokuje volba LLM poskytovatele)
+a LIDSKÁ BRÁNA (odblokována 2.1).**
+
+### Co jde do lidské brány jako známé, vyčíslené odchylky
+
+| # | Odchylka | Čísla | Rozhodnuto |
+|---|---|---|---|
+| 1 | K1 kompetentní hra 3p/4p nad stropem 70 % | 77,5 / 79,7 % | D39 |
+| 2 | K6a spread napříč počty hráčů | 22,4 b. (gate ≤6) | D39 |
+| 3 | K9 — cíl `muj-den` je saturovaný | 99,4 / 98,3 / 96,0 / 91,4 % (gate 5–95) | D44 |
+| 4 | Dva z osmi cílů nejsou osobní (norm. divergence < 0,7) | `plny-zasah` 0,00–0,03 · `kupecke-slovo` 0,20–0,49 | D44 |
+
+Záložní páky, které se aktivují **jen** na nález lidské brány: `hraci[n].ruka`
+(pro #1/#2, D39) · kandidát V-3 pro #3 (proměřený, D43).
 
 *Průběh kalibrace-4 (historie):*
 [[../technika/kalibrace-4-brana-navrh-2026-07-27|Balík]] byl kanonické zadání.
@@ -191,8 +210,8 @@ variance doměřena (2sd = 3,22 < 6). Eskalace V1–V4 rozhodnuta uživatelem ja
 | **Přeladit `prahOffsetDlePoctu` (K1 3p/4p + K6a)** — jediná páka bez dotyku obsahu; sweep je levný | game-designer + playtest-facilitator | **HOTOVO 2026-07-27 (D38) — páka VYČERPÁNA, nic nezapečeno.** Průchozí kandidát existuje (`{1:0,2:5,3:6,4:6}`: K1 6/6, K6a 6,03), ale platí se jím K2 drift (1,28, 2/6) a leží v režimu, který předregistrace předem zakázala (clamp prahů). Report [[../technika/kalibrace-5-sweep-prahoffset-2026-07-27|technika/kalibrace-5-sweep-prahoffset]]; **uzavřeno D39 = varianta (a)**, breach jde do lidské brány jako známá odchylka |
 | Mrtvá volba: cíl `mozek-operace` má 0 % splnění ve všech variantách včetně baseline (vedlejší nález D38) | content-generator + game-designer + playtest-facilitator | **HOTOVO 2026-07-28 (D42)** — cíl byl strukturálně nesplnitelný (nejen slabý), škrtnut do patičky `cile.yaml` s poučením; nahrazen `schovana-bouchacka` (`GANGSTER_skryta >= 1 a doruceno`, 2 b.) vybraným kontrafaktuálem ~290k runů proti naslepo předregistrovaným pásmům. Sada je nově **8/8 mechanická**. Report [[../technika/mozek-operace-kontrafaktual-2026-07-28\|technika/mozek-operace-kontrafaktual-2026-07-28.md]] |
 | **`muj-den` breachuje K9** — nepodmíněně 99,4 / 98,3 / 96,0 / 91,4 % pro 1p–4p (gate 5–95 %). Odkryto hygienou reportu v D42 | game-designer + playtest-facilitator | **ZMĚŘENO 2026-07-28 (D43), ZAPEČENÍ ČEKÁ NA UŽIVATELE.** Vada je v metrice (sloty škálují 3,5× mezi 1p a 4p), ne v prahu. Kandidát V-3 `podil_slotu_splnil_pct >= 50 a sloty_vlastnika_celkem >= 5` prošel jako jediný ze 4 řezů, všemi předregistrovanými kritérii. **Blokují dvě podmínky mimo dosah simulace:** K6b tempo (živý v 80–89 % uzlů) a UI ukazatel „prošlo X / propadlo Y". Fallbacky A (škrt + `o-vlasek`) / B (nést do brány). Report [[../technika/muj-den-kontrafaktual-2026-07-28\|technika/muj-den-kontrafaktual-2026-07-28.md]] |
-| **Předpoklad zapečení V-3: UI ukazatel „prošlo X / propadlo Y" u tajného cíle** — bez něj je podíl neřiditelný (metrika 6, čitelnost) | technical-developer | otevřeno — aktivuje se **jen** pokud uživatel zvolí zapečení V-3; jinak bezpředmětné |
-| **Dva z osmi cílů nejsou osobní** — po zavedení normalizované divergence (D43) mají `plny-zasah` 0,00/0,01/0,03 a `kupecke-slovo` 0,20/0,35/0,49 proti prahu ≥ 0,7, `bez-jizvy` je na hraně (0,71/0,66/0,65) | game-designer | otevřeno — **kritérium, kterým se měřili kandidáti, nikdo neaplikoval na zapečenou sadu.** Větší nález než `muj-den` sám; rozhodnout, zda kolo před lidskou bránou, nebo po ní |
+| **Předpoklad zapečení V-3: UI ukazatel „prošlo X / propadlo Y" u tajného cíle** — bez něj je podíl neřiditelný (metrika 6, čitelnost) | technical-developer | **BEZPŘEDMĚTNÉ po D44** — V-3 se nezapéká. Aktivuje se jen tehdy, vyžádá-li si lidská brána zapečení V-3 |
+| **Dva z osmi cílů nejsou osobní** — po zavedení normalizované divergence (D43) mají `plny-zasah` 0,00/0,01/0,03 a `kupecke-slovo` 0,20/0,35/0,49 proti prahu ≥ 0,7, `bez-jizvy` je na hraně (0,71/0,66/0,65) | game-designer | **NESE SE DO LIDSKÉ BRÁNY (D44)** jako odchylka #4 — neřeší se čtvrtým kalibračním kolem. Kritérium, kterým se měřili kandidáti, nikdo neaplikoval na zapečenou sadu; jestli to vadí, řekne reveal u stolu, ne simulace |
 | `kredity_utracene_za` engine počítá **týmově** (`events.js:175-178` nefiltruje `hrac_id`), ač ji `technika/architektura.md` §2.2 ř. 141 vede jako per-hráč metriku | technical-developer | otevřeno — v D42 **neopraveno záměrně** (je to nález, ne úklid). Dokud platí, nelze na kreditech postavit osobní cíl; oprava by otevřela ekonomickou osu hádky, po které nikdo zatím nevolal |
 | **Fáze 2.1: vysvětlující vrstva pravidel v UI** — bez ní lidská brána selže na čitelnosti (metrika 6), ne na designu | kódový repo | **HOTOVO A PŘIJATO 2026-07-28 (D41)** — návrh D36 → plán (12 tasků TDD) → stavba na větvi `faze-2.1` → PM review (231 testů + lint nezávisle, smoke test celé smyčky v prohlížeči, §11 splněno) → merge do `main`. Spec: [[../technika/faze-2.1-navrh-2026-07-27|technika/faze-2.1-navrh-2026-07-27.md]] |
 | **v3 fallback šablony protokolu (~20)** — součást 2.1, běží paralelně s UI | content-generator + protocol-humor-tester + design-critic | **HOTOVO A ZAPEČENO 2026-07-28 (D40)** — 28 šablon v `prompty/fallback-sablony.yaml`, v2 sada v `obsah/archiv-v2/`; `kolaps` přepsán na v3 sémantiku + nové pásmo `navrat`, `hlas_z_auta` zamítnut (engine událost nemá). Situace dostaly pole `nazev` (15 + 4 u pronásledovatelů) — anotace mapy nově jmenuje místo. 231 testů zelených, 4 golden snapshoty rebasovány (otisk obsahu + jméno místa) |

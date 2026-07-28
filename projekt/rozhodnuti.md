@@ -13,6 +13,29 @@ architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.m
 
 ## 2026-07-28
 
+- **D44 (ROZHODNUTÍ UŽIVATELE) — varianta B: `muj-den` se NEZAPÉKÁ a jde do
+  lidské brány jako známá odchylka. Ladění cílů se zastavuje.** Uživatel zvolil
+  z variant předložených po D43 (B / zapéct V-3 / A škrt + `o-vlasek` / kolo nad
+  celou sadou). **Důsledky:** (1) `muj-den` zůstává v zapečené podobě
+  `pocet_slotu_splnil >= 3` a jeho **K9 breach (99,4 / 98,3 / 96,0 / 91,4 %)
+  se nese do lidské brány jako druhá vyčíslená odchylka** vedle K1 3p/4p + K6a
+  z D39 (precedent D33/K5). (2) Kandidát **V-3 se nezapéká, ale nezahazuje** —
+  je proměřený, prošel všemi předregistrovanými kritérii a leží v D43 + reportu
+  připravený k zapečení, pokud ho lidská brána vyžádá. (3) **UI ukazatel
+  „prošlo X / propadlo Y" se nestaví** — byl předpokladem V-3, je tedy
+  bezpředmětný, dokud se V-3 nezapeče. (4) Nález „2 z 8 cílů nejsou osobní"
+  (`plny-zasah`, `kupecke-slovo`; `bez-jizvy` na hraně) **se nese do brány
+  taktéž** — neřeší se čtvrtým kalibračním kolem.
+  **Zdůvodnění (PM doporučení, uživatel přijal):** blokující předpoklad V-3 je
+  čitelnost (metrika 6) a **čitelnost je právě to, co má lidská brána změřit** —
+  stavět UI na cíli, který se po bráně může přepsat, je práce na špatném konci.
+  Zároveň je celá třída těchto nálezů (saturace, neosobnost, mrtvý reveal)
+  odpovědí na jedinou otázku, kterou simulace z principu nedá: **dělá reveal
+  tajných cílů u stolu vůbec něco?** Až to čtyři lidé řeknou, bude jasné, jestli
+  se sada ladí, nebo přestavuje. Tři kola ladění cílů za sebou (D42, D43 + tento
+  návrh) byla hranice návratnosti.
+  **Kritická cesta je tím volná: fáze 3 (blokuje volba LLM poskytovatele)
+  a LIDSKÁ BRÁNA.**
 - **D43 (kolo `muj-den`, schváleno uživatelem) — kandidát V-3 PROŠEL měřením,
   ZAPEČENÍ ESKALOVÁNO NA UŽIVATELE; a OPRAVA ZDŮVODNĚNÍ v D42.**
   Kolo `game-designer` (návrh + předregistrace naslepo) → `playtest-facilitator`
