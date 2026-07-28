@@ -6,12 +6,14 @@
  *
  * Žádná herní logika — jen render snapshotu enginu (architektura §2.4).
  *
- * Kontrakt `ctx` v tomto tasku NEnese `content` (viz Task 8, kde ho `obrazovkaRun`
- * doplňuje) — okraj proto nemá k dispozici popisky odvozené z obsahu (přesný
- * název postihu, přesné znění pravidla pronásledovatele). Kde takový popisek
- * chybí, okraj NEVYPISUJE syrové id z enginu (kebab-case postih_id, `GANGSTER`
- * apod.) — ukazuje jen to, co lze bezpečně přeložit ze statických map
- * v `labels.js` (kategorie/tier postihu, jméno statu).
+ * Kontrakt `ctx` nese `content` jen VOLITELNĚ: dokud `obrazovkaRun` (Task 8)
+ * nezačne posílat celý ctx včetně validovaného obsahu (`parseContent()`),
+ * okraj běží i bez něj. S `content` k dispozici vypisuje u postihů přesný
+ * český název (`content.postihy[].nazev`) — bez něj zůstává jen kategorie
+ * a tier ze statických map v `labels.js`. Kde popisek z obsahu chybí (ať už
+ * proto, že `content` není v ctx, nebo protože v něm postih s daným id není),
+ * okraj NEVYPISUJE syrové id z enginu (kebab-case postih_id, `GANGSTER` apod.)
+ * — jen bezpečný fallback.
  */
 import { h } from '../../dom.js';
 import { MISTO } from '../../vysvetleni.js';
@@ -21,14 +23,18 @@ import { PRAH_LABEL, STAT_LABEL, KATEGORIE_LABEL } from '../../labels.js';
 const OKRAJ_ANOTACI = 4;
 
 /**
- * Krátký, bezpečný popis postihu bez jeho syrového id — přesný název (`nazev`
- * z obsah/postihy.yaml) tenhle modul nemá k dispozici (ctx nenese `content`),
- * takže ukazuje jen kategorii a tier, obojí z existujících map v `labels.js`.
- * @param {{kategorie: string, tier: string}} postih
+ * Krátký, bezpečný popis postihu bez jeho syrového id. S `content` k dispozici
+ * a shodou id vypíše přesný český název (`nazev` z obsah/postihy.yaml) doplněný
+ * o tier — hráč tak vidí, který konkrétní postih drží (např. „Prach do očí"
+ * místo obecného „informační"). Bez `content`, nebo když v něm postih s daným
+ * id není, spadne zpět na kategorii a tier z map v `labels.js`.
+ * @param {{id: string, kategorie: string, tier: string}} postih
+ * @param {{postihy: {id: string, nazev: string}[]}} [content]
  */
-function popisPostihu(postih) {
-  const kategorie = KATEGORIE_LABEL[postih.kategorie] ?? postih.kategorie;
-  return postih.tier === 'tezky' ? `${kategorie} (těžký)` : kategorie;
+function popisPostihu(postih, content) {
+  const nazev = content?.postihy?.find((p) => p.id === postih.id)?.nazev;
+  const zaklad = nazev ?? KATEGORIE_LABEL[postih.kategorie] ?? postih.kategorie;
+  return postih.tier === 'tezky' ? `${zaklad} (těžký)` : zaklad;
 }
 
 /**
@@ -47,10 +53,10 @@ function popisRuseni(rusi) {
 
 /**
  * @param {{S: object, st: object, rules: object, akce: Record<string, any>,
- *   anotace: Map<number, object[]>}} ctx
+ *   anotace: Map<number, object[]>, content?: {postihy: {id: string, nazev: string}[]}}} ctx
  */
 export function okrajSpisu(ctx) {
-  const { S, st, rules, akce, anotace } = ctx;
+  const { S, st, rules, akce, anotace, content } = ctx;
   // P1 (rules.zar.prahOffsetDlePoctu): prahy trati se per počet hráčů posouvají
   // dolů. Kdyby okraj kreslil základní prahy, hráč by viděl jinou trať, než na
   // které stojí (a metrika 6 by padla přesně na tomhle).
@@ -130,7 +136,7 @@ export function okrajSpisu(ctx) {
           h(
             'p',
             { class: 'napoveda' },
-            p.postihy.length === 0 ? 'bez postihů' : p.postihy.map((/** @type {any} */ x) => popisPostihu(x)).join(' · ')
+            p.postihy.length === 0 ? 'bez postihů' : p.postihy.map((/** @type {any} */ x) => popisPostihu(x, content)).join(' · ')
           )
         )
       )
