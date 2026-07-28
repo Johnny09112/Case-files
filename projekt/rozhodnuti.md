@@ -13,6 +13,24 @@ architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.m
 
 ## 2026-07-28
 
+- **D41 (PM review + ROZHODNUTÍ PM) — fáze 2.1 PŘIJATA a sloučena do `main`;
+  kritérium hotovo §11 ověřeno včetně smoke testu v prohlížeči.** Stavba
+  proběhla na větvi `faze-2.1` (TDD po 12 taskech, review opravy po každém).
+  PM ověřil nezávisle: **231/231 testů zelených + lint čistý (vlastní běh)**;
+  `protocol-fill.js` čte živou v3 sadu (ne archiv) a `app.js` ji importuje;
+  **smoke test v prohlížeči** (sólo, seed 42): setup → los pronásledovatele →
+  mapa (jmenuje místo, pravidlo typu místa nelže) → commit (telegraf + odvozená
+  anotace rolí) → přiřazení (rozpad prahu „práh 2 = kotva 4 −2", skrytá role
+  značená, gamble nabízen) → výsledek (razítka s důvody vč. propadu
+  „chtělo to improvizaci 2, má 0", learnabilita „optimální rozdělení TÉHOŽ
+  commitu by dalo 4/4", Žár s důvodem „hlučné násilí", protokol z v3 šablony
+  klepe psacím strojem). Konzole bez chyb. **Volba integrace: možnost 1 —
+  merge do `main` lokálně + push, bez PR** (konvence repa je trunk na `main`,
+  PR proces tu neexistuje); větev po merge smazána. Dva zastaralé řádky
+  stavu z D40 opraveny (protocol-fill v3 byl mezitím hotov — task 6).
+  **Zbylý drobný úklid (nová položka backlogu):** `opravUvozovkySablon()`
+  v `protocol-fill.js` — workaround v2 uvozovek; v3 sada je validní YAML,
+  funkce je no-op a smí zaniknout i s poznámkou v testu.
 - **D40 (obsahové kolo + 3 ROZHODNUTÍ uživatele) — v3 fallback sada ZAPEČENA
   (28 šablon) a situace dostaly pole `nazev`.** Kolo `content-generator` →
   `protocol-humor-tester` → `design-critic` dle §8 návrhu fáze 2.1 (zadání D36).
