@@ -35,23 +35,24 @@ import { MISTO } from '../../vysvetleni.js';
 import { EVENT } from '../../../engine/events.js';
 
 /**
- * @param {{S: object, st: object, akce: Record<string, any>, anotace: Map<number, object[]>}} ctx
- *   - S stav aplikace (S.fronta[0] je položka s `udalosti` z JEDNOHO uzlu)
- *   - st snapshot enginu (obsahuje `nodeIndex` aktuálního uzlu)
+ * @param {{S: object, akce: Record<string, any>, anotace: Map<number, object[]>}} ctx
+ *   - S stav aplikace (S.fronta[0] je položka s `udalosti` z JEDNOHO uzlu
+ *     a jeho `nodeIndex`; živý snapshot enginu je tou dobou už o uzel dál)
  *   - akce callbacky UI
  *   - anotace mapa seq → anotace z vysvětlující vrstvy
  */
 export function pohledVysledku(ctx) {
-  const { S, st, akce, anotace } = ctx;
+  const { S, akce, anotace } = ctx;
   const polozka = S.fronta[0];
   const { udalosti, sekce } = polozka;
   const prvni = (/** @type {any} */ u) => (anotace.get(u.seq) ?? [])[0];
 
-  // Obranná filtracja: propusť jen události z aktuálního uzlu.
-  // Události bez nodeIndex propusť (tichý filtr bez varování).
-  // Viz invariant výše: S.fronta[0].udalosti by měly být jen z jednoho uzlu,
-  // ale filtrujeme zde pro případ, že volající pošle širší výřez.
-  const jeZTohotoUzlu = (/** @type {any} */ u) => u.nodeIndex === undefined || u.nodeIndex === st.nodeIndex;
+  // Obranná filtrace: propusť jen události uzlu, který se právě zobrazuje.
+  // Porovnává se s `polozka.nodeIndex`, NE se `st.nodeIndex` — než hráč
+  // výsledek uvidí, engine už nabízí cesty dalšího uzlu, takže živý snapshot
+  // ukazuje jinam a filtr proti němu by vyhodil úplně všechno.
+  // Události bez nodeIndex propouštíme (tichý filtr, žádná výjimka).
+  const jeZTohotoUzlu = (/** @type {any} */ u) => u.nodeIndex === undefined || u.nodeIndex === polozka.nodeIndex;
 
   const sloty = udalosti.filter((/** @type {any} */ u) => jeZTohotoUzlu(u) && u.type === EVENT.SLOT_RESOLVED);
   const pasmo = udalosti.find((/** @type {any} */ u) => jeZTohotoUzlu(u) && u.type === EVENT.BAND_RESOLVED);
