@@ -78,6 +78,39 @@ a princip „flavor nesmí slibovat mechaniku, kterou pravidla neznají". v2 tag
 - **improvizace = univerzální flex** (nejvyšší demand i supply) NEŘEŠIT obsahem —
   je to sim watchlist (K4b/K5 „když nevíš, hraj improv").
 
+**Fallback šablony protokolu (kolo 2026-07-27, návrh — kalibrace řemesla, ne fakta):**
+- **Pásmo je TÝMOVÉ přes 4 sloty** → šablona pásma nesmí ukázat prstem na jednoho
+  viníka. `{jmeno}` jen tam, kde engine osobu skutečně určil (postih, složení, návrat).
+- **Do protokolu jde `nazev` postihu, ne jeho `text`** — texty postihů jsou psané
+  ve 2. osobě („saháš pomaleji“) a protokol je 3. osoba, úřední.
+- **Engine neskloňuje** → `{jmeno}` používat výhradně nesklonně („podezřelý {jmeno}“).
+- **Pojistná varianta bez `podminka`** v každém početním pásmu: jinak neošetřená
+  kombinace propadne do `NOUZOVY_ZAZNAM` a v protokolu je vidět díra.
+- Registr v2 (úřední obal „v úseku vedeném jako“, „stav nákladu:“, jedna závorka
+  vyšetřovatele na konci) **zachovávat i po pivotu** — fallbacky a živé LLM protokoly
+  mají mluvit stejným jazykem. Ale texty psát znovu, nepřeklápět.
+- **Pojistná varianta (bez `podminka`) musí být pravdivá v CELÉM pásmu, ne jen
+  dosaditelná.** Hraje přesně ve stavech, které nikdo jiný nepokrývá — tam, kde je
+  svět nejdivnější. Nejdražší chyba prověrky 2026-07-27.
+- **Když je nepravdivé sloveso, neškrtej podmět.** Týmový postih („Drobná pokuta“)
+  nelze psát jako „podezřelý X si odnesl“, ale jmenovat ho lze — engine osobu eviduje.
+  Lék měř podle choroby; škrtnout jméno z celého pásma je předražené.
+- **Registrová kotva se opakováním mění v tik.** Když se táž věta („stav nákladu:
+  {naklad}“) objeví v každém odstavci, spis se čte jako opakovaně vyplněný formulář.
+  Lék je změna POŘADÍ informace u 1–2 variant pásma, ne bohatší slovník.
+- **Přepisy od testéra/kritika kontrolovat na věcnost, ne jen přebírat** — v prověrce
+  2026-07-27 měl jeho přepis „jediná zdařilá úloha“ tam, kde pásmo znamená ≤1 (i nula).
+- **Věcnou poctivost ověřuj ve TŘECH osách, ne jedné.** Sémantika události (co znamená)
+  je jen první; dvě další chytily kritické nálezy, které dvě předchozí role minuly:
+  **časování** (kdy se událost loguje vůči svému důsledku — složení se v 50 % vrací
+  v témže uzlu, `band_resolved` se loguje před ztrátou bedny) a **počet hráčů**
+  (ukázkové runy se skládají na 4p, ale sólo je pravděpodobnější sezení). Navíc:
+  **text nesmí slibovat budoucnost** — run může skončit právě tímhle uzlem.
+- **Redundanci měř vůči CELÉ obrazovce, ne uvnitř sady.** Když vedle textu běží
+  vysvětlující vrstva a próza situace, je protokol třetí převyprávění téhož a hráč
+  ho přestane číst. Lék jsou kvóty (výčet věcí a otvírák počtem nejvýš u poloviny
+  variant) a posun od reportu ke **komentáři a verdiktu**.
+
 **Když obsah dostane za úkol dotlačit metriku brány (K1–K9) — fikce má přednost
 před číslem.** Zadání typu „chybí 0,03 driftu, přiřaď situacím fázi" se řeší
 fikční logikou; položku, kterou by fikce a číslo táhly proti sobě, nechávám

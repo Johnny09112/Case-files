@@ -11,6 +11,47 @@ ukazatel na archiv.*
 architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.md]]
 (přesunuto 2026-07-24).
 
+## 2026-07-28
+
+- **D40 (obsahové kolo + 3 ROZHODNUTÍ uživatele) — v3 fallback sada ZAPEČENA
+  (28 šablon) a situace dostaly pole `nazev`.** Kolo `content-generator` →
+  `protocol-humor-tester` → `design-critic` dle §8 návrhu fáze 2.1 (zadání D36).
+  Kritik: „zapéct s výhradami" — 7 nálezů, po opravách zapečeno; matice
+  `pásmo × podminka` projeta proti enginu, **žádná kombinace nepadá do
+  `NOUZOVY_ZAZNAM`**. Sada: 4/4 = 3 · 3/4 = 4 · 2/4 = 5 · ≤1/4 = 5 · zatah 2 ·
+  lecka 1 · konfrontace 1 · kolaps 2 · **navrat 1** · finále 2+2. v2 sada
+  archivována do `obsah/archiv-v2/fallback-sablony-v2.yaml` (nesmazána).
+  **Obě povinná rozhodnutí ze zadání §8:** (1) **`kolaps` v sadě, ale psaný
+  znovu** — v3 sémantika je 3. postih, ne zranění (lehké postihy opadnou, těžké
+  zůstanou); k tomu **přibylo pásmo `navrat`** (`character_returned`), protože
+  bez něj by spis implicitně tvrdil trvalé vyřazení, které mechanika nedala.
+  (2) **`hlas_z_auta` NEJDE do v3 sady** — engine takovou událost nemá
+  (`EVENT` ji nezná, v2 ji plnilo UI přes `extra.hlasy`), text tvrdil „vliv na
+  výsledek vzat na vědomí" a UI-only varianta by výsledek tvořila mimo engine,
+  tedy nová mechanika, ne text. Zůstává v archivu s v2; obživne, jen když se
+  mechanika postaví (tech backlog `navrh-v3.md` ř. 337).
+  **Tři rozhodnutí uživatele k nálezům kritika:** (a) **N1** (`slozeniKolMin: 1`
+  + tick na konci téže situace → v ~50 % se postava vrací ve stejném uzlu) se
+  opravuje **v textu, ne v enginu** — kalibrovaná čísla brány po D35/D39 se kvůli
+  fikci nerozbíjejí; šablony `kolaps`/`navrat` proto nesmí tvrdit uplynulý čas
+  a musí dávat smysl jako dva sousední odstavce. (b) **N3** (sólo run vede jednu
+  postavu, ale 17 šablon mluvilo o „podezřelých") se řeší **neutrálním psaním**
+  (úlohy, role, vůz, náklad), ne novým klíčem `podminka` — první sezení lidské
+  brány bude podle playtestu 2026-07-22 zase sólo. (c) **arbitráž (b) kritika:
+  `nazev` se DOPLŇUJE** — 15 situací + 4 léčky/konfrontace pronásledovatelů;
+  bez něj by protokol sázel do úředního spisu kebab-case id. Vedlejší efekt
+  ověřen měřením: `vysvetleni.js` si `nazev` vzala sama, anotace mapy nově zní
+  „Cesta zvolena: Překladiště v Syracuse (člověk)" místo „Cesta zvolena: člověk".
+  **Zamítnuto kritikem:** rozšíření kontraktu na `{veci_zasah}`/`{veci_selhani}`
+  (třetí opakování téže informace vedle `situace.text` a vysvětlující vrstvy →
+  backlog fáze 3); strop 28 šablon platí, opravy se dělají přepisem.
+  **Vedlejší nález — zadání kola se mýlilo:** tvrdilo, že bedny se ztrácejí jen
+  v PRŮŠVIHU; testér doložil opak (ztrátové postihy, `prototyp-mvp.md` ř. 168,
+  `state.js` 382–384, `vysypana-bedna` v poolech `s_nasledky`). Hlavička sady
+  nese doklad a explicitní zákaz škrtat `fb-v3-nasledky-4`.
+  *Kontext: verdikt kritika a průvodky ve scratchpadu session; kanonické zadání
+  [[../technika/faze-2.1-navrh-2026-07-27|technika/faze-2.1-navrh-2026-07-27.md]] §8.*
+
 ## 2026-07-27
 
 - **D39 (ROZHODNUTÍ PM, delegováno uživatelem) — výsledek sweepu přijat,

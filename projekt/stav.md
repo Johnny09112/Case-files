@@ -1,7 +1,7 @@
 # Stav projektu
 
 *Živý dokument. Udržuje `project-manager` — aktualizuj po každém větším kroku.
-Poslední aktualizace: 2026-07-27.*
+Poslední aktualizace: 2026-07-28.*
 
 ## Aktuální fáze
 
@@ -94,6 +94,17 @@ Report: [[../technika/kalibrace-5-sweep-prahoffset-2026-07-27|technika/kalibrace
 vyčíslená odchylka; A1 nezapečen (porušuje blind předregistraci a kupuje K1 za
 K2 drift). `hraci[n].ruka` = záložní páka, aktivuje se jen po nálezu lidské
 brány. **Kalibrace je ZAVŘENÁ; kritická cesta = 2.1 → 3 → lidská brána.**
+**OBSAHOVÉ KOLO 2.1 ZAPEČENO (D40, 2026-07-28):** v3 fallback sada **28 šablon**
+v `prompty/fallback-sablony.yaml` (v2 do `obsah/archiv-v2/`), po kole
+generátor → humor-testér → kritik („zapéct s výhradami", 7 nálezů opraveno).
+Obě povinná rozhodnutí §8 padla: `kolaps` přepsán na v3 sémantiku a doplněn
+o nové pásmo **`navrat`**; **`hlas_z_auta` zamítnut** — engine událost nemá,
+UI-only varianta by tvořila výsledek mimo engine. Uživatel rozhodl tři nálezy:
+N1 se opravuje v textu (ne `slozeniKolMin` — kalibrovaná čísla se nerozbíjejí),
+N3 neutrálním psaním (sólo run), a **`nazev` se doplňuje** do 15 situací + 4
+léček/konfrontací. Vedlejší zisk: `vysvetleni.js` si `nazev` vzala sama —
+anotace mapy nově jmenuje místo. 231 testů zelených, lint čistý.
+**Zbývá z 2.1:** `protocol-fill.js` na v3 (+ jeho 32 testů) a doklikatelný run.
 
 *Průběh kalibrace-4 (historie):*
 [[../technika/kalibrace-4-brana-navrh-2026-07-27|Balík]] byl kanonické zadání.
@@ -143,7 +154,8 @@ variance doměřena (2sd = 3,22 < 6). Eskalace V1–V4 rozhodnuta uživatelem ja
 | **Přeladit `prahOffsetDlePoctu` (K1 3p/4p + K6a)** — jediná páka bez dotyku obsahu; sweep je levný | game-designer + playtest-facilitator | **HOTOVO 2026-07-27 (D38) — páka VYČERPÁNA, nic nezapečeno.** Průchozí kandidát existuje (`{1:0,2:5,3:6,4:6}`: K1 6/6, K6a 6,03), ale platí se jím K2 drift (1,28, 2/6) a leží v režimu, který předregistrace předem zakázala (clamp prahů). Report [[../technika/kalibrace-5-sweep-prahoffset-2026-07-27|technika/kalibrace-5-sweep-prahoffset]]; **uzavřeno D39 = varianta (a)**, breach jde do lidské brány jako známá odchylka |
 | Mrtvá volba: cíl `mozek-operace` má 0 % splnění ve všech variantách včetně baseline (vedlejší nález D38) | content-generator + game-designer | otevřeno — **dle D39(iv) vyřešit samostatným malým kolem PŘED lidskou bránou** (diagnóza → oprava či výměna cíle → kontrafaktuál přes CONTENT_DIR); nepřibalovat k jiné iteraci |
 | **Fáze 2.1: vysvětlující vrstva pravidel v UI** — bez ní lidská brána selže na čitelnosti (metrika 6), ne na designu | kódový repo | **NÁVRH SCHVÁLEN PO PM REVIEW (D36, 2026-07-27)** — [[../technika/faze-2.1-navrh-2026-07-27|technika/faze-2.1-navrh-2026-07-27.md]]; 2 nálezy zapracovány, §10 rozhodnuty (hide = b). Další krok: implementační plán (Superpowers) a stavba. Stavba NEZAČALA |
-| **v3 fallback šablony protokolu (~20)** — součást 2.1, běží paralelně s UI | content-generator + protocol-humor-tester | **zadání hotové** (§8 návrhu 2.1): v2 sada je nepoužitelná (pásma `uspech/za_cenu/selhani`, `{zraneni}`, jedna karta) |
+| **v3 fallback šablony protokolu (~20)** — součást 2.1, běží paralelně s UI | content-generator + protocol-humor-tester + design-critic | **HOTOVO A ZAPEČENO 2026-07-28 (D40)** — 28 šablon v `prompty/fallback-sablony.yaml`, v2 sada v `obsah/archiv-v2/`; `kolaps` přepsán na v3 sémantiku + nové pásmo `navrat`, `hlas_z_auta` zamítnut (engine událost nemá). Situace dostaly pole `nazev` (15 + 4 u pronásledovatelů) — anotace mapy nově jmenuje místo. 231 testů zelených, 4 golden snapshoty rebasovány (otisk obsahu + jméno místa) |
+| **Zbytek fáze 2.1 po zapečení sady:** `protocol-fill.js` přepsat na v3 (`{uzel}` z `nazev` s fallbackem na id, `{veci}` dle kontraktu v hlavičce sady) + přepsat jeho 32 testů; pak smí zaniknout `opravUvozovkySablon()` (v3 sada je validní YAML) a fixtura `protocol-fill.test.js` ukazující do archivu | kódový repo (Opus) | **na řadě** — dokud modul běží ve v2, test čte archivovanou v2 sadu (komentář v testu říká proč) |
 | **Fáze 3: LLM adaptér + test kvality českého humoru** — největší produktové riziko dle CLAUDE.md, simulace ho z principu neotestuje | kódový repo + protocol-humor-tester | **na řadě** — BLOKUJE volba poskytovatele (viz otevřené otázky) |
 | Obsahové vady mimo mandát P2 (z D29): viditelný utok-4 slot v NPC je ve 40 % instancí nesplnitelný (`rival-prepad`, `urednik-vaha`, `mesto-ulicka`); kombi `[nastroj, improvizace]` nesplnitelný nad práh 3 (`farmar-stodola`, `most-prohnila-prkna`) | content-generator | otevřeno — nepřibalovat k jiné iteraci, rozmazalo by měření |
 | ~~P4: ruka 1p 8→9~~ | — | **ZRUŠENO (D29)** — po P1 je 1p nejvyšší ze všech počtů (61,6 %), zvětšení ruky by rozbilo K6a |

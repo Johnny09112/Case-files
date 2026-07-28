@@ -4,3 +4,4 @@
 - [Kalibrace-4 audit](kalibrace-4-audit.md) — balík nové brány (D25, 2026-07-27): goalpost-tell = best-case gamble; nekřič vlk u poctivě držených bodů; K7 pojistka neměřená; dvojí cut
 - [K7 learnabilita verdikt](k7-learnabilita-verdikt.md) — gate ≥12 b. neprošel (9,1), ale byl mis-specifikovaný mnou; prahy z cizí osy vždy ověř proti jejímu headroomu
 - [K2/K5-D P-rozhodnutí verdikt](k2-k5d-p-rozhodnuti-verdikt.md) — 2026-07-27: D25e × K5-D je nesplnitelná dvojice, oba gaty pod prahem vnímatelnosti, doporučeno jít na lidskou bránu
+- [Fallback v3 verdikt](fallback-v3-verdikt.md) — 2026-07-27: zapéct s výhradami (7 oprav), arbitráže a–e, 2 otevřená rozhodnutí (kolaps timing, sólo plurál)
