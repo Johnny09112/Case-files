@@ -1,131 +1,289 @@
-﻿# Fallback šablony protokolu — losují se při výpadku API (timeout 10 s → fallback).
-# Jsou to NÁHRADNÍ protokoly, ne prompt: hotový text s dosazovanými hodnotami.
-# Nesmí nikdy tvrdit nic, co mechanika nedala — počty beden/zranění se DOSAZUJÍ
-# z výsledku hodu; jaká pole šablona smí zmínit, hlídá `podminka`.
-# Tón dle prompty/protokol.md: suchá úřední čeština, 3–5 vět, humor z kontrastu.
+# Fallback šablony protokolu (v3) — losují se při výpadku LLM (timeout 10 s → fallback,
+# ADR-004). Nejsou to prompty: je to HOTOVÝ text s dosazovanými hodnotami. Bez API klíče
+# je hra na nich plně hratelná, takže pro lidskou bránu jde o PRIMÁRNÍ texty, ne nouzovku.
+#
+# Tón dle prompty/protokol.md (systémový prompt v0.3): suchá úřední čeština, 1930,
+# 3–5 vět, humor výhradně z kontrastu úřední řeči a absurdity, nejvýše JEDNA závorková
+# poznámka vyšetřovatele na odstavec. Žádná reálná značka ani osoba, žádné vymyšlené
+# jméno mimo {jmeno}.
+#
+# ČÍM JE PROTOKOL, KDYŽ VEDLE NĚJ BĚŽÍ VYSVĚTLUJÍCÍ VRSTVA (nález N6, 2026-07-28):
+# „Co se stalo“ už řekl `text:` situace prózou a `ui/vysvetleni.js` u každého slotu
+# přesněji (kus, stat, práh, důvod). Protokol přidává ÚŘEDNÍ RÁM A VERDIKT, ne třetí
+# převyprávění téhož. Proto tvrdé kvóty: {veci} nejvýš u POLOVINY variant v pásmu
+# a nejvýš POLOVINA variant v pásmu smí otevřít počítáním („N ze čtyř“). Kde {veci}
+# zůstane, ať je vyšetřovatel HODNOTÍ, ne vyjmenovává.
+#
+# TVRDÝ ZÁKAZ: šablona nesmí tvrdit nic, co mechanika nedala. v3 vyhodnocuje uzel
+# TÝMOVĚ přes 4 sloty (ne hodem jednotlivce), proto pásmové šablony NEUKAZUJÍ prstem
+# na viníka slotu. {jmeno} smí padnout jen tam, kde engine jednu osobu skutečně určil:
+# příjemce postihu (penalty_added.hrac_id), složení, návrat. POZOR: oběť postihu je
+# vlastník PRVNÍHO propadlého slotu v pořadí slotů, tedy volba arbitrární — text proto
+# nesmí naznačovat zavinění, jen evidenci.
 #
 # Schéma (nová pole nepřidávat bez úpravy tohoto komentáře):
-#   id:       kebab-case, unikátní napříč všemi soubory
-#   pasmo:    uspech | za_cenu | selhani | zatah | lecka | konfrontace
-#             | kolaps | hlas_z_auta | finale_doruceno | finale_nevyreseno
-#   podminka: (volitelné) kdy šablona sedí; klíč vynechán = "jakkoli":
-#               zraneni: ano | ne     — utrpěl podezřelý tímto hodem zranění?
-#               bedna:   ano | ne     — ztratil tým tímto hodem aspoň 1 bednu?
-#   text:     hotový protokol, 3–5 vět. Placeholdery (engine formátuje shodu):
-#               {jmeno}   — příjmení podezřelého (engine dosazuje příjmení, 1. pád)
-#               {uzel}    — název uzlu (1. pád, úřední label "v úseku vedeném jako {uzel}"
-#                          / "v bodě hlášeném jako {uzel}"; label sedí i na uzly pojmenované dějem)
-#               {karta}   — název karty, vždy v „uvozovkách", 1. pád
-#               {bedny}   — bedny ztracené TÍMTO hodem, fráze "jedna bedna" / "dvě bedny"
-#               {naklad}  — zůstatek nákladu, fráze "N beden"
-#               {zraneni} — krátký popis zranění (engine dodá; fallback "zranění blíže neurčené")
-#             Šablona smí {bedny}/{zraneni} použít, jen když to `podminka` zaručuje.
-# Cílový počet pro MVP: ~20 (nejvíc za_cenu a selhani; vysokofrekvenční pásma ≥4 varianty).
+#   id:       kebab-case, unikátní napříč všemi soubory obsahu
+#   pasmo:    "4/4_HLADCE_LOOT" | "3/4_HLADCE" | "2/4_S_NASLEDKY" | "≤1/4_PRUSVIH"
+#             | zatah | lecka | konfrontace          (úvodní odstavec dle typu situace)
+#             | kolaps | navrat                      (character_folded / character_returned)
+#             | finale_doruceno | finale_nevyreseno  (závěr spisu)
+#             Klíče čtyř pásem jsou PŘESNĚ řetězce, které vydává engine
+#             (prototyp/src/engine/events.js, BAND) — včetně znaku „≤“; proto v uvozovkách.
+#   podminka: (volitelné) kdy šablona sedí; klíč vynechaný = „jakkoli“:
+#               postih: ano | ne   — padl v této situaci postih (penalty_added)?
+#               bedna:  ano | ne   — ztratil tým touto situací aspoň 1 bednu?
+#             (v2 klíč `zraneni` zaniká — zranění nahradily postihy.)
+#   text:     hotový protokol, 3–5 vět, jeden odstavec.
+#
+# ------------------------------------------------------------------------------
+# PĚT PRAVIDEL, KTERÁ VZNIKLA Z NÁLEZŮ — NEEDITOVAT ZPĚT
+# ------------------------------------------------------------------------------
+# 1) POJISTNÁ VARIANTA (bez `podminka`) musí být pravdivá v CELÉM pásmu, ne jen
+#    dosaditelná — hraje přesně ve stavech, které nikdo jiný nepokrývá. Konkrétně
+#    nesmí tvrdit postih: `addPenalty` postih nezaloguje, když propadlý slot nemá
+#    vlastníka (`obet == null`) ani když cap → místo postihu padne SLOŽENÍ. (K1)
+# 2) PROPADLÝ SLOT NEMUSÍ MÍT KARTU. `resolveSituation()` loguje u neobsazeného slotu
+#    `duvod: 'neobsazeno'`, `karta_id: null` — nastane vždy, když je committnutých karet
+#    míň než 4 (složená postava, `ruka_minus`), a prázdný slot propadá VŽDY, takže je
+#    mezi propadlými nadreprezentovaný. Vinu proto připisuj ROLI / ÚLOZE, nikdy „kusu“
+#    — jinak protokol řekne opak toho, co o centimetr výš tvrdí razítko vysvětlující
+#    vrstvy („Slot nikdo neobsadil — složená postava necommituje“). (N2)
+# 3) ŽÁDNÉ VÝHLEDOVÉ VAZBY („do dalšího úseku“, „pokračovali dál“, „potáhne se s ním“).
+#    Run může skončit právě tímto uzlem: konfrontace v pásmu PRŮŠVIH = prohra vždy,
+#    a `loseCrates()` na poslední bedně ukončí run i z lehkého `vysypana-bedna` ve 2/4.
+#    Finále o odstavec níž by tvrdilo opak. Trvalost postihu se říká bez budoucího času
+#    („samo od sebe to nepřejde“). (N5)
+# 4) SLOŽENÍ NETVRDÍ UPLYNULÝ ČAS. `kolDoNavratu = 1 + rng.int(2) ∈ {1,2}` a tick běží
+#    na konci TÉŽE situace → v polovině případů padne `CHARACTER_RETURNED` se stejným
+#    `nodeSeq` jako `CHARACTER_FOLDED` a postava nevynechá ani jednu situaci. Šablony
+#    `kolaps`/`navrat` proto musí dávat smysl i jako dva SOUSEDNÍ odstavce téhož uzlu:
+#    žádné „setrval mimo dění“, „odležel zbytek úseku“, „ostatní pokračovali“. (N1;
+#    rozhodnuto 2026-07-28 opravit TEXT, ne engine — `slozeniKolMin` zůstává 1, aby se
+#    nerozbila kalibrovaná čísla brány po D35.)
+# 5) NEUTRALITA K POČTU HRÁČŮ. `createRun` bere 1–4 hráče; v sólu vede hráč JEDNU
+#    postavu a committne všechny čtyři karty sám (`rules.ruce[1]`). Pásmové šablony
+#    proto nepočítají osoby a nepoužívají množné číslo osob — mluví o ÚLOHÁCH, ROLÍCH,
+#    VOZE a NÁKLADU, případně o jedné jmenované osobě u postihu. Nepředělávat zpět na
+#    „podezřelí“. (N3; rozhodnuto 2026-07-28.)
+#
+# PLACEHOLDERY (engine dosazuje; co `podminka` nezaručuje, se v textu nesmí objevit):
+#   {jmeno}  příjmení postavy = poslední slovo pole `jmeno` z obsah/postavy.yaml
+#            (kontrakt prototyp/CLAUDE.md). Engine NESKLOŇUJE → šablona ho smí použít
+#            VÝHRADNĚ v nominativní apozici jako podmět: „podezřelý {jmeno}“ (i v obráceném
+#            pořadí slov: „…nese podezřelý {jmeno}“). Jakýkoli šikmý pád („na podezřelého
+#            {jmeno}“, „podezřelému {jmeno}“) po dosazení rozbije shodu — do jiné vazby se
+#            jméno NEDÁVÁ. Potřebuje-li věta jméno v jiném pádě, přestav větu.
+#            Vazba předpokládá mužský rod; sada jmen v obsah/postavy.yaml je fixní
+#            a mužská (poznámku o tom nese hlavička postavy.yaml).
+#   {uzel}   název situace v 1. pádě (pole `nazev`), úřední obal „v úseku vedeném jako
+#            {uzel}“ / „v bodě hlášeném jako {uzel}“. Zdroj `nazev` se do
+#            obsah/situace.yaml + pronasledovatele.yaml doplňuje spolu s touto sadou
+#            (rozhodnutí 2026-07-28) — bez něj by se sázelo kebab-case id.
+#            V každém početním pásmu drží {uzel} JEN JEDNA varianta (loot-1, hladce-1,
+#            nasledky-3, prusvih-1) a z úvodních odstavců jen zatah-1 a lecka-1 —
+#            jinak by název místa padl dvakrát ve dvou sousedních odstavcích.
+#            Počet {uzel}-šablon v pásmu NEZVYŠOVAT.
+#   {veci}   VĚCI VE SLOTECH, v pořadí slotů situace (ne jedna karta jako ve v2).
+#            FORMÁT, KTERÝ MÁ ENGINE VYROBIT (kontrakt tohoto souboru):
+#              „Balík bankovek“, „Otrlený výraz“, „Zlaté hodinky“ a „Banánový kanón“
+#            tj. názvy věcí v typografických uvozovkách, oddělené čárkou a mezerou,
+#            poslední dvojice spojkou „ a “; bez koncové interpunkce, 1. pád.
+#            Položek smí být MÉNĚ než čtyři (složená postava kartu nedodala) —
+#            žádná šablona proto netvrdí „čtyři předměty“ o obsahu {veci}.
+#            Kvóta dle N6: nejvýš polovina variant pásma (dnes 7 ze 17).
+#   {postih} NÁZEV postihu z obsah/postihy.yaml (pole `nazev`, 1. pád) — NIKOLI pole
+#            `text`: to je psané ve 2. osobě („saháš pomaleji“) a do protokolu nepatří.
+#            Šablona ho vždy obaluje uvozovkami a úřední vazbou („vedený jako „{postih}““).
+#            Jen když podminka {postih: ano}. NESMÍ tvrdit, jak dlouho postih vydrží:
+#            lehké s `trvani: ihned` (drobna-pokuta, utrzena-kapsa, vysypana-bedna) se
+#            aplikují okamžitě a dál se nenesou. NESMÍ tvrdit, kdo za postih zaplatil:
+#            `rozsah: tym` (drobna-pokuta, vysypana-bedna) jde z týmového konta, byť je
+#            postih zalogován na jednu osobu. Bezpečná vazba je „podezřelý {jmeno} je
+#            veden s následkem „{postih}““, nikoli „odnesl si / zaplatil / vyvázl s“.
+#            (Těžké postihy v ≤1/4 mají všechny `rozsah: hrac` a `trvani: do_vyleceni`,
+#            tam je osobní i trvalostní formulace bezpečná — ale bez budoucího času, viz 3.)
+#   {bedny}  bedny ztracené TOUTO situací, fráze („jedna bedna“ / „dvě bedny“).
+#            Jen když podminka {bedna: ano}.
+#   {naklad} zůstatek nákladu, fráze („pět beden“). Používat STŘÍDMĚ: náklad se mimo
+#            PRŮŠVIH skoro nemění a opakované „stav nákladu: šest beden“ v každém
+#            odstavci runu se z registrové kotvy mění v tik (K6). Poměr v sadě:
+#            4/4 jedna ze tří, 3/4 dvě ze čtyř, 2/4 dvě z pěti, PRŮŠVIH všech pět.
+#
+# CO SMÍ KTERÉ PÁSMO TVRDIT (prototyp-mvp.md §Resoluční systém v3 + engine state.js):
+#   4/4 HLADCE+LOOT … bez postihu, bez ztráty; loot „karta navíc“ autorují VŠECHNY
+#                     situace (20/20) a `drawCard()` míchá odhaz, takže je prakticky
+#                     garantovaný. Kredity +2.
+#   3/4 HLADCE     … bez postihu, bez ztráty. Kredity +1.
+#   2/4 S NÁSLEDKY … 1 LEHKÝ postih, má-li propadlý slot vlastníka.
+#   ≤1/4 PRŮŠVIH   … těžký postih (NENÍ garantovaný — při capu padne místo něj složení),
+#                     ztráta nákladu a růst Žáru.
+#   ŽÁR: zmínka o vzrostlé pozornosti zákona je bezpečná v ≤1/4. Žár ale roste i ve 2/4
+#        a v KTERÉMKOLI pásmu za hlučnou kartu (GANGSTER / vysoký útok) — proto ho žádná
+#        šablona nesmí POPÍRAT („nikdo si ničeho nevšiml“).
+#   BEDNY MIMO PRŮŠVIH JSOU LEGITIMNÍ — NEŠKRTAT `fb-v3-nasledky-4`. Náklad berou
+#        „PRŮŠVIH / ztrátové postihy“ (prototyp-mvp.md ř. 168); `applyImmediate()` volá
+#        pro `druh: ztrata_naklad` přímo `loseCrates()` (prototyp/src/engine/state.js
+#        ř. 382–384) a lehký postih `vysypana-bedna` je v poolu `s_nasledky` čtyř situací.
+#        Šablona s {bedna: ano} mimo PRŮŠVIH proto ztrátu připisuje POSTIHU, ne pásmu.
+#        (Arbitráž 2026-07-27: dřívější znění zadání tvrdilo opak a mýlilo se.)
+#   TRUHLA A MOTEL NEMAJÍ PÁSMO — rozhodnuto vědomě (N7), ne opomenutím: netvoří situaci,
+#        takže ani odstavec, a pohyb kreditů nese anotace `credit_flow` na okraji mapy.
+#        Spis o 1–3 ze 7 kroků mlčí a to je v pořádku. Nezakládat pásma bez rozhodnutí.
+#   POZOR `prusvih-4`: `podminka: {postih: ano}` bez klíče `bedna` NEZNAMENÁ „PRŮŠVIH bez
+#        ztráty“ — v PRŮŠVIHU je `bedna` vždy `ano`. Je to prostě další kandidát.
+#
+# VALIDITA: soubor musí být VALIDNÍ YAML (v2 sada nebyla — uzavírala české uvozovky
+# ASCII znakem, což předčasně ukončovalo scalar, a kód proti tomu držel workaround
+# `opravUvozovkySablon()` v prototyp/src/ui/protocol-fill.js). Uvnitř textů se používají
+# výhradně typografické české uvozovky „ a “; ASCII " se v `text:` nesmí objevit.
+#
+# Cílový počet pro MVP: ~20. Zde 28 a to je STROP (verdikt kritika 2026-07-28):
+# opravy se dělají přepisem, ne přírůstkem.
 
 sablony:
-  # ---------- ÚSPĚCH (plný úspěch) — bez zranění, bez ztráty bedny ----------
-  - id: fb-uspech-1
-    pasmo: uspech
-    podminka: {zraneni: ne, bedna: ne}
-    text: "V úseku vedeném jako {uzel} zvolil podezřelý {jmeno} postup „{karta}“. Postup se z jeho hlediska osvědčil, hlídka nezasáhla a náklad prošel bez úhony. Zranění žádné, ztráta žádná. Stav nákladu: {naklad}. (Zdejší strážník má zjevně jiné starosti než já.)"
+  # ============================================================
+  # 4/4 HLADCE + LOOT — všechny sloty prošly, bonusová věc navíc
+  # ============================================================
+  - id: fb-v3-loot-1
+    pasmo: "4/4_HLADCE_LOOT"
+    podminka: {postih: ne, bedna: ne}
+    text: "V úseku vedeném jako {uzel} obstály všechny čtyři úlohy. Ve spisu jsou k nim vedeny {veci}, a poprvé za dlouhou dobu se každý kus hodil tam, kam byl dán. Náklad zůstal nedotčen — stav nákladu: {naklad}. Z místa nadto zmizel kus, který dosud nikdo nenahlásil jako pohřešovaný. (Bezvadné hlášení se mi píše hůř než přiznání.)"
 
-  - id: fb-uspech-2
-    pasmo: uspech
-    podminka: {zraneni: ne, bedna: ne}
-    text: "Podezřelý {jmeno} předložil v bodě hlášeném jako {uzel} „{karta}“ a věc tím pro sebe uzavřel příznivě. Nikdo nebyl zraněn, náklad zůstal nedotčen. Stav nákladu: {naklad}. Případ v tomto bodě bez dalšího."
+  - id: fb-v3-loot-2
+    pasmo: "4/4_HLADCE_LOOT"
+    podminka: {postih: ne, bedna: ne}
+    text: "Zjištěno, že v tomto bodě trasy nedošlo k ničemu, co by zakládalo úřední úkon. Všechny čtyři úlohy obstály; následek žádný, ztráta žádná. Při odjezdu se z místa ztratil ještě jeden kus, jehož původ zůstává neobjasněn a objasněn nebude."
 
-  - id: fb-uspech-3
-    pasmo: uspech
-    podminka: {zraneni: ne, bedna: ne}
-    text: "Dle zjištění použil podezřelý {jmeno} v úseku vedeném jako {uzel} postup „{karta}“, a to úspěšně. Zásah orgánů se nekonal, ztráty na nákladu ani na zdraví žádné. Stav nákladu: {naklad}. (Poznamenávám bez nadšení.)"
+  - id: fb-v3-loot-3
+    pasmo: "4/4_HLADCE_LOOT"
+    text: "Opatření v tomto bodě trasy nenavrhuji žádné, což mě na téhle silnici potkává zřídka. Důvod uvádím tento: čtyři úlohy, čtyři zdařilé konce. Odjezd proběhl i s kusem navíc, po kterém se dosud nikdo nesháněl."
 
-  - id: fb-uspech-4
-    pasmo: uspech
-    podminka: {zraneni: ne, bedna: ne}
-    text: "Podezřelý {jmeno} prošel úsekem vedeným jako {uzel} bez potíží; ve spisu vedeno jako „{karta}“. Náklad zůstal celý, osoba bez újmy. Stav nákladu: {naklad}. Věc odložena do příště."
+  # ============================================================
+  # 3/4 HLADCE — tři sloty prošly, jeden ne; bez postihu i ztráty
+  # ============================================================
+  - id: fb-v3-hladce-1
+    pasmo: "3/4_HLADCE"
+    podminka: {postih: ne, bedna: ne}
+    text: "V úseku vedeném jako {uzel} obstály tři úlohy ze čtyř. Čtvrtá zůstala nezvládnutá, aniž by to komukoli přineslo následky. K úkonům jsou ve spisu vedeny {veci}; sestavu jako celek hodnotím zdrženlivě. Stav nákladu: {naklad}."
 
-  # ---------- ÚSPĚCH ZA CENU — vždy zranění ----------
-  - id: fb-zacenu-1
-    pasmo: za_cenu
-    podminka: {zraneni: ano, bedna: ne}
-    text: "Podezřelý {jmeno} v úseku vedeném jako {uzel} vsadil na „{karta}“. Věc prošla, nikoli však zadarmo — podezřelý si odnesl zranění, dle listu {zraneni}. Náklad zůstal celý, stav nákladu: {naklad}. Do spisu zaneseno; pokračoval, byť pomaleji."
+  - id: fb-v3-hladce-2
+    pasmo: "3/4_HLADCE"
+    podminka: {postih: ne, bedna: ne}
+    text: "Průchod tímto bodem trasy hodnotím jako uspokojivý, byť ne úplný. Jedna ze čtyř úloh nedopadla; následky z toho neplynou žádné, na nákladu ani na osobách. Stav nákladu: {naklad}. Hlášení k místu jsem přijal ústně a dále je nešířil."
 
-  - id: fb-zacenu-2
-    pasmo: za_cenu
-    podminka: {zraneni: ano, bedna: ne}
-    text: "V bodě hlášeném jako {uzel} použil podezřelý {jmeno} postup „{karta}“. Cíle dosáhl, cenu však zaplatil na vlastním těle — zranění dle listu: {zraneni}. Ztráty na nákladu žádné, stav nákladu: {naklad}. (Kdo chce pašovat, ať počítá s modřinami.)"
+  - id: fb-v3-hladce-3
+    pasmo: "3/4_HLADCE"
+    podminka: {postih: ne, bedna: ne}
+    text: "Vyslechnutý svědek uvádí, že vůz odjel klidně a bez zdržení; jeho výpověď nemám důvod zpochybňovat, neboť je totožná s mou. Tři ze čtyř úloh v tomto bodě trasy obstály, čtvrtá nikoli, a nikomu to nevadilo. K úkonům jsou vedeny {veci}."
 
-  - id: fb-zacenu-3
-    pasmo: za_cenu
-    podminka: {zraneni: ano, bedna: ne}
-    text: "Dle protokolu podezřelý {jmeno} prosadil v úseku vedeném jako {uzel} svůj záměr „{karta}“. Odešel s tím, zato poznamenán na těle — {zraneni}. Náklad nedotčen, stav nákladu: {naklad}. Zranění zapsáno do zdravotního listu podezřelého."
+  - id: fb-v3-hladce-4
+    pasmo: "3/4_HLADCE"
+    text: "Věc v tomto bodě trasy nevyžaduje opatření. Jedna ze čtyř úloh sice nedopadla, ale bez následků pro osoby i pro náklad. Spis odkládám do příštího hlášení."
 
-  - id: fb-zacenu-4
-    pasmo: za_cenu
-    podminka: {zraneni: ano, bedna: ano}
-    text: "Podezřelý {jmeno} v bodě hlášeném jako {uzel} vytáhl „{karta}“. Aby věc obrátil ve svůj prospěch, obětoval část nákladu — z vozu odepsáno: {bedny}. Přesto neodešel bez úhony, zranění dle listu: {zraneni}. Stav nákladu: {naklad}. (Draze koupené, leč koupené.)"
+  # ============================================================
+  # 2/4 S NÁSLEDKY — polovina slotů propadla, padá 1 lehký postih
+  # ============================================================
+  - id: fb-v3-nasledky-1
+    pasmo: "2/4_S_NASLEDKY"
+    podminka: {postih: ano, bedna: ne}
+    text: "Na uvedeném místě obstály dvě úlohy ze čtyř. Zbylé dvě role skončily bez užitku — ať už tím, že je zastal nevhodný kus, nebo tím, že je nezastal nikdo. Podezřelý {jmeno} je od té chvíle ve spisu veden s následkem „{postih}“. Náklad zůstal na voze."
 
-  - id: fb-zacenu-5
-    pasmo: za_cenu
-    podminka: {zraneni: ano, bedna: ano}
-    text: "V úseku vedeném jako {uzel} zvolil podezřelý {jmeno} postup „{karta}“. Situaci zachránil až tím, že se části nákladu vzdal — odepsáno: {bedny}. Vyvázl, byť poznamenán — {zraneni}. Stav nákladu: {naklad}. Zaznamenáno bez komentáře."
+  - id: fb-v3-nasledky-2
+    pasmo: "2/4_S_NASLEDKY"
+    podminka: {postih: ano, bedna: ne}
+    text: "K úkonům jsou ve spisu vedeny {veci}; volba nástrojů k jednotlivým rolím vzbuzuje otázky, na které tu nikdo neodpoví. Polovina úloh vyšla, polovina nikoli, což zdejší poměry vystihuje přesně. Podezřelý {jmeno} je veden s následkem „{postih}“; jak dlouho mu vydrží, se neuvádí. (Zapisuji bez soucitu, byť s pochopením.)"
 
-  # ---------- SELHÁNÍ ----------
-  - id: fb-selhani-1
-    pasmo: selhani
-    podminka: {zraneni: ano, bedna: ne}
-    text: "Podezřelý {jmeno} v úseku vedeném jako {uzel} ztroskotal s pokusem o „{karta}“. Věc se obrátila proti němu a podezřelý utrpěl zranění — {zraneni}. Náklad se tentokrát podařilo udržet, stav nákladu: {naklad}. Do spisu poznamenávám neúspěch."
+  - id: fb-v3-nasledky-3
+    pasmo: "2/4_S_NASLEDKY"
+    podminka: {postih: ano, bedna: ne}
+    text: "V úseku vedeném jako {uzel} zůstaly dvě ze čtyř úloh nezvládnuté. Vypomoci mělo to, co bylo po ruce: {veci}. Následkem toho je záznam vedený jako „{postih}“. Náklad zůstal nedotčen; stav nákladu: {naklad}."
 
-  - id: fb-selhani-2
-    pasmo: selhani
-    podminka: {zraneni: ano, bedna: ne}
-    text: "V bodě hlášeném jako {uzel} se podezřelý {jmeno} pokusil o „{karta}“ a pohořel. Odnesl si zranění, dle listu {zraneni}. Náklad však zůstal na voze, stav nákladu: {naklad}. (Štěstí v neštěstí, chtělo by se říci.)"
+  - id: fb-v3-nasledky-4
+    pasmo: "2/4_S_NASLEDKY"
+    podminka: {postih: ano, bedna: ano}
+    text: "Ztráta se v tomto bodě trasy vyčísluje na {bedny}; způsobil ji následek vedený jako „{postih}“. Teprve pak se dostávám k příčině: dvě ze čtyř úloh nevyšly. Nikdo z přítomných to nepovažoval za událost hodnou hlášení. Stav nákladu: {naklad}."
 
-  - id: fb-selhani-3
-    pasmo: selhani
-    podminka: {zraneni: ne, bedna: ano}
-    text: "Podezřelý {jmeno} se v úseku vedeném jako {uzel} pokusil o „{karta}“, což nevyšlo. Aby zachránil kůži, ponechal osudu část nákladu — na místě zůstalo: {bedny}. Sám vyvázl bez zranění. Stav nákladu: {naklad}."
+  - id: fb-v3-nasledky-5
+    pasmo: "2/4_S_NASLEDKY"
+    text: "Spis k tomuto bodu trasy nevyznívá ani dobře, ani zle, což je na téhle silnici nadprůměr. Dvě úlohy ze čtyř zůstaly nezvládnuté. Co z toho komu zůstalo, se dozvím z hlášení okrsku, až nějaké dorazí."
 
-  - id: fb-selhani-4
-    pasmo: selhani
-    podminka: {zraneni: ne, bedna: ano}
-    text: "Podezřelý {jmeno} se v bodě hlášeném jako {uzel} pokusil o únik pod hlavičkou „{karta}“, což se nezdařilo dle plánu. Zdravou kůži vykoupil nákladem — z vozu se poroučelo: {bedny}. Zranění tentokrát žádné. Stav nákladu: {naklad}. (Bedny mlčí, na rozdíl od zraněných.)"
+  # ============================================================
+  # ≤1/4 PRŮŠVIH — těžký postih, ztráta nákladu, pohyb Žáru
+  # ============================================================
+  - id: fb-v3-prusvih-1
+    pasmo: "≤1/4_PRUSVIH"
+    podminka: {postih: ano, bedna: ano}
+    text: "V úseku vedeném jako {uzel} obstála nanejvýš jediná ze čtyř úloh. K úkonům jsou vedeny {veci}; zbylé role zůstaly buď špatně obsazené, nebo neobsazené vůbec. Podezřelý {jmeno} je veden s těžkým následkem „{postih}“; samo od sebe to nepřejde. Z vozu se přitom poroučelo: {bedny}, stav nákladu: {naklad}. Rozruch neušel pozornosti okrsku."
 
-  - id: fb-selhani-5
-    pasmo: selhani
-    podminka: {zraneni: ano, bedna: ano}
-    text: "Podezřelý {jmeno} se v úseku vedeném jako {uzel} pokusil o „{karta}“ a selhal na celé čáře. Utrpěl zranění — {zraneni} — a k tomu z nákladu ubylo: {bedny}. Stav nákladu: {naklad}. Neúspěch zapsán se vší vážností."
+  - id: fb-v3-prusvih-2
+    pasmo: "≤1/4_PRUSVIH"
+    podminka: {postih: ano, bedna: ano}
+    text: "Tento bod trasy je nutno označit za průšvih v plném úředním významu slova. K dispozici byly {veci}; k čemu to bylo, spis neuvádí, neboť role zůstaly nezvládnuté tak jako tak. Podezřelý {jmeno} je veden s těžkým následkem „{postih}“, který se sám nespraví. Náklad se ztenčil o {bedny}, zbývá {naklad}. Pozornost zákona v okolí tím citelně vzrostla."
 
-  - id: fb-selhani-6
-    pasmo: selhani
-    podminka: {zraneni: ano, bedna: ano}
-    text: "V bodě hlášeném jako {uzel} podezřelý {jmeno} sáhl po „{karta}“ a dopadl zle. Kromě zranění (dle listu {zraneni}) přišel tým i o část nákladu — odepsáno: {bedny}. Stav nákladu: {naklad}. (Den, na který se bude vzpomínat nerado.)"
+  - id: fb-v3-prusvih-3
+    pasmo: "≤1/4_PRUSVIH"
+    podminka: {postih: ano, bedna: ano}
+    text: "Škoda se vyčísluje takto: {bedny} z korby a vzrostlá pozornost zákona v celém okrsku. Těžký následek „{postih}“ nese podezřelý {jmeno}. Příčinou byla nanejvýš jediná zdařilá úloha ze čtyř. Zbývá {naklad}."
 
-  # ---------- SPECIÁLNÍ SITUACE ----------
-  - id: fb-zatah-1
+  - id: fb-v3-prusvih-4
+    pasmo: "≤1/4_PRUSVIH"
+    podminka: {postih: ano}
+    text: "Průběh v tomto bodě trasy nelze označit jinak než jako selhání. Podezřelý {jmeno} je veden s těžkým následkem „{postih}“; k jeho odstranění by bylo třeba víc než ochoty. Stav nákladu: {naklad}. Hlášení o rozruchu doputovalo na okrsek dřív, než z místa kdokoli odjel."
+
+  - id: fb-v3-prusvih-5
+    pasmo: "≤1/4_PRUSVIH"
+    text: "Průběh v tomto bodě trasy hodnotím jako selhání, byť se k němu nikdo výslovně nepřihlásil. Ze čtyř úloh obstála nanejvýš jediná; zda ostatní ztroskotaly pro nezpůsobilost, nebo pro nepřítomnost, spis neuvádí. Z vozu se poroučelo, co drželo hůř než ostatní; stav nákladu: {naklad}. Pozornost zákona tím v okolí vzrostla, což poznamenávám bez zadostiučinění."
+
+  # ============================================================
+  # ÚVODNÍ ODSTAVCE dle typu situace
+  # ============================================================
+  - id: fb-v3-zatah-1
     pasmo: zatah
-    text: "Pozornost zákona v tomto úseku citelně vzrostla a trasa podezřelých byla přesměrována přes narychlo zřízenou kontrolu, v hlášení vedenou jako {uzel}. Přítomnost pronásledovatele na místě potvrzena. Podezřelí vstupují do zátahu; další vývoj níže. (Někdo si zjevně dělá čárky u nadřízených.)"
+    text: "Pozornost zákona v tomto úseku vzrostla natolik, že byla přes noc zřízena silniční kontrola, v hlášení vedená jako {uzel}. Obě průjezdné cesty byly svedeny na ni; jinudy se projet nedalo. Průběh zaznamenávám níže."
 
-  - id: fb-lecka-1
+  - id: fb-v3-zatah-2
+    pasmo: zatah
+    text: "Hlídkové vozy postavené napříč silnicí nejsou na téhle trase novinka; tentokrát však stály přesně tam, kudy vedla cesta. Objížďka nebyla, vrátit se nešlo. Co následovalo, uvádím níže. (Někdo si zjevně dělá čárky u nadřízených.)"
+
+  - id: fb-v3-lecka-1
     pasmo: lecka
-    text: "V úseku vedeném jako {uzel} na podezřelé čekala nastražená léčka; pronásledovatel zjevně znal jejich úmysly předem. Situace se rázem vyostřila. Podrobnosti hodu níže. (Buď někdo mluvil, nebo mají pašeráctví psáno ve tváři.)"
+    text: "V bodě hlášeném jako {uzel} byla nastražena léčka; pronásledovatel znal cestu předem, což mě přivádí k otázce, od koho. Vystoupit z vozu nikdo nestihl. Výsledek zaznamenávám níže."
 
-  - id: fb-konfrontace-1
+  - id: fb-v3-konfrontace-1
     pasmo: konfrontace
-    text: "Pozornost zákona dostoupila vrcholu a v bodě hlášeném jako {uzel} došlo k přímé konfrontaci s pronásledovatelem. O dalším osudu nákladu i podezřelých rozhodl jediný střet. Výsledek zaznamenán níže, bez příkras."
+    text: "Pozornost zákona dostoupila vrcholu a došlo k přímé konfrontaci s pronásledovatelem. O nákladu i o osobách rozhodl jediný střet, bez možnosti odvolání. Výsledek uvádím níže, bez příkras."
 
-  - id: fb-kolaps-1
+  # ============================================================
+  # SLOŽENÍ A NÁVRAT — nesmí tvrdit uplynulý čas (pravidlo 4 v hlavičce);
+  # oba odstavce mohou stát vedle sebe v TÉMŽE uzlu.
+  # ============================================================
+  - id: fb-v3-kolaps-1
     pasmo: kolaps
-    text: "Podezřelý {jmeno} utrpěl v úseku vedeném jako {uzel} zranění, které jej vyřadilo — dále veden jako nezpůsobilý pokračovat a přepravován v korbě vlastního vozu. Výslech na místě nebyl možný. Ostatní podezřelí pokračovali bez něj. (Jednoho ubylo, práce zůstalo stejně.)"
+    text: "Podezřelý {jmeno} nasbíral třetí následek v pořadí a tím přestal být k užitku. Byl uložen do vozu; výslech na místě nepřicházel v úvahu. Co se z toho dá vyležet, vyleží; co ne, veze si dál. Zastoupit ho nemá kdo, a spis k tomu nemá co dodat."
 
-  - id: fb-hlas-z-auta-1
-    pasmo: hlas_z_auta
-    text: "Ačkoli podezřelý {jmeno} ležel vyřazen v korbě, do dění přesto zasáhl — z auta zazněla rada, či snad kletba, mířená na spolujezdce. Vliv na výsledek vzat na vědomí. (Rady z korby bývají překvapivě hlasité.)"
+  - id: fb-v3-kolaps-2
+    pasmo: kolaps
+    text: "Podezřelý {jmeno} dosáhl počtu následků, po kterém už není k ničemu, a byl odklizen do vozu. Co bylo lehčího, ztrácí se ležením; co těžšího, nikoli. Kdy se posadí, nechává spis otevřené. Do té doby je veden jako nezpůsobilý."
 
-  - id: fb-finale-doruceno-1
+  - id: fb-v3-navrat-1
+    pasmo: navrat
+    text: "Podezřelý {jmeno} se posadil a je od tohoto bodu opět veden jako činný účastník. Jak dlouho ve voze ležel, spis nezaznamenává; nikdo to neměřil. Zda si z toho odnesl poučení, rovněž neuvádím. (Škoda; ve voze byl přehlednější.)"
+
+  # ============================================================
+  # ZÁVĚR SPISU
+  # ============================================================
+  - id: fb-v3-finale-doruceno-1
     pasmo: finale_doruceno
-    text: "Náklad byl navzdory všemu doručen na místo určení, stav nákladu: {naklad}. Podezřelí se rozplynuli dřív, než stačil kdokoli sepsat jejich jména správně. Spis se tímto uzavírá razítkem DORUČENO. (Zdejší úřad k věci dále nic nemá; ostatně nikdy neměl.)"
+    text: "Náklad byl navzdory všemu doručen na místo určení; stav nákladu při předání: {naklad}. Kdo jej předával, rozplynul se dřív, než stačil kdokoli zapsat jméno správně. Spis se tímto uzavírá razítkem DORUČENO. (Zdejší úřad k věci dále nic nemá; ostatně nikdy neměl.)"
 
-  - id: fb-finale-nevyreseno-1
+  - id: fb-v3-finale-doruceno-2
+    pasmo: finale_doruceno
+    text: "Zboží dorazilo do New Yorku a přešlo do rukou, jejichž popis spis neobsahuje. Předáno bylo: {naklad}. Zadržen nebyl nikdo, neboť nikdo z přítomných orgánů nikoho neviděl. Věc uzavírám razítkem DORUČENO a vracím se ke svým povinnostem."
+
+  - id: fb-v3-finale-nevyreseno-1
     pasmo: finale_nevyreseno
-    text: "Náklad se nepodařilo dopravit; poslední bedny skončily mimo dosah podezřelých a věc je tímto vedena jako NEVYŘEŠENO. Kdo přežil, mlčí; kdo mlčí, nebyl obviněn. Spis odkládám na neurčito. (Alkohol se, pokud vím, nenašel. Skutečně.)"
+    text: "Náklad se na místo určení dopravit nepodařilo. Kdo u toho byl, mlčí; kdo mlčí, nebyl obviněn. Věc vedu jako NEVYŘEŠENO a odkládám ji na neurčito. (Alkohol se, pokud vím, nenašel. Skutečně.)"
+
+  - id: fb-v3-finale-nevyreseno-2
+    pasmo: finale_nevyreseno
+    text: "Cesta skončila dřív než trasa, která k ní byla vybrána. Zboží na místo určení nedorazilo, po osobách není památky a svědci jsou hluší. Spis uzavírám razítkem NEVYŘEŠENO, aby se do konce měsíce neválel na stole. (Kdyby se něco našlo, jistě mi to někdo oznámí.)"

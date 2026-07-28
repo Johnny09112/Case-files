@@ -5,6 +5,10 @@
 #
 # Schéma (nová pole nepřidávat bez úpravy komentáře):
 #   id:        kebab-case, unikátní napříč obsah/
+#   nazev:     krátký název místa v 1. PÁDĚ, začínající podstatným jménem. Dosazuje se
+#              do protokolu jako {uzel} v obalech „v úseku vedeném jako {uzel}“ /
+#              „v bodě hlášeném jako {uzel}“ — engine ho NESKLOŇUJE, takže musí snést
+#              oba obaly beze změny tvaru. Bez něj by protokol sázel kebab-case id.
 #   typ:       npc | lokace | zatah | lecka | konfrontace
 #              (lecka/konfrontace se autorují u pronásledovatelů, ne zde)
 #   svet:      1930 (default) | ...
@@ -48,6 +52,7 @@ situace:
   # TÉMA 1 — Farmář
   # ============================================================
   - id: farmar-brod
+    nazev: Farmářův brod
     typ: npc
     svet: 1930
     telegraf: "Vůz trčí v brodě a farmář s vidlemi nemá dobrý den. Tři viditelné role chtějí zaplatit, klidné slovo a pár šikovných rukou u postroje; jedna skrytá čeká na nejhorší. Zbraň na očích ho jen popudí — projde leda potají."
@@ -66,6 +71,7 @@ situace:
       prusvih:     { postih_tezky: [zlomene-zebro] }
 
   - id: farmar-stodola
+    nazev: Statkářova stodola
     typ: lokace
     svet: 1930
     telegraf: "Statkář vás nechá přespat ve stodole, ale jeho psi hlídají líp než on. Tři viditelné role chtějí důvtip a šikovné ruce (u jedné obojí naráz); jedna skrytá je o pevné nervy. Tady vás nikdo nešpehuje, i zbraň projde."
@@ -91,6 +97,7 @@ situace:
   # TÉMA 2 — Venkovský strážník
   # ============================================================
   - id: deputy-mytnice
+    nazev: Mýtnice za Batavií
     typ: npc
     svet: 1930
     telegraf: "U boudy natahuje zástupce šerifa ruku po 'silničním poplatku'. Tři viditelné role chtějí peníze, hladké řeči a klidnou tvář; jedna skrytá čeká, kdyby došlo na pěsti. Zbraň před ním schovej, na světle neprojde."
@@ -109,6 +116,7 @@ situace:
       prusvih:     { postih_tezky: [zlomene-zebro] }
 
   - id: deputy-hlidka
+    nazev: Hlídka na senecké silnici
     typ: npc
     svet: 1930
     telegraf: "Postarší strážník přehradil cestu a leští si odznak, o to raděj sahá po revolveru. Tři viditelné role chtějí klid, něco na přilepšenou a šikovné ruce; jedna skrytá je pro tvrdé řešení. Zbraň jen potají."
@@ -130,6 +138,7 @@ situace:
   # TÉMA 3 — Přechod přes řeku
   # ============================================================
   - id: most-prohnila-prkna
+    nazev: Starý most přes Mohawk
     typ: lokace
     svet: 1930
     telegraf: "Most přes řeku vrže prohnilými prkny a přehrazuje ho stará závora. Tři viditelné role volají po nářadí a šikovnosti (u jedné obojí zároveň); jedna skrytá se pozná, až bude pozdě couvnout. Zbraně se tu nikdo nelekne."
@@ -152,6 +161,7 @@ situace:
       prusvih:     { postih_tezky: [rozdrcena-noha] }
 
   - id: privoz-celnik
+    nazev: Přívoz přes Hudson
     typ: npc
     svet: 1930
     telegraf: "Převozník vás veze na druhý břeh, jenže celník na palubě čichá ke každé bedně. Tři viditelné role chtějí důvtip, přesun z očí a peníze do dlaně; jedna skrytá řeší, kdyby čich zabral. Zbraň drž z dohledu."
@@ -173,6 +183,7 @@ situace:
   # TÉMA 4 — Rivalský gang
   # ============================================================
   - id: rival-prepad
+    nazev: Zátaras u Verony
     typ: npc
     svet: 1930
     telegraf: "Konkurenční parta zablokovala cestu a chce náklad. Tři viditelné role jsou o síle, pevných nervech a mrštnosti; jedna skrytá patří tomu, kdo tasí včas. Zbraň projde jen skrytě a jako první — vytažená na očích tě potopí."
@@ -191,6 +202,7 @@ situace:
       prusvih:     { postih_tezky: [ochrnuta-ruka, otras-mozku] }
 
   - id: rival-parley
+    nazev: Zadní místnost v Utice
     typ: npc
     svet: 1930
     telegraf: "Bootleggerský boss vás zve k jednání nad sklenkou, za zády tři chlapi. Tři viditelné role chtějí peníze na stůl, uhlazenou řeč a chladnou hlavu; jedna skrytá čeká, kdyby úsměv zmizel. Zbraň na stole neprojde, pod stolem ano."
@@ -212,6 +224,7 @@ situace:
   # TÉMA 5 — Úředník / celnice
   # ============================================================
   - id: urednik-vaha
+    nazev: Silniční váha u Amsterdamu
     typ: npc
     svet: 1930
     telegraf: "U váhy sedí úředník s knírkem a hromadou předpisů, brát nesmí a sledují ho shora. Tři viditelné role chtějí papíry, správné nářadí a když nezbude, zvýšený hlas; jedna skrytá drží nervy. Papír tu zmůže víc než olovo — na očích úředníka jen popudí, schovaná nezmůže nic."
@@ -230,6 +243,7 @@ situace:
       prusvih:     { postih_tezky: [rozdrcena-noha] }
 
   - id: urednik-razitko
+    nazev: Celnice v Albany
     typ: npc
     svet: 1930
     telegraf: "Na celnici chybí jediné razítko a úředník je úzkostlivě poctivý. Tři viditelné role chtějí věrohodný list, dorazit razítko a něco navíc do dlaně; jedna skrytá je o pevné nervy. Papír tu zmůže víc než dolar — a olovo tady nepořídí nic, ať u pasu nebo v ruce."
@@ -251,6 +265,7 @@ situace:
   # TÉMA 6 — Městská policie
   # ============================================================
   - id: mesto-houkacky
+    nazev: Yonkerské ulice v poplachu
     typ: lokace
     svet: 1930
     telegraf: "Ulicemi houkají hlídkové vozy, velká policejní akce. Tři viditelné role chtějí důvtip a rychlé řízení, abys splynul a zmizel; jedna skrytá je o klid v návalu. V té tlačenici zbraň nikdo neřeší."
@@ -273,6 +288,7 @@ situace:
       prusvih:     { postih_tezky: [rozdrcena-noha] }
 
   - id: mesto-ulicka
+    nazev: Slepá ulička v Bronxu
     typ: npc
     svet: 1930
     telegraf: "Dva městští policisté vás zahnali do slepé uličky a znají tu každý kanál. Tři viditelné role chtějí klid, řeč a v nouzi výhružné gesto; jedna skrytá hledá skulinu. Zbraň na očích neprojde, skulina se najde jen potají."
@@ -294,6 +310,7 @@ situace:
   # TÉMA 7 — Nádraží / překladiště
   # ============================================================
   - id: nadrazi-vypravci
+    nazev: Překladiště v Syracuse
     typ: npc
     svet: 1930
     telegraf: "Na nádraží chce výpravčí nákladní list, který nemáte — chlap jako hora, který ale ustoupí každému, kdo mluví dost nahlas. Tři viditelné role jsou o síle, odsunutí závory a penězích do dlaně; jedna skrytá ho zmate papírem. Tomuhle zbraň na očích pusu zavře — jen se pak o vás mluví po celé trati."
@@ -312,6 +329,7 @@ situace:
       prusvih:     { postih_tezky: [ochrnuta-ruka] }
 
   - id: nadrazi-noc
+    nazev: Odstavený vagon v Peekskillu
     typ: lokace
     svet: 1930
     telegraf: "V noci se protahujete kolem hlídače s lucernou k odstavenému vagonu. Dvě viditelné role chtějí důvtip a nářadí; dvě skryté hlídají klid a záložní řešení. Mezi vagony zbraň nikoho nevyplaší."
@@ -337,6 +355,7 @@ situace:
   # SPECIÁLNÍ — Zátah (vkládaný při prahu Žáru; nahradí jednu z cest)
   # ============================================================
   - id: zatah
+    nazev: Zátah na páté silnici
     typ: zatah
     svet: 1930
     telegraf: "Silnici přehradily hlídkové vozy a všude bliká policejní světlo. Tři viditelné role jsou o průraz, strhnout vůz do postranní a zmizet v ulicích; jedna skrytá drží nervy u okna. Zbraň tu projde, ale na očích akci jen přiostří."
