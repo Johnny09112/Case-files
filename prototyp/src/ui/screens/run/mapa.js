@@ -54,7 +54,7 @@ export function pohledMapy(ctx) {
       h('h1', {}, zatah ? 'Zátah! Jiná cesta není' : 'Volba cesty'),
       h('p', { class: 'napoveda' }, zatah
         ? `Žár dosáhl prahu — ${st.pronasledovatel.nazev} přehradil obě cesty.`
-        : 'Typ místa je vidět předem a rozhoduje o zbrani. Stůl se radí, kliká kdokoli.')
+        : 'Typ místa je vidět předem a napoví, jak si tu povede zbraň. Stůl se radí, kliká kdokoli.')
     ),
     h(
       'div',
