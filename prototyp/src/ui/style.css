@@ -595,11 +595,21 @@ button.karta:hover:not(:disabled) {
   gap: 0.6rem;
 }
 
+/* `.hod-radek` je i klikatelný <button> (assign.js — přiřazení do slotu):
+   reset na plnou šířku/zarovnání jako u `.uzel-karta`, ať funguje klávesnicí. */
 .hod-radek {
+  display: block;
+  width: 100%;
+  text-align: left;
   border: 1px solid var(--hrana);
   border-left: 4px solid var(--inkoust-slaby);
   padding: 0.5rem 0.8rem;
   background: var(--papir);
+}
+
+.hod-radek:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 .hod-radek.uspech {
