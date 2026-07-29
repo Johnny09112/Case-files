@@ -206,6 +206,13 @@ mechanika shodná. Uživatel rozhodl **zapéct teď a zakrývací zkoušku necha
 otevřenou položku** (řádek invariantu to přiznává, aby nevznikla mrtvá litera).
 **Míč: (a) UI přepínač řádku + onboarding, (b) zakrývací zkouška se 6 čtenáři,
 (c) lidská brána, (d) fáze 3 LLM.**
+**NEZÁVISLÉ PM REVIEW OBOU PROUDŮ (2026-07-29, Fable):** 2.2 i telegrafy
+**přijaty** — 295/295 + lint vlastním během, smoke test v prohlížeči: scéna
+s číslovanými mezerami se plní živě (příjmení + věc), výsledek nese finální
+znění, popisy věcí viditelné, telegrafy uzlů 1–2 čtou jako předzvěst bez
+skeletonu. **Potvrzeno, že (a) je jediný blokátor sezení lidské brány** —
+řádek „CO Z TOHO PLYNE" dnes svítí na každém uzlu, takže by sezení testovalo
+EASY režim, ne přepis telegrafů.
 
 ### Co jde do lidské brány jako známé, vyčíslené odchylky
 
@@ -285,6 +292,7 @@ variance doměřena (2sd = 3,22 < 6). Eskalace V1–V4 rozhodnuta uživatelem ja
 | **Fáze 3: LLM adaptér + test kvality českého humoru** — největší produktové riziko dle CLAUDE.md, simulace ho z principu neotestuje | kódový repo + protocol-humor-tester | **na řadě** — BLOKUJE volba poskytovatele (viz otevřené otázky) |
 | Obsahové vady mimo mandát P2 (z D29): viditelný utok-4 slot v NPC je ve 40 % instancí nesplnitelný (`rival-prepad`, `urednik-vaha`, `mesto-ulicka`); kombi `[nastroj, improvizace]` nesplnitelný nad práh 3 (`farmar-stodola`, `most-prohnila-prkna`) | content-generator | otevřeno — nepřibalovat k jiné iteraci, rozmazalo by měření |
 | ~~P4: ruka 1p 8→9~~ | — | **ZRUŠENO (D29)** — po P1 je 1p nejvyšší ze všech počtů (61,6 %), zvětšení ruky by rozbilo K6a |
+| Kosmetika textu situace (z PM review 2026-07-29, NEHLÁSIT znovu jako nález): (1) `{VEC}` se plní 1. pádem v uvozovkách i uvnitř vazeb („pomocí „Kněžský kolárek"") — vědomý kontrakt neskloňování, obhajitelné, ale sledovat u stolu; (2) sólo run opakuje totéž příjmení ve všech 4 mezerách `{kdo}` | kódový repo + game-designer | otevřeno — kosmetika, řešit až po lidské bráně, pokud to u stolu skřípe |
 | Volitelná obtížnost při startu runu (easy/normal/hard) | game-designer | **budoucí úkol (D25d)** — neřešit teď; až po lidské bráně |
 | **Monorepo (D23): sloučení kódového repa do `prototyp/`** — subtree se zachovanou historií, submodule zrušen, cesty na kořen, ADR-009, otisk verzeObsahu nezávislý na line endings | project-manager | **hotovo 2026-07-26** — 118/118 testů, sim smoke shodný s kalibrací-2, build+lint čisté; GitHub repo prototypu archivovat (viz plán); plán [[../technika/migrace-monorepo-plan-2026-07-26|technika/migrace-monorepo-plan]] |
 | Setup pluginů pro kódovou část (`prototyp/`): Superpowers (inženýrská disciplína), frontend-design (až UI — nakrmit estetikou z design dokumentu), security-guidance | uživatel (claude CLI) | po monorepu (D23) se instalují do tohoto repa — dělba platí: Superpowers jen pro práci v `prototyp/`, herně-designovou disciplínu drží naši agenti |
