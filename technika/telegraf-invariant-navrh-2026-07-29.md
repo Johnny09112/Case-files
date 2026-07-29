@@ -478,7 +478,9 @@ doklad, co se změnilo a proč (konvence projektu).*
    (`zatah` a `rival-prepad` v1 znění vyvracely).
 7. **Kanál 7 (`rusi`) jen pro 4 telegrafy pronásledovatelů**, klasifikovaný
    správně jako připomínka veřejného pravidla, ne fidelitní kanál.
-8. **Délka: přijat strop 350 zn.**, cíl ~300, rozpočet na uzel 620 zn.
+8. **Délka: strop 400 zn.** (D48 — designér navrhl 350, uživatel posunul na
+   400 poté, co PM naměřil, že dvě ze tří ukázek 350 přetahují), cíl ~350,
+   rozpočet na uzel 670 zn. Číslo je předběžné do stopek na dalším sezení.
 9. **Scope creep vypuštěn** — test v `prototyp/test/`, „obrazy v pořadí slotů",
    povinná křížová kontrola s `text`. Obsahové kolo je **19 telegrafů, žádné
    `text`y**.
@@ -490,7 +492,9 @@ doklad, co se změnilo a proč (konvence projektu).*
 ## 11. §2 v2 — QA invariant ke vložení do `obsah/situace.yaml`
 
 Nahrazuje blok `# QA INVARIANT TELEGRAFU (D19 + D6)` a mění řádek schématu na
-`#   telegraf:  předzvěst před commitem, max 350 zn. (viz QA invariant níže)`.
+`#   telegraf:  předzvěst před commitem, max 400 zn. (viz QA invariant níže)`.
+**Strop upraven na 400 zn. rozhodnutím uživatele (D48)** — číslo se potvrdí
+stopkami na dalším sezení lidské brány, do té doby je předběžné.
 Platí i pro `lecka`/`konfrontace` v `obsah/pronasledovatele.yaml` (tam navíc
 kanál 7).
 
@@ -613,10 +617,11 @@ kanál 7).
 # padá. Zbytek telegrafu je volná próza — pevná forma (telegram) byla zamítnuta.
 #
 # --- ROZSAH A TEMPO -----------------------------------------------------------
-# Telegraf: 3–5 vět, STROP 350 znaků, cíl ~300. Nejvýš JEDNA věta bez kanálu.
-# Rozpočet na UZEL: telegraf + `text` ≤ 620 zdrojových znaků. Roste-li telegraf,
+# Telegraf: 3–5 vět, STROP 400 znaků, cíl ~350 (D48; předběžné číslo, potvrdí
+# se stopkami na dalším sezení lidské brány). Nejvýš JEDNA věta bez kanálu.
+# Rozpočet na UZEL: telegraf + `text` ≤ 670 zdrojových znaků. Roste-li telegraf,
 # krátí se `text` (plněné mezery ho ještě prodlouží o ~25 %).
-# Důvod: česká četba nahlas ~850–1000 zn./min → 350 zn. ≈ 21–25 s, a na uzlu se
+# Důvod: česká četba nahlas ~850–1000 zn./min → 400 zn. ≈ 24–28 s, a na uzlu se
 # navíc čte `text` i protokol. Bez stropu vychází 8–10 min hlasitého čtení
 # z 30minutového runu a hráči začnou skimovat — což sráží přesně tu čitelnost,
 # kvůli které se telegraf přepisuje.
@@ -721,7 +726,7 @@ Skrytí řádku je **jediná páka na K1 3p/4p, kterou sim umí modelovat** (kno
 | **R-2** | **Falešná poptávka** (porušení pravidla B) — nejdražší jednotlivá chyba: tým committne kartu naprázdno a nedozví se proč | Vlastní metrika zkoušky, ne jen „trefil trend" |
 | **R-3** | Zatemnění verdiktu zbraně — bot ho čte s jistotou, brána pro tu ztrátu měřidlo nemá | Uzavřená mřížka + nulová tolerance drahé chyby |
 | **R-4** | Nerovnoměrná čitelnost napříč situacemi | Rozhodovací pravidlo **per telegraf**, ne na průměru sady |
-| **R-5** | Délka × tempo | Strop 350 zn. + rozpočet 620 zn./uzel; stopky na prvním sezení |
+| **R-5** | Délka × tempo | Strop 400 zn. + rozpočet 670 zn./uzel (D48); stopky na dalším sezení potvrdí nebo srazí |
 | **R-6** | Zdvojení scény telegraf/`text` | Odlišení POV a času; opakuje se podstatné jméno, ne konstrukce |
 | **R-7** | 5 vět svádí k vtipkování, telegraf přebije protokol | Humor telegrafu je v suchosti hrozby; kontroluje `protocol-humor-tester` |
 | **R-8** | **Kolize kulisy s obranou** (přiznaný nedisjunktní zbytek) | Hlavní položka vzorku zkoušky; padne-li, je to nález o slovníku, ne o jednom telegrafu |
@@ -802,18 +807,34 @@ si vzít netroufne" je legální) a `nadrazi-noc` má skrytý `utok`, takže vě
 
 **Délky změřeny a NESEDÍ — dvě ze tří ukázek přetahují vlastní nový strop:**
 
-| ukázka | uvedeno v návrhu | změřeno | strop 350 |
-|---|---|---|---|
-| B1 `most-prohnila-prkna` | ≈ 301 | **336** | ✅ |
-| B2 `urednik-vaha` | ≈ 330 | **363** | ❌ +13 |
-| B3 `nadrazi-noc` | ≈ 332 | **385** | ❌ +35 |
+| ukázka | uvedeno v návrhu | změřeno | proti stropu 350 (návrh) | proti stropu 400 (D48) |
+|---|---|---|---|---|
+| B1 `most-prohnila-prkna` | ≈ 301 | **336** | ✅ | ✅ |
+| B2 `urednik-vaha` | ≈ 330 | **363** | ❌ +13 | ✅ |
+| B3 `nadrazi-noc` | ≈ 332 | **385** | ❌ +35 | ✅ |
 
-Tvrzení „je doloženo, že 6 kanálů se do 350 znaků vejde" tedy **doloženo není**
-— vejde se jich tam 5 (B1 nemá `zbran_skryte`). Není to fatální (obě přetažení
-jsou otázka jedné věty), ale je to **stejná třída chyby jako v1**: uvedená
-čísla nikdo neověřil. Před obsahovým kolem je nutné rozhodnout, jestli se
-strop drží na 350 a texty se krátí, nebo se posouvá na ~380 —
-a to číslo pak musí projít stopkami, ne odhadem.
+Tvrzení „je doloženo, že 6 kanálů se do 350 znaků vejde" **doloženo nebylo**
+— vejde se jich tam 5 (B1 nemá `zbran_skryte`). Není to fatální, ale je to
+**stejná třída chyby jako v1**: uvedená čísla nikdo neověřil. Poučení pro
+obsahové kolo: **každý telegraf se měří, ne odhaduje.**
+
+## 15. Rozhodnutí uživatele k v2 (D48, 2026-07-29)
+
+1. **Strop 400 znaků** (ne 350) — cíl ~350, rozpočet na uzel 670 zn. Všechny
+   tři ukázky tím projdou beze změny. Číslo je **předběžné**: potvrdí ho, nebo
+   srazí, stopky na dalším sezení lidské brány (R-5).
+2. **Onboarding: mechanický řádek je viditelný na PRVNÍM uzlu prvního runu**,
+   dál už ne. Nesahá to na D47 (řádek zůstává nativně skrytý) — jen se
+   onboarding neplatí ztrátou prvního uzlu. Přibírá se k zadání UI přepínače.
+3. **Obsahové kolo se OTEVÍRÁ** — 19 telegrafů (15 situací + 4 léčky/
+   konfrontace) dle v2 invariantu, pak review kolečko. Druhá prověrka kritika
+   před psaním se nekoná (v2 na jeho šest bodů odpovídá).
+
+**Co se ZATÍM nezapéká do `obsah/`:** znění invariantu se do hlavičky
+`obsah/situace.yaml` vkládá **až spolu s přepsanými telegrafy**, v jednom
+commitu — aby v repu nevzniklo pravidlo, které 15 sousedních záznamů porušuje.
+Týž commit ponese i opravu `CLAUDE.md` (§Stylová pravidla dnes říkají
+„telegraf situace 1–2 věty", což bude s invariantem v přímém rozporu).
 
 ---
 

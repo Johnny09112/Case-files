@@ -13,6 +13,45 @@ architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.m
 
 ## 2026-07-29
 
+- **D48 (ROZHODNUTÍ UŽIVATELE) — invariant telegrafu v2 schválen, obsahové kolo
+  19 telegrafů OTEVŘENO.** Revize designéra po D47 odpověděla na všech šest
+  blokujících nálezů kritika; verze 2 je v §10–§15
+  [[../technika/telegraf-invariant-navrh-2026-07-29|technika/telegraf-invariant-navrh-2026-07-29.md]].
+  **Podstata v2:** nové jádro **„nárok je sloveso, ne kulisa"** — scéna smí
+  obsahovat úředníka, hlídače i zámek, kulisa neprozrazuje nic; kanál se obsadí
+  teprve tím, že próza přiřkne POSÁDCE práci. Tím se rozpadá spor o leaky
+  a nedisjunktní slovník obrazů (V-4/V-5) najednou. Doplněno pravidlo
+  **záporného tvrzení** (stat lze vyloučit jen když není v žádném slotu ani
+  skrytém — jinak anti-tell, který bot nemá) a **verdikt zbraně přepsán na
+  mřížku o TOLERANCI místa, ne o užitečnosti** (staré znění by v konfrontacích,
+  které jsou `vzdy_pass` s viditelným útok-slotem kotva 4, tvrdilo pravý opak
+  toho, co scéna chce). Kanál 7 (`rusi`) přidán jen pro 4 telegrafy
+  pronásledovatelů a klasifikován jako připomínka veřejného pravidla, ne
+  fidelitní kanál. Scope creep vypuštěn (test v `prototyp/test/`, „obrazy
+  v pořadí slotů", přepis 19 polí `text`).
+  **PM ověřil:** sloty všech tří ukázek sedí (`most-prohnila-prkna` má skrytou
+  `obrana` → vypuštění „Nikdo tu není" je správná oprava; `urednik-vaha` nemá
+  `hodnota` v žádném slotu → zápor je legální; `nadrazi-noc` má skrytý `utok`
+  → věta „kdo je rychlejší" je povinná). **Délky ale neseděly znovu:** změřeno
+  336 / 363 / 385 zn. proti uváděným ~301 / ~330 / ~332 — tvrzení „6 kanálů se
+  do 350 zn. vejde" doloženo nebylo. Poučení do kola: **každý telegraf se měří,
+  ne odhaduje.**
+  **Rozhodnutí uživatele:** (1) **strop 400 zn.** (ne 350), cíl ~350, rozpočet
+  na uzel 670 zn. — předběžné číslo, potvrdí ho stopky na dalším sezení;
+  (2) **onboarding: mechanický řádek viditelný na PRVNÍM uzlu prvního runu**,
+  dál ne (nesahá na D47, přibírá se k zadání UI přepínače); (3) **obsahové kolo
+  se otevírá**, druhá prověrka kritika před psaním se nekoná.
+  **Nezapéká se zvlášť:** znění invariantu jde do hlavičky `obsah/situace.yaml`
+  **až spolu s přepsanými telegrafy v jednom commitu** (jinak by v repu stálo
+  pravidlo, které 15 sousedních záznamů porušuje); týž commit ponese opravu
+  `CLAUDE.md` §Stylová pravidla („telegraf situace 1–2 věty").
+  **Vedlejší nález s dopadem na UI:** při dokonalém čtení telegrafu (= řádek
+  zapnutý) jde 4p win-rate na **86,8 %**. „Vysvětlivky zapnuté" tedy nejsou
+  neutrální přístupnost, ale **EASY režim**, a tak se mají v UI jmenovat
+  (kolonka volitelné obtížnosti, D25d). Zároveň z toho plyne, že přepis
+  telegrafu **nemá K1 kam zhoršit směrem nahoru** — efektivní fidelita je po
+  skrytí řádku shora omezená dneškem, takže brána na tuhle změnu je čistě
+  lidská, ne simulační.
 - **D47 (ROZHODNUTÍ UŽIVATELE) — telegraf: směr schválen, tři P-otázky
   rozhodnuty; invariant jde na revizi, obsahové kolo se ještě neotevírá.**
   Kolo mandátu D45 proběhlo (game-designer → design-critic, oba Opus), návrh

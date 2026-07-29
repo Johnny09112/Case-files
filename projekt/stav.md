@@ -182,7 +182,18 @@ nová položka pro `prototyp/`; próza se tím stává jediným nositelem inform
 (2) **R1 = mlčet** o statu skrytého slotu; (3) **zakrývací zkouška zůstává
 jako gate** (6+ čtenářů), ale její zadání se přepisuje — leakuje počet slotů
 i jména statů a práh 0,70 je kruhový. Znění invariantu jde na revizi
-(6 blokujících kritika). **Obsahové kolo 15+4 se ještě neotevírá.**
+(6 blokujících kritika).
+**INVARIANT v2 SCHVÁLEN, OBSAHOVÉ KOLO OTEVŘENO (D48, 2026-07-29).** Revize
+odpověděla na všech 6 blokujících; jádro v2 je **„nárok je sloveso, ne kulisa"**
+(kulisa neprozrazuje nic, kanál obsadí až práce přiřknutá posádce) + pravidlo
+záporného tvrzení + verdikt zbraně jako mřížka o **toleranci** místa, ne
+o užitečnosti (staré znění by v konfrontacích tvrdilo opak toho, co scéna chce)
++ kanál 7 (`rusi`) jen pro léčky. Uživatel rozhodl: **strop 400 zn.** (předběžný,
+potvrdí stopky), **řádek viditelný na prvním uzlu prvního runu** (onboarding),
+**obsahové kolo se otevírá** bez druhé prověrky. PM ověřil sloty všech ukázek
+(sedí) a změřil délky (336 / 363 / 385 — uváděné odhady zase neseděly).
+**Znění invariantu se do `obsah/situace.yaml` vkládá až SPOLU s přepsanými
+telegrafy v jednom commitu**, včetně opravy `CLAUDE.md` („1–2 věty").
 
 ### Co jde do lidské brány jako známé, vyčíslené odchylky
 
@@ -233,7 +244,8 @@ variance doměřena (2sd = 3,22 < 6). Eskalace V1–V4 rozhodnuta uživatelem ja
 | První lidské sezení (lidská brána): solo/remote run přes `npm run dev`, vyhodnotit metriky + hypotézy (kolaps jako default, tři měřidla) | uživatel + playtest-facilitator | **PŘERUŠENO 2026-07-29 (D45)** — tři nálezy fikce (text situace chybí v UI, popisy v hoveru, telegraf polopatě), metriky nevyplněny, do Go/No-Go se nepočítá; pokračuje po fázi 2.2 |
 | **Fáze 2.2: text situace + viditelné popisy do UI** — nedodaný kanon §4.3 z nálezů D45 | kódový repo (Opus) | **HOTOVO 2026-07-29 (D46)** — všechny 3 body zadání [[../technika/faze-2.2-navrh-2026-07-29|technika/faze-2.2-navrh-2026-07-29.md]]; modul `situace-text.js` + 60 nových testů (295 celkem), lint čistý, smoke test celého runu v prohlížeči. Engine netknutý |
 | **Telegraf: atmosférická předzvěst místo mechanického výčtu** — nový QA invariant telegrafu + limity délky, se zachováním fidelity signálu pro bota (K7) | game-designer + design-critic, schvaluje uživatel | **SMĚR SCHVÁLEN, INVARIANT NA REVIZI (D47)** — kolo designer→kritik proběhlo, [[../technika/telegraf-invariant-navrh-2026-07-29|návrh + prověrka]]; 3 P-otázky rozhodnuty. Zbývá: revize znění dle 6 blokujících kritika (3 čisté ukázky, strop 350 zn., disjunktní slovník obrazů, 7. kanál `rusi` + varianta verdiktu pro konfrontace, scope creep ven) + přepis zadání zakrývací zkoušky. Teprve pak obsahové kolo 15+4 |
-| **Mechanický řádek „co z toho plyne" nativně skrýt + přepínač v nastavení hry** (rozklik na vyžádání; výhledově prvek obtížnosti, váže na D25d) | kódový repo (Opus) | **ZADÁNO D47 (2026-07-29)** — změna proti čerstvě hotové 2.2, která řádek jen vizuálně podřídila próze. Bez něj nemá přepis telegrafu efekt: atmosférická inference je zrušena o řádek níž |
+| **Mechanický řádek „co z toho plyne" nativně skrýt + přepínač v nastavení hry** (rozklik na vyžádání; výhledově prvek obtížnosti, váže na D25d) | kódový repo (Opus) | **ZADÁNO D47 (2026-07-29), rozšířeno D48** — změna proti čerstvě hotové 2.2, která řádek jen vizuálně podřídila próze. Bez něj nemá přepis telegrafu efekt: atmosférická inference je zrušena o řádek níž. **D48: řádek je viditelný na PRVNÍM uzlu prvního runu** (onboarding), dál ne. Přepínač se má jmenovat jako ulehčení, ne jako nastavení zobrazení — při zapnutém řádku jde 4p win-rate na 86,8 %, je to **EASY režim** |
+| **Obsahové kolo: přepis 19 telegrafů** (15 situací + 4 léčky/konfrontace) dle v2 invariantu; zapéká se spolu se zněním invariantu do hlavičky `situace.yaml` + oprava `CLAUDE.md` („1–2 věty") | content-generator → protocol-humor-tester → design-critic | **OTEVŘENO D48 (2026-07-29)** — psát dle §11 návrhu, každý telegraf **měřit, ne odhadovat** (strop 400 zn.). Zapečení blokuje zakrývací zkouška (§13.4, 6 čtenářů, 8 telegrafů, srovnávací rameno proti dnešní sadě) |
 | **Oprava kanonu: telegraf má 6 kanálů, ne 3** — `design-dokument.md:107–108` a `prototyp-mvp.md:91–93` neznají `zbran_skryte` (D22) ani `improv_skryte` (D25f), ač je engine derivuje a UI zobrazuje. Plus `prototyp-mvp.md:33` cituje K4d 7,9 z ramene `optimal`, ač gate stojí na rameni `kompetentní` (dnes 18,6 / 22,1 / 24,6 / 22,8) | game-designer / PM | **otevřeno (nález D47)** — nezávislé na osudu invariantu, ať jde vlastním commitem |
 | Jemné doladění obtížnosti po loot-injury (exploit-bot ~74–76 % vs. pásmo 45–70; ladit tvrdosti/Žár, ne resoluční práh) | game-designer + playtest-facilitator | **nahrazeno kalibrací-1 v3** — viz řádek níže |
 | **Kalibrace-1 v3: zapéct 45-slot kotva-patch + kořenový lék K5/K7/K2** (gamble vynucený ne zvolený, snowball plochý) | game-designer + content-generator | **hotovo 2026-07-24 (D22)** — patch zapečen (45 slotů +1, pásmo 2–4 drží); lék zapracován: 4 skryté obrana-kotvy 3→2 (dial), 2 telegraf-přepisy npc-pastí, 5 věcí +1 sekundární stat (obrana/nastroj, improvizace netknuta), info-heavy pooly pozdních událostí se stropem ≤7 (D20). Enginová část léku = řádek níže; 3 eskalace na uživatele (viz otevřené otázky) |
