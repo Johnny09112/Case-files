@@ -5,6 +5,9 @@ import { fileURLToPath } from 'node:url';
 // fs.allow: obsah (YAML) žije v kořeni monorepa, o úroveň nad vite rootem.
 export default defineConfig({
   server: {
+    // Port z prostředí (`PORT`), ať jde dev server spustit i vedle jiné běžící
+    // instance; bez proměnné zůstává výchozí vite port.
+    port: Number(process.env.PORT) || undefined,
     fs: { allow: [fileURLToPath(new URL('..', import.meta.url))] },
   },
 });

@@ -156,6 +156,15 @@ vůbec nevykresluje a popis věci je jen v hoveru → **fáze 2.2**, zadání
 [[../technika/faze-2.2-navrh-2026-07-29|technika/faze-2.2-navrh-2026-07-29.md]].
 Třetí je designová změna (telegraf atmosféricky, ne polopatě) → **mandát
 game-designera**, schvaluje uživatel. Brána pokračuje po 2.2.
+**FÁZE 2.2 HOTOVA (D46, 2026-07-29):** próza situace je nově hlavní prvek
+přiřazení (mezery klikatelné, plní se živě názvem věci i příjmením vlastníka)
+i výsledku (finální znění nad razítky, plněné z `slot_resolved`), popisy věcí
+jsou vidět bez hoveru a mechanický souhrn telegrafu ustoupil próze. Nový čistý
+modul `prototyp/src/ui/situace-text.js`, engine netknutý. Zapečen kontrakt
+**`{kdo}` = vlastník karty v nejbližší NÁSLEDUJÍCÍ mezeře** (dvě situace mají
+jen 3 `{kdo}` — skrytá „kdyby" role jednajícího nemá). 295 testů zelených, lint
+čistý, celý run projitý v prohlížeči vč. léčky a konfrontace, konzole bez chyb.
+**Míč: lidská brána (pokračování sezení) + mandát telegrafu.**
 
 ### Co jde do lidské brány jako známé, vyčíslené odchylky
 
@@ -204,7 +213,7 @@ variance doměřena (2sd = 3,22 < 6). Eskalace V1–V4 rozhodnuta uživatelem ja
 | **Fáze 2.1: vysvětlující vrstva pravidel v UI** — nápověda/průvodce, „proč se to stalo" anotace (vynucená karta, zákaz tagu, rider volba, prahy Žáru, postih za zranění) | kódový repo | **nález 1. lidského sezení 2026-07-22** ([[../playtesty/2026-07-22|playtest]]): systém funguje, ale je pro hráče neviditelný — hráč-autor mu nerozuměl |
 | Prototyp fáze 3: LLM adaptér (provider NEROZHODNUT — otevřená otázka) | kódový repo | na řadě spolu s 2.1 — cache→provider→timeout→fallback dle ADR-004/007; fallback větev už stojí |
 | První lidské sezení (lidská brána): solo/remote run přes `npm run dev`, vyhodnotit metriky + hypotézy (kolaps jako default, tři měřidla) | uživatel + playtest-facilitator | **PŘERUŠENO 2026-07-29 (D45)** — tři nálezy fikce (text situace chybí v UI, popisy v hoveru, telegraf polopatě), metriky nevyplněny, do Go/No-Go se nepočítá; pokračuje po fázi 2.2 |
-| **Fáze 2.2: text situace + viditelné popisy do UI** — nedodaný kanon §4.3 z nálezů D45 | kódový repo (Opus) | **ZADÁNO 2026-07-29** — [[../technika/faze-2.2-navrh-2026-07-29|technika/faze-2.2-navrh-2026-07-29.md]]; stavba nezačala |
+| **Fáze 2.2: text situace + viditelné popisy do UI** — nedodaný kanon §4.3 z nálezů D45 | kódový repo (Opus) | **HOTOVO 2026-07-29 (D46)** — všechny 3 body zadání [[../technika/faze-2.2-navrh-2026-07-29|technika/faze-2.2-navrh-2026-07-29.md]]; modul `situace-text.js` + 60 nových testů (295 celkem), lint čistý, smoke test celého runu v prohlížeči. Engine netknutý |
 | **Telegraf: atmosférická předzvěst místo mechanického výčtu** — nový QA invariant telegrafu + limity délky, se zachováním fidelity signálu pro bota (K7) | game-designer + design-critic, schvaluje uživatel | **MANDÁT z D45** — návrh předložit uživateli, pak obsahové kolo přepisu telegrafů |
 | Jemné doladění obtížnosti po loot-injury (exploit-bot ~74–76 % vs. pásmo 45–70; ladit tvrdosti/Žár, ne resoluční práh) | game-designer + playtest-facilitator | **nahrazeno kalibrací-1 v3** — viz řádek níže |
 | **Kalibrace-1 v3: zapéct 45-slot kotva-patch + kořenový lék K5/K7/K2** (gamble vynucený ne zvolený, snowball plochý) | game-designer + content-generator | **hotovo 2026-07-24 (D22)** — patch zapečen (45 slotů +1, pásmo 2–4 drží); lék zapracován: 4 skryté obrana-kotvy 3→2 (dial), 2 telegraf-přepisy npc-pastí, 5 věcí +1 sekundární stat (obrana/nastroj, improvizace netknuta), info-heavy pooly pozdních událostí se stropem ≤7 (D20). Enginová část léku = řádek níže; 3 eskalace na uživatele (viz otevřené otázky) |
@@ -225,7 +234,7 @@ variance doměřena (2sd = 3,22 < 6). Eskalace V1–V4 rozhodnuta uživatelem ja
 | **Fáze 2.1: vysvětlující vrstva pravidel v UI** — bez ní lidská brána selže na čitelnosti (metrika 6), ne na designu | kódový repo | **HOTOVO A PŘIJATO 2026-07-28 (D41)** — návrh D36 → plán (12 tasků TDD) → stavba na větvi `faze-2.1` → PM review (231 testů + lint nezávisle, smoke test celé smyčky v prohlížeči, §11 splněno) → merge do `main`. Spec: [[../technika/faze-2.1-navrh-2026-07-27|technika/faze-2.1-navrh-2026-07-27.md]] |
 | **v3 fallback šablony protokolu (~20)** — součást 2.1, běží paralelně s UI | content-generator + protocol-humor-tester + design-critic | **HOTOVO A ZAPEČENO 2026-07-28 (D40)** — 28 šablon v `prompty/fallback-sablony.yaml`, v2 sada v `obsah/archiv-v2/`; `kolaps` přepsán na v3 sémantiku + nové pásmo `navrat`, `hlas_z_auta` zamítnut (engine událost nemá). Situace dostaly pole `nazev` (15 + 4 u pronásledovatelů) — anotace mapy nově jmenuje místo. 231 testů zelených, 4 golden snapshoty rebasovány (otisk obsahu + jméno místa) |
 | ~~Zbytek fáze 2.1 po zapečení sady: protocol-fill.js na v3~~ | — | **ZASTARALÉ — hotovo v tasku 6 stavby** (modul i test čtou živou v3 sadu); zbyl jen řádek níže |
-| Drobný úklid: `opravUvozovkySablon()` v `protocol-fill.js` — workaround v2 uvozovek, nad v3 sadou (validní YAML) je no-op; smazat i s poznámkou v testu | kódový repo (Opus) | otevřeno — nízká priorita, přibalit k příští práci v `prototyp/` |
+| Drobný úklid: `opravUvozovkySablon()` v `protocol-fill.js` — workaround v2 uvozovek, nad v3 sadou (validní YAML) je no-op; smazat i s poznámkou v testu | kódový repo (Opus) | **hotovo 2026-07-29** — přibaleno k fázi 2.2 (D46); no-op nad živou sadou nejdřív ověřen, pak smazáno z modulu, `app.js` i testu (s poznámkou proč) |
 | **Fáze 3: LLM adaptér + test kvality českého humoru** — největší produktové riziko dle CLAUDE.md, simulace ho z principu neotestuje | kódový repo + protocol-humor-tester | **na řadě** — BLOKUJE volba poskytovatele (viz otevřené otázky) |
 | Obsahové vady mimo mandát P2 (z D29): viditelný utok-4 slot v NPC je ve 40 % instancí nesplnitelný (`rival-prepad`, `urednik-vaha`, `mesto-ulicka`); kombi `[nastroj, improvizace]` nesplnitelný nad práh 3 (`farmar-stodola`, `most-prohnila-prkna`) | content-generator | otevřeno — nepřibalovat k jiné iteraci, rozmazalo by měření |
 | ~~P4: ruka 1p 8→9~~ | — | **ZRUŠENO (D29)** — po P1 je 1p nejvyšší ze všech počtů (61,6 %), zvětšení ruky by rozbilo K6a |

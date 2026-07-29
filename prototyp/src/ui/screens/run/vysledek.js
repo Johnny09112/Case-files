@@ -33,16 +33,19 @@ import { h } from '../../dom.js';
 import { vyklepej } from '../../typewriter.js';
 import { MISTO } from '../../vysvetleni.js';
 import { EVENT } from '../../../engine/events.js';
+import { doplnText, textSituace } from '../../situace-text.js';
 
 /**
- * @param {{S: object, akce: Record<string, any>, anotace: Map<number, object[]>}} ctx
+ * @param {{S: object, content?: object, akce: Record<string, any>,
+ *   anotace: Map<number, object[]>}} ctx
  *   - S stav aplikace (S.fronta[0] je položka s `udalosti` z JEDNOHO uzlu
  *     a jeho `nodeIndex`; živý snapshot enginu je tou dobou už o uzel dál)
+ *   - content validovaný obsah (autorský text situace + názvy věcí)
  *   - akce callbacky UI
  *   - anotace mapa seq → anotace z vysvětlující vrstvy
  */
 export function pohledVysledku(ctx) {
-  const { S, akce, anotace } = ctx;
+  const { S, content, akce, anotace } = ctx;
   const polozka = S.fronta[0];
   const { udalosti, sekce } = polozka;
   const prvni = (/** @type {any} */ u) => (anotace.get(u.seq) ?? [])[0];
@@ -77,6 +80,8 @@ export function pohledVysledku(ctx) {
       h('p', { class: 'formular-popisek' }, 'výsledek — hráč vždy ví proč'),
       h('h1', {}, `List ${sekce.cislo} — ${sekce.titulek}`)
     ),
+
+    prozaSituace(),
 
     h(
       'section',
@@ -142,4 +147,37 @@ export function pohledVysledku(ctx) {
       h('button', { class: 'tlacitko tlacitko-hlavni', onclick: () => akce.pokracuj() }, 'Pokračovat')
     )
   );
+
+  /**
+   * Finální znění autorského textu situace s doplněnými věcmi a jmény —
+   * NAD razítky, aby razítka četla jako verdikt k příběhu, ne jako čtyři
+   * nesouvisející testy (fáze 2.2, nález 1. sezení lidské brány).
+   *
+   * Mezery se plní z událostí `slot_resolved` (co kam nakonec šlo, včetně
+   * gamblem vyměněných věcí), ne z assign-výběru UI — po vyhodnocení je
+   * pravdou log enginu. Neobsazený slot zůstane mezerou: text nikdy netvrdí
+   * věc, kterou tam mechanika nedala.
+   */
+  function prozaSituace() {
+    const odhaleni = udalosti.find((/** @type {any} */ u) => jeZTohotoUzlu(u) && u.type === EVENT.SITUATION_REVEALED);
+    const text = odhaleni ? textSituace(content, odhaleni.situace_id) : null;
+    if (!text) return null;
+    /** @type {Record<number, string>} */ const veci = {};
+    /** @type {Record<number, string>} */ const jmena = {};
+    for (const u of sloty) {
+      if (u.karta_id) veci[u.slot_index] = nazevVeci(u.karta_id);
+      if (u.hrac_id) jmena[u.slot_index] = S.jmena?.[u.hrac_id] ?? u.hrac_id;
+    }
+    return h(
+      'section',
+      { class: 'uzel-karta situace-blok' },
+      h('p', { class: 'formular-popisek' }, 'Jak to nakonec bylo'),
+      h('p', { class: 'situace-text' }, doplnText(text, { veci, jmena }))
+    );
+  }
+
+  /** Český název věci z obsahu — nikdy syrové kebab-case id. */
+  function nazevVeci(kartaId) {
+    return content?.veci?.find((/** @type {any} */ v) => v.id === kartaId)?.nazev ?? kartaId;
+  }
 }

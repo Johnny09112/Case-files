@@ -17,13 +17,10 @@ import {
   zapisSituace,
   zapisFinale,
   NOUZOVY_ZAZNAM,
-  opravUvozovkySablon,
 } from '../src/ui/protocol-fill.js';
 
 const REALNE_SABLONY = load(
-  opravUvozovkySablon(
-    fs.readFileSync(new URL('../../prompty/fallback-sablony.yaml', import.meta.url), 'utf8')
-  )
+  fs.readFileSync(new URL('../../prompty/fallback-sablony.yaml', import.meta.url), 'utf8')
 ).sablony;
 
 /** v3 sada už v obsahu je? (viz §8 návrhu — obsahové kolo běží souběžně) */
@@ -187,16 +184,10 @@ describe('zapisFinale', () => {
   });
 });
 
-describe('opravUvozovkySablon (workaround nevalidního YAML v obsahu)', () => {
-  it('escapuje vnitřní ASCII uvozovky v text: scalarech na typografické', () => {
-    const vstup = '  - id: x\n    text: "postup „{veci}". Dál."';
-    expect(() => load(opravUvozovkySablon(vstup))).not.toThrow();
-  });
-  it('validní řádky nechává beze změny', () => {
-    const vstup = '  - id: x\n    text: "bez vnitřních uvozovek"\n    pasmo: 3/4_HLADCE';
-    expect(opravUvozovkySablon(vstup)).toBe(vstup);
-  });
-});
+// `opravUvozovkySablon()` (workaround nevalidních uvozovek v2 sady) byl smazán
+// 2026-07-29: v3 sada v `prompty/fallback-sablony.yaml` je validní YAML, funkce
+// byla nad ní prokazatelně no-op. Načtení sady bez ní hlídá test níž — kdyby se
+// nevalidní uvozovky do obsahu vrátily, spadne `load()` v tomhle souboru.
 
 // Až designový tým dodá v3 sadu (§8 návrhu), guard přestane platit sám.
 describe.skipIf(!MA_V3_SABLONY)('reálné v3 šablony pokrývají, co engine umí vyrobit', () => {

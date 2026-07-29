@@ -7,6 +7,11 @@
  * (anotace `misto: 'slot'` z vysvětlující vrstvy). Tohle je místo, kde se hráč
  * učí, že kotva je stálá a šum ne.
  *
+ * **Hlavní prvek obrazovky je PRÓZA situace** (fáze 2.2, nález 1. sezení lidské
+ * brány): autorský text se 4 mezerami je kanon (§4.3) a slotové řádky bez něj
+ * čtou jako čtyři nesouvisející testy. Mezery jsou klikatelné — přiřazení jde
+ * jak z textu, tak z technického rozpisu pod ním; rozpis je vizuálně podřízený.
+ *
  * Žádná herní logika — jen render snapshotu enginu (architektura §2.4).
  * `content` je tu ze stejného důvodu jako v `commit.js`: aby se nikdy
  * nevypsalo syrové interní id (situace.id, VELKÝMI id štítku) do textu pro
@@ -16,6 +21,8 @@ import { h } from '../../dom.js';
 import { MISTO } from '../../vysvetleni.js';
 import { STAT_LABEL } from '../../labels.js';
 import { kdoNevidi } from './commit.js';
+import { rozlozText, textSituace, MEZERA } from '../../situace-text.js';
+import { prijmeni } from '../../protocol-fill.js';
 
 /** Anotace odhalení prahů pro tenhle uzel: slot_index → anotace. */
 function anotaceSlotu(anotace, nodeIndex, events) {
@@ -88,7 +95,7 @@ export function pohledPrirazeni(ctx) {
       { class: 'spis-hlavicka' },
       h('p', { class: 'formular-popisek' }, 'odhaleno — teď se dělí'),
       h('h1', {}, nazevSituace(content, situace)),
-      h('p', { class: 'napoveda' }, 'Klikni na věc, pak na roli. Práh je vidět; kotva se opakuje, šum ne.')
+      h('p', { class: 'napoveda' }, 'Klikni na věc, pak na mezeru v textu (nebo na roli v rozpisu). Práh je vidět; kotva se opakuje, šum ne.')
     ),
     nevidiViditelnost.length > 0
       ? h(
@@ -97,9 +104,11 @@ export function pohledPrirazeni(ctx) {
           `${nevidiViditelnost.join(', ')} tohle nevidí (které role jsou skryté) — ${nevidiViditelnost.length > 1 ? 'nesmějí' : 'nesmí'} podle toho radit.`
         )
       : null,
+    prozaSituace(),
     h(
       'section',
-      { class: 'rozpis-hodu' },
+      { class: 'rozpis-hodu rozpis-tlumeny' },
+      h('h2', { class: 'formular-popisek' }, 'Rozpis rolí — co která mezera měří'),
       sloty.map((/** @type {any} */ s) => radekSlotu(s))
     ),
     h(
@@ -117,11 +126,11 @@ export function pohledPrirazeni(ctx) {
             {
               class: `karta${vybrana ? ' zoufala' : ''}${uzPouzita ? ' neaktivni' : ''}`,
               disabled: uzPouzita,
-              title: c.karta.text,
               onclick: () => akce.vyberKartu(c.karta.id),
             },
             h('strong', {}, c.karta.nazev),
             h('span', { class: 'karta-meta' }, Object.entries(c.karta.staty).map(([k, v]) => `${STAT_LABEL[k] ?? k} ${v}`).join(' · ')),
+            h('span', { class: 'karta-popis' }, c.karta.text),
             c.karta.stitek ? h('span', { class: 'karta-hlucna' }, `${nazevStitku(content, c.karta.stitek)} — hlučná`) : null
           );
         })
@@ -154,10 +163,66 @@ export function pohledPrirazeni(ctx) {
     )
   );
 
+  /** Committnutá věc přiřazená do slotu (`{hrac_id, karta}`), nebo null. */
+  function veSlotu(slotIndex) {
+    const kartaId = prirazeno[slotIndex];
+    return situace.committed.find((/** @type {any} */ c) => c.karta.id === kartaId) ?? null;
+  }
+
+  /**
+   * Autorská próza situace s živě plněnými mezerami — hlavní prvek obrazovky.
+   * Mezera je tlačítko se stejným chováním jako řádek rozpisu (přiřadit /
+   * zrušit), takže hráč nemusí překládat „slot 3" na „…pomocí ___".
+   * Když obsah text nemá (starý/nekompletní obsah), sekce prostě zmizí —
+   * rozpis rolí zůstává funkční.
+   */
+  function prozaSituace() {
+    const text = textSituace(content, situace.id);
+    if (!text) return null;
+    return h(
+      'section',
+      { class: 'uzel-karta situace-blok' },
+      h('p', { class: 'formular-popisek' }, 'Co se právě děje'),
+      h(
+        'p',
+        { class: 'situace-text' },
+        rozlozText(text).map((u) => {
+          if (u.typ === 'text') return u.hodnota;
+          if (u.typ === 'kdo') return jednajici(u.slot);
+          return mezera(u.slot);
+        })
+      )
+    );
+  }
+
+  /** Jednající u mezery — příjmení vlastníka přiřazené věci, jinak mezera. */
+  function jednajici(slotIndex) {
+    const c = veSlotu(slotIndex);
+    return c
+      ? h('span', { class: 'jednajici' }, prijmeni(jmenoHrace(st, c.hrac_id)))
+      : h('span', { class: 'jednajici mezera-prazdna' }, MEZERA);
+  }
+
+  /** Klikatelná mezera {VEC} — plní se názvem přiřazené věci. */
+  function mezera(slotIndex) {
+    const s = sloty.find((/** @type {any} */ x) => x.slot_index === slotIndex);
+    const karta = veSlotu(slotIndex)?.karta ?? null;
+    return h(
+      'button',
+      {
+        class: `mezera${karta ? ' mezera-plna' : ' mezera-prazdna'}`,
+        disabled: !karta && !vybranaKarta,
+        title: s ? `role ${slotIndex + 1}: ${s.role} — ${popisStatSlotu(s)}, práh ${s.prah}` : '',
+        onclick: () => (karta ? akce.zrusPrirazeni(slotIndex) : akce.prirad(slotIndex)),
+      },
+      karta ? `„${karta.nazev}"` : MEZERA,
+      h('sup', { class: 'mezera-cislo' }, String(slotIndex + 1))
+    );
+  }
+
   /** @param {any} s odhalený slot */
   function radekSlotu(s) {
-    const kartaId = prirazeno[s.slot_index];
-    const karta = situace.committed.find((/** @type {any} */ c) => c.karta.id === kartaId)?.karta ?? null;
+    const karta = veSlotu(s.slot_index)?.karta ?? null;
     const a = vysvetlivky.get(s.slot_index);
     // Prázdný slot bez vybrané věci nemá co přiřadit — tlačítko na to nesmí
     // vést k nelegálnímu příkazu (`prirad` bez karty). Zrušit přiřazení jde
@@ -173,7 +238,7 @@ export function pohledPrirazeni(ctx) {
       h(
         'div',
         { class: 'okraj-postava-radka' },
-        h('strong', {}, s.role),
+        h('strong', {}, `${s.slot_index + 1}. ${s.role}`),
         h('span', { class: 'napoveda' }, `${popisStatSlotu(s)} · práh ${s.prah} · ${s.viditelnost === 'skryta' ? 'skrytá role' : 'viditelná role'}`)
       ),
       a ? h('p', { class: 'napoveda', title: a.detail ?? '' }, a.veta) : null,

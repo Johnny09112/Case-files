@@ -102,7 +102,15 @@ export function pohledCommitu(ctx) {
       { class: 'uzel-karta' },
       h('p', { class: 'formular-popisek' }, 'Telegraf — jediné, co víte předem'),
       h('p', { class: 'uzel-uvod' }, situace.telegraf),
-      h('p', { class: 'pravidlo' }, popisSignalu(situace.signal)),
+      // Mechanický výčet zůstává (bez něj by commit naslepo byl hádání), ale
+      // ustupuje próze: hlavní je telegraf, tohle je poznámka pod ním (D36
+      // „próza hlavní, čísla vedle"; fáze 2.2, nález 3 lidské brány).
+      h(
+        'p',
+        { class: 'telegraf-souhrn' },
+        h('span', { class: 'telegraf-souhrn-popisek' }, 'co z toho plyne: '),
+        popisSignalu(situace.signal)
+      ),
       poznamkaCestnosti(nevidiTelegraf, 'informační postih na telegraf')
     ),
     h(
@@ -158,11 +166,11 @@ export function pohledCommitu(ctx) {
             {
               class: `karta${jeVybrana ? ' zoufala' : ''}${plno ? ' neaktivni' : ''}`,
               disabled: plno,
-              title: k.text,
               onclick: () => akce.prepniKartu(p.id, k.id),
             },
             h('strong', {}, k.nazev),
             h('span', { class: `karta-meta${maSkryteStaty ? ' skryto-postihem' : ''}` }, popisStatu(k.staty)),
+            h('span', { class: 'karta-popis' }, k.text),
             k.stitek ? h('span', { class: 'karta-hlucna' }, `${nazevStitku(content, k.stitek)} — hlučná`) : null
           );
         })

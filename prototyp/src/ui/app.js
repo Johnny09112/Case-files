@@ -24,7 +24,7 @@ import { RULES } from '../engine/rules.js';
 import { createRun } from '../engine/state.js';
 import { EVENT } from '../engine/events.js';
 
-import { createVyberSablon, zapisSituace, zapisFinale, opravUvozovkySablon } from './protocol-fill.js';
+import { createVyberSablon, zapisSituace, zapisFinale } from './protocol-fill.js';
 import { vysvetli, ctxZObsahu } from './vysvetleni.js';
 import { obrazovkaSetup } from './screens/setup.js';
 import { obrazovkaRun } from './screens/run/index.js';
@@ -43,7 +43,7 @@ export function initApp(root) {
     cile: cileYaml,
     postavy: postavyYaml,
   });
-  const sablony = load(opravUvozovkySablon(sablonyYaml)).sablony;
+  const sablony = load(sablonyYaml).sablony;
 
   const S = novyStav();
 

@@ -385,6 +385,91 @@ button.uzel-karta:hover {
   font-style: italic;
 }
 
+/* Mechanický souhrn telegrafu (fáze 2.2, bod 3): zůstává čitelný, ale ustupuje
+   próze — bez rámečku `.pravidlo`, menší a tlumený (D36 „próza hlavní"). */
+.telegraf-souhrn {
+  margin: 0.45rem 0 0;
+  font-size: 0.78rem;
+  color: var(--inkoust-slaby);
+}
+
+.telegraf-souhrn-popisek {
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+}
+
+/* ---------- text situace se 4 mezerami (fáze 2.2) ---------- */
+
+.situace-blok {
+  margin: 1rem 0;
+  border-left: 4px solid var(--inkoust);
+}
+
+/* Próza je HLAVNÍ prvek obrazovky — proto větší a vzdušnější než rozpis. */
+.situace-text {
+  margin: 0.3rem 0 0;
+  font-family: var(--tiskopis);
+  font-size: 1.06rem;
+  line-height: 1.85;
+}
+
+.jednajici {
+  font-weight: 700;
+}
+
+/* Mezera {VEC} je tlačítko, ale musí číst jako podtržítko ve formuláři,
+   ne jako ovládací prvek — proto bez rámečku a s podtrženou linkou. */
+button.mezera {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  border-bottom: 2px solid var(--inkoust-slaby);
+  padding: 0 0.15rem;
+  margin: 0 0.1rem;
+  cursor: pointer;
+}
+
+button.mezera:hover:not(:disabled) {
+  background: var(--papir-tmavy);
+  border-bottom-color: var(--inkoust);
+}
+
+button.mezera:disabled {
+  cursor: default;
+  opacity: 0.75;
+}
+
+.mezera-plna {
+  font-weight: 700;
+  border-bottom-color: var(--inkoust);
+}
+
+.mezera-prazdna {
+  color: var(--inkoust-slaby);
+  letter-spacing: 0.05em;
+}
+
+/* Číslo mezery = číslo role v rozpisu pod textem (jediný můstek mezi prózou
+   a mechanikou — bez něj hráč neví, který práh se právě plní). */
+.mezera-cislo {
+  font-size: 0.62rem;
+  color: var(--cervena);
+  margin-left: 0.1rem;
+}
+
+/* Rozpis rolí na přiřazení je od 2.2 podřízený próze (menší, tlumený rám). */
+.rozpis-tlumeny {
+  margin-top: 0.9rem;
+  opacity: 0.9;
+}
+
+.rozpis-tlumeny .hod-radek {
+  padding: 0.35rem 0.7rem;
+  font-size: 0.9rem;
+}
+
 .afinity {
   display: flex;
   gap: 0.5rem;
@@ -509,6 +594,17 @@ button.karta:hover:not(:disabled) {
 .karta-meta {
   font-size: 0.75rem;
   color: var(--inkoust-slaby);
+}
+
+/* Autorský popis věci (≤140 znaků) — od fáze 2.2 viditelně na kartě, ne
+   v `title` tooltipu: na sdíleném hot-seat displeji se hover nedá čekat. */
+.karta-popis {
+  font-size: 0.72rem;
+  font-family: var(--tiskopis);
+  font-style: italic;
+  color: var(--inkoust-slaby);
+  max-width: 13rem;
+  white-space: normal;
 }
 
 /* informační postih, varianta (b): informace je vidět, ale přeškrtnutá */

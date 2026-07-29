@@ -15,26 +15,6 @@
  */
 import { EVENT } from '../engine/events.js';
 
-/**
- * Workaround chyby obsahu (nahlášeno do design repa 2026-07-22):
- * fallback-sablony.yaml uzavírá české uvozovky ASCII znakem `"` uvnitř
- * double-quoted YAML scalarů (`text: "… „{karta}". …"`), což scalar předčasně
- * ukončí a soubor je nevalidní YAML. Než to design repo opraví, nahradíme
- * vnitřní neescapované `"` v `text:` řádcích typografickým `“` (správná česká
- * uzavírací uvozovka). Po opravě obsahu je funkce neškodná (nic nenajde).
- * @param {string} yamlText
- */
-export function opravUvozovkySablon(yamlText) {
-  return yamlText
-    .split('\n')
-    .map((radek) => {
-      const m = radek.match(/^(\s*text:\s*")(.*)("\s*)$/);
-      if (!m) return radek;
-      return m[1] + m[2].replace(/(?<!\\)"/g, '“') + m[3];
-    })
-    .join('\n');
-}
-
 /** Nouzová věta, kdyby pro kombinaci neexistovala žádná šablona. */
 export const NOUZOVY_ZAZNAM =
   'Průběh v tomto bodě zaznamenán bez podrobností; spis doplní vyšetřovatel dodatečně.';

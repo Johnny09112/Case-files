@@ -13,6 +13,25 @@ architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.m
 
 ## 2026-07-29
 
+- **D46 — fáze 2.2 postavena a hotová; zapečen kontrakt `{kdo}` → nejbližší
+  následující mezera.** Zadání
+  [[../technika/faze-2.2-navrh-2026-07-29|technika/faze-2.2-navrh-2026-07-29.md]]
+  splněno ve všech třech bodech (próza s živě plněnými mezerami na přiřazení
+  i výsledku, popisy věcí bez hoveru, mechanický souhrn telegrafu podřízený
+  próze). Nový čistý modul `prototyp/src/ui/situace-text.js` (obdoba
+  `protocol-fill.js`, bez DOM a bez herní logiky) — **engine se nedotkl**,
+  text se dohledává z obsahu, mezery na výsledku se plní z událostí
+  `slot_resolved`, ne z UI výběru. **Rozhodnutí, které si žádá zápis:**
+  autorský text NEMÁ vždy 4 `{kdo}` — `deputy-mytnice` a `privoz-celnik` mají
+  jen 3, protože skrytá „kdyby" role nemá jednajícího. Kontrakt je proto
+  **`{kdo}` = vlastník karty v NEJBLIŽŠÍ NÁSLEDUJÍCÍ mezeře**, ne „i-tý {kdo}
+  patří i-tému slotu"; `{kdo}` bez mezery za sebou se zahodí (jednající se
+  nedomýšlí). Autoři textů tím dostávají volnost mezery bez jednajícího
+  nechat. Invariant „právě 4 mezery, indexy 0–3 v pořadí slotů" hlídá test nad
+  reálným `obsah/` u všech 19 situací (pool + léčky/konfrontace). 295 testů
+  zelených, lint čistý, celý run projitý v prohlížeči (2p, seed 7, vč. léčky
+  a konfrontace) bez chyby konzole. Přibalen dluh z backlogu:
+  `opravUvozovkySablon()` smazán (nad v3 sadou prokazatelně no-op).
 - **D45 (triáž PM) — nálezy prvního sezení lidské brány: dva jsou nedodaný
   kanon (→ fáze 2.2), jeden designová změna (→ kolo designera).** Sezení
   ([[../playtesty/2026-07-29|playtest]]) se přerušilo na fikci, balanc se
