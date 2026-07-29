@@ -237,6 +237,24 @@ souhlas uživatele:** (a) Wizard-of-Oz test protokolů ve 2 režimech (kanonick�
 vs. kreativní interpretace) — rozhodující; (b) konceptové kolo „kde bydlí
 kreativita" (mandát AI vrstvy, slot-literalismus, divočejší věci) + telegrafy;
 engine/kalibrace se nezahazují, dokud nepromluvi (a).
+**OBĚ KOLA TRIÁŽE DOBĚHLA (2026-07-30):** (a) **WoZ test** —
+[[../technika/woz-test-2026-07-30|technika/woz-test-2026-07-30.md]], 8 uzlů
+ve 2 režimech naslepo (klíč na konci), doporučení testéra „B-lite" (invence jen
+u selhaných/nesedících slotů + 3 pojistky do promptu + per-slot vstupy ZÁCHRANA
+a MAX DOSAŽITELNÉ); **čeká na slepé čtení uživatele — rozhodující data-point.**
+(b) **Konceptové kolo** —
+[[../technika/koncept-kreativita-navrh-2026-07-30|technika/koncept-kreativita-navrh-2026-07-30.md]]
+(vč. prověrky kritika §8 a consistency-checku §10): rám „nespolehlivého
+vypravěče" (AI smí JAK/PROČ a smí se mýlit v kauzalitě, mechanika drží
+ZDA/KOLIK), slot-literalismus 76 slotů klasifikován (6 povinných + 7
+doporučených přepisů; skrytá role nikdy doslovná, max 1 doslovná viditelná na
+scénu), telegraf: škrtnout kanál POKRYTÍ. **Nález nad mandát POTVRZEN PM
+v kódu, kanonu i botovi: `assign.js:243` ukazuje finální zašuměné prahy už při
+rozdělování** (kanon: „prahy skryté před, odhalené po", design ř. 165/295; bot
+je při přiřazení nezná) — jádro „rozděl co nejméně špatně" se hraje jako
+aritmetika. Vada vznikla v katalogu §5 návrhu 2.1 (D36, prošlo PM review).
+**Rozhodnutí uživatele: oprava úniku prahů · telegraf škrtací kolo vs.
+zakrývací zkouška · fallback rovnocenný vs. přiznaně chudší · verdikt WoZ.**
 
 ### Co jde do lidské brány jako známé, vyčíslené odchylky
 
