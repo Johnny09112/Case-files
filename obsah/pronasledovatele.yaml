@@ -40,7 +40,7 @@ pronasledovatele:
       nazev: Most u Poughkeepsie
       typ: lecka
       svet: 1930
-      telegraf: "Malone obsadil most u Poughkeepsie a drží vaši fotografii. Tři viditelné role chtějí zapřít totožnost, pevné nervy a objet ho stranou; jedna skrytá čeká na nejhorší. Peníze na něj neplatí — a zbraň projde leda potají."
+      telegraf: "Na mostě u Poughkeepsie stojí Malone s vaší fotografií v ruce a peníze na něj neplatí. Někdo musí zapřít vlastní jméno tak, aby to sedělo; jiný u toho nesmí uhnout pohledem. Vůz projede kolem něj jen po krajnici, kde se sotva vejde. Jednou mu zajede ruka pod kabát a rozhodne to, kdo bude první. Na očích zbraň všechno pokazí, potají může být to jediné, co pomůže."
       text: >
         U závory stál Malone a porovnával tváře s fotografií. {kdo} zapřel totožnost
         pomocí {VEC}, {kdo} nedal na sobě znát strach za {VEC} a {kdo} navedl vůz kolem
@@ -58,7 +58,7 @@ pronasledovatele:
       nazev: Kolona na albanské poštovní silnici
       typ: konfrontace
       svet: 1930
-      telegraf: "Kolona federálních vozů vás sevřela a Malone si bez spěchu nasazuje brýle. Tři viditelné role jsou o průraz silou, ustát salvu a strhnout vůz do pole; jedna skrytá kryje záda. Tady zbraň konečně mluví — na očích i potají."
+      telegraf: "Kolona federálních vozů vás svírá z obou stran a Malone si beze spěchu nasazuje brýle; na peníze neslyší. Ven se někdo musí probít silou, jiný první salvu vydrží vestoje. Kudy pak vyjet, ukáže se až podle toho, kde pole řídne. Jednou střelba ustane a rozhodne to, kdo bude první. Zbraň tu nikoho nevyplaší a schovaná se vyplatí."
       text: >
         Federální vozy zatarasily silnici z obou stran a Malone vystoupil. {kdo} se
         pokusil probít ven s {VEC}, {kdo} ustál první salvu za {VEC} a {kdo} strhl vůz
@@ -84,7 +84,7 @@ pronasledovatele:
       nazev: Brodyho zátaras u Oneidy
       typ: lecka
       svet: 1930
-      telegraf: "Brody s partou nadšených občanů přehradil silnici valníkem a nasadil služební úsměv. Tři viditelné role chtějí uklidnit dav, přimazat dlaň a kamennou tvář; jedna skrytá pro nejhorší. Zbraň projde jen potají — a u Brodyho přitáhne dvojnásob pozornosti."
+      telegraf: "Silnici přehrazuje Brodyho valník a kolem se tlačí parta nadšených občanů. Dav musí někdo uklidnit dřív, než se rozjede; jiný zatím šerifovi připlatí za shovívavost. Další u toho nesmí hnout brvou. Jednou z davu přiletí kámen a bude se to řešit rukama. Na očích zbraň všechno pokazí, potají může rozhodnout, a u Brodyho přitáhne dvojnásob pozornosti."
       text: >
         Brody stál před valníkem obklopen zvědavci a culil se. {kdo} uklidňoval dav
         pomocí {VEC}, {kdo} přimazal šerifovi dlaň {VEC} a {kdo} držel kamennou tvář
@@ -102,7 +102,7 @@ pronasledovatele:
       nazev: Zavřený most u Cohoes
       typ: konfrontace
       svet: 1930
-      telegraf: "Brodyho muži vás zahnali k zavřenému mostu a šerif si sundává klobouk. Tři viditelné role jsou o průraz silou, najít kudy ujet a kličkovat; jedna skrytá vydrží nápor. Tady zbraň mluví, ale u Brodyho každý výstřel přitáhne olovo dvojnásob."
+      telegraf: "Brodyho muži vás tlačí k zavřenému mostu a šerif si sundává klobouk. Vpřed vede jen průraz silou; z mostu musí někdo jiný dostat to, co ho zavírá. Mezi vozy se pak kličkuje podle toho, co zrovna přijde. Most pod vámi jednou dutě zaduní a poznáte to pozdě. Zbraně se tu nikdo nelekne, ale u Brodyho přitáhne každá bouchačka dvojnásob pozornosti."
       text: >
         Most byl zavřený a Brodyho muži se hrnuli zezadu. {kdo} se probíjel vpřed
         s {VEC}, {kdo} hledal, kudy ujet, pomocí {VEC} a {kdo} kličkoval mezi vozy

@@ -74,8 +74,10 @@ Křížové odkazy v patičkách zachovávej.
   na účet etnika, pohlaví ani dětí — tohle je zároveň baseline budoucí moderace
   UGC karet.
 - **Limity:** text věci max ~140 znaků, název max 3 slova, telegraf situace
-  1–2 věty, text situace se 4 mezerami max ~5 vět. Protokol 3–5 vět dle
-  `prompty/protokol.md`.
+  3–5 vět / max 400 znaků (D48; telegraf je **předzvěst, ne výčet rolí** —
+  závazný je QA invariant v hlavičce `obsah/situace.yaml`), text situace se
+  4 mezerami max ~5 vět, rozpočet na uzel telegraf + text ≤ 670 zn. Protokol
+  3–5 vět dle `prompty/protokol.md`.
 
 ## Konvence
 

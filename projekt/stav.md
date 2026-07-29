@@ -192,8 +192,20 @@ o užitečnosti (staré znění by v konfrontacích tvrdilo opak toho, co scéna
 potvrdí stopky), **řádek viditelný na prvním uzlu prvního runu** (onboarding),
 **obsahové kolo se otevírá** bez druhé prověrky. PM ověřil sloty všech ukázek
 (sedí) a změřil délky (336 / 363 / 385 — uváděné odhady zase neseděly).
-**Znění invariantu se do `obsah/situace.yaml` vkládá až SPOLU s přepsanými
-telegrafy v jednom commitu**, včetně opravy `CLAUDE.md` („1–2 věty").
+**OBSAHOVÉ KOLO ZAPEČENO (D49, 2026-07-29):** nový invariant + **19 přepsaných
+telegrafů** jsou v `obsah/`, `CLAUDE.md` opraven („1–2 věty" → 3–5 vět / 400 zn.).
+Kolečko generátor → kritik → humor-testér → opravné kolo. Blokující nálezy byly
+o čtenáři, ne o mechanice: konstrukce „A a B" znamenala tři různé věci, skeleton
+„Jedna věc se rozhodne bez vás…" nesl 17 z 19 telegrafů, `brody-konfrontace` si
+vymyslela rekvizitu, kterou by odhalení vyvrátilo. Po opravě: skeleton **0×**,
+„vymyslíte až na místě" 10× → 1×. **Ověřeno PM měřením:** derivovaný signál sedí
+u 19/19 (verdikty zbraně, 10× skrytý útok, 1× skrytá improvizace, slotová
+výjimka, dva skryté u `nadrazi-noc`), délky 302–379 (strop 400), **295/295 testů
+zelených**, golden snapshoty rebasovány — jediný rozdíl je `verzeObsahu`,
+mechanika shodná. Uživatel rozhodl **zapéct teď a zakrývací zkoušku nechat jako
+otevřenou položku** (řádek invariantu to přiznává, aby nevznikla mrtvá litera).
+**Míč: (a) UI přepínač řádku + onboarding, (b) zakrývací zkouška se 6 čtenáři,
+(c) lidská brána, (d) fáze 3 LLM.**
 
 ### Co jde do lidské brány jako známé, vyčíslené odchylky
 
@@ -247,7 +259,8 @@ variance doměřena (2sd = 3,22 < 6). Eskalace V1–V4 rozhodnuta uživatelem ja
 | **Mechanický řádek „co z toho plyne" nativně skrýt + přepínač v nastavení hry** (rozklik na vyžádání; výhledově prvek obtížnosti, váže na D25d) | kódový repo (Opus) | **ZADÁNO D47 (2026-07-29), rozšířeno D48** — změna proti čerstvě hotové 2.2, která řádek jen vizuálně podřídila próze. Bez něj nemá přepis telegrafu efekt: atmosférická inference je zrušena o řádek níž. **D48: řádek je viditelný na PRVNÍM uzlu prvního runu** (onboarding), dál ne. Přepínač se má jmenovat jako ulehčení, ne jako nastavení zobrazení — při zapnutém řádku jde 4p win-rate na 86,8 %, je to **EASY režim** |
 | **Sloty s pohybem vozu: `nastroj` vs. `improvizace`** — „strhnout vůz do postranní" = `nastroj` (`zatah`, `mesto-houkacky`), ale „strhnout do pole" = `improvizace` (`malone-konfrontace`); dále `mesto-ulicka` „Najít skulinu", `brody-konfrontace` „Najít, kudy ujet", `malone-lecka` „Objet ho stranou" — všechny `nastroj`, ač slovník invariantu řadí „cestu vymyšlenou až na místě" k improvizaci | game-designer + content-generator | **otevřeno (nález obsahového kola D48, potvrzen kritikem)** — táž fikce, opačný stat, žádné pravidlo mezi tím: hráč se místo mapy učí seznam výjimek. Sloty jsou z kola D48 vyňaté (V-8), ale **tohle by kontrafaktuál přes `CONTENT_DIR` změřit uměl** (sim staty čte, prózu ne). Neřešit rekvizitami v telegrafu — tři ze čtyř dodaných jsou vlastnosti scény, ne překážky |
 | **Protokol utrácí první větu na rekapitulaci telegrafu** — ukázka dobrého protokolu v `prompty/protokol.md` začíná první větou telegrafu `farmar-brod` v minulém čase; s bohatšími telegrafy to zesílí a z 3–5 vět zbudou na vtip 2–4 | protocol-humor-tester + content-generator | **otevřeno (nález humor-testéra D48)** — vada styku telegrafu a promptu, ne jednoho z nich. Buď pravidlo do promptu („scénu neopakuj, začni tím, co udělali podezřelí"), nebo se přizná, že protokol má fakticky 2–4 věty |
-| **Obsahové kolo: přepis 19 telegrafů** (15 situací + 4 léčky/konfrontace) dle v2 invariantu; zapéká se spolu se zněním invariantu do hlavičky `situace.yaml` + oprava `CLAUDE.md` („1–2 věty") | content-generator → protocol-humor-tester → design-critic | **OTEVŘENO D48 (2026-07-29)** — psát dle §11 návrhu, každý telegraf **měřit, ne odhadovat** (strop 400 zn.). Zapečení blokuje zakrývací zkouška (§13.4, 6 čtenářů, 8 telegrafů, srovnávací rameno proti dnešní sadě) |
+| **Obsahové kolo: přepis 19 telegrafů** (15 situací + 4 léčky/konfrontace) dle v2 invariantu; zapéká se spolu se zněním invariantu do hlavičky `situace.yaml` + oprava `CLAUDE.md` („1–2 věty") | content-generator → protocol-humor-tester → design-critic | **HOTOVO A ZAPEČENO 2026-07-29 (D49)** — 19 telegrafů + invariant v `obsah/`, `CLAUDE.md` opraven. Signál ověřen 19/19 proti enginu, délky 302–379, 295/295 testů, golden rebase jen na `verzeObsahu` |
+| **Zakrývací zkouška telegrafů** — 6 čtenářů, 8 vybraných telegrafů, každý čte novou i starou verzi jiného telegrafu (srovnávací rameno); protokol a rozhodovací pravidla [[../technika/telegraf-invariant-navrh-2026-07-29\|§13.4–13.5 návrhu]] | uživatel + playtest-facilitator | **OTEVŘENO (D49)** — zapečení proběhlo bez ní vědomě, invariant to v hlavičce přiznává. Měří to, co simulace neumí (sim prózu nečte). Spouštěč přepisu je per telegraf, ne na průměru sady |
 | **Oprava kanonu: telegraf má 6 kanálů, ne 3** — `design-dokument.md:107–108` a `prototyp-mvp.md:91–93` neznají `zbran_skryte` (D22) ani `improv_skryte` (D25f), ač je engine derivuje a UI zobrazuje. Plus `prototyp-mvp.md:33` cituje K4d 7,9 z ramene `optimal`, ač gate stojí na rameni `kompetentní` (dnes 18,6 / 22,1 / 24,6 / 22,8) | game-designer / PM | **otevřeno (nález D47)** — nezávislé na osudu invariantu, ať jde vlastním commitem |
 | Jemné doladění obtížnosti po loot-injury (exploit-bot ~74–76 % vs. pásmo 45–70; ladit tvrdosti/Žár, ne resoluční práh) | game-designer + playtest-facilitator | **nahrazeno kalibrací-1 v3** — viz řádek níže |
 | **Kalibrace-1 v3: zapéct 45-slot kotva-patch + kořenový lék K5/K7/K2** (gamble vynucený ne zvolený, snowball plochý) | game-designer + content-generator | **hotovo 2026-07-24 (D22)** — patch zapečen (45 slotů +1, pásmo 2–4 drží); lék zapracován: 4 skryté obrana-kotvy 3→2 (dial), 2 telegraf-přepisy npc-pastí, 5 věcí +1 sekundární stat (obrana/nastroj, improvizace netknuta), info-heavy pooly pozdních událostí se stropem ≤7 (D20). Enginová část léku = řádek níže; 3 eskalace na uživatele (viz otevřené otázky) |

@@ -13,6 +13,50 @@ architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.m
 
 ## 2026-07-29
 
+- **D49 — OBSAHOVÉ KOLO TELEGRAFŮ ZAPEČENO: nový invariant + 19 přepsaných
+  telegrafů v `obsah/`.** Kolečko generátor → design-critic → protocol-humor-tester
+  → opravné kolo → ověření PM. **Oba recenzenti se shodli:** sada je jasné
+  zlepšení, ale první verze se zapéct nesměla — ne kvůli mechanice, ale kvůli
+  čtenáři. Blokující byly: (1) táž konstrukce „A a B" znamenala v sadě tři různé
+  věci (KOMBI slot / jeden slot se dvěma obrazy / dva různé sloty), takže
+  pravidlo POKRYTÍ bylo splněné jen v autorském čtení; (2) skeleton „Jedna věc
+  se rozhodne bez vás…" nesl **17 z 19** telegrafů, z toho 13× doslova celá věta
+  — a je to věta nesoucí informaci o skrytých slotech; (3) `brody-konfrontace`
+  si vymyslela „závoru s řetězem", která ve scéně není, takže odhalení by obraz
+  **vyvrátilo**, ne potvrdilo. **Po opravném kole:** skeleton 17× → **0×**
+  (skryté sloty ohlašují vidle, lucerna, ručička váhy, prázdné políčko,
+  rozsvícené okno, zhasínající lampa, otočený reflektor, kámen z davu, dunící
+  most), „vymyslíte až na místě" 10× → 1×, „dlaň" a „nemrknout" → 0×.
+  **Ověření PM (ne důvěra):** derivovaný signál porovnán položku po položce pro
+  všech 19 — verdikty zbraně, 10× skrytý útok, 1× skrytá improvizace, 1× slotová
+  výjimka, `nadrazi-noc` se dvěma skrytými; **19/19 sedí**. Délky změřeny:
+  max 379, min 302, průměr 338, **žádný přes strop 400**. Zákazaný meta-slovník
+  se nevyskytuje. Testy **295/295 zelených**, lint čistý; golden snapshoty
+  rebasovány — **jediný rozdíl v obou runech je `verzeObsahu`** (59f1ea48 →
+  432cbc42), mechanika bit po bitu shodná.
+  **Rozhodnutí uživatele:** (1) **zapéct teď, zakrývací zkouška až potom** —
+  řádek invariantu se přeformuloval na to, co se opravdu stalo („zapečeno po
+  autorském a recenzním checklistu; zakrývací zkouška je otevřená položka"),
+  aby v hlavičce obsahu nevznikla mrtvá litera, kterou čte každý další autor;
+  (2) **sloty s pohybem vozu do backlogu**, neopravovat teď — míchat je do
+  zapečení telegrafů by rozmazalo, co se měří (precedent D42).
+  **Zapečeno i:** dodatky invariantu z review (slovník nároků jsou **definice,
+  ne znění** + strop 2 výskyty fráze v sadě · markér hranice nároku · dělicí
+  čára humoru proti protokolu) a oprava `CLAUDE.md` §Stylová pravidla
+  („1–2 věty" → 3–5 vět / max 400 zn.).
+  **Rozhodnuto proti doporučení humor-testéra, na základě měření:** navrhoval
+  sjednotit Brodyho připomínku na „každý výstřel přitáhne olovo dvojnásob".
+  `pronasledovatele.yaml` ale říká `typ: stitek, cil: GANGSTER` — zdvojený Žár
+  za každou gangsterskou kartu **včetně té ve skrytém slotu, kde se nestřílí**.
+  „Výstřel" pravidlo zužuje, „olovo" ho překládá na zranění místo stopy.
+  Sjednoceno opačně, na **„pozornost"**.
+  **Generátor přiznal dva vlastní overreache** (obojí přijato): sáhl na
+  schválenou ukázku `urednik-vaha`, protože porušovala nové pravidlo hranice
+  nároku (past i „kusem gumy" zůstaly netknuté), a **odmítl tři ze sedmi
+  návrhů humor-testéra** — „dveře ve zdi" by pojmenovaly skrytý nástrojový slot,
+  „postraněk" a „údaj v knize" by nesly týž předmět jako viditelný nárok.
+  V obou případech měl pravdu. `most-prohnila-prkna` zůstal **bit po bitu
+  netknutý** jako referenční implementace invariantu.
 - **D48 (ROZHODNUTÍ UŽIVATELE) — invariant telegrafu v2 schválen, obsahové kolo
   19 telegrafů OTEVŘENO.** Revize designéra po D47 odpověděla na všech šest
   blokujících nálezů kritika; verze 2 je v §10–§15
