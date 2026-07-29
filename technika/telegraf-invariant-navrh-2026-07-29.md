@@ -452,6 +452,371 @@ Opravit na kompetentní rameno s dnešními čísly.*
 
 ---
 
+# VERZE 2 (2026-07-29, po prověrce kritika a rozhodnutí D47)
+
+*Sekce §2, §3, §4 a §6 výše jsou tímto nahrazeny. Verze 1 se nemaže — je
+doklad, co se změnilo a proč (konvence projektu).*
+
+## 10. Co se změnilo proti v1
+
+1. **Teze vyškrtnuta, ne zeslabena.** Přepis je věc fikce a čitelnosti
+   (nález 3, metrika 6), **ne balanční lék** — marginální hodnota čtení je dnes
+   největší u 3p/4p, lepší telegraf by K6a rozevíral.
+2. **§4 přepsáno na stav po D47.** Žádost o viditelný řádek stažena. Próza je
+   v defaultu jediný nositel; učení mapy fikce→stat se přesouvá na obrazovku
+   odhalení (`assign.js`), která ho po 2.2 unese.
+3. **„Tvrdý strop K4d" z §6 pryč** — rezerva 18,6 b. u 1p, 13,0 b. i při
+   p = 0,3. Ukázáno, proč simulační brána na tuhle změnu není potřeba.
+4. **Nové jádro invariantu: „nárok je sloveso, ne kulisa."** Řeší V-4 i V-5
+   najednou — obrazy disjunktní nikdy nebudou, ale *nároky* ano. Kulisa
+   (úředník, hlídač, zámek) je povolená; kanál se obsadí teprve tím, že próza
+   přiřkne **posádce práci**.
+5. **Nové pravidlo o záporném tvrzení** — stat se smí vyloučit jen tehdy, když
+   není v žádném slotu ani skrytém (jinak je to anti-tell, který bot nemá).
+6. **Verdikt zbraně přestal být čtyřprvkovým seznamem** a mluví jen
+   o **toleranci** místa, ne o užitečnosti — tím padá V-10 u konfrontací
+   (`zatah` a `rival-prepad` v1 znění vyvracely).
+7. **Kanál 7 (`rusi`) jen pro 4 telegrafy pronásledovatelů**, klasifikovaný
+   správně jako připomínka veřejného pravidla, ne fidelitní kanál.
+8. **Délka: přijat strop 350 zn.**, cíl ~300, rozpočet na uzel 620 zn.
+9. **Scope creep vypuštěn** — test v `prototyp/test/`, „obrazy v pořadí slotů",
+   povinná křížová kontrola s `text`. Obsahové kolo je **19 telegrafů, žádné
+   `text`y**.
+10. **D-13 přiznáno a rozvolněno** — pevný je jen smysl verdiktu zbraně;
+    pozice poslední věty je doporučení a falzifikovatelná hypotéza zkoušky.
+11. **Zakrývací zkouška přepsána** na neleakující formát se **srovnávacím
+    ramenem proti dnešní sadě** — tím zmizel kruhový práh 0,70.
+
+## 11. §2 v2 — QA invariant ke vložení do `obsah/situace.yaml`
+
+Nahrazuje blok `# QA INVARIANT TELEGRAFU (D19 + D6)` a mění řádek schématu na
+`#   telegraf:  předzvěst před commitem, max 350 zn. (viz QA invariant níže)`.
+Platí i pro `lecka`/`konfrontace` v `obsah/pronasledovatele.yaml` (tam navíc
+kanál 7).
+
+```yaml
+# QA INVARIANT TELEGRAFU (D19 + D6; přepis 2026-07-29 — nález 3 lidské brány, D47)
+#
+# Telegraf je PŘEDZVĚST, ne výčet rolí. Je to PRÓZA = lidský rendering signálu,
+# který engine DERIVUJE ze slotů (`deriveTelegrafSignal`, prototyp/src/engine/
+# resolve.js). Signál se NEautoruje — próza jen musí zůstat věrná.
+# Od D47 je mechanický výčet („co z toho plyne“) v UI NATIVNĚ SKRYTÝ, takže
+# v defaultním režimu je tenhle text JEDINÝ nositel informace před commitem.
+# Informaci nese OBRAZ (překážka, člověk, předmět, gesto), ne jméno statu:
+# hráč si nároky odvozuje z fikce (learnabilita slíbená v design-dokument §4.5).
+#
+# --- JÁDRO: NÁROK JE SLOVESO, NE KULISA ---------------------------------------
+# Scéna smí obsahovat cokoli — úředníka, který se dívá, zámek, blok pokut. Kulisa
+# NIC neprozrazuje. Kanál je „obsazen“ teprve tím, že próza přiřkne POSÁDCE práci
+# („bude třeba…“, „zbude…“, „jde to jedině tak, že…“). Z toho plynou dvě pravidla,
+# ze kterých je odvozeno všechno ostatní:
+#   (A) POKRYTÍ  — každý VIDITELNÝ slot má v próze právě jeden nárok.
+#   (B) ČISTOTA  — próza nepřiřkne posádce žádný nárok, který není slotem.
+# Porušení (B) je dražší než porušení (A): otevírá past (tým committne kartu na
+# poptávku, která ve slotech není), kdežto (A) jen zdražuje jeden slot.
+# Pořadí nároků je VOLNÉ — commit je naslepo, pořadí rolí je pro něj irelevantní.
+#
+# --- ZÁPORNÉ TVRZENÍ (povolené, cenné, omezené) --------------------------------
+# Stat se smí výslovně VYLOUČIT („peníze si vzít netroufne“, „tady se nikdo nepere“)
+# — ale JEN stat, který není v žádném slotu, ani skrytém, a nejvýš jednou za
+# telegraf. Bot celý trend zná, takže tím člověk nedostane víc než on. Zákaz
+# u skrytých slotů je proto, aby próza neodváděla od toho, co se pokazí.
+#
+# --- ŠEST KANÁLŮ, KTERÉ PRÓZA MUSÍ NÉST (tolik jich derivuje engine) ----------
+# 1) TREND — pravidlo (A) výše. Obraz je předmět, člověk nebo gesto, nikdy
+#    abstrakce; jeden slot = jeden nárok, dva obrazy na týž slot svedou tým dát
+#    tam dvě karty. Slovník NÁROKŮ níže.
+# 2) KOMBI SLOT (`stat: [a, b]`) — JEDEN nárok se dvěma požadavky výslovně
+#    spojenými do JEDNÉ práce („přibít a zároveň podložit něčím, co leží po ruce“).
+#    Nikdy jako dvě práce vedle sebe.
+# 3) POČET SKRYTÝCH (`proti_srsti`) — číslovkou a fikcí, spočítatelně, bez slova
+#    „skrytá“ („Jedno prkno povolí, až bude pozdě couvnout.“ / „Dvě věci se
+#    rozhodnou potmě…“). Dvě skryté role má jediná situace (nadrazi-noc) — musí
+#    být citelně těžší, ne jen o číslovku jiná.
+# 4) SKRYTÝ ÚTOK / SKRYTÁ IMPROVIZACE (`zbran_skryte`, `improv_skryte`) — když
+#    jsou true, MUSÍ v próze být („kdyby přituhlo, ať je po ruce…“ / „bude se to
+#    muset něčím zamluvit“). Jsou to JEDINÉ skryté sloty, o kterých se mluví.
+#    O statu jiného skrytého slotu se MLČÍ (D47/R1) — ani kladně, ani záporně.
+#    Skrytá obrana a skrytý nástroj v telegrafu nemají co dělat.
+# 5) VERDIKT ZBRANĚ — jedna věta, smysl z uzavřené mřížky, doporučeně poslední
+#    (viz POZNÁMKA K FORMĚ). Mluví VÝHRADNĚ o toleranci místa, nikdy o tom, jestli
+#    se zbraň hodí — to je práce trendu. Zdroj pravdy je obsah/stitky.yaml
+#    `chovani_dle_typu`, ne typ uzlu odhadem.
+#      zbran_projde=ano,        zbran_skryte=false  → „Zbraň tu nikoho nevyplaší.“
+#      zbran_projde=ano,        zbran_skryte=true   → „Zbraň tu nikoho nevyplaší
+#                                                     a schovaná se vyplatí.“
+#      zbran_projde=jen_skryte, zbran_skryte=true   → „Na očích zbraň všechno
+#                                                     pokazí, potají může být to
+#                                                     jediné, co pomůže.“
+#      zbran_projde=jen_skryte, zbran_skryte=false  → „Sáhnout tu pod kabát
+#                                                     jen popudí; a schovaná
+#                                                     zbraň nezmůže nic.“
+#    Slovesa a obrazy se smějí přizpůsobit situaci; SMYSL a jeho dvě osy
+#    (na očích / potají) se měnit nesmí. Ověřeno proti všem 19 situacím.
+# 6) SLOTOVÁ VÝJIMKA (`stitek_citlivy: GANGSTER`) — je-li přítomna, dovětek
+#    k verdiktu: „…ale jednomu z nich bouchačka pusu zavře.“ Bez toho si próza
+#    a strojový signál protiřečí (resolve.js:276–282).
+# 7) JEN V `lecka`/`konfrontace`: PŘIPOMÍNKA PRAVIDLA `rusi` daného pronásledovatele
+#    („Peníze na něj neplatí.“ / „u Brodyho přitáhne každý výstřel olovo dvojnásob“).
+#    NENÍ to sedmý derivovaný kanál — pravidlo je run-wide a viditelné od startu,
+#    engine i bot ho aplikují bez ohledu na prózu. Je to připomínka ve chvíli, kdy
+#    je nejdražší na ni zapomenout; formuluje se fikcí, nikdy zněním pravidla.
+#
+# --- CO SE NESMÍ PROZRADIT ----------------------------------------------------
+# Kotvy, prahy, šum, konkrétní čísla, pásma, obsah lootu ani stat skrytého slotu
+# nad rámec kanálu 4. Telegraf říká, CO se blíží, nikdy JAK TĚŽKÉ to je.
+#
+# --- ZÁKAZ META-SLOVNÍKU (autorský checklist, ne CI test) ----------------------
+# V telegrafu se NESMÍ objevit: „role“, „slot“, „viditeln*“, „skryt*“, „stat“,
+# „práh“, „kotva“, „nároky“, jména statů (útok / obrana / hodnota / improvizace /
+# nástroj ani zjevná synonyma „nářadí“, „důvtip“, „šikovné ruce“) a číslovky ve
+# spojení s rolemi. Výjimka: „na očích“ / „potají“ ve verdiktu zbraně.
+# (Grep tohle chytí, ale drahá porušení — falešná poptávka, leak skrytého slotu —
+# grepem NEjdou. Proto je to checklist autora a recenzenta, ne strojová brána.)
+#
+# --- SLOVNÍK NÁROKŮ (klíčem je SLOVESO, podstatné jméno je jen kotva) ----------
+#   utok         posádka musí TLAČIT: prorazit, zvýšit hlas, být rychlejší,
+#                postavit se, zastrašit gestem. Obraz zbraně smí být použit JEN
+#                tam, kde je zbran_projde=ano — jinde svádí ke kartě, co auto-failne.
+#   obrana       posádka musí VYDRŽET a nedat znát: ustát nápor, nemrknout,
+#                držet nervy, stát a čekat. POZOR: NPC, který se dívá, sám o sobě
+#                obranu NEobsazuje (viz JÁDRO) — obsadí ji až demand posádce.
+#   hodnota      posádka musí DÁT něco, co má cenu: zaplatit, podmáznout, sazba,
+#                poplatek, otevřená dlaň, blok pokut.
+#   improvizace  NEEXISTUJE správná věc: musí to jen OBSTÁT. Historka, jméno,
+#                list papíru, cesta vymyšlená až na místě, zamluvit to.
+#   nastroj      SPRÁVNÁ věc existuje a musí se správně použít: závora, zámek,
+#                prkno, kolo, šroub; přibít, vypáčit, spravit, odsunout.
+#
+# --- KOLIZE A ROZHODOVACÍ PRAVIDLA (slovník NENÍ plně disjunktní) --------------
+#   utok × obrana        — kdo jedná první? Posádka tlačí = útok; posádka drží
+#                          nápor = obrana. Když věta unese obojí, dopiš „první“
+#                          (útok) nebo „vydržet / nedat na sobě“ (obrana).
+#   nastroj × improvizace— existuje ve scéně věc, která to řeší? Ano (zámek→páčidlo)
+#                          = nástroj. Ne, musí to jen projít jako pravé = improvizace.
+#                          Platí-li obojí, patří to do KOMBI slotu, nebo je slot
+#                          špatně naautorovaný.
+#   hodnota × improvizace— dostane protistrana VĚC (peníze, zboží)? = hodnota.
+#                          Jen slova? = improvizace.
+#   ZBYTEK, KTERÝ DISJUNKTNÍ NEBUDE: NPC jako kulisa je v pašerácké scéně
+#   nevyhnutelné a čtenář si ho může přečíst jako poptávku po obraně. Invariant to
+#   NEZAKAZUJE (bez lidí by scény nešly psát) a NEPŘEDSTÍRÁ, že to vyřešil —
+#   je to hlavní položka zakrývací zkoušky (§13).
+#
+# --- POZNÁMKA K FORMĚ (přiznaná, ne skrytá) -----------------------------------
+# Invariant fixuje JEDNU věc: smysl verdiktu zbraně z uzavřené množiny. Pozice
+# (poslední věta) je DOPORUČENÍ, ne pravidlo — poslední věta se pamatuje nejlíp
+# a verdikt je jediný kanál, jehož chybné čtení stojí auto-fail karty. Typové
+# pravidlo přitom hráč zná už z mapy (mapa.js:19–20), takže telegraf ho většinou
+# potvrzuje a přidává jen výjimku. Je to falzifikovatelná hypotéza: ukáže-li
+# zakrývací zkouška, že čtenáři verdikt trefí bez ohledu na pozici, doporučení
+# padá. Zbytek telegrafu je volná próza — pevná forma (telegram) byla zamítnuta.
+#
+# --- ROZSAH A TEMPO -----------------------------------------------------------
+# Telegraf: 3–5 vět, STROP 350 znaků, cíl ~300. Nejvýš JEDNA věta bez kanálu.
+# Rozpočet na UZEL: telegraf + `text` ≤ 620 zdrojových znaků. Roste-li telegraf,
+# krátí se `text` (plněné mezery ho ještě prodlouží o ~25 %).
+# Důvod: česká četba nahlas ~850–1000 zn./min → 350 zn. ≈ 21–25 s, a na uzlu se
+# navíc čte `text` i protokol. Bez stropu vychází 8–10 min hlasitého čtení
+# z 30minutového runu a hráči začnou skimovat — což sráží přesně tu čitelnost,
+# kvůli které se telegraf přepisuje.
+# Telegraf je scéna PŘEDEM: neosobně, v přítomném čase, nikdy nepředjímá výsledek.
+# `text` je táž scéna POTOM: v minulém čase a se jmény. (Doporučení, ne pravidlo:
+# podstatné jméno kotvy z telegrafu se hodí zopakovat i v `text` — tím se hráč učí
+# mapu fikce na staty. Nespouští to přepis pole `text`.)
+#
+# --- PŘEJÍMACÍ KRITÉRIUM ------------------------------------------------------
+# Telegraf se nezapéká bez zakrývací zkoušky — protokol, vzorek a rozhodovací
+# pravidla viz technika/telegraf-invariant-navrh-2026-07-29.md §13.
+```
+
+## 12. §3 v2 — tři ukázkové přepisy
+
+*Sloty ověřeny PM proti `obsah/situace.yaml`; délky změřeny (viz §14).*
+
+### B1 · `most-prohnila-prkna` (lokace; nastroj / KOMBI / improvizace / **skrytá obrana**)
+
+> Příjezd na most přes Mohawk drží zrezivělá závora, kterou roky nikdo nezvedl.
+> Prkna za ní jsou prohnilá: bude je třeba přibít a zároveň podložit něčím,
+> co leží po ruce. Uprostřed zeje díra a cestu kolem ní si vymyslíte až na
+> místě. Jedno prkno povolí, až bude pozdě couvnout. Zbraň tu nikoho nevyplaší.
+
+**Co v něm záměrně NENÍ:** v1 měl „Nikdo tu není" — to je *záporné tvrzení
+o obraně*, a obrana tu skrytým slotem JE. Nové pravidlo to zakazuje jako
+anti-tell, který bot nemá. Hráčova inference „brokovnici nechat doma" se
+neztrácí: nese ji **absence jakéhokoli útok-nároku v trendu** plus verdikt,
+který mluví jen o toleranci, ne o užitečnosti.
+
+### B2 · `urednik-vaha` (npc; improvizace / nastroj / **viditelný utok** / skrytá obrana)
+
+> U silniční váhy sedí úředník s předpisem na všechno. Peníze si vzít
+> netroufne; chce listinu, která obstojí, a razítko, které v knize chybí
+> a nadělá se leda kusem gumy. Když ani to nepomůže, zbude na něj zvýšit hlas.
+> Jedna věc se rozhodne bez vás a poznáte ji pozdě. Sáhnout tu pod kabát jen
+> popudí, a schovaná zbraň nezmůže nic.
+
+**Opravy proti v1:** vypadlo „odkud úředníka hlídají" (dozor nad úředníkem
+implikuje, že posádka musí udržet tvář = leak skryté obrany) a „Bere jen
+papíry" (čte se jako poptávka po `hodnota`, která tu není). Nové znění dělá
+totéž **záporem**, který je pod novým pravidlem legální — `hodnota` ověřeně
+není v žádném slotu.
+**Nejcennější telegraf sady:** trend explicitně volá po útoku a verdikt
+zároveň zakazuje zbraň. Kdo přečte půlku, committne bouchačku do viditelné
+role a dostane auto-fail.
+
+### B3 · `nadrazi-noc` (lokace; improvizace / nastroj viditelné, **skrytá obrana + skrytý útok**)
+
+> Na seřaďovišti v Peekskillu se mezi odstavenými vagony pohupuje lucerna
+> nočního hlídače. Projít kolem něj jde jedině tak, že si na místě vymyslíte,
+> kdo jste. Pak zbývá vagon, jehož dveře drží zámek, co po dobrém nepovolí.
+> Dvě věci se rozhodnou potmě — a u jedné z nich půjde o to, kdo je rychlejší.
+> Zbraň tu nikoho nevyplaší a schovaná se vyplatí.
+
+**K výtce „noční hlídač = leak skryté obrany":** hlídač tu není kulisa navíc,
+je to **kotva viditelného improvizačního nároku** — bez něj nemá „vymyslet si,
+kdo jste" komu. Pod pravidlem JÁDRO to leak není (próza nepřiřkne posádce
+práci typu „vydržet a nedat znát"). Je to ale přesně ten zbytkový případ,
+o kterém invariant přiznává, že disjunktní není — proto patří do měřeného
+vzorku zkoušky.
+
+## 13. §4 a §6 v2 — próza jako jediný nositel, rizika, zakrývací zkouška
+
+### 13.1 Kde se hráč učí mapu fikce → stat, když řádek nevidí
+
+**Ne v telegrafu — na obrazovce odhalení.** `assign.js` od fáze 2.2 vykresluje
+prózu situace s klikatelnými mezerami a pod ní tlumený rozpis rolí s plnými
+jmény statů, prahem a viditelností, plus anotace kotvy a šumu. Smyčka učení je
+tedy *obraz v telegrafu → commit naslepo → odhalení, které obraz pojmenuje*.
+To je silnější učení než souběžný překlad v telegrafu (hráč nejdřív hádá, pak
+dostane odpověď) a je to přímá odpověď na metriku 6. **Bez téhle vazby by
+skrytí řádku bylo neúnosné — s ní je zdravé.**
+
+### 13.2 Měřený důsledek skrytí řádku (a proč se z něj nesmí stát designový cíl)
+
+Skrytí řádku je **jediná páka na K1 3p/4p, kterou sim umí modelovat** (knob
+`fidelita` je přesně model „jak dobře hráč přečte předzvěst"). Z dat §9:
+
+| režim | model | 1p | 4p | rozpětí (K6a) |
+|---|---|---|---|---|
+| řádek zapnutý | fidelita 1,0 | 62,4 | 86,8 | 24,4 |
+| řádek skrytý, próza výborná | ~0,7 | 58,8 | 79,1 | 20,3 |
+| řádek skrytý, próza průměrná | ~0,5 | 54,6 | 73,9 | 19,3 |
+
+- **„Vysvětlivky zapnuté" nejsou neutrální přístupnost, je to EASY režim**
+  a v UI se tak musí jmenovat (u 4p posílá win-rate na 86,8 %). Volitelná
+  obtížnost (D25d) je pro to správná kolonka; „nastavení zobrazení" ne.
+- **Přepis telegrafu nemá vzhůru kam K1 zhoršit** — efektivní `p` je po skrytí
+  řádku shora omezená dneškem, takže riziko je jednostranné (dolů) a dole je
+  13 b. rezervy v K4d i při p = 0,3. **Simulační brána na tuhle změnu není
+  potřeba, je výhradně lidská.**
+- **Zákaz, který z toho plyne:** vágnější próza se **nesmí** používat jako
+  balanční páka. Vyměnila by měřenou metriku za neměřitelnou ztrátu
+  porozumění — a na porozumění první sezení lidské brány havarovalo.
+
+### 13.3 Rizika
+
+| # | Riziko | Kontrola |
+|---|---|---|
+| **R-1** | Pokles čitelnosti (obraz je vágnější než jméno statu). Na bránu dopadá jednosměrně dolů; skutečná cena je metrika 6 a zábava u stolu | Zakrývací zkouška §13.4 |
+| **R-2** | **Falešná poptávka** (porušení pravidla B) — nejdražší jednotlivá chyba: tým committne kartu naprázdno a nedozví se proč | Vlastní metrika zkoušky, ne jen „trefil trend" |
+| **R-3** | Zatemnění verdiktu zbraně — bot ho čte s jistotou, brána pro tu ztrátu měřidlo nemá | Uzavřená mřížka + nulová tolerance drahé chyby |
+| **R-4** | Nerovnoměrná čitelnost napříč situacemi | Rozhodovací pravidlo **per telegraf**, ne na průměru sady |
+| **R-5** | Délka × tempo | Strop 350 zn. + rozpočet 620 zn./uzel; stopky na prvním sezení |
+| **R-6** | Zdvojení scény telegraf/`text` | Odlišení POV a času; opakuje se podstatné jméno, ne konstrukce |
+| **R-7** | 5 vět svádí k vtipkování, telegraf přebije protokol | Humor telegrafu je v suchosti hrozby; kontroluje `protocol-humor-tester` |
+| **R-8** | **Kolize kulisy s obranou** (přiznaný nedisjunktní zbytek) | Hlavní položka vzorku zkoušky; padne-li, je to nález o slovníku, ne o jednom telegrafu |
+
+**Vypuštěno proti v1 (scope creep):** test v `prototyp/test/`, povinnost
+„obrazy v pořadí slotů", povinná křížová kontrola s polem `text`. Obsahové
+kolo je **19 telegrafů, žádné `text`y**.
+
+### 13.4 Zakrývací zkouška — přepsaný, neleakující protokol
+
+**Vada v1:** otázka „které čtyři věci by sis vzal, hodnoceno po slotech"
+prozrazovala počet slotů i jména statů, takže by měřila systematicky výš než
+realita; práh 0,70 byl kruhový.
+
+**Co čtenář dostane:** jeden odstavec pravidel (parta pašuje chlast; před
+každou překážkou přijde telegraf; pak posádka pošle **čtyři věci** ze svých
+kufrů, ještě než uvidí, co se přesně děje). **Nedostane:** jména ani počet
+statů, počet nároků, ani slovo „slot"/„role".
+
+**Otázky** (papír, asynchronně, ~20–25 min):
+- **Q1 — poptávka, volným textem:** „Vypiš vlastními slovy, co po vás tohle
+  místo chce. Jedna odrážka = jedna věc, kterou tam někdo musí umět nebo mít."
+  Bez zadaného počtu.
+- **Q2 — počet skrytých:** „Kolik věcí se tam podle tebe může pokazit tak, že
+  to telegraf neřekl?" Jen číslo.
+- **Q3 — zbraň:** „Vzali byste bouchačku? *vytaženou / schovanou / vůbec*."
+
+**Kódování** (dělá autor obsahu, ne autor invariantu, a nezná, kterou verzi
+čte): odrážka se mapuje na stat podle slovníku nároků, a **jde-li namapovat na
+dva staty, počítá se jako netrefa** (konzervativní). Měří se **pokrytí**
+(kolik viditelných slotů má jednoznačnou odrážku), **falešná poptávka**
+(odrážky mířící na nárok, který není v žádném slotu), **|odhad − skutečnost|**
+u skrytých a **verdikt zbraně** ve třech třídách: shoda / laciná chyba (nechal
+doma, kde by prošla) / **drahá chyba** (vzal vytaženou tam, kde propadá).
+
+**Vzorek:** místo 19 × N čtenářů měř **8 telegrafů vybraných na těžké případy**
+(KOMBI slot, situace se dvěma skrytými, po jednom pro každý ze čtyř řádků
+mřížky zbraně, slotová výjimka `nadrazi-vypravci`, kolize nástroj × improvizace
+`urednik-vaha`). Každý telegraf čtou **3 čtenáři v nové verzi a 3 ve staré**;
+každý čtenář dostane od jednoho telegrafu jen jednu verzi. 6 čtenářů to pokryje.
+Autor nesmí být čtenář. Zbylých 11 projde jen autorský a recenzní checklist.
+**Staré rameno je tam schválně** — je to sada, kterou bychom jinak vydali,
+takže se srovnává proti reálné alternativě místo proti vymyšlenému číslu.
+
+### 13.5 Přejímací kritérium (předregistrováno, psáno před měřením)
+
+**Spouštěč přepisu, per telegraf:**
+1. Slot, který **≥ 2 ze 3** čtenářů nové verze nepojmenovali → přepis.
+2. **Falešná poptávka od ≥ 2 ze 3** → přepis (dražší chyba, R-2).
+3. Odhad počtu skrytých mimo ±1 u **≥ 2 ze 3** → přepis.
+
+**Brána sady (zapéct / nezapéct):**
+4. **Drahá chyba verdiktu zbraně: nula.** Jediné absolutní číslo v kritériu
+   a jediné obhájené důsledkem (auto-fail karty), ne volbou. Laciné chyby se
+   počítají a hlásí, ale zapečení nebrání.
+5. **Nová sada nesmí být proti staré horší** v pokrytí ani ve falešné poptávce,
+   a aspoň v jedné z nich musí být lepší — jinak se vrací stará znění
+   **položku po položce**, ne celá sada.
+6. **Pravidlo výběru:** vyhrává znění s **maximin rezervou** ke spouštěčům 1–3.
+
+**Co se do simu NEdosazuje:** naměřené pokrytí **není** `p̂`. Mapování
+„čtenář nepojmenoval nárok" → „bot si domyslí uniformně náhodný stat" není
+ověřené a v1 ho sliboval neprávem. Sim se použije jen jako citlivostní
+kontrola ve zprávě z kola. **Žádné K se tímhle kolem neotvírá ani nezavírá.**
+
+**Kdy páku nepoužít:** prohraje-li nová sada v bodě 5 i po druhém přepisu,
+návrh se neškrtá ani nerozpočtuje — hlásí se uživateli jako volba mezi „zpět
+k výčtu nároků jmény (a pak znovu otevřít viditelnost mechanického řádku)"
+a „telegram jako pevná forma".
+
+## 14. Ověření v2 (PM, 2026-07-29)
+
+**Sloty ověřeny proti `obsah/situace.yaml` — všechny tři ukázky v2 sedí:**
+`most-prohnila-prkna` má skrytou `obrana` (vypuštění „Nikdo tu není" je tedy
+správná oprava), `urednik-vaha` nemá `hodnota` v žádném slotu (zápor „Peníze
+si vzít netroufne" je legální) a `nadrazi-noc` má skrytý `utok`, takže věta
+„kdo je rychlejší" je povinná, ne ozdobná. Verdikty zbraně sedí ve všech třech.
+
+**Délky změřeny a NESEDÍ — dvě ze tří ukázek přetahují vlastní nový strop:**
+
+| ukázka | uvedeno v návrhu | změřeno | strop 350 |
+|---|---|---|---|
+| B1 `most-prohnila-prkna` | ≈ 301 | **336** | ✅ |
+| B2 `urednik-vaha` | ≈ 330 | **363** | ❌ +13 |
+| B3 `nadrazi-noc` | ≈ 332 | **385** | ❌ +35 |
+
+Tvrzení „je doloženo, že 6 kanálů se do 350 znaků vejde" tedy **doloženo není**
+— vejde se jich tam 5 (B1 nemá `zbran_skryte`). Není to fatální (obě přetažení
+jsou otázka jedné věty), ale je to **stejná třída chyby jako v1**: uvedená
+čísla nikdo neověřil. Před obsahovým kolem je nutné rozhodnout, jestli se
+strop drží na 350 a texty se krátí, nebo se posouvá na ~380 —
+a to číslo pak musí projít stopkami, ne odhadem.
+
+---
+
 *Zdroje: `obsah/situace.yaml` · `obsah/pronasledovatele.yaml` ·
 `prototyp/src/engine/resolve.js:260–283` · `prototyp/sim/strategies.js:150–164,
 400–428` · `prototyp/sim/learnability.js` ·
