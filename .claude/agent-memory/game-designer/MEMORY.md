@@ -6,3 +6,4 @@ Kalibrace role (ne projektová fakta — ta žijí v gitu: `projekt/rozhodnuti.m
 - [Předregistrace kritérií](preregistrace-kriterii.md) — kritéria přijetí, regresní rozpočet a „kdy páku nepoužít" piš naslepo před měřením facilitátora.
 - [Divergence a falzifikovatelnost](divergence-a-falzifikovatelnost.md) — divergenci verdiktu čti normalizovaně k marginální míře; předregistrace musí mít kritérium, které fakticky může selhat.
 - [Teorie vs. měření = ověř proti enginu](kalibrace-revert-falzifikace.md) — revert kotev i K5 redefinice padly na měření; K1 drží finále; doklad kódem chtěj i po kritikovi.
+- [Obsah vs. brána: přenosová cesta](obsah-vs-brana-prenosova-cesta.md) — próza se do brány přenáší jen přes derivovaný signál a lidskou fidelitu; fidelita je oboustranný rozpočet.

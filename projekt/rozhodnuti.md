@@ -13,6 +13,52 @@ architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.m
 
 ## 2026-07-29
 
+- **D47 (ROZHODNUTÍ UŽIVATELE) — telegraf: směr schválen, tři P-otázky
+  rozhodnuty; invariant jde na revizi, obsahové kolo se ještě neotevírá.**
+  Kolo mandátu D45 proběhlo (game-designer → design-critic, oba Opus), návrh
+  i prověrka jsou v
+  [[../technika/telegraf-invariant-navrh-2026-07-29|technika/telegraf-invariant-navrh-2026-07-29.md]].
+  Do `obsah/` se nesáhlo.
+  **Co kolo obrátilo naruby:** (a) kritikův nález K-1 — mechanický výčet všech
+  6 kanálů plnými jmény statů **už v UI pod telegrafem je** (`commit.js:103–113`,
+  `popisSignalu()`), takže próza nikdy nebyla jediný nositel informace a
+  atmosférická inference byla vždy zrušena o řádek níž; (b) PM přeměřil K4d
+  (`sim/learnability.js`, 1000×4×2): rezerva u 1p **není 0,4 b., ale 18,6 b.**
+  proti τ = 6 — číslo z kalibrace-4 je po opravách bota (D35) mrtvé, náhodné
+  rameno spadlo u 1p z 52,7 na 40,2. **Riziko přepisu je řádově menší, než
+  návrh tvrdil, ZATO se obrátila jeho teze:** marginální hodnota dokonalého
+  čtení telegrafu je dnes nejmenší u sóla (3,6 b.) a největší u 3p/4p
+  (6,8–7,7), takže lepší telegraf by K6a **rozevřel**, ne zúžil. Přepis
+  telegrafu je věc fikce a zábavnosti, **ne balanční lék** — a nesmí se tak
+  prodávat.
+  **Rozhodnutí uživatele:**
+  (1) **Mechanický řádek „co z toho plyne" se nativně SKRÝVÁ**, ale v rozhraní
+  nastavení hry půjde zapnout možnost si ho rozkliknout; výhledově je to
+  kandidát na prvek odlišení obtížnosti (váže se na D25d volitelnou obtížnost).
+  Důsledek: **próza se stává jediným nositelem informace v default režimu**,
+  takže kritikovy fidelitní výhrady jsou živé a naměřená rezerva K4d 18,6 b.
+  je to, co ten krok dělá únosným. Je to **změna proti čerstvě hotové 2.2**
+  (D46 řádek jen vizuálně podřídila próze) → nová položka pro `prototyp/`.
+  (2) **R1 = mlčet** — telegraf nadále nepojmenovává stat skrytého slotu nad
+  rámec toho, co derivuje engine (`zbran_skryte`, `improv_skryte`); dnešní
+  prozrazení u ~5 situací se v přepisu odstraní. Přiznaný úbytek proti dnešku,
+  dopadá i na sólo.
+  (3) **Zakrývací zkouška ZŮSTÁVÁ jako gate** (uživatel má 6+ naivních
+  čtenářů) — ale její zadání se musí přepsat: v předložené podobě čtenáři
+  leakuje počet slotů i jména statů (měřila by systematicky výš než realita)
+  a práh 0,70 je kruhový (nikdy to nebyla naměřená lidská hodnota, jen zvolený
+  sweep knob).
+  **Nezapečeno, na revizi u designéra:** znění invariantu §2 (kritik má 6
+  blokujících — všechny tři ukázky porušují vlastní invariant, slovník STOP
+  STATŮ není disjunktní, délka podhodnocená ~o polovinu → strop 350 zn.,
+  léčky/konfrontace nesou sedmý kanál `rusi` + konfrontace potřebují pátou
+  variantu verdiktu zbraně, a scope creep ven: test v `prototyp/test/`,
+  „obrazy v pořadí slotů", rozšíření na pole `text`).
+  **Samostatně, nezávisle na osudu invariantu:** `design-dokument.md:107–108`
+  a `prototyp-mvp.md:91–93` vedou telegraf jako **3 kanály**, engine jich
+  derivuje **6** (`zbran_skryte` z D22, `improv_skryte` z D25f) — oprava
+  kanonu. A `prototyp-mvp.md:33` cituje jako nejhorší per-count K4d **7,9**,
+  což je číslo z ramene `optimal`, ač gate stojí na rameni `kompetentní`.
 - **D46 — fáze 2.2 postavena a hotová; zapečen kontrakt `{kdo}` → nejbližší
   následující mezera.** Zadání
   [[../technika/faze-2.2-navrh-2026-07-29|technika/faze-2.2-navrh-2026-07-29.md]]

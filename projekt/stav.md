@@ -165,6 +165,24 @@ modul `prototyp/src/ui/situace-text.js`, engine netknutý. Zapečen kontrakt
 jen 3 `{kdo}` — skrytá „kdyby" role jednajícího nemá). 295 testů zelených, lint
 čistý, celý run projitý v prohlížeči vč. léčky a konfrontace, konzole bez chyb.
 **Míč: lidská brána (pokračování sezení) + mandát telegrafu.**
+**KOLO TELEGRAFU: SMĚR SCHVÁLEN, INVARIANT NA REVIZI (D47, 2026-07-29).**
+Designer → kritik (oba Opus), návrh + prověrka v
+[[../technika/telegraf-invariant-navrh-2026-07-29|technika/telegraf-invariant-navrh-2026-07-29.md]];
+`obsah/` netknutý. **Dva obraty:** (a) kritikův nález K-1 — mechanický výčet
+všech 6 kanálů plnými jmény statů **už v UI je** (`commit.js:103–113`), takže
+próza nikdy nebyla jediný nositel informace; (b) PM přeměřil K4d
+(`sim/learnability.js`): rezerva u 1p **není 0,4 b., ale 18,6 b.** (τ = 6) —
+kalibrace-4 číslo je po D35 mrtvé. Riziko přepisu je řádově menší, **zato se
+obrátila teze návrhu**: marginální hodnota čtení telegrafu je dnes nejmenší
+u sóla (3,6 b.) a největší u 3p/4p (6,8–7,7) → lepší telegraf by K6a
+**rozevřel**, ne zúžil. Přepis je věc fikce, **ne balanční lék**.
+**Uživatel rozhodl:** (1) mechanický řádek **nativně skrytý**, v nastavení hry
+zapínatelný rozklik, výhledově prvek obtížnosti (→ změna proti čerstvé 2.2,
+nová položka pro `prototyp/`; próza se tím stává jediným nositelem informace);
+(2) **R1 = mlčet** o statu skrytého slotu; (3) **zakrývací zkouška zůstává
+jako gate** (6+ čtenářů), ale její zadání se přepisuje — leakuje počet slotů
+i jména statů a práh 0,70 je kruhový. Znění invariantu jde na revizi
+(6 blokujících kritika). **Obsahové kolo 15+4 se ještě neotevírá.**
 
 ### Co jde do lidské brány jako známé, vyčíslené odchylky
 
@@ -214,7 +232,9 @@ variance doměřena (2sd = 3,22 < 6). Eskalace V1–V4 rozhodnuta uživatelem ja
 | Prototyp fáze 3: LLM adaptér (provider NEROZHODNUT — otevřená otázka) | kódový repo | na řadě spolu s 2.1 — cache→provider→timeout→fallback dle ADR-004/007; fallback větev už stojí |
 | První lidské sezení (lidská brána): solo/remote run přes `npm run dev`, vyhodnotit metriky + hypotézy (kolaps jako default, tři měřidla) | uživatel + playtest-facilitator | **PŘERUŠENO 2026-07-29 (D45)** — tři nálezy fikce (text situace chybí v UI, popisy v hoveru, telegraf polopatě), metriky nevyplněny, do Go/No-Go se nepočítá; pokračuje po fázi 2.2 |
 | **Fáze 2.2: text situace + viditelné popisy do UI** — nedodaný kanon §4.3 z nálezů D45 | kódový repo (Opus) | **HOTOVO 2026-07-29 (D46)** — všechny 3 body zadání [[../technika/faze-2.2-navrh-2026-07-29|technika/faze-2.2-navrh-2026-07-29.md]]; modul `situace-text.js` + 60 nových testů (295 celkem), lint čistý, smoke test celého runu v prohlížeči. Engine netknutý |
-| **Telegraf: atmosférická předzvěst místo mechanického výčtu** — nový QA invariant telegrafu + limity délky, se zachováním fidelity signálu pro bota (K7) | game-designer + design-critic, schvaluje uživatel | **MANDÁT z D45** — návrh předložit uživateli, pak obsahové kolo přepisu telegrafů |
+| **Telegraf: atmosférická předzvěst místo mechanického výčtu** — nový QA invariant telegrafu + limity délky, se zachováním fidelity signálu pro bota (K7) | game-designer + design-critic, schvaluje uživatel | **SMĚR SCHVÁLEN, INVARIANT NA REVIZI (D47)** — kolo designer→kritik proběhlo, [[../technika/telegraf-invariant-navrh-2026-07-29|návrh + prověrka]]; 3 P-otázky rozhodnuty. Zbývá: revize znění dle 6 blokujících kritika (3 čisté ukázky, strop 350 zn., disjunktní slovník obrazů, 7. kanál `rusi` + varianta verdiktu pro konfrontace, scope creep ven) + přepis zadání zakrývací zkoušky. Teprve pak obsahové kolo 15+4 |
+| **Mechanický řádek „co z toho plyne" nativně skrýt + přepínač v nastavení hry** (rozklik na vyžádání; výhledově prvek obtížnosti, váže na D25d) | kódový repo (Opus) | **ZADÁNO D47 (2026-07-29)** — změna proti čerstvě hotové 2.2, která řádek jen vizuálně podřídila próze. Bez něj nemá přepis telegrafu efekt: atmosférická inference je zrušena o řádek níž |
+| **Oprava kanonu: telegraf má 6 kanálů, ne 3** — `design-dokument.md:107–108` a `prototyp-mvp.md:91–93` neznají `zbran_skryte` (D22) ani `improv_skryte` (D25f), ač je engine derivuje a UI zobrazuje. Plus `prototyp-mvp.md:33` cituje K4d 7,9 z ramene `optimal`, ač gate stojí na rameni `kompetentní` (dnes 18,6 / 22,1 / 24,6 / 22,8) | game-designer / PM | **otevřeno (nález D47)** — nezávislé na osudu invariantu, ať jde vlastním commitem |
 | Jemné doladění obtížnosti po loot-injury (exploit-bot ~74–76 % vs. pásmo 45–70; ladit tvrdosti/Žár, ne resoluční práh) | game-designer + playtest-facilitator | **nahrazeno kalibrací-1 v3** — viz řádek níže |
 | **Kalibrace-1 v3: zapéct 45-slot kotva-patch + kořenový lék K5/K7/K2** (gamble vynucený ne zvolený, snowball plochý) | game-designer + content-generator | **hotovo 2026-07-24 (D22)** — patch zapečen (45 slotů +1, pásmo 2–4 drží); lék zapracován: 4 skryté obrana-kotvy 3→2 (dial), 2 telegraf-přepisy npc-pastí, 5 věcí +1 sekundární stat (obrana/nastroj, improvizace netknuta), info-heavy pooly pozdních událostí se stropem ≤7 (D20). Enginová část léku = řádek níže; 3 eskalace na uživatele (viz otevřené otázky) |
 | **Pro engine — kalibrace-1 uzavření (signál = tento commit):** (1) reset `rules.kotvaBumpFrakce` 0.8→0; (2) rozšíření šumu pro K4c (model D15 kotva ± šum); (3) derivace telegraf_signal: pozitivně rozlišit „zbraň funguje ve skrytém slotu (stat=utok)" od „zbraň k ničemu" — druhá polovina léku K7 + párová podmínka telegraf-přepisů urednik-vaha/razitko (jinak próza/signál drift); (4) ověřit, že hide_* postih z uzlu N reálně degraduje commit uzlu N+1 (bez toho info-postihy nesnowbalují); (5) zvážit shlukování léček/zátahů/konfrontací do uzlů 3–4+ přes tempo Žáru (K2 cíl ≥1,3); (6) čisté re-měření 1000×2 (seedy 1–1000) dle akceptační brány, POVINNĚ: K1∈[45,70] ∧ K5 odděleně viditelná/skrytá ∧ K7≤20 % současně, per-situace take-rate před/po, K6a v rozpadu dle typu postihu (info-postihy vs. 1p/2p), pozor nadrazi-noc (2 skryté sloty, nejtvrdší offender; skrytých slotů je 20, ne 19) + doladění K8 | kódový repo (technical-developer) | **hotovo 2026-07-24 (kalibrace-2)** — body 1–4 zapracovány, 5 vědomě odloženo; re-měření 1000×2. **K4c OPRAVENO** (+2.4 ≤3). K5/K7 dál breach, K1/K5 coupling z D22(e) POTVRZEN (80 % neřešitelných slotů = viditelné); K1 3p/4p těsně >70, K6a regrese 11.8. Report [[../technika/kalibrace-2-2026-07-24|technika/kalibrace-2-2026-07-24.md]]; míč zpět u obsahu (řádek níže) |
