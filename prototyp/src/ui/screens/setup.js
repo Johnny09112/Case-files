@@ -1,15 +1,20 @@
 // @ts-check
 /**
  * Obrazovka setupu — titulní strana spisu: počet hráčů, přiřazení postav
- * (pořadí kliknutí = pořadí u stolu), volitelný seed.
+ * (pořadí kliknutí = pořadí u stolu), obtížnost, volitelný seed.
+ *
+ * Kolonka „Obtížnost" má zatím jedinou položku (rozbor telegrafu na rozklik,
+ * D47/D48) a je předchůdcem volitelné obtížnosti easy/normal/hard (D25d).
+ * Pojmenování je závazné: zapnutý rozbor NENÍ nastavení zobrazení, ale EASY
+ * režim — 4p win-rate 86,8 % proti stropu K1 70 %.
  */
 import { h } from '../dom.js';
 
 /**
  * @param {{postavy: object[], setup: {pocet: number, vybrane: string[],
- *   seedText: string}, akce: {zmenPocet(n: number): void,
+ *   seedText: string, ulehceni: boolean}, akce: {zmenPocet(n: number): void,
  *   prepniPostavu(id: string): void, zmenSeed(text: string): void,
- *   otevriSpis(): void}}} ctx
+ *   prepniUlehceni(): void, otevriSpis(): void}}} ctx
  */
 export function obrazovkaSetup(ctx) {
   const { postavy, setup, akce } = ctx;
@@ -68,6 +73,33 @@ export function obrazovkaSetup(ctx) {
             h('span', { class: 'postava-flavor' }, p.flavor)
           );
         })
+      )
+    ),
+
+    h(
+      'section',
+      { class: 'formular-blok' },
+      h('h2', { class: 'formular-popisek' }, 'Obtížnost'),
+      h(
+        'div',
+        { class: 'radka-voleb' },
+        h(
+          'button',
+          {
+            class: `tlacitko${setup.ulehceni ? ' aktivni' : ''}`,
+            'aria-pressed': setup.ulehceni ? 'true' : 'false',
+            onclick: () => akce.prepniUlehceni(),
+          },
+          'Ulehčení: rozbor telegrafu na rozklik'
+        ),
+        h('span', { class: 'napoveda' }, setup.ulehceni ? 'zapnuto' : 'vypnuto — plná obtížnost')
+      ),
+      h(
+        'p',
+        { class: 'napoveda' },
+        setup.ulehceni
+          ? 'U každého telegrafu si smíte rozkliknout, které role v něm jsou a co si o zbrani myslí. Znatelně snazší hra — se čtením naplno projde ve čtyřech podezřelých 87 % běhů.'
+          : 'Telegraf si čtete sami; co z něj plyne, se dozvíte až při odhalení rolí. Zapnuté ulehčení není nastavení zobrazení, ale lehčí režim.'
       )
     ),
 

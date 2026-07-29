@@ -393,6 +393,18 @@ button.uzel-karta:hover {
   color: var(--inkoust-slaby);
 }
 
+/* Rozklik rozboru (D47): drobný, nenápadný — je to ulehčení na vyžádání,
+   ne prvek, ke kterému má obrazovka vést oko. */
+.tlacitko-rozbor {
+  margin-top: 0.5rem;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-width: 1px;
+  color: var(--inkoust-slaby);
+}
+
 .telegraf-souhrn-popisek {
   letter-spacing: 0.06em;
   text-transform: uppercase;

@@ -13,6 +13,28 @@ architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.m
 
 ## 2026-07-29
 
+- **D50 — UI: mechanický řádek telegrafu skryt, ulehčení a onboarding
+  postaveny (zadání D47 + D48 splněno).** Řádek „co z toho plyne" už na commit
+  obrazovce nesvítí; próza telegrafu je v default režimu jediný nositel
+  informace, jak D47 rozhodlo. Pravidlo „kdy je řádek vidět" bydlí v novém
+  čistém modulu `prototyp/src/ui/telegraf-rozbor.js` (13 testů), ne v těle
+  renderu — je to pravidlo hry, ne kosmetika. Přepínač stojí na obrazovce
+  setupu v **nové kolonce „Obtížnost"** a jmenuje se *Ulehčení: rozbor
+  telegrafu na rozklik*, ne „zobrazení" (D48: se čtením naplno jde 4p win-rate
+  na 86,8 %); kolonka je současně prázdný rám pro volitelnou obtížnost D25d.
+  **Dva implementační kontrakty, které zadání nechalo otevřené a stavitel je
+  rozhodl:** (1) **onboarding se spotřebuje jednou za relaci, ne za run** —
+  kdo si dá druhý run, telegraf už číst umí a nedostane EASY první uzel
+  zadarmo (žádná perzistence do `localStorage`: skrytý stav napříč sezeními by
+  facilitátora playtestu mátl víc, než pomohl); (2) **rozklik se resetuje
+  s každým commitem** — kdyby zůstal otevřený, ulehčení by splynulo se starým
+  „řádek svítí pořád" a přepínač by nebyl přepínač, ale vypínač. Při zapnutém
+  ulehčení onboarding jen otevře rozklik a **poznámku „vidíte to naposledy"
+  nevydá** (lhala by — řádek zůstává k dispozici). Ověřeno v prohlížeči na
+  všech pěti cestách, 308/308 testů, lint čistý. **Tím padá jediný blokátor
+  sezení lidské brány** (PM review 2026-07-29: dokud řádek svítil na každém
+  uzlu, sezení by testovalo EASY režim, ne přepis telegrafů z D49).
+
 - **D49 — OBSAHOVÉ KOLO TELEGRAFŮ ZAPEČENO: nový invariant + 19 přepsaných
   telegrafů v `obsah/`.** Kolečko generátor → design-critic → protocol-humor-tester
   → opravné kolo → ověření PM. **Oba recenzenti se shodli:** sada je jasné

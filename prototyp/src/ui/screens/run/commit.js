@@ -1,6 +1,10 @@
 // @ts-check
 /**
- * Commit naslepo: telegraf (próza) + odvozený signál, ruce hráčů s kvótami.
+ * Commit naslepo: telegraf (próza) + ruce hráčů s kvótami.
+ *
+ * Od D47 je próza JEDINÝ nositel informace v default režimu — mechanický
+ * rozbor odvozeného signálu se ukáže jen jako zvolené ulehčení nebo při
+ * jednorázovém onboardingu (pravidlo v `ui/telegraf-rozbor.js`).
  * Tým committne přesně tolik karet, kolik říká `commitPlan`, a teprve pak se
  * odhalí sloty — v tom je celé napětí v3 resoluce.
  *
@@ -16,6 +20,7 @@
  */
 import { h } from '../../dom.js';
 import { STAT_LABEL, KATEGORIE_LABEL } from '../../labels.js';
+import { stavRozboru, popisSignalu } from '../../telegraf-rozbor.js';
 
 /** Jména postav, které mají aktivní postih daného druhu. */
 export function kdoNevidi(st, druh) {
@@ -87,6 +92,7 @@ export function pohledCommitu(ctx) {
   const hotovo = situace.commitPlan.every((/** @type {any} */ p) => vybrano(p.hrac_id).length === p.pocet);
   const nevidiTelegraf = kdoNevidi(st, 'hide_telegraf');
   const nevidiStaty = kdoNevidi(st, 'hide_staty');
+  const rozbor = stavRozboru({ ulehceni: S.ulehceni, onboarding: S.onboardingRozbor, otevreno: S.rozborOtevren });
 
   return h(
     'div',
@@ -102,15 +108,37 @@ export function pohledCommitu(ctx) {
       { class: 'uzel-karta' },
       h('p', { class: 'formular-popisek' }, 'Telegraf — jediné, co víte předem'),
       h('p', { class: 'uzel-uvod' }, situace.telegraf),
-      // Mechanický výčet zůstává (bez něj by commit naslepo byl hádání), ale
-      // ustupuje próze: hlavní je telegraf, tohle je poznámka pod ním (D36
-      // „próza hlavní, čísla vedle"; fáze 2.2, nález 3 lidské brány).
-      h(
-        'p',
-        { class: 'telegraf-souhrn' },
-        h('span', { class: 'telegraf-souhrn-popisek' }, 'co z toho plyne: '),
-        popisSignalu(situace.signal)
-      ),
+      // Mechanický výčet kanálů je od D47 SKRYTÝ: dokud svítil, rušil
+      // atmosférickou inference z prózy o řádek níž (nález kritika K-1) a
+      // próza nikdy nebyla jediný nositel informace. Ukáže se jen jako
+      // zvolené ulehčení (rozklik) nebo jednorázově při onboardingu (D48/2).
+      // Smyčka učení tím nemizí: role pojmenuje obrazovka odhalení (assign.js).
+      rozbor.prepinac
+        ? h(
+            'button',
+            {
+              class: 'tlacitko tlacitko-rozbor',
+              'aria-expanded': rozbor.viditelny ? 'true' : 'false',
+              onclick: () => akce.prepniRozbor(),
+            },
+            rozbor.viditelny ? 'Schovat rozbor' : 'Rozkliknout rozbor telegrafu'
+          )
+        : null,
+      rozbor.viditelny
+        ? h(
+            'p',
+            { class: 'telegraf-souhrn' },
+            h('span', { class: 'telegraf-souhrn-popisek' }, 'co z toho plyne: '),
+            popisSignalu(situace.signal)
+          )
+        : null,
+      rozbor.poznamka
+        ? h(
+            'p',
+            { class: 'napoveda' },
+            'Rozbor ukazujeme jen na tomhle prvním úseku, ať víte, co ta slova znamenají. Dál si telegraf čtete sami — a role vám po commitu pojmenuje odhalení. Natrvalo se rozbor zapíná v obtížnosti jako ulehčení.'
+          )
+        : null,
       poznamkaCestnosti(nevidiTelegraf, 'informační postih na telegraf')
     ),
     h(
@@ -184,18 +212,3 @@ function popisStatu(staty) {
   return Object.entries(staty).map(([klic, hodnota]) => `${STAT_LABEL[klic] ?? klic} ${hodnota}`).join(' · ');
 }
 
-/** Odvozený signál telegrafu do jedné věty (engine ho derivuje ze slotů). */
-function popisSignalu(signal) {
-  if (!signal) return '';
-  const staty = (signal.trend ?? []).map((/** @type {any} */ t) =>
-    Array.isArray(t.stat) ? t.stat.map((/** @type {string} */ s) => STAT_LABEL[s] ?? s).join('+') : (STAT_LABEL[t.stat] ?? t.stat)
-  );
-  return [
-    `viditelné role: ${staty.join(', ') || 'žádné'}`,
-    `skrytých rolí: ${signal.proti_srsti}`,
-    signal.zbran_projde === 'ano' ? 'zbraň projde i na očích' : 'zbraň na očích neprojde',
-    signal.zbran_skryte ? 've skryté roli se zbraň vyplatí' : null,
-    signal.improv_skryte ? 'skrytá role stojí na improvizaci' : null,
-    signal.zbran_slot_vyjimka ? 'jedna role zbraň přímo vítá' : null,
-  ].filter(Boolean).join(' · ');
-}

@@ -47,12 +47,26 @@ export function initApp(root) {
 
   const S = novyStav();
 
+  /**
+   * Onboarding rozboru telegrafu (D48/2) se spotřebuje jednou za relaci, ne
+   * jednou za run — proto stojí MIMO `novyStav()`, který `novyRun()` přepisuje.
+   * Kdo si zahraje druhý run, už umí telegraf číst a nemá dostat EASY první
+   * uzel zadarmo.
+   */
+  let onboardingSpotrebovan = false;
+
   function novyStav() {
     return {
       obrazovka: /** @type {'setup'|'run'|'konec'} */ ('setup'),
-      setup: { pocet: 2, vybrane: /** @type {string[]} */ ([]), seedText: '' },
+      setup: { pocet: 2, vybrane: /** @type {string[]} */ ([]), seedText: '', ulehceni: false },
       /** @type {ReturnType<typeof createRun>|null} */ run: null,
       /** @type {number|null} */ seed: null,
+      /** Ulehčení zvolené pro tenhle run (rozbor telegrafu na rozklik, D47). */
+      ulehceni: false,
+      /** Rozbor rozkliknutý na aktuálním uzlu — resetuje se s každým commitem. */
+      rozborOtevren: false,
+      /** Jednorázová onboarding ukázka rozboru (první uzel prvního runu). */
+      onboardingRozbor: false,
       /** @type {Record<string, string>} */ jmena: {},
       vyber: createVyberSablon(sablony, Math.random),
       /** Kompletní log (pro obrazovky, které hledají událost podle seq). */
@@ -174,6 +188,10 @@ export function initApp(root) {
       S.setup.seedText = text;
       render();
     },
+    prepniUlehceni() {
+      S.setup.ulehceni = !S.setup.ulehceni;
+      render();
+    },
     otevriSpis() {
       const zadany = S.setup.seedText.trim();
       S.seed = zadany === '' ? Math.floor(Math.random() * 0xffffffff) : Number(zadany) >>> 0;
@@ -185,6 +203,8 @@ export function initApp(root) {
       S.run = createRun({ seed: S.seed, content, rules: RULES, players });
       S.obrazovka = 'run';
       S.briefing = true;
+      S.ulehceni = S.setup.ulehceni;
+      S.onboardingRozbor = !onboardingSpotrebovan;
       sync();
       render();
     },
@@ -223,6 +243,10 @@ export function initApp(root) {
       S.commitVyber[hracId] = vybrane;
       render();
     },
+    prepniRozbor() {
+      S.rozborOtevren = !S.rozborOtevren;
+      render();
+    },
     commitni() {
       const list = Object.entries(S.commitVyber).flatMap(([characterId, karty]) =>
         karty.map((cardId) => ({ characterId, cardId }))
@@ -231,6 +255,14 @@ export function initApp(root) {
         S.run.commitCards(list);
         S.commitVyber = {};
         S.assignVyber = { karta: null, sloty: {} };
+        // Rozklik je rozhodnutí per uzel, ne trvalý spínač — jinak by ulehčení
+        // splynulo se starým „řádek svítí pořád". A onboardingová ukázka končí
+        // s prvním commitem: hráč viděl, co ta slova znamenají, dál čte prózu.
+        S.rozborOtevren = false;
+        if (S.onboardingRozbor) {
+          S.onboardingRozbor = false;
+          onboardingSpotrebovan = true;
+        }
       });
     },
 
