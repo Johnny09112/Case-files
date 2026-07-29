@@ -1,6 +1,6 @@
 ---
 name: testing-failure-taxonomy
-description: Znovupoužitelné vzorce, kde protokol i fallback šablony selhávají, a jak je probíhat při testu humoru (kalibrace role, trvalá); snapshot promptu v0.3
+description: Znovupoužitelné vzorce, kde protokol, fallback šablony i telegrafy selhávají tónově, a jak je probíhat při testu humoru (kalibrace role, trvalá); snapshot promptu v0.3
 metadata:
   type: project
 ---
@@ -87,6 +87,17 @@ Nejsilnější nález 2026-07-27 a **nejde ho najít čtením šablon jednotliv�
 - **Lék není víc slov, ale jiné pořadí informace** v 1–2 variantách pásma
   (vést výpovědí svědka, vést inventurou škody) + škrtnout kotvu z poloviny variant.
 
+## B5′ — ZÁKON NAPŘÍČ FORMÁTY: „po jedné dobré, poskládané formulář"
+B5 se 2026-07-29 zopakoval na **telegrafech** (jiný formát, jiný autor, tentýž
+tvar selhání). Ber to jako obecný zákon, ne jako vlastnost fallbacků: **jakmile
+existuje autorský slovník / invariant se vzorovými formulacemi, autor sáhne po
+formulaci ze slovníku místo po obrazu z konkrétní scény.** Slovník míněný jako
+disambiguace se v praxi použije jako frázovník.
+- **Vždy testuj SADU, ne položky.** Vytáhni si frekvenční seznam sdílených frází
+  napříč celou sadou dřív, než začneš číst jednotlivé kusy.
+- **Počítej, kolik z nich hráč uvidí v jednom runu** (u telegrafů 6–7 z 19), ne
+  kolikrát se fráze vyskytne v repu. To je metrika, která bolí.
+
 ## C. Jak testovat placeholdery proti kódu
 Vždy tabulka placeholder → událost enginu, která ho plní. Konkrétní pasti:
 - Placeholder **bez producenta** (`{veci}` neměl kód, formát je nový kontrakt).
@@ -108,6 +119,26 @@ Vždy tabulka placeholder → událost enginu, která ho plní. Konkrétní past
   sedadlo) → „nikdo za něj úlohy nepřevezme“ je pravdivé.
 - Složená postava nemá žádný mechanický kanál → „hlas z auta“ by nebyl oživený text,
   ale nová mechanika. Do archivu, dokud nebude v `EVENT`.
+
+## E. Tón telegrafů (trvalá role — riziko R-7 invariantu 2026-07-29)
+Telegraf = suchá hrozba PŘED uzlem, protokol = pointa PO uzlu. Moje práce je
+hlídat, aby si telegraf nebral protokolu jeho nástroj.
+- **Dělicí čára, která funguje:** humor telegrafu = *suché pojmenování hrozivé
+  věci* (Malone si beze spěchu nasazuje brýle; šerif si sundává klobouk; „parta
+  nadšených občanů"). Humor protokolu = *úřední jazyk aplikovaný na absurdní
+  volbu hráče*. Když telegraf sáhne po ironickém označení nebo po srovnávacím
+  gagu s pomlčkou, ukradl protokolu mechanismus, ne jen hlasitost.
+- **Kontroluj překryv úvodní věty telegrafu s úvodní větou protokolu** — protokol
+  má 3–5 vět a rekapitulace scény mu sežere první z nich.
+- **Registrové úlety, které se opakují:** minulý čas v úvodní větě (telegraf má
+  být scéna PŘEDEM), rozkazovací způsob (telegraf nesmí velet), přeskakování mezi
+  neosobním „někdo musí" a oslovením „vy" uvnitř jednoho textu.
+- **Past metafor:** obraz z herní mechaniky („poslední karta" ve hře s kartami)
+  čte se jako mrknutí na hráče přes čtvrtou stěnu. Hledej je cíleně.
+- **Dobovost trasy Buffalo → New York je v pořádku:** Mohawk, Poughkeepsie,
+  Peekskill, Yonkers leží na trase a v roce 1930 existují. Silniční mýtná bouda
+  v Hudson Highlands je doložená (Bear Mountain Bridge Road Toll House, 1924) —
+  není to anachronismus, nepřipomínkovat znovu.
 
 ## Stav promptu (snapshot: v0.3, 2026-07-23)
 v0.3 = remap na v3 (SITUACE/ROZDĚLENÍ/VÝSLEDEK MECHANIKY/NÁSLEDKY, placeholdery

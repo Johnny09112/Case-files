@@ -830,6 +830,31 @@ obsahové kolo: **každý telegraf se měří, ne odhaduje.**
    konfrontace) dle v2 invariantu, pak review kolečko. Druhá prověrka kritika
    před psaním se nekoná (v2 na jeho šest bodů odpovídá).
 
+## 16. Dodatky do §11, které vyplynuly z prvního obsahového kola
+
+*Zapracovat do znění invariantu PŘED vložením do `obsah/situace.yaml`. Všechny
+tři vznikly tím, že se invariant poprvé použil na 19 textů — bez nich se totéž
+selhání zopakuje při každém dalším obsahovém kole.*
+
+1. **Ke SLOVNÍKU NÁROKŮ:** jeho příklady jsou **definice nároku, ne doporučené
+   znění**. První kolo sáhlo po formulaci ze slovníku místo po obrazu ze scény
+   — „vymyslíte / rozhodne se až na místě" **10×**, „co obstojí" 5×, „nemrknout
+   ani okem / nedat na sobě nic znát" 6×, „dlaň" 4×. Devět z devatenácti
+   telegrafů mělo improvizaci i obranu obsazenou stock frází současně.
+   **Strop: žádná fráze ze slovníku se v sadě neopakuje víc než 2×.**
+2. **K pravidlu (A) POKRYTÍ — markér hranice nároku.** Invariant zakazuje „dva
+   obrazy na týž slot" a předepisuje KOMBI jako „jednu práci se dvěma
+   požadavky", ale nedefinuje, čím se to od sebe pozná. Doplnit: KOMBI = „a
+   zároveň / a přitom" v téže klauzuli · dva různé sloty = oddělené **aktérem
+   nebo tečkou** („Někdo… jiný…"), nikdy jen spojkou „a" · jeden slot = jedno
+   sloveso, jeden objekt.
+3. **K R-7 (§13.3) — provozuschopná dělicí čára místo „humor je v suchosti
+   hrozby":** humor telegrafu smí plynout ze **suchého pojmenování hrozivé
+   věci** („parta nadšených občanů" = lynčující dav pojmenovaný úředně,
+   „úředník s předpisem na všechno"). Nesmí plynout ze **srovnání, pomlčkové
+   pointy ani komentáře k NPC** — to je motor protokolu a každý takový vtip
+   v telegrafu je smích, který protokol už nevydělá.
+
 **Co se ZATÍM nezapéká do `obsah/`:** znění invariantu se do hlavičky
 `obsah/situace.yaml` vkládá **až spolu s přepsanými telegrafy**, v jednom
 commitu — aby v repu nevzniklo pravidlo, které 15 sousedních záznamů porušuje.
