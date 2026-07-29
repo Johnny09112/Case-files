@@ -11,6 +11,25 @@ ukazatel na archiv.*
 architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.md]]
 (přesunuto 2026-07-24).
 
+## 2026-07-29
+
+- **D45 (triáž PM) — nálezy prvního sezení lidské brány: dva jsou nedodaný
+  kanon (→ fáze 2.2), jeden designová změna (→ kolo designera).** Sezení
+  ([[../playtesty/2026-07-29|playtest]]) se přerušilo na fikci, balanc se
+  neřešil. (1) **Text situace se 4 mezerami `{VEC}` + `{kdo}` se v UI vůbec
+  nevykresluje** — jádro designu §4.3 („rozděl karty do mezer jednoho
+  příběhu") je autorsky hotové v `obsah/situace.yaml`, ale hráč vidí jen
+  technická jména slotů vedle sebe, což čte jako čtyři alternativní řešení.
+  (2) Popis věci jen v hoveru. Obojí = **fáze 2.2**, zadání
+  [[../technika/faze-2.2-navrh-2026-07-29|technika/faze-2.2-navrh-2026-07-29.md]]
+  (Opus, `prototyp/`). (3) **Telegraf mluví mechanicky polopatě** — hráč chce
+  atmosférickou předzvěst, delší text; sahá na QA invariant telegrafu a limity
+  délky → **mandát pro game-designera** (návrh nového invariantu se zachováním
+  fidelity derivovaného signálu pro bota/K7; kritik prověří; schvaluje
+  uživatel). Mechanický souhrn pod telegrafem se už ve 2.2 jen vizuálně
+  podřizuje próze (D36 „próza hlavní"). Lidská brána pokračuje po 2.2 —
+  metriky sezení zůstávají nevyplněné, sezení se nepočítá do Go/No-Go.
+
 ## 2026-07-28
 
 - **D44 (ROZHODNUTÍ UŽIVATELE) — varianta B: `muj-den` se NEZAPÉKÁ a jde do
