@@ -223,6 +223,20 @@ ulehčení splynulo se starým „svítí pořád"). Pravidlo je čistý modul
 všech pět cest projito v prohlížeči, konzole bez chyb.
 **Míč: (a) lidská brána — sezení může začít, (b) zakrývací zkouška se 6 čtenáři,
 (c) fáze 3 LLM.**
+**PRVNÍ DOHRANÝ RUN LIDSKÉ BRÁNY (2026-07-29): „všechno, jen ne zábava" —
+NEJVÁŽNĚJŠÍ NÁLEZ PROJEKTU.** Po rozboru s hráčem-autorem NE proti mechanice:
+(1) texty nezáživné/matoucí (telegraf = hádanka o 6 kanálech — riziko odložené
+zakrývací zkoušky se naplnilo), (2) **vytratila se představivost** — karty měly
+být slovník a AI měla jako GM v DnD kreativně interpretovat, JAK se věc použije;
+stat-na-stat čtení udělalo z absurdní volby doslovnou pitomost bez obhajoby;
+(3) věci „tematické až moc, ale nudné". Světlý bod: atmosféra telegrafu jako
+směr. **Kontext: sólo + fallbacky + viditelný řádek = dva ze tří pilířů zábavy
+netestovány; AI vrstva (největší riziko dle CLAUDE.md) nikdy nestála.**
+Detail: [[../playtesty/2026-07-29|playtesty/2026-07-29.md]]. **Triáž PM čeká na
+souhlas uživatele:** (a) Wizard-of-Oz test protokolů ve 2 režimech (kanonický
+vs. kreativní interpretace) — rozhodující; (b) konceptové kolo „kde bydlí
+kreativita" (mandát AI vrstvy, slot-literalismus, divočejší věci) + telegrafy;
+engine/kalibrace se nezahazují, dokud nepromluvi (a).
 
 ### Co jde do lidské brány jako známé, vyčíslené odchylky
 
