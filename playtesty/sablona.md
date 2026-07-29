@@ -15,6 +15,7 @@ nepočítá do Go/No-Go.)*
 | 3 | Dobrovolný 2.–3. run bez pobízení | ano / ne | |
 | 4 | Reveal tajných cílů vyvolal reakci | ano / ne | |
 | 5 | Hráči po hře převyprávěli konkrétní momenty | ano / ne | které: |
+| 6 | **Čitelnost:** hráč po runu bez nahlédnutí do logu odpoví, PROČ propadl konkrétní slot a PROČ postoupil šerif | ano / ne | (nález 2026-07-22; kritérium fáze 2.1 §11) |
 
 ## Pozorování
 
