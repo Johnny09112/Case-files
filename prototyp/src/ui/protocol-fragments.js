@@ -72,29 +72,56 @@ export function stabilniIndex(klic, pocet) {
  * Kombi slot (`stat` je pole dvou statů) bere jen obecné fragmenty: „stat
  * neprošel" u kombi znamená něco jiného než u jednoduchého slotu.
  *
- * `pouzite` = id fragmentů už použitých V TOMTO UZLU, v pořadí použití. Čtyři
- * věty jednoho odstavce se čtou naráz, takže opakovaný tvar z nich udělá
- * formulář (nález golden testu nad reálným runem: tři ze čtyř vět měly stejnou
- * stavbu). Odsun je DVOUSTUPŇOVÝ a jen preference — pořadí: pool bez všech
- * použitých → pool bez naposledy použitého → celý pool. Věta je totiž
- * důležitější než rozmanitost: mlčení o slotu je horší než opakovaný tvar.
+ * DVĚ PAMĚTI, obě deterministické:
+ *   - `pouzite` (id už použitá V TOMTO UZLU) — čtyři věty jednoho odstavce se
+ *     čtou naráz, opakovaný tvar z nich udělá formulář;
+ *   - RUNOVÉ POČÍTADLO uvnitř closure — bez něj se přes celý run vylosovalo
+ *     jen 14 fragmentů z 32 a jeden z nich šestkrát (měřeno na golden runu).
+ *     Preferuje se NEJMÉNĚ POUŽITÝ kandidát, teprve pak rozhoduje hash. Tím se
+ *     sada čerpá rovnoměrně a autorský rozpočet se skutečně přečte.
+ * Obojí je PREFERENCE, ne filtr: mlčení o slotu je horší než opakovaný tvar.
+ *
+ * `dostupne` = placeholdery, které událost slotu umí dosadit. Pool se jimi
+ * filtruje PŘEDEM — fragment žádající `{vec}` se u neobsazeného slotu vůbec
+ * nenabídne. Dřív se taková věta vybrala a až po dosazení zahodila, takže slot
+ * zmlkl a spotřeboval kandidáta (přesně ta podlaha, kvůli které vrstva vzniká).
  *
  * @param {{id: string, vysledek: string, stat?: string, text: string}[]} fragmenty sada z prompty/fallback-fragmenty.yaml
  * @param {string|number} [seed] seed runu (`run_started.seed`) — dva runy nedostanou tutéž větu
  * @returns {(vysledek: string, stat: string|string[]|null|undefined, klic: string,
- *   pouzite?: string[]) => {id: string, stat?: string, text: string}|null}
+ *   pouzite?: string[], dostupne?: string[]) => {id: string, stat?: string, text: string}|null}
  */
 export function createVyberFragmentu(fragmenty, seed = 0) {
-  return function vyber(vysledek, stat, klic, pouzite = []) {
+  /** @type {Map<string, number>} kolikrát už fragment padl V TOMTO RUNU */
+  const pocty = new Map();
+
+  return function vyber(vysledek, stat, klic, pouzite = [], dostupne = POVOLENE_PLACEHOLDERY) {
     const statSlotu = Array.isArray(stat) ? null : stat;
     const pool = fragmenty.filter(
-      (f) => f.vysledek === vysledek && (f.stat == null || f.stat === statSlotu)
+      (f) =>
+        f.vysledek === vysledek &&
+        (f.stat == null || f.stat === statSlotu) &&
+        // fragment smí žádat jen placeholdery, které tenhle slot umí dosadit
+        [...String(f.text).matchAll(/\{(\w+)\}/g)].every(([, k]) => dostupne.includes(k))
     );
     if (pool.length === 0) return null;
+
+    // 1) co v tomhle uzlu ještě nepadlo (jinak aspoň ne to úplně poslední)
     const bezVsech = pool.filter((f) => !pouzite.includes(f.id));
     const bezPosledniho = pool.filter((f) => f.id !== pouzite.at(-1));
-    const kandidati = bezVsech.length > 0 ? bezVsech : bezPosledniho.length > 0 ? bezPosledniho : pool;
-    return kandidati[stabilniIndex(`${seed}|${klic}`, kandidati.length)];
+    const uzel = bezVsech.length > 0 ? bezVsech : bezPosledniho.length > 0 ? bezPosledniho : pool;
+
+    // 2) z toho nejméně použité v runu; 3) mezi rovnými rozhodne hash.
+    // Hash se počítá per fragment (rendezvous), ne indexem do pole — přidání
+    // nesouvisejícího fragmentu do sady pak nepřerovná celý golden snapshot.
+    const min = Math.min(...uzel.map((f) => pocty.get(f.id) ?? 0));
+    const kandidati = uzel.filter((f) => (pocty.get(f.id) ?? 0) === min);
+    const vybrany = kandidati.reduce((a, b) =>
+      stabilniIndex(`${seed}|${klic}|${a.id}`, 1e6) <= stabilniIndex(`${seed}|${klic}|${b.id}`, 1e6) ? a : b
+    );
+
+    pocty.set(vybrany.id, (pocty.get(vybrany.id) ?? 0) + 1);
+    return vybrany;
   };
 }
 
@@ -110,19 +137,19 @@ export function createVyberFragmentu(fragmenty, seed = 0) {
  * @returns {{text: string, id: string}|null}
  */
 export function vetaSlotu(slot, role, ctx, vyber, pouzite = []) {
-  const klic = `${slot.nodeIndex ?? 0}|${slot.slot_index}|${slot.karta_id ?? '-'}|${slot.duvod}`;
-  const fragment = vyber(slot.duvod, slot.stat, klic, pouzite);
-  if (!fragment) return null;
-
   /** @type {Record<string, string>} */
   const hodnoty = {};
   if (slot.karta_id != null) hodnoty.vec = ctx.veci?.[slot.karta_id] ?? slot.karta_id;
   if (slot.hrac_id != null) hodnoty.jmeno = prijmeni(ctx.jmena?.[slot.hrac_id] ?? slot.hrac_id);
   if (role) hodnoty.role = role;
 
+  const klic = `${slot.nodeIndex ?? 0}|${slot.slot_index}|${slot.karta_id ?? '-'}|${slot.duvod}`;
+  const fragment = vyber(slot.duvod, slot.stat, klic, pouzite, Object.keys(hodnoty));
+  if (!fragment) return null;
+
   const text = dosad(fragment.text, hodnoty);
-  // Pojistka kontraktu: nedosazený placeholder = fragment mluví o něčem, co
-  // mechanika v tomhle slotu neurčila. Radši větu zahodit než vytisknout.
+  // Tripwire, ne mechanismus: pool je filtrovaný předem, takže sem se nedosazený
+  // placeholder nemá jak dostat. Když ano, je to vada sady — radši ticho.
   return /\{\w+\}/.test(text) ? null : { text, id: fragment.id };
 }
 

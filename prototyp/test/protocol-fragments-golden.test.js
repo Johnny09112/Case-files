@@ -16,9 +16,11 @@ import { load } from 'js-yaml';
 import { parseContent } from '../src/content/loader.js';
 import { EVENT } from '../src/engine/events.js';
 import { createVyberSablon, zapisSituace, zapisFinale } from '../src/ui/protocol-fill.js';
-import { createVyberFragmentu } from '../src/ui/protocol-fragments.js';
+import { createVyberFragmentu, zapisSloty, vetaSlotu } from '../src/ui/protocol-fragments.js';
 import { ctxZObsahu } from '../src/ui/vysvetleni.js';
 import { loadRealYaml } from './content.test.js';
+import { RULES } from '../src/engine/rules.js';
+import { playRun, PRESETY } from '../sim/run.js';
 
 const CESTA_FRAGMENTU = new URL('../../prompty/fallback-fragmenty.yaml', import.meta.url);
 const MA_FRAGMENTY = fs.existsSync(CESTA_FRAGMENTU);
@@ -116,6 +118,68 @@ describe('golden fallback protokol nad runem WoZ testu', () => {
     for (let i = 0; i < bez.length; i += 1) {
       if (bez[i].titulek.startsWith('Uzavření')) continue;
       expect(s[i].odstavce.length, s[i].titulek).toBeGreaterThan(bez[i].odstavce.length);
+    }
+  });
+
+  /**
+   * Test, na kterém záleží (výtka prověrky): dosud se ověřovalo jen to, že pro
+   * každý slot EXISTUJE kandidát — ne že se věta skutečně dostala do protokolu.
+   * Ve světě, kde by pojistka zahodila všechny věty, projde první, tenhle ne.
+   */
+  it.skipIf(!MA_FRAGMENTY)('každý vyhodnocený slot má v protokolu SVOU větu', () => {
+    const vyber = createVyberFragmentu(fragmenty, 1);
+    const ctx = { ...ctxZObsahu(content, Object.fromEntries(content.postavy.map((/** @type {any} */ p) => [p.id, p.jmeno]))) };
+    /** @type {Map<number, object[]>} */ const uzly = new Map();
+    for (const u of udalosti) {
+      if (!uzly.has(u.nodeIndex)) uzly.set(u.nodeIndex, []);
+      uzly.get(u.nodeIndex).push(u);
+    }
+    for (const [nodeIndex, buffer] of uzly) {
+      const pocetSlotu = buffer.filter((u) => u.type === EVENT.SLOT_RESOLVED).length;
+      if (pocetSlotu === 0) continue;
+      expect(zapisSloty(buffer, ctx, vyber).length, `uzel ${nodeIndex}`).toBe(pocetSlotu);
+    }
+  });
+});
+
+/**
+ * Druhá fixtura (výtka obou recenzí): run z WoZ testu nepokrývá `neobsazeno`,
+ * `gangster_auto_fail` ani `postih_lock_*` — tedy PRÁVĚ ty přihrádky, kde
+ * jediné hrozí porušení kontraktu (N2: slot bez karty a bez vlastníka).
+ * Seed 2 / 1 hráč / Malone vydá `neobsazeno` i `postih_lock_stitek`.
+ */
+describe.skipIf(!MA_FRAGMENTY)('golden nad runem se složením postavy (pokrytí N2)', () => {
+  const udalosti = playRun({
+    content,
+    rules: RULES,
+    spec: PRESETY.kompetentni,
+    seed: 2,
+    players: content.postavy.slice(0, 1).map((/** @type {any} */ p) => ({ id: p.id, jmeno: p.jmeno })),
+    pronasledovatelId: 'agent-malone',
+  });
+
+  it('fixtura skutečně obsahuje neobsazený slot i zámkový postih', () => {
+    const duvody = new Set(udalosti.filter((u) => u.type === EVENT.SLOT_RESOLVED).map((u) => u.duvod));
+    expect(duvody).toContain('neobsazeno');
+    expect(duvody).toContain('postih_lock_stitek');
+  });
+
+  it('spis se složením postavy', () => {
+    expect(spis(udalosti, createVyberFragmentu(fragmenty, 2))).toMatchSnapshot();
+  });
+
+  it('u neobsazeného slotu protokol nejmenuje ani věc, ani osobu (N2)', () => {
+    const vyber = createVyberFragmentu(fragmenty, 2);
+    const ctx = ctxZObsahu(content, Object.fromEntries(content.postavy.map((/** @type {any} */ p) => [p.id, p.jmeno])));
+    const nazvyVeci = Object.values(ctx.veci);
+    const prijmeni = Object.values(ctx.jmena).map((/** @type {any} */ j) => String(j).split(/\s+/).at(-1));
+    for (const u of udalosti.filter((x) => x.type === EVENT.SLOT_RESOLVED && x.duvod === 'neobsazeno')) {
+      const odhaleni = udalosti.find((x) => x.type === EVENT.SITUATION_REVEALED && x.nodeIndex === u.nodeIndex);
+      const role = odhaleni?.sloty?.find((/** @type {any} */ s) => s.slot_index === u.slot_index)?.role;
+      const veta = vetaSlotu(u, role, ctx, vyber)?.text;
+      if (veta == null) continue;
+      for (const n of nazvyVeci) expect(veta, `věc ${n}`).not.toContain(n);
+      for (const p of prijmeni) expect(veta, `jméno ${p}`).not.toContain(p);
     }
   });
 });

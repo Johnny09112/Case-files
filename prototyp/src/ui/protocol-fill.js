@@ -70,27 +70,27 @@ export function sedi(sablona, stav) {
  * Stavový výběr šablon: filtruje dle pásma + podmínky a losuje bez opakování
  * v řadě (tatáž šablona nepadne dvakrát po sobě, pokud je z čeho vybírat).
  *
- * `opts.bezVeci` upřednostní varianty BEZ placeholderu `{veci}`. Používá se,
- * když nad odstavcem běží fragmentová vrstva (D54(1)) a věci jmenuje ona:
- * dvojí vyjmenování týchž čtyř kusů ve dvou sousedních odstavcích je přesně ta
- * únava, kterou kvótuje pravidlo N6 hlavičky sady. Je to PREFERENCE, ne filtr —
- * když v pásmu jiná varianta není, pásmo se stejně napíše.
+ * ŠKRTNUTÁ PREFERENCE `bezVeci` (D54(1), 2026-07-30): pokus potlačit varianty
+ * s `{veci}`, když pod odstavcem běží fragmentová vrstva, byl ZRUŠEN po měření —
+ * runtime filtr je špatná vrstva. Půlil tři ze čtyř pásmových zásobníků
+ * (4/4: 3→2, 3/4: 4→2, 2/4 s postihem: 4→2), čímž vynutil střídání A-B-A-B
+ * (v jednom runu dva DOSLOVA shodné odstavce), a v PRŮŠVIHU srazil varianty
+ * hlásící ztrátu bedny z 3 na 1 — protokol pak o ztracené bedně mlčel, ačkoli
+ * ji předchozí verze hlásila. Odstranění výčtu je AUTORSKÁ změna (přepis
+ * `{veci}`-variant dle N6 „ať je vyšetřovatel hodnotí, ne vyjmenovává"),
+ * ne běhový filtr; zadáno obsahovému kolu.
  *
  * @param {object[]} sablony seznam z fallback-sablony.yaml
  * @param {() => number} [rand] zdroj náhody [0,1) — v testech deterministický
- * @returns {(pasmo: string, stav?: {postih?: boolean, bedna?: boolean},
- *   opts?: {bezVeci?: boolean}) => {id: string|null, text: string}}
+ * @returns {(pasmo: string, stav?: {postih?: boolean, bedna?: boolean}) =>
+ *   {id: string|null, text: string}}
  */
 export function createVyberSablon(sablony, rand = Math.random) {
   /** @type {Map<string, string>} poslední vylosované id per pásmo */
   const posledni = new Map();
-  return function vyber(pasmo, stav = {}, opts = {}) {
+  return function vyber(pasmo, stav = {}) {
     let kandidati = sablony.filter((s) => s.pasmo === pasmo && sedi(s, stav));
     if (kandidati.length === 0) return { id: null, text: NOUZOVY_ZAZNAM };
-    if (opts.bezVeci) {
-      const bezVyctu = kandidati.filter((s) => !String(s.text).includes('{veci}'));
-      if (bezVyctu.length > 0) kandidati = bezVyctu;
-    }
     if (kandidati.length > 1 && posledni.has(pasmo)) {
       const bezPosledni = kandidati.filter((s) => s.id !== posledni.get(pasmo));
       if (bezPosledni.length > 0) kandidati = bezPosledni;
@@ -149,7 +149,7 @@ export function zapisSituace(udalosti, ctx, vyber, vyberFragmentu) {
     const postih = postihy[0] ?? null;
     const stav = { postih: postih != null, bedna: (pasmoUdalost.naklad_ztrata ?? 0) > 0 };
     odstavce.push(
-      dosad(vyber(pasmoUdalost.pasmo, stav, { bezVeci: vetySlotu.length > 0 }).text, {
+      dosad(vyber(pasmoUdalost.pasmo, stav).text, {
         // {jmeno} JEN z příjemce postihu — mechanika jinak žádnou osobu
         // neurčila (viz JSDoc výše i hlavička fallback-sablony.yaml).
         ...(postih ? { jmeno: prijmeni(ctx.jmena?.[postih.hrac_id] ?? postih.hrac_id) } : {}),

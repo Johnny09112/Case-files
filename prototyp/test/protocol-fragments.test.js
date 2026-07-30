@@ -117,17 +117,48 @@ describe('createVyberFragmentu — přihrádky duvod × stat', () => {
 
   it('`pouzite` odsune už použitý fragment, dokud je z čeho brát', () => {
     for (let i = 0; i < 40; i += 1) {
-      const f = vyber('nizky_stat', null, `k${i}`, ['f-nizky-obecny-1']);
-      expect(f?.id).toBe('f-nizky-obecny-2');
+      const v = createVyberFragmentu(FRAGMENTY);
+      expect(v('nizky_stat', null, `k${i}`, ['f-nizky-obecny-1'])?.id).toBe('f-nizky-obecny-2');
     }
   });
 
   it('vyčerpaný pool ustoupí na „jen ne poslední“ — věta je důležitější než rozmanitost', () => {
     for (let i = 0; i < 40; i += 1) {
+      const v = createVyberFragmentu(FRAGMENTY);
       // Obě varianty použité, poslední byla `-2` → smí se zopakovat jen `-1`.
-      const f = vyber('nizky_stat', null, `k${i}`, ['f-nizky-obecny-1', 'f-nizky-obecny-2']);
-      expect(f?.id).toBe('f-nizky-obecny-1');
+      expect(v('nizky_stat', null, `k${i}`, ['f-nizky-obecny-1', 'f-nizky-obecny-2'])?.id).toBe('f-nizky-obecny-1');
     }
+  });
+
+  it('runové počítadlo čerpá sadu rovnoměrně (nález: 1 fragment nesl 6 z 32 vět)', () => {
+    // 40 losování téže přihrádky bez omezení uzlem: rozdíl mezi nejčastějším
+    // a nejvzácnějším fragmentem smí být nejvýš 1.
+    const v = createVyberFragmentu(FRAGMENTY);
+    const pocty = {};
+    for (let i = 0; i < 40; i += 1) {
+      const f = v('proslo', 'hodnota', `k${i}`);
+      pocty[f.id] = (pocty[f.id] ?? 0) + 1;
+    }
+    const hodnoty = Object.values(pocty);
+    expect(Math.max(...hodnoty) - Math.min(...hodnoty)).toBeLessThanOrEqual(1);
+  });
+
+  it('`dostupne` vyřadí fragment žádající placeholder, který slot nemá', () => {
+    // Neobsazený slot umí dosadit jen {role} → varianta s {vec} se NENABÍDNE
+    // (dřív se vybrala a až po dosazení zahodila, čímž slot zmlkl).
+    const v = createVyberFragmentu(FRAGMENTY);
+    for (let i = 0; i < 40; i += 1) {
+      expect(v('neobsazeno', null, `k${i}`, [], ['role'])?.id).toBe('f-neobsazeno-1');
+    }
+  });
+
+  it('přidání nesouvisejícího fragmentu nepřerovná volby v jiné přihrádce', () => {
+    // Rendezvous hash: volba je vázaná na id fragmentu, ne na index v poli.
+    const klice = Array.from({ length: 10 }, (_, i) => `n|${i}`);
+    const pred = klice.map((k) => createVyberFragmentu(FRAGMENTY)('nizky_stat', null, k)?.id);
+    const rozsirene = [...FRAGMENTY, { id: 'f-proslo-navic', vysledek: 'proslo', text: 'NOVÝ „{vec}“.' }];
+    const po = klice.map((k) => createVyberFragmentu(rozsirene)('nizky_stat', null, k)?.id);
+    expect(po).toEqual(pred);
   });
 
   it('seed runu mění volbu — dva runy nedostanou tutéž větu na týž slot', () => {
@@ -143,10 +174,11 @@ describe('vetaSlotu — dosazení a kontrakt placeholderů', () => {
   const u = (over) => ({ nodeIndex: 2, slot_index: 2, karta_id: 'c', hrac_id: 'p1', stat: 'nastroj', duvod: 'proslo', ...over });
 
   it('dosadí název věci, roli slotu i příjmení vlastníka', () => {
-    const { text } = vetaSlotu(u(), 'Zapřáhnout a táhnout', CTX, vyber);
-    expect(text).toContain('Klíč');
-    expect(text).toContain('Zapřáhnout a táhnout');
-    expect(text).not.toMatch(/\{\w+\}/);
+    const vsechny = createVyberFragmentu([
+      { id: 'f-vse', vysledek: 'proslo', text: 'K „{role}“ šel „{vec}“; hlásí podezřelý {jmeno}.' },
+    ]);
+    const { text } = vetaSlotu(u(), 'Zapřáhnout a táhnout', CTX, vsechny);
+    expect(text).toBe('K „Zapřáhnout a táhnout“ šel „Klíč“; hlásí podezřelý Bartoš.');
   });
 
   it('{jmeno} je PŘÍJMENÍ, ne celé jméno (kontrakt CLAUDE.md)', () => {
@@ -172,9 +204,11 @@ describe('vetaSlotu — dosazení a kontrakt placeholderů', () => {
     expect(vetaSlotu(u({ duvod: 'gangster_auto_fail' }), 'R', CTX, vyber)).toBeNull();
   });
 
-  it('týž slot téhož runu dá vždy tutéž větu (determinismus)', () => {
-    const a = vetaSlotu(u(), 'Zapřáhnout a táhnout', CTX, vyber);
-    const b = vetaSlotu(u(), 'Zapřáhnout a táhnout', CTX, vyber);
+  it('týž slot ZNOVU PŘEHRANÉHO runu dá tutéž větu (determinismus)', () => {
+    // Determinismus = reprodukovatelnost runu od začátku, ne stálost odpovědi
+    // téhož výběru: ten si vede runové počítadlo a záměrně se posouvá.
+    const a = vetaSlotu(u(), 'Zapřáhnout a táhnout', CTX, createVyberFragmentu(FRAGMENTY, 7));
+    const b = vetaSlotu(u(), 'Zapřáhnout a táhnout', CTX, createVyberFragmentu(FRAGMENTY, 7));
     expect(a.text).toBe(b.text);
   });
 });
@@ -219,7 +253,6 @@ describe('zapisSituace — zapojení fragmentové vrstvy do protokolu', () => {
     { id: 't-hladce-veci', pasmo: '3/4_HLADCE', text: 'HLADCE, kusy: {veci}.' },
     { id: 't-hladce-bez', pasmo: '3/4_HLADCE', text: 'HLADCE bez výčtu.' },
   ];
-  const vyberFragmentu = createVyberFragmentu(FRAGMENTY);
 
   it('bez fragmentové vrstvy se protokol nemění (zpětná kompatibilita)', () => {
     const odstavce = zapisSituace(udalostiUzlu(), CTX, createVyberSablon(SABLONY, () => 0));
@@ -228,25 +261,25 @@ describe('zapisSituace — zapojení fragmentové vrstvy do protokolu', () => {
   });
 
   it('s fragmentovou vrstvou přibude odstavec ZA pásmovým', () => {
-    const odstavce = zapisSituace(udalostiUzlu(), CTX, createVyberSablon(SABLONY, () => 0), vyberFragmentu);
+    const odstavce = zapisSituace(udalostiUzlu(), CTX, createVyberSablon(SABLONY, () => 0), createVyberFragmentu(FRAGMENTY));
     expect(odstavce).toHaveLength(2);
     expect(odstavce[0]).toMatch(/^HLADCE/);
     expect(odstavce[1]).toContain('Zaplatit za vytažení');
   });
 
-  it('když fragmenty mluví o věcech, pásmová šablona s {veci} se nevybere (žádné dvojí vyjmenování)', () => {
-    const odstavce = zapisSituace(udalostiUzlu(), CTX, createVyberSablon(SABLONY, () => 0), vyberFragmentu);
-    expect(odstavce[0]).toBe('HLADCE bez výčtu.');
-  });
-
-  it('když existují jen šablony s {veci}, pásmo se stejně napíše (pojistka)', () => {
-    const jenVeci = [SABLONY[0]];
-    const odstavce = zapisSituace(udalostiUzlu(), CTX, createVyberSablon(jenVeci, () => 0), vyberFragmentu);
-    expect(odstavce[0]).toContain('Sochor');
+  /**
+   * Preference `bezVeci` byla po měření ZRUŠENA (viz JSDoc `createVyberSablon`):
+   * půlila pásmové zásobníky a v PRŮŠVIHU umlčela hlášení o ztracené bedně.
+   * Test drží, že se nevrátila jako runtime filtr — dvojí výčet řeší přepis sady.
+   */
+  it('fragmentová vrstva NEOVLIVŇUJE výběr pásmové šablony', () => {
+    const bez = zapisSituace(udalostiUzlu(), CTX, createVyberSablon(SABLONY, () => 0));
+    const s = zapisSituace(udalostiUzlu(), CTX, createVyberSablon(SABLONY, () => 0), createVyberFragmentu(FRAGMENTY));
+    expect(s[0]).toBe(bez[0]);
   });
 
   it('žádný odstavec nenechá nedosazený placeholder', () => {
-    for (const odstavec of zapisSituace(udalostiUzlu(), CTX, createVyberSablon(SABLONY, () => 0), vyberFragmentu)) {
+    for (const odstavec of zapisSituace(udalostiUzlu(), CTX, createVyberSablon(SABLONY, () => 0), createVyberFragmentu(FRAGMENTY))) {
       expect(odstavec).not.toMatch(/\{\w+\}/);
     }
   });
@@ -321,5 +354,35 @@ describe.skipIf(!MA_FRAGMENTY)('kontrakt reálné sady prompty/fallback-fragment
     for (const f of REALNE_FRAGMENTY) {
       expect(f.text, f.id).not.toMatch(/bedn|kredit|Žár|žáru|postih/i);
     }
+  });
+
+  /**
+   * D51: prahy se před vyhodnocením neukazují a protokol je nesmí prozradit
+   * ani zpětně v podobě „scházely dva stupně". Sada je dnes čistá, ale bez
+   * zámku je to autorská náhoda — D51 stálo čtyři průchody.
+   */
+  it('neprozrazuje čísla ani slovník prahů (D51)', () => {
+    for (const f of REALNE_FRAGMENTY) {
+      expect(f.text, f.id).not.toMatch(/\d/);
+      expect(f.text, f.id).not.toMatch(/práh|prahu|kotv|šum/i);
+    }
+  });
+});
+
+/**
+ * Tripwire proti tichému rozchodu s enginem: `VYSLEDKY` je ručně udržovaný
+ * seznam. Když engine začne vydávat nový `duvod`, fragmentová vrstva o tom
+ * druhu výsledku bez tohohle testu prostě MLČÍ (vysvetleni.js má na tutéž
+ * třídu rizika `neznama()`; tady zmlknutí nikdo nepozná).
+ */
+describe('VYSLEDKY drží krok s enginem', () => {
+  it('pokrývá přesně důvody, které resolve.js vydává', () => {
+    const zdroj = fs.readFileSync(new URL('../src/engine/resolve.js', import.meta.url), 'utf8');
+    const zEnginu = new Set([...zdroj.matchAll(/duvod:\s*(?:zasah\s*\?\s*)?'([a-z_]+)'/g)].map((m) => m[1]));
+    // `resolve.js` staví část důvodů ternárně (`zasah ? 'proslo' : …`) — posbírej i ty.
+    for (const m of zdroj.matchAll(/'([a-z_]+)'\s*:\s*rusiTohoto\s*\?\s*'([a-z_]+)'\s*:\s*'([a-z_]+)'/g)) {
+      for (const d of m.slice(1)) zEnginu.add(d);
+    }
+    for (const duvod of zEnginu) expect(VYSLEDKY, `engine vydává '${duvod}'`).toContain(duvod);
   });
 });
