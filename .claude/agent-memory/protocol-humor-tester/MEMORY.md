@@ -1,3 +1,3 @@
 # Paměť — protocol-humor-tester
 
-- [Taxonomie selhání protokolu](testing-failure-taxonomy.md) — tónová selhání protokolu, fallback šablon i telegrafů; zákon „sada se testuje jako sada"; dobové reálie trasy; snapshot promptu v0.3
+- [Taxonomie selhání protokolu](testing-failure-taxonomy.md) — tónová selhání protokolu, fallbacků i telegrafů; „vysvětlující ocásek"; test mřížky verdiktu zbraně; dobové reálie trasy; prompt v0.3

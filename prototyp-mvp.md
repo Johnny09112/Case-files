@@ -222,7 +222,16 @@ se testuje agentem `protocol-humor-tester` nad promptem `prompty/protokol.md`.
 Prémiové karty + meta-progrese, custom skladač karet + UGC moderace, perzistence
 profilů napříč runy, další světy / DLC obsah, online multiplayer, Remote Play,
 Steam, pixel-art (placeholder papír), zvuk, angličtina (testuje se česky — je to
-rizikovější jazyk), volitelný časovač, volba obtížnosti.
+rizikovější jazyk), volitelný časovač, **plná volba obtížnosti** (easy / normal /
+hard, tj. D25d).
+
+**Jediná výjimka u obtížnosti (D50, 2026-07-29):** setup má kolonku **Obtížnost**,
+ale obsahuje výhradně přepínač *Ulehčení: rozbor telegrafu na rozklik* — ten
+**v MVP je**, protože po skrytí mechanického řádku (D47) je to přístupnostní
+ventil pro čitelnost (metrika 6). Kolonka je zároveň prázdný rám pro D25d; cokoli
+dalšího do ní patří až za MVP. Pojmenování „Obtížnost", ne „zobrazení", je záměr:
+se zapnutým rozborem jde 4p win-rate na 86,8 % (D48), takže je to obtížnostní
+volba, ne kosmetika.
 
 ## Fáze 2 — Playtesty a ladění (průběžně)
 

@@ -50,8 +50,6 @@ páky Ž a potvrzuje se čistě. cautious 4→5 (uzel 4→5).
 
 ## 3. BĚH (2026-07-22, po D10, 240 000 runů) — NEPROŠLA TĚSNĚ (2 lokální kalibrace)
 
-## 3. BĚH (2026-07-22, po D10, 240 000 runů) — NEPROŠLA TĚSNĚ (2 lokální kalibrace)
-
 D10: prahy **7+ úspěch / 5–6 úspěch za cenu (reálné zranění) / ≤4 selhání** (páka F);
 frajer-v-klidu zmírněn na `zraneni <= 1 a doruceno`. Matice 3 počty × 10 strategií × 2
 pronásledovatelé × 2 hlasy à 2000.

@@ -211,10 +211,14 @@ napříč runy (scope + patent WB na nemesis), soubojový systém s HP, tahy nep
 ### 4.10 Tajné osobní cíle (kooperace s třením)
 Každý hráč si na začátku lízne tajný cíl vázaný na jeho hru a na obsah protokolu
 („skonči se dvěma postihy a přesto DORUČENO", „ani jednou nedej zbraň do viditelné
-role", „polda tě označí za mozek operace"). Dává skrytý důvod hádat se o **konkrétní
-rozdělení slotu**, zatímco tým optimalizuje globálně, a vytváří závěrečný reveal
-moment. Cíle jsou převážně **mechanicky ověřitelné** (simulace je umí bodovat),
-čistě textové jen tam, kde nesou reveal.
+role", „ať tvoje železo zapracuje tam, kam nikdo nevidí"). Dává skrytý důvod hádat
+se o **konkrétní rozdělení slotu**, zatímco tým optimalizuje globálně, a vytváří
+závěrečný reveal moment. Cíle jsou **mechanicky ověřitelné** (simulace je umí
+bodovat); čistě textový cíl (typu „polda tě označí za mozek operace") je vize
+podmíněná tím, že vstup promptu vůbec nese informaci o osobách — dnes ji nenese
+(protokol drží osoby jako „podezřelý A–D"), takže takový cíl byl **D42 škrtnut**
+a nahrazen mechanickou variantou. Než se textový cíl vrátí, musí se nejdřív doložit,
+že ho vstup promptu umí ověřit (viz hlavička `obsah/cile.yaml`).
 
 ### 4.11 Vysvětlující vrstva „proč se to stalo"
 **Každá netriviální mechanická událost nese při odhalení krátkou anotaci, proč

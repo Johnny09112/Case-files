@@ -8,3 +8,4 @@
 - [mozek-operace audit](mozek-operace-audit.md) — 2026-07-28: V-A „strůjce" roztrhán (8 nálezů), protinávrh GANGSTER_skryta, K9 maskuje cíle automatické-při-výhře
 - [muj-den V-3 audit](muj-den-v3-audit.md) — 2026-07-28: diagnóza platí, preregistrace ne; divergence-null jako nástroj; V-3 nemění rozhodnutí, jen obtížnost
 - [Telegraf invariant audit](telegraf-invariant-audit.md) — 2026-07-29: mech. řádek už v kódu → p≈1,0, teze návrhu obrácená; K4d stale po D35; STOPY nejsou partice
+- [Telegraf škrtací kolo audit](telegraf-skrtaci-kolo-audit.md) — 2026-07-30: v3 invariant SCHVÁLIT S ÚPRAVAMI; prior ověřen, ale nenaučitelný pro 5/19; útok lze zapřít jen ve 4/19

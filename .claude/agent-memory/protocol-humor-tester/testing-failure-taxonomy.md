@@ -1,6 +1,6 @@
 ---
 name: testing-failure-taxonomy
-description: Znovupoužitelné vzorce, kde protokol, fallback šablony i telegrafy selhávají tónově, a jak je probíhat při testu humoru (kalibrace role, trvalá); snapshot promptu v0.3
+description: Znovupoužitelné vzorce, kde protokol, fallback šablony i telegrafy selhávají tónově, a jak je probíhat při testu humoru (kalibrace role, trvalá); vč. tvaru „vysvětlující ocásek", testu mřížky verdiktu zbraně, dobových reálií trasy a snapshotu promptu v0.3
 metadata:
   type: project
 ---
@@ -135,10 +135,62 @@ hlídat, aby si telegraf nebral protokolu jeho nástroj.
   neosobním „někdo musí" a oslovením „vy" uvnitř jednoho textu.
 - **Past metafor:** obraz z herní mechaniky („poslední karta" ve hře s kartami)
   čte se jako mrknutí na hráče přes čtvrtou stěnu. Hledej je cíleně.
-- **Dobovost trasy Buffalo → New York je v pořádku:** Mohawk, Poughkeepsie,
-  Peekskill, Yonkers leží na trase a v roce 1930 existují. Silniční mýtná bouda
-  v Hudson Highlands je doložená (Bear Mountain Bridge Road Toll House, 1924) —
-  není to anachronismus, nepřipomínkovat znovu.
+
+### E1 — KONKRÉTNÍ TVAR PŘEKROČENÍ ČÁRY: „vysvětlující ocásek" (2026-07-30)
+Všech 5 nálezů v přepsané sadě mělo **týž tvar**: konkrétní obraz, který si vystačí,
++ čárka/pomlčka + **narátorův verdikt nad tím obrazem**. („leští si odznak o rukáv,
+*jako by měl do večera čas*"; „most stojí nad vodou *už jen ze zvyku*"; „tři chlapi,
+*kteří se nebaví*"; „*nikdo z nich nikam nespěchá*"; „*může vytrhnout trn*".)
+- **Operační test:** škrtni druhou polovinu věty. Když obraz pořád hrozí, ocásek byl
+  vtip a patří protokolu. Když obraz zmizí, byl to fakt a zůstává.
+- **Rozdíl fakt vs. figura:** „závora, kterou roky nikdo nezvedl" = fakt s implikací
+  (dovolené). „most stojí ze zvyku" = personifikace (protokolův motor).
+- **Bonus:** škrt ocásků uvolní ~90 znaků → slouží mandátu „víc obrazu", nejde proti němu.
+- **Opakující se figura sady:** „beze spěchu / nespěchá / do večera čas / beze slova"
+  4–5× v 19 (nad stropem 2×). Podceňovaný poddruh — je to *evaluační* register,
+  tj. půjčený protokolu, ne jen fráze. Hlídej ho v každém dalším kole.
+- **Skeleton v syntaxi nároku:** mould „jde to *jen/jedině* tak, že…" 6× v 19.
+  Frekvenční seznam veď i podle **syntaxe**, ne jen podle slov — bohatá slovní
+  zásoba skeleton maskuje (viz B5).
+
+### E2 — Uvolněné místo teče do úvodní scény = jediné, co se překrývá s protokolem
+Když se rozpočet zvětší, autor prodlouží **úvodní scénický obrázek** (u D51 se
+zdvojnásobil: 64 → 125 zn.). To je nejhorší volba: protokol i `text` scénu rekapitulují
+znovu, takže hráč ji slyší 3×. Správný cíl uvolněného místa je **věta nároku
+a předzvěst** — ty protokol nekryje. Kontroluj to jako první.
+
+### E3 — Rozpad mřížky verdiktu zbraně (empirický test, dělej ho vždy)
+2026-07-30: 4 semantické buňky verdiktu byly v sadě 19 renderovány **~11 různými
+zněními**, a rozptyl byl **nejvyšší přesně v obou buňkách, které se liší jen tím,
+jestli skrytá zbraň pomáhá** (`jen_skryte`+true 5 znění / 8 uzlů; `jen_skryte`+false
+3 znění). Posluchač je pak rozlišuje na **poslední třech slovech** — a chyba stojí
+auto-fail karty.
+- **Test:** vždy sestav tabulku buňka → uzel → doslovné znění. Rozpad se nedá najít
+  čtením po jednom, jen tabulkou.
+- **Můj doporučený verdikt (2026-07-30):** znění dělat **normativní, ne příkladné** —
+  4 pevné řetězce + definovaná appendovací místa (slotová výjimka, `rusi` u Brodyho).
+  „Slovesa a obrazy se smějí přizpůsobit situaci" je ta věta invariantu, která rozpad
+  vyrobila. Repetice v pevné **koncové pozici** čte se jako refrén telegrafního
+  úředníka, ne jako chudoba — pozice + znění musí být konzistentní obojí.
+- Hlídej i **lexikální register** kanálu: sada míchá „zbraň" / „bouchačka" /
+  „železo" / „pod kabátem" — v jediném kanálu, který má být rozpoznatelný na dvě slova.
+
+### E4 — Dobové reálie trasy Buffalo → New York (ověřeno, needitovat znovu)
+- **V pořádku:** Mohawk, Poughkeepsie, Peekskill, Yonkers, Batavia, Syracuse, Oneida,
+  Cohoes leží na trase a v roce 1930 existují. Silniční mýtná bouda v Hudson Highlands
+  je doložená (Bear Mountain Bridge Road Toll House, 1924). Kořalka v šálcích je
+  doložená praxe speakeasy (šálek jako maskování při razii). „Vysolit", „bouchačka",
+  obušky strážníků, blok pokut, nákladní list — vše dobové.
+- **Silniční most u Poughkeepsie:** Mid-Hudson Bridge otevřen **1930-08-25** →
+  obhajitelné, ale těsné (platí jen pro druhou polovinu roku). Nepřipomínkovat, ledaže
+  by se hra datovala na jaro.
+- **Přívoz na Hudsonu 1930 = PÁRA, ne motor.** Trajekty byly parní; dieselové konverze
+  až od ~1935. Česky proto **„stroj"**, nikdy „motor" (motor implikuje spalovací).
+- **„Celnice v Albany" je institucionální chyba.** Domácí trasa Buffalo → NYC neřeší
+  celnici; celní přístav je **Buffalo** (Peace Bridge 1927), a albanská celnice-budova
+  byla teprve financována 1930. Papírové razítkovací scény patří na „úřadovnu".
+- **„Pátá silnice" je nejednoznačná** — NY Route 5 (Buffalo → Albany, od 1924) je
+  geograficky správná, ale česky se to čte jako Fifth Avenue. Používej „pětka".
 
 ## Stav promptu (snapshot: v0.3, 2026-07-23)
 v0.3 = remap na v3 (SITUACE/ROZDĚLENÍ/VÝSLEDEK MECHANIKY/NÁSLEDKY, placeholdery

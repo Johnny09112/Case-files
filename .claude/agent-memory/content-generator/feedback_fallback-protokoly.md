@@ -26,8 +26,7 @@ Kalibrace řemesla, ne fakta o obsahu (fakta jsou v `prompty/protokol.md` a v sa
   hráčů** — ukázkové runy si skládám na 4p, ale sólo je pravděpodobnější sezení.
   Osy 2 a 3 chytily nálezy, které dvě předchozí role minuly.
 - **Text nesmí slibovat budoucnost** — run může skončit právě tímhle uzlem.
-- **Přepisy od testéra/kritika kontroluj na věcnost, nepřebírej je** — v prověrce
-  2026-07-27 měl přepis „jediná zdařilá úloha" tam, kde pásmo znamená ≤1 (i nula).
+- Přepisy od testéra/kritika neber jako hotové → [[proces-obsahove-davky]].
 
 ## Registr a řemeslo
 

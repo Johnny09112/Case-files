@@ -1,5 +1,6 @@
 # Paměť — playtest-facilitator
 
+- [D51 prior-sweep (memorizacni)](d51-prior-sweep-memorizacni.md) — dokonalý prior 1p +3,9b, 2-4p −3,9 až −9,6b vs. kompetentní čtení telegrafu; znaménko se otáčí (2026-07-30)
 - [Kolo `muj-den` → podíl](muj-den-kontrafaktual.md) — řez 50 % prošel vším; podíl obrátil závislost na počtu hráčů; normalizovaná divergence jako měřidlo osobnosti (2026-07-28)
 - [Kontrafaktuál `mozek-operace`](mozek-operace-kontrafaktual.md) — A vyhrála, B/C týmové (divergence 0,00 %), brána invariantní vůči sadě cílů; ⚠ čtení divergence retrahováno (2026-07-28)
 - [Kalibrace-5 sweep prahOffset](kalibrace-5-sweep-prahoffset.md) — A1 {0,5,6,6} spraví K1 6/6, K6a 6,03 na hraně, cena = K2 drift; páka nemonotonní nad off 6 (2026-07-27)

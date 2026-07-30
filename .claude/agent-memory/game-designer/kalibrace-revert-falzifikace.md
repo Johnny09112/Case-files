@@ -45,6 +45,26 @@ jako fakt o enginu, dokud je nedoložíš kódem; ale tentýž pohled do kódu o
 jeho zbytek (tam mi našel chybnou pravděpodobnost i prázdný tie-break). Doruč obojí:
 co přijímám a co odmítám **s citací místa v kódu**.
 
+**Třetí instance, tentokrát proti KRITIKOVI (škrtací kolo telegrafů, 2026-07-30):**
+kritik označil zapečené délky telegrafů D49 („302–379") za **omylem změřené v bajtech**
+a odvodil z toho, že sada má proti stropu víc místa, než se myslí. Přeměření
+(`playtest-facilitator`, `js-yaml` + `String.length`) ukázalo, že **jsou to znaky
+a byly správně** (bajtově je táž sada 336–421). Platná zůstala jen druhá polovina
+výtky — invariant jednotku neuváděl. **How to apply:** i „nechutně konkrétní" číslo
+od recenzenta je hypotéza, dokud ho někdo se Bashem nepřeměří; a měření je levné
+(jeden node skript, 1,5 minuty), takže se to vždycky vyplatí zadat, i když výtka
+zní jistě.
+
+**Čtvrtá instance, a znovu proti kritikovi (týž den, 2026-07-30):** kritik navrhl
+rameno `memorizacni` (bot znající staty slotů podle id) jako **horní mez hodnoty
+prioru** pro telegraf v3. Měření (96 000 runů, 3 bloky): rozdíl *memorizační −
+kompetentní* je **+3,9 b. u 1p, ale −3,9 / −8,1 / −9,6 b. u 2p/3p/4p** — striktně
+informovanější bot je pro tým HORŠÍ, takže se ta ramena neliší jen informací
+(liší se commit-politikou) a mez to není. **How to apply:** než přijmu cizí
+rameno/metriku jako „strop", ověř, že se od referenčního ramena liší **jen tou
+proměnnou, o které se mluví**. Když striktně lepší vstup dá horší výsledek, měřím
+politiku, ne informaci — a nález je o modelu, ne o designu.
+
 **Zobecněné pravidlo:** než navrhnu redefinici metriky jako „lék", **ověř matematiku
 proti enginu / požádej facilitátora o kontrafaktuál** — teoretická redefinice může
 být no-op nebo mířit na špatný driver. Dvakrát mě teorie (efekt vs. měření) svedla.
