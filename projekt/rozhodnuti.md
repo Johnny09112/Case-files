@@ -13,6 +13,19 @@ architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.m
 
 ## 2026-07-30
 
+- **D54 (ROZHODNUTÍ UŽIVATELE) — fallback = plnohodnotná fragmentová vrstva;
+  kombinatorický skladač karet potvrzen jako budoucnost, po lidské bráně.**
+  (1) **Fragmentový fallback:** kódové kolo (per-slot placeholdery
+  v protocol-fill + ~20–30 autorských fragmentů) — fallback bude umět říct, co
+  která věc v které roli dělala; jediná investice zlepšující už otestovanou
+  buňku {sólo, fallback}. Ve frontě za dokončením telegrafů (koliduje by
+  s během na obsahu). (2) **Kombinatorická tvorba karet:** uživatel potvrdil,
+  že „kreativita ve formě tvorby karet" je zásadní prvek — PM stanovisko
+  přijato: v kanonu nikdy neškrtnuta (D18 custom skladač, humor baseline jako
+  UGC moderace), D53 ji činí poprvé proveditelnou (AI-GM obslouží kombinace,
+  pooly nejsou volný text, staty z částí pravidlem). Designové kolo
+  „kombinatorický skladač" + rozhodnutí o šíři situací (30–40, Denisa #4) se
+  otevírají PO lidské bráně — šíře zábavu násobí, netvoří.
 - **D53 (ROZHODNUTÍ UŽIVATELE) — verdikt WoZ testu: kreativní interpretace
   („AI jako GM") vyhrává; mandát AI vrstvy pro fázi 3 potvrzen.** Uživatel po
   slepém čtení (technika/woz-test-2026-07-30.md): rozšířené verze s kreativní

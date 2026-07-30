@@ -281,6 +281,14 @@ a účet narazil na měsíční limit útraty — agentní kola dočasně selhá
 zakrývací zkouška). **U uživatele dál: slepé čtení WoZ testu + zvednutí
 limitu.** Nový agent `denisa` (game-dev-lead) onboardována, 5 nálezů
 v `.claude/game-lead/brief.md`.
+**LIMIT OBNOVEN, WoZ ROZHODNUT (D53–D54, 2026-07-30):** kreativní interpretace
+vyhrává (mandát AI vrstvy pro fázi 3; čeština = kritérium volby poskytovatele,
+testovat baterií per kandidát). Fallback = fragmentová vrstva (D54).
+**Běží:** dokončení telegrafů (4 věty → směrový test → zapečení) + kolo
+separability (Denisa P0/#1, návrh mezislotové vazby s kontrafaktuálem).
+**Fronta:** fragmentový fallback (za telegrafy) → fáze 3 (prompt s kreativním
+mandátem + volba poskytovatele) → sezení 2–3 hráčů. **Po lidské bráně:**
+kombinatorický skladač karet + šíře situací (D54/2).
 
 ### Co jde do lidské brány jako známé, vyčíslené odchylky
 
