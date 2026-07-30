@@ -13,6 +13,18 @@ architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.m
 
 ## 2026-07-30
 
+- **D53 (ROZHODNUTÍ UŽIVATELE) — verdikt WoZ testu: kreativní interpretace
+  („AI jako GM") vyhrává; mandát AI vrstvy pro fázi 3 potvrzen.** Uživatel po
+  slepém čtení (technika/woz-test-2026-07-30.md): rozšířené verze s kreativní
+  interpretací „výrazně lepší" — „to bylo částečně to, co mě trápilo, nyní je
+  to lepší." Výhrada: model má občas problém s češtinou a významem slov →
+  (a) dolaďování promptem, (b) **kvalita češtiny se stává explicitním
+  kritériem volby LLM poskytovatele** (testovat baterií humor-testéra per
+  kandidát, ne rozhodovat od stolu). Poznámka do prompt-kola fáze 3: testér
+  doporučil B-lite (invence jen u selhaných/nesedících slotů), uživatel četl
+  plné B jako výrazně lepší — rozhodne se v prompt-kole s oběma data-pointy.
+  Největší produktová sázka projektu je tímto poprvé podložená pozitivním
+  lidským testem.
 - **D52 (ROZHODNUTÍ UŽIVATELE) — dokončení telegrafů agentním kolem po zvednutí
   limitu (ne PM v zastoupení); hranice A = urgence; kolo separability se otevírá.**
   Kontext: směrový test dal 15/19 (report §5.5) a předregistrované pravidlo
