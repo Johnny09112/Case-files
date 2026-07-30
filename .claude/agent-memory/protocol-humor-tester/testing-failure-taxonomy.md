@@ -152,6 +152,24 @@ Všech 5 nálezů v přepsané sadě mělo **týž tvar**: konkrétní obraz, kt
 - **Skeleton v syntaxi nároku:** mould „jde to *jen/jedině* tak, že…" 6× v 19.
   Frekvenční seznam veď i podle **syntaxe**, ne jen podle slov — bohatá slovní
   zásoba skeleton maskuje (viz B5).
+- **Slabší forma ocásku = KONCESIVNÍ SPOJKA** („na stole je plno, *ačkoli* nikdo
+  nepije"). Oba členy jsou fakty, takže operační test je propustí — ale spojka
+  vysloví rozpor ZA čtenáře. Nahraď „a"; inference se vrátí stolu a věta zkrátí.
+- **Generický zesilovač místo obrazu** (nová podtřída, 2026-07-30): „bez varování /
+  bez ohlášení / ve špatnou chvíli" 3× v 19. Je to legální (nese informaci
+  „pokazí se to"), ale je to *přenosné na kterýkoli obraz* — proto se to množí.
+  Test: dá se to příslovce beze změny přesadit do jiného telegrafu? Pak není ze scény.
+
+### E1b — Skeleton se po opravě PŘESTĚHUJE, nezmizí (2026-07-30)
+D49 měla „a poznáte to pozdě" 8×/19. Škrt číslovky a rozvolnění pozice ten výskyt
+zrušily — a v témž kanálu vyrostl **nový mould „[dál / pak / od té chvíle] to
+bude/jde o X" 6×/19**, ze toho 3× doslova o „rychlosti". Příčina je B5′: invariant
+dal kanálu 3+4 JEDNU vzorovou formulaci pro `zbran_skryte=true`, a ten signál má
+10 z 19 uzlů → autor sáhl po slovníku 6×.
+- **Po každé opravě jednotvárnosti udělej frekvenční seznam ZNOVU na tomtéž kanálu.**
+  Opravená figura je pryč; hledá se její nástupce, ne její návrat.
+- **Lék patří do invariantu, ne do textů:** kde má jeden signál >5 uzlů, musí
+  vzorových formulací být 3–4 různých TYPŮ obrazu, jinak je jedna z nich frázovník.
 
 ### E2 — Uvolněné místo teče do úvodní scény = jediné, co se překrývá s protokolem
 Když se rozpočet zvětší, autor prodlouží **úvodní scénický obrázek** (u D51 se
@@ -191,6 +209,19 @@ auto-fail karty.
   byla teprve financována 1930. Papírové razítkovací scény patří na „úřadovnu".
 - **„Pátá silnice" je nejednoznačná** — NY Route 5 (Buffalo → Albany, od 1924) je
   geograficky správná, ale česky se to čte jako Fifth Avenue. Používej „pětka".
+
+### E5 — Dvě procesní kontroly, které se dělají POSLEDNÍ (a hledají chyby v páru)
+1. **Rozpočet VĚT, ne jen znaků.** 2026-07-30: finální sada telegrafů měla 19/19
+   přesně **5 vět = na stropu**. Znaková rezerva byla přitom pohodlná (~335 ze 400),
+   takže „místo je" mate. Důsledek: **žádná oprava už nesmí rozdělit souvětí na dvě
+   věty** — každý čtivostní nález se musí řešit PŘEPISEM. Počítej věty dřív, než
+   navrhneš „rozdělit na dvě".
+2. **Invariant × sada se rozejdou právě na PEVNÝCH zněních.** Tam, kde invariant
+   fixuje doslovný řetězec, autor cestou opraví jeho vadu (u D51: append slotové
+   výjimky měl v invariantu „bouchačka", což porušovalo jeho vlastní pravidlo
+   „vždy zbraň"; sada napsala správně „zbraň"). Sada je pak lepší než spec —
+   a kdo zapeče obojí, dostane v příštím kole „opravu" sady zpátky na vadu.
+   **Vždy diffuj normativní řetězce spec × sada a nahlas, KTERÝ ze dvou se opravuje.**
 
 ## Stav promptu (snapshot: v0.3, 2026-07-23)
 v0.3 = remap na v3 (SITUACE/ROZDĚLENÍ/VÝSLEDEK MECHANIKY/NÁSLEDKY, placeholdery

@@ -1,5 +1,6 @@
 # Paměť — playtest-facilitator
 
+- [D51 délky finální sady 19 telegrafů, 4. průchod](d51-final-19-delky.md) — průměr 317,8 zn. (nad gatem 315), nejdelší nadrazi-vypravci 351, nic přes 400/670, verdikt-C nekonzistence u malone-lecka, sada zatím nezapečena (2026-07-30)
 - [D51 prior-sweep (memorizacni)](d51-prior-sweep-memorizacni.md) — dokonalý prior 1p +3,9b, 2-4p −3,9 až −9,6b vs. kompetentní čtení telegrafu; znaménko se otáčí (2026-07-30)
 - [Kolo `muj-den` → podíl](muj-den-kontrafaktual.md) — řez 50 % prošel vším; podíl obrátil závislost na počtu hráčů; normalizovaná divergence jako měřidlo osobnosti (2026-07-28)
 - [Kontrafaktuál `mozek-operace`](mozek-operace-kontrafaktual.md) — A vyhrála, B/C týmové (divergence 0,00 %), brána invariantní vůči sadě cílů; ⚠ čtení divergence retrahováno (2026-07-28)

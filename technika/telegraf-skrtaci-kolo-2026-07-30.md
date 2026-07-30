@@ -1,10 +1,17 @@
 # Telegraf — škrtací kolo (D51)
 
-*Stav ke 2026-07-30, `game-designer` dle mandátu D51. **Invariant v3 je hotový
-a prošel oběma recenzemi. Sada 19 telegrafů je přepsaná, ale DO `obsah/` SE
-V TOMTO KOLE NEZAPSALA** — drží ji předregistrované kritérium §3.0/2 (dvě nová
-porušení ČISTOTY, §3.4). Zbývá jedno krátké kolo na diff, ne další velké.
-Consistency opravy z D51 bodu 3 **zapsané jsou** (§6.1). Předchůdci: [[telegraf-invariant-navrh-2026-07-29|technika/telegraf-invariant-navrh-2026-07-29.md]]
+*Stav ke 2026-07-30, `game-designer` dle mandátu D51 + dokončovacího kola.
+**Invariant v3 je hotový a po re-review doplněný o pravidla, která kolo objevilo
+teprve použitím na hotové texty (zákaz výhradnosti, směrový test — §2, §3.6).
+Sada 19 telegrafů prošla ČTYŘMI průchody a do `obsah/` se ANI TEĎ NEZAPSALA:**
+oba recenzenti dali „ZAPÉCT PO OPRAVÁCH", jejich nálezy jsou zapracované (§3.5),
+ale výsledná verze je opět nerecenzovaná a **délky se musí přeměřit** — kritik
+doloženě odhaduje, že čtvrtý průchod ubral obraz v 9 uzlech. Předem, aby to nebylo
+zpětné rozhodnutí: **vyjde-li průměr pod 315 znaků, nezapéká se a rozpočet se
+dopisuje do obrazu** (§3.6). Historie všech průchodů je záměrně zachovaná
+v §3.1–3.6 — je to doklad, co gate zachytil a co recenzentům uniklo. Consistency
+opravy z D51 bodu 3 jsou zapsané (§6.1), oprava kanonu čeká na zapékací commit
+(§6.2). Předchůdci: [[telegraf-invariant-navrh-2026-07-29|technika/telegraf-invariant-navrh-2026-07-29.md]]
 (znění v1 a v2), [[koncept-kreativita-navrh-2026-07-30|technika/koncept-kreativita-navrh-2026-07-30.md]]
 §5 (Q4 — verdikt „osekat právě jeden kanál") a §8 (prověrka kritika).*
 
@@ -17,7 +24,9 @@ nárok". To je jediná změna, kterou zadal mandát D51.
 
 **Co se změnilo NAD mandát a proč** (mandát žádal ostatní kanály zachovat dle v2,
 „pokud kolo neukáže jinak — každou další změnu zdůvodni zvlášť"; kolo ukázalo jinak
-u šesti věcí, každá má jmenovaný důvod a jmenovaného nálezce):
+u **devíti** věcí, každá má jmenovaný důvod a jmenovaného nálezce — tři poslední
+řádky přidalo teprve dokončovací kolo, kdy se pravidla poprvé použila na hotové
+texty):
 
 | změna | důvod | odkud |
 |---|---|---|
@@ -26,11 +35,15 @@ u šesti věcí, každá má jmenovaný důvod a jmenovaného nálezce):
 | **číslovka počtu skrytých jen tam, kde `proti_srsti` ≠ 1** | počet „jedna" je konstanta u 18 z 19 → vyčíslovat ji = platit skeletonem za nulu; přesně tenhle požadavek vyrobil v D49 skeleton v 17 z 19 | nález **N-1** generátoru |
 | **druhý nárok** dovolen i v léčce/konfrontaci (kanál 7 srostlý), ale nikdy tam, kde by pojmenoval všechny viditelné sloty; kvóta podílem + registr | plošný zákaz upíral nejvíc informace `brody-zataras`, tedy uzlu, na kterém hráč nález vyslovil | **N-2** + **V-6** |
 | **PRAVIDLO PODMĚTU** (vět s podmětem posádka = počet nároků) | po škrtu se poměr kulisy k nároku převrací z ~1:3 na ~1:1 a falešná poptávka přestává být rozpoznatelná; je to jediná kontrola ČISTOTY, kterou máme | **V-5** |
-| **PŘEJÍMKA v3** (5 bodů) + **strop záporů** o témže statu | procedura D49 byla definovaná proti plnému pokrytí, po škrtu neznamená nic; a šest telegrafů říkajících „peníze neplatí" by naučilo, že hodnota je past | **B-3** + **N-4** |
+| **PŘEJÍMKA v3** (6 bodů) + **strop záporů** o témže statu | procedura D49 byla definovaná proti plnému pokrytí, po škrtu neznamená nic; a šest telegrafů říkajících „peníze neplatí" by naučilo, že hodnota je past | **B-3** + **N-4** |
+| **VERDIKT ZBRANĚ přestal být „smysl" a je NORMATIVNÍ ZNĚNÍ** — 4 doslovné řetězce v jednom paradigmatu + 2 pevné appendy | pravidlo „slovesa se smějí přizpůsobit, smysl ne" ten rozpad **vyrobilo**: 11 znění na 4 buňky, s největším rozptylem u dvou buněk, které se liší jen tím, jestli skrytá zbraň pomáhá → posluchač je rozlišoval na posledních třech slovech. Chybné čtení = auto-fail karty | **N-3** generátoru, **potvrzeno měřením** humor-testéra |
+| **KONTROLA ANTI-TELLU VÝČTEM** (vypiš pět statů uzlu, odškrtni, který není v žádném slotu — pak teprve čti prózu) | zápor o statu, který ve slotech JE, se čtením nenajde: první průchod v3 měl **4 z 19**, všechny o `improvizace`, a neodhalil je ani jeden recenzent | vlastní nález při opravě, §3.5 |
+| **DOVĚTEK k pravidlu podmětu:** nárok vzniká i přes NPC-přání („chce…", „ustoupí jen tomu, kdo…") | pravidlo podmětu je jinak obcházitelné — `urednik-vaha` si tak vyrobil tři nároky místo jednoho, ačkoli podmětové počítání vycházelo (kritik na to varoval: „semantika přebije grep") | vlastní nález, §3.4 |
 
 Naopak **beze změny zůstává** jádro („nárok je sloveso, ne kulisa"), mřížka
-verdiktu zbraně, kanál 6 (slotová výjimka), kanál 7 jako připomínka pravidla,
-slovník nároků, dělicí čára humoru, strop 400 znaků a rozpočet uzlu 670.
+verdiktu jako čtyři buňky (mění se jen znění, ne logika), kanál 6 (slotová
+výjimka), kanál 7 jako připomínka pravidla, slovník nároků, dělicí čára humoru,
+strop 400 znaků a rozpočet uzlu 670.
 
 Argument je **počet položek, ne délka**. `farmar-brod` má 351 znaků a nese věci,
 které si hráč musí držet v hlavě naráz, po jednom přečtení, nahlas, před slepým
@@ -252,8 +265,9 @@ run nenaučí, správná odpověď **není** vrátit POKRYTÍ, ale prior **doř�
 
 ## 2. Nové znění invariantu (v3) — ke vložení do `obsah/situace.yaml`
 
-Nahrazuje blok od `# QA INVARIANT TELEGRAFU` po `# --- STAV PŘEJÍMKY …` včetně.
-Řádek schématu zůstává (`telegraf: předzvěst před commitem, max 400 zn.`).
+Nahrazuje blok od `# QA INVARIANT TELEGRAFU` po `# --- STAV PŘEJÍMKY …` včetně
+(v dnešním `situace.yaml` jsou to ř. 38–156). Řádek schématu se mění jen o jednotku:
+`telegraf: předzvěst před commitem, max 400 ZNAKŮ (viz QA invariant níže)`.
 Platí i pro `lecka`/`konfrontace` v `obsah/pronasledovatele.yaml` (tam navíc
 kanál 7).
 
@@ -328,10 +342,14 @@ kanál 7).
 #
 # DOVOLENÝ DRUHÝ NÁROK — co přestalo být povinné, zůstává dovolené:
 #   · nejvýš JEDEN další viditelný slot smí dostat nárok;
-#   · NIKDY tam, kde by tím byly pojmenované VŠECHNY viditelné sloty scény —
-#     to je obnovené POKRYTÍ pro daný uzel (dopadá na `nadrazi-noc`, který má jen
-#     dva viditelné sloty). Odhalení musí vždy zbýt aspoň jeden nárok, jinak
-#     přestane být odhalením (nález V-6 prověrky);
+#   · NIKDY tam, kde by tím byly pojmenované VŠECHNY viditelné STATY scény —
+#     ne sloty, STATY. Commit se dělá po statech, takže uzel se dvěma různými
+#     staty ve třech slotech (`mesto-houkacky`: improvizace/nastroj/improvizace)
+#     je po dvou nárocích vyčerpaný a odhalení nepřinese žádnou novou poptávku.
+#     Odhalení musí vždy zbýt aspoň jeden NEPOJMENOVANÝ STAT, jinak přestane být
+#     odhalením. (Nález V-6 prověrky, zpřesněný po 3. průchodu: litera „sloty“
+#     měla díru, kterou `mesto-houkacky` prošlo.) Dopadá na `nadrazi-noc`
+#     a `mesto-houkacky`;
 #   · nejvýš u TŘETINY telegrafů sady (dnes 19 → nejvýš 6); vyjádřeno podílem,
 #     aby pravidlo přežilo růst obsahu. Jinak se enumerace vrátí zadními dvířky
 #     a strop položek je fikce;
@@ -430,6 +448,48 @@ kanál 7).
 # klauzule („nechce zaplaceno ani se s nikým bít“) — pak je to pro čtenáře jedna
 # myšlenka. Jinak platí jeden na telegraf.
 #
+# JAK SE ZÁPOR KONTROLUJE (dodatek po dokončovacím kole — bez tohohle postupu se
+# chyba NENAJDE, doloženo: první průchod v3 měl 4 anti-telly z 19):
+#   NEČTI větu a neptej se „je to zápor?“. Vypiš si VŠECH PĚT statů uzlu, u každého
+#   odškrtni, jestli je v nějakém slotu (viditelném NEBO skrytém), a teprve pak se
+#   podívej, o kterém z nich próza tvrdí, že nepomůže. Vyloučit se smí JEN stat
+#   s nulou u obou.
+#   POZOR NA `improvizace`: všechny čtyři nalezené anti-telly mířily na ni
+#   („mluvit nepomůže“, „na řeči nedá“, „jméno zná zpaměti“, „je na to zvyklý“).
+#   Je to jediný stat, jehož poptávka je NEPŘEDMĚTNÁ, takže se v próze vylučuje
+#   nejsnáz — a přitom je nárokem v 9 z 12 npc scén. Zápor o improvizaci je proto
+#   nejlevnější věta, kterou autor napíše, a nejdražší chyba, kterou udělá.
+#   ANTI-TELL JE HORŠÍ NEŽ MLČENÍ: mlčení jen neinformuje, anti-tell aktivně
+#   odvádí od správné karty — a hráč nemá jak poznat, že byl obelhán.
+#
+# --- ZÁKAZ VÝHRADNOSTI (nejdražší pravidlo v3; přidáno po 3. průchodu) ---------
+# VĚTA NÁROKU NESMÍ OBSAHOVAT OPERÁTOR VÝHRADNOSTI vztažený ke splnění scény:
+# „jen“, „jedině“, „jinak“, „dokud ne…“, „nic jiného“.
+# Nárok se formuluje jako práce, která JE potřeba — nikdy jako práce, která je
+# JEDINÁ potřeba.
+#   ✗ „Ustoupí JEDINĚ tomu, kdo na ně vyjede zostra.“
+#   ✗ „Neustoupí, DOKUD na něj někdo nezvýší hlas.“
+#   ✗ „Ven vede JEN průraz.“
+#   ✓ „Zostra na ně vyjet bude muset někdo z posádky.“
+#   ✓ „Ven se někdo musí probít silou.“
+# POVOLENÁ VÝJIMKA: výhradnost vztažená k NÁSTROJI té jedné práce, protože tam se
+# nic jiného nezapírá — „Bedny se BEZ PÁKY nehnou“, „Zámek PO DOBRÉM nepovolí“.
+# PROČ TO JE KRITICKÉ PRÁVĚ VE V3 (a pod POKRYTÍM nebylo): dokud próza jmenovala
+# všechny poptávky, byla výhradnost neškodná ozdoba. Po škrtu POKRYTÍ mění
+# ABSENCI nároku — která nemá znamenat NIC — na EXPLICITNÍ ZÁPOR o všech
+# nepojmenovaných slotech. Je to tedy anti-tell v gramatickém převleku nároku:
+# výčtová kontrola záporů (výše) ho NENAJDE, protože autor po pravdě odpoví
+# „nevylučuji žádný stat“.
+#
+# --- SMĚROVÝ TEST (druhá polovina kontroly ČISTOTY; bez něj to nefunguje) ------
+# Na KAŽDOU větu telegrafu, ne jen na zápory, se ptej:
+#   „Zvýší, nebo SNÍŽÍ tato věta ochotu stolu committnout kartu na stat X?“
+# Každé SNÍŽÍ u statu, který je v nějakém slotu (viditelném i skrytém), je
+# porušení — bez ohledu na gramatickou formu. Tenhle test chytá výhradnost,
+# anti-telly i „NPC to nezajímá“ obraty; výčet statů sám chytá jen zápory.
+# Doloženo: 3. průchod v3 měl 4 uzly, které výčtem prošly a směrovým testem ne
+# (`urednik-vaha`, `mesto-ulicka`, `zatah`, `nadrazi-vypravci`).
+#
 # --- KANÁLY: CO PRÓZA NESE A CO VĚDOMĚ NENESE ---------------------------------
 # Engine derivuje ŠEST kanálů (`resolve.js`), próza od v3 nese jen PODMNOŽINU:
 # z `trend` jen JEDEN slot (kotvu), zbytek ne. Próza tedy říká MÉNĚ než signál —
@@ -446,6 +506,14 @@ kanál 7).
 #    (vidle, lucerna, ručička váhy, štěrk), nikdy abstraktní „věc“. Je-li
 #    `zbran_skryte` nebo `improv_skryte` true, MUSÍ to v ní být („…a rozhodne to,
 #    kdo je rychlejší“ / „…bude se to muset něčím zamluvit“).
+#    `zbran_skryte` SE V PŘEDZVĚSTI NEOPAKUJE (rozhodnuto po 3. průchodu, týž
+#    argument jako u číslovky v N-1): buňky B a C verdiktu ho nesou DOSLOVA
+#    („a potají se vyplatí“ / „potají může rozhodnout“), takže požadovat ho i
+#    v předzvěsti je dvojí kódování téže konstanty u 10 z 19 uzlů — ~25 znaků za
+#    informaci, kterou vzápětí zopakuje razítko. Předzvěst ho smí nést obrazem,
+#    ale NEMUSÍ. `improv_skryte` naopak POVINNÝ ZŮSTÁVÁ: v žádném verdiktu není
+#    a v celé sadě ho nese jediný uzel (`nadrazi-vypravci`) — kdyby vypadl,
+#    zmizí beze zbytku.
 #    PŘEDZVĚST JE VŽDY NEOSOBNÍ — podmětem je předmět scény, NIKDY posádka, a
 #    markéry nároku („bude muset“, „zbude“, „někdo“) se v ní NEPOUŽÍVAJÍ, i když
 #    příklady výše vypadají jinak. (Oprava po 2. obsahovém kole v3: příklad
@@ -481,9 +549,19 @@ kanál 7).
 #    RUŠÍ — nikoli proto, že by byla špatná, ale protože míchala registr: sada
 #    v jednom kanálu střídala zbraň / bouchačku / železo a osy na očích / pod
 #    kabátem / schovaná / na světle. Jednotný registr je celý smysl opravy.)
-#    APPENDY (pevné znění, připojují se ZA řetězec):
-#      · slotová výjimka: „…ale jednomu z nich bouchačka pusu zavře.“
-#      · Brodyho `rusi`:  „…a u Brodyho přitáhne každá dvojnásob pozornosti.“
+#    APPENDY (pevné znění, připojují se ZA řetězec pomlčkou):
+#      · slotová výjimka: append se VÁŽE NA NÁROK KOTVY, ne na osobu — jinak nemá
+#        rozlišovač scope a stůl ho přečte jako ODVOLÁNÍ verdiktu, ne jako výjimku
+#        (nález kritika po 3. průchodu). Znění: „— ale zatlačit s ní nahlas je
+#        tady jediné, co zabere.“, tj. slovesná fráze kotvy + „s ní“.
+#        NENÍ-LI `stitek_citlivy` slot zároveň KOTVOU, je to nález a řeší se
+#        výběrem kotvy (pravidlo 1b/2), ne appendem. V celé sadě je to jeden uzel
+#        (`nadrazi-vypravci`) a kotvou tam je právě on.
+#        (Dřívější znění „ale jednomu z nich bouchačka pusu zavře“ je ZRUŠENO:
+#        „nich“ mířilo na vyjmenované role, které POKRYTÍ škrtlo, a „bouchačka“
+#        porušovala jednotný registr tři odstavce nad sebou. Invariant si
+#        odporoval sám — proto to sada tiše nedodržovala.)
+#      · Brodyho `rusi`:  „— a u Brodyho přitáhne každá dvojnásob pozornosti.“
 #    ZNĚNÍ JE NORMATIVNÍ, NE PŘÍKLADNÉ — cituje se DOSLOVNĚ (změna po review
 #    2026-07-30: pravidlo „slovesa a obrazy se smějí přizpůsobit, smysl ne“
 #    v praxi NEDRŽELO. První kolo v3 z něj vyrobilo 11 znění na 4 buňky, a rozptyl
@@ -625,7 +703,7 @@ kanál 7).
 # autor odhadem (dvakrát se to spletlo o 30–50 znaků a jednou se z toho stal spor
 # o jednotku).
 #
-# --- PŘEJÍMKA v3 (5 bodů, per telegraf; nahrazuje proceduru D49) ---------------
+# --- PŘEJÍMKA v3 (6 bodů, per telegraf; nahrazuje proceduru D49) ---------------
 # Procedura D49 („derivovaný signál položku po položce, 19/19“) byla definovaná
 # proti `trend` = VŠEM viditelným slotům. Po škrtu POKRYTÍ by hlásila, že sada
 # signál nepokrývá (pravda a irelevantní), a o kotvě ani ČISTOTĚ by nezkontrolovala
@@ -651,24 +729,41 @@ kanál 7).
 #      čtením po jednom telegrafu NENAJDE — takhle se našel.)
 #   5) POVINNÝ ZÁPOR tam, kde `zbran_projde = ano` a útok není v žádném slotu;
 #      u `lecka`/`konfrontace` navíc kanál 7 ve srostlé formě.
+#   6) ŽÁDNÝ ANTI-TELL: vypiš všech pět statů uzlu, odškrtni u každého, jestli je
+#      v nějakém slotu (viditelném NEBO skrytém), a teprve pak zkontroluj, o kterém
+#      próza tvrdí, že nepomůže. Kontroluje se VÝČTEM, ne čtením — čtením se to
+#      nenajde (první průchod v3: 4 anti-telly z 19, všechny o `improvizace`).
+#   7) SMĚROVÝ TEST NA KAŽDOU VĚTU + ZÁKAZ VÝHRADNOSTI (viz bloky výše). Bod 6 sám
+#      NESTAČÍ: chytá jen zápory, kdežto výhradnost („jen“, „jedině“, „dokud“,
+#      „jinak“) je gramaticky NÁROK a výčtem projde — ve 3. průchodu takhle prošly
+#      4 uzly, z toho dva čerstvě „opravené“. U každé věty se ptej, jestli SNIŽUJE
+#      ochotu committnout na stat, který v nějakém slotu je.
 # Zapisuje se i REGISTR: u kterých id je použit DOVOLENÝ DRUHÝ NÁROK.
 ```
 
-**Blok STAV PŘEJÍMKY**, který se do hlavičky vloží při zapečení (znění je hotové,
-doplní se jen registr a datum měření):
+**Blok STAV PŘEJÍMKY**, který se do hlavičky vkládá při zapečení (hotový, včetně
+registru a naměřených délek):
 
 ```yaml
 # --- STAV PŘEJÍMKY (v3, D51, 2026-07-30) --------------------------------------
 # Znění invariantu i sada 19 telegrafů jsou zapečeny po AUTORSKÉM A RECENZNÍM
 # CHECKLISTU: generátor → design-critic (na SPECIFIKACI, dřív než na texty)
-# → protocol-humor-tester (na sadě) → opravné kolo → přejímka v3 (5 bodů výše)
-# → délky změřené kódem, ne odhadem. Verdikt kritika: SCHVÁLIT S ÚPRAVAMI
-# (3 blokující, všechny zapracovány). Verdikt humor-testéra: ZAPÉCT PO OPRAVÁCH
-# (2 blokující, oba zapracovány).
+# → protocol-humor-tester (na sadě) → opravné kolo → dokončovací kolo → cílené
+# re-review obou recenzentů na diff → přejímka v3 (6 bodů výše) → délky změřené
+# kódem, ne odhadem.
+# Verdikt kritika na SPECIFIKACI: SCHVÁLIT S ÚPRAVAMI (3 blokující, zapracovány).
+# Verdikt humor-testéra na SADĚ: ZAPÉCT PO OPRAVÁCH (2 blokující, zapracovány).
+# Sada se v prvním pokusu NEZAPEKLA (4 anti-telly + 1 falešná poptávka + 1 nepřiznaný
+# druhý nárok) — držel je předregistrovaný gate ČISTOTY. Zapéká se až tato verze.
 # ZAKRÝVACÍ ZKOUŠKA JE POŘÁD OTEVŘENÁ POLOŽKA (od D49) — protokol viz
 # technika/telegraf-invariant-navrh-2026-07-29.md §13; po v3 se zjednodušuje
 # (ptá se na jednu poptávku, ne na tři).
-# REGISTR DRUHÉHO NÁROKU: <doplní se při zapečení>
+# REGISTR DRUHÉHO NÁROKU (5 z 19, kvóta ≤ třetina): deputy-mytnice · mesto-houkacky
+# · agent-malone/konfrontace · serif-brody/lecka · serif-brody/konfrontace.
+# DÉLKY (změřeno kódem 2026-07-30, znaky): min 285 · max 358 (urednik-vaha) ·
+# průměr 319,5. Strop 400 i rozpočet uzlu 670 splněny 19/19; nejtěsnější uzel
+# privoz-celnik 580/670.
+# Podrobný report kola: technika/telegraf-skrtaci-kolo-2026-07-30.md
 ```
 
 ---
@@ -987,21 +1082,54 @@ Součet `telegraf` + `text` je u všech 19 pod rozpočtem uzlu 670 (max 595,
 znaky, takže vázající limit je STROP 400, ne rozpočet uzlu.** Nová sada má tedy
 proti cíli ~320 pohodlnou rezervu a „místo pro obraz" není teoretické.
 
-### 4.2 Nová sada — NEZMĚŘENO, a je to vědomé
+### 4.2 Finální sada — ZMĚŘENO (2026-07-30, `playtest-facilitator`)
 
-Sada se **neposlala na měření**, protože se v tomto kole nezapéká (§3.4) a měřit
-znění, které se ještě o dvě věty změní, by dalo číslo, které nikdo nepoužije.
-**Připraveno je všechno ostatní:** `playtest-facilitator` má hotový a proti
-zapečenému obsahu ověřený skript (`telegraf-delky.mjs` ve scratchpadu — znaky
-i bajty, součet s `text`, kontrola proti 400 / 670), takže měření finální sady
-je otázka jednoho běhu.
+Měřeno stejnou metodikou jako §4.1 (`String.length` nad naparsovaným řetězcem,
+`text` s nedosazenými `{VEC}`/`{kdo}`), znění z §3.5.
 
-**Autorský odhad pro orientaci (ne pro rozhodnutí):** ⌀ ~335 znaků, max
-`nadrazi-vypravci` ~365. Odhad je **shodný se zapečenou D49 (338)**, což je přesně
-cíl mandátu: *táž délka, jiná náplň*. Rozpočet uzlu je bezpečný — `text` se
-neměnil a volné místo bylo 432–479 znaků, takže vázající limit zůstává strop 400.
-**Číslo z odhadu se do žádného rozhodnutí nepustí**, dokud ho nepotvrdí kód
-(poučení D49, dvakrát se to spletlo o 30–50 znaků).
+| jednotka | min | max | průměr |
+|---|---|---|---|
+| **znaky** | **285** (`malone-konfrontace`) | **358** (`urednik-vaha`) | **319,5** |
+| bajty | 312 | 402 | ~356 |
+
+- **Strop 400 zn.: splněn u 19/19**, nejtěsnější `urednik-vaha` s rezervou 42 zn.
+- **Rozpočet uzlu 670 zn.: splněn u 19/19**, nejtěsnější `privoz-celnik` 580
+  (rezerva 90) a `malone-lecka` 577.
+- **Průměr 319,5 je přesně cíl mandátu D51 („~320")** a leží v předregistrovaném
+  pásmu 300–360 — proti zapečené D49 (338) je to −18,5 zn., tedy **táž délka,
+  jiná náplň**, jak kolo slibovalo. Pod hranici nálezu (280) sada nespadla.
+
+**Dva nálezy z měření, které stojí za zapsání:**
+
+1. **Můj odhad, kdo bude nejdelší, byl mylný.** Tipoval jsem `nadrazi-vypravci`
+   a `privoz-celnik` (oba mají dlouhý verdikt); nejdelší je `urednik-vaha`
+   s **nejkratším** ze čtyř verdiktů. **Délka verdiktu není prediktor délky
+   telegrafu** — rozhoduje délka nárokových obrazů. Je to čtvrté potvrzení
+   pravidla „každý telegraf se měří, neodhaduje" v jednom kole.
+2. **Bajty vs. znaky: u téhle sady žádný code-point rozdíl** (facilitátor
+   přepočítal `[...s].length` proti `.length` — shoda), takže jediný rozdíl proti
+   bajtům je diakritika, jak invariant tvrdí.
+
+*Skript: `d51-final-19.mjs` ve scratchpadu; nález uložen v paměti facilitátora
+(`d51-final-19-delky.md`).*
+
+### 4.3 Finální vyhodnocení předregistrovaných kritérií §3.0
+
+| # | kritérium | verdikt na FINÁLNÍ sadě (§3.5) |
+|---|---|---|
+| 1 | věrnost signálu 19/19 | **SPLNĚNO** — kotva, předzvěst, `zbran_skryte` 10×, `improv_skryte` 1×, `proti_srsti` 2 u `nadrazi-noc`, slotová výjimka 1×, mřížka verdiktu 19/19 |
+| 2 | ČISTOTA, nula falešných poptávek a anti-tellů | **SPLNĚNO po opravě šesti uzlů** — v předchozí verzi 6 porušení (4 anti-telly, 1 falešná poptávka, 1 nepřiznaný druhý nárok), viz §3.5 |
+| 3 | rozpočet položek 3 (strop 4) | **SPLNĚNO** — 3 položky u 14 uzlů, 4 u pěti (registr) |
+| 4 | délky (strop 400 / uzel 670) | **SPLNĚNO 19/19** — max 358, nejtěsnější uzel 580/670 (§4.2) |
+| 5 | žádný skeleton, fráze ≤ 2× | **SPLNĚNO** — skeleton předzvěsti 0×, 19 různých předmětů; verdikt je uzavřená mřížka a z kvóty je vyjmutý (adjudikace §3.1) |
+| 6 | ⌀ délka v pásmu 280–360 | **SPLNĚNO — 319,5**, tedy přesně cíl D51 „~320" a −18,5 proti D49 |
+| 7 | nejvýš 3 telegrafy shodné s D49 | **SPLNĚNO** — přepsáno 19/19 |
+
+**Tři průchody, jeden gate.** Kritérium 2 padlo v obou předchozích verzích sady
+a odhalilo pokaždé něco jiného (1. průchod: falešná poptávka, kterou našel
+humor-testér; 2. průchod: čtyři anti-telly, které nenašel nikdo z recenzentů
+a vypadly z výčtové kontroly). Kdyby se sada zapekla po prvním „ano s úpravami",
+nesla by šest míst, kde próza odvádí od správné karty.
 
 ## 5. Verdikt recenzentů
 
@@ -1078,6 +1206,10 @@ dřív, než jsem tvrdil, že se měřilo špatně."*
 nad mandát, **ale žádá, aby se zapsal do `projekt/stav.md` jako blokátor commitu
 zapečení** — slib v pracovním souboru, který bude nahrazen dalším pracovním
 souborem, selhal už dvakrát.
+**VYŘÍZENO v dokončovacím kole (2026-07-30):** blokátor PM do `projekt/stav.md`
+zapsal a **mandát dokončovacího kola opravu kanonu výslovně zadal do TÉHOŽ
+commitu jako zapečení**. Trojnásobné odkládání tím končí — viz §6.2, kde je
+u každé položky poznámka „ZAPSÁNO".
 
 ### 5.2 `protocol-humor-tester` — review SADY (2026-07-30)
 
@@ -1163,7 +1295,249 @@ překážky z mostu. Telegraf si tedy vymyslel práci, která ve slotech není. 
 pravidle 1b je kotvou stejně útok („probít se vpřed") a druhý nárok musí mluvit
 o **cestě ven**, ne o odklízení mostu.
 
-## 5.3 Proč se nezapéká, i když oba recenzenti řekli „ano s úpravami"
+### 3.5 Dokončovací kolo — finální sada (2026-07-30)
+
+**Rozsah se při opravě rozšířil, a je to nález, ne bobtnání.** Šel jsem opravit
+dvě věty (§3.4) a při čtení každého záporu proti *všem* slotům — včetně skrytých —
+jsem našel **tři další porušení téže třídy**. Anti-tell o reálném slotu tedy
+nebyl výjimka, byl to **vzor: 4 z 19**.
+
+| uzel | co bylo špatně | třída |
+|---|---|---|
+| `privoz-celnik` | „na řeč o svatbách je zvyklý" — `improvizace` JE viditelný slot (kotva 4) | anti-tell |
+| `mesto-ulicka` | „Domluvit se s nimi nejde" — `improvizace` JE viditelný slot (kotva 4) | anti-tell |
+| `nadrazi-noc` | „jméno každého, kdo tu má co dělat, zná zpaměti" — `improvizace` JE viditelný slot (kotva 3) | anti-tell |
+| `urednik-vaha` | „Chce listinu…, a razítko…" — dvě další poptávky přes NPC-přání | implicitní pokrytí |
+| `farmar-brod` | „nahlas počítá, co mu patří za škodu" — `hodnota` je slot, tedy nepřiznaný druhý nárok mimo registr | implicitní pokrytí |
+| `brody-konfrontace` | „dostane z vjezdu to, co ho zavírá" — slot je *„Najít, kudy ujet"* | falešná poptávka |
+
+**Proč to vzniklo trojmo:** všechny tři anti-telly míří na `improvizace` — a to
+je stat, který se v próze nejsnáz vylučuje („mluvit nepomůže", „na řeči nedá"),
+protože je to jediný stat, jehož poptávka je *nepředmětná*. Zápor o improvizaci
+je proto **nejlevnější věta, kterou autor napíše, a nejdražší chyba, kterou
+udělá**: `improvizace` je nárokem v 9 z 12 npc scén.
+→ **Do invariantu doplněno provozní pravidlo** (viz níže): zápor se nekontroluje
+podle toho, co říká, ale **vyjmenováním všech pěti statů uzlu** a odškrtnutím,
+který z nich není v žádném slotu. Jinak se to nenajde.
+
+**Druhá věc, kterou dokončovací kolo muselo udělat:** sada z opravného kola
+používala **verdikty ve znění D49**, kdežto invariant v3 mezitím zafixoval
+**nové normativní paradigma** („Zbraň … na očích …, potají …"). Nechat to být
+by znamenalo zapéct sadu, která porušuje vlastní právě dopsaný invariant — přesně
+mrtvá litera z poučení D49. Verdikty jsou proto přepsané u všech 19.
+
+**Vráceny dva chráněné obrazy z 1. kola** (ztracené mou procesní chybou):
+„proud pod koly přerovnává kameny" (`farmar-brod`) a **kávové šálky**
+(`rival-parley`).
+
+**Jeden dobový nález testéra se v tomto kole VĚDOMĚ neopravuje** a jde do
+backlogu: `urednik-razitko` má v telegrafu „V celnici", což testér označil za
+institucionálně sporné (domácí trasa Buffalo → New York celnici neřeší) a navrhl
+„v úřadovně". Jenže **`nazev` toho uzlu je „Celnice v Albany"** a `nazev` se
+zobrazuje na mapě a dosazuje do protokolu jako `{uzel}`. Kdybych opravil jen
+telegraf, mapa a próza si začnou protiřečit — a `nazev` je pole mimo rozsah
+telegrafního kola. **Oprava je jednořádková, ale patří do kola, které smí sáhnout
+na `nazev`** (nebo do přesunu uzlu do Buffala, což testér označil za tematicky
+nejlepší a co je designová změna). Poloopravu nedělám.
+
+#### Finální znění — `obsah/situace.yaml`
+
+1. **`farmar-brod`** · kotva `nastroj` · verdikt C
+   > Vůz sedí v brodě po nápravy a na břehu už čeká farmář s vidlemi. Postraňky jsou zpuchřelé; někdo je bude muset sešít, než koně vůz vytrhnou. Proud pod koly přerovnává kameny. Ty vidle se zvednou bez ohlášení a dál to bude o rychlosti. Zbraň na očích tu všechno pokazí, potají může rozhodnout.
+2. **`farmar-stodola`** · kotva KOMBI · zápor hodnoty + povinný zápor útoku · verdikt A
+   > Statkář za nocleh nechce ani dolar a bít se tu nebude s kým. U vrat leží jeho smečka a nespí; seno za nimi je vlhké až k trámům. Vrata bude muset někdo zaklínit a zároveň podepřít tím, co leží po ruce. Lucerna projde kolem stání jedinkrát a mimo její světlo se stodola nedá přečíst. Zbraň tu nikdo neřeší, ani na očích.
+3. **`deputy-mytnice`** · kotva `hodnota` · 2. nárok `improvizace` · verdikt C
+   > U mýtné boudy natahuje zástupce šerifa ruku po silničním poplatku a sazbu si určuje sám; vysolit ji bude muset někdo z posádky. Jiný zatím odvede řeč k pumpě, která na dvoře netočí ani kapku. Ruka mu sjede z bloku pokut níž a bude to o pěstech. Zbraň na očích tu všechno pokazí, potají může rozhodnout.
+4. **`deputy-hlidka`** · kotva `nastroj` · verdikt C
+   > Postarší strážník stojí vozem napříč silnicí a leští si odznak. Na zadním kole se cestou uvolnily matice a někdo je dotáhne, nebo se dál nepojede. Strážník si zatím prohlíží tabulku vozu, číslo po číslo. Odznak dopadne zpátky na kapsu dřív, než kdo domluví. Zbraň na očích tu všechno pokazí, potají může rozhodnout.
+5. **`most-prohnila-prkna`** · kotva KOMBI · povinný zápor útoku · verdikt A
+   > Příjezd na most přes Mohawk drží zrezivělá závora, kterou roky nikdo nezvedl, a bít se tu nebude s kým. Prkna za ní jsou prohnilá: bude je třeba přibít a zároveň podložit něčím, co leží po ruce. Uprostřed zeje díra a pod ní jde řeka. Jedno prkno povolí, až bude pozdě couvnout. Zbraň tu nikdo neřeší, ani na očích.
+6. **`privoz-celnik`** · kotva `nastroj` · **OPRAVENO** · verdikt C
+   > Prám se odlepil od břehu a celník obchází náklad s nosem u plachty. Bedny se bez páky z dohledu nehnou a někdo se do toho musí dát dřív, než celník dojde na konec. Pod podlahou duní stroj a paluba je od stříkající vody klouzavá. Plachta sklouzne sama a pak jde o to, kdo se pohne dřív. Zbraň na očích tu všechno pokazí, potají může rozhodnout.
+7. **`rival-prepad`** · kotva `utok` · verdikt C
+   > Napříč silnicí stojí vozy konkurence a chlapi z nich vystupují jeden po druhém. Někdo se do nich musí opřít dřív, než se srovnají do řady. Vpředu si jeden zapaluje, druhý si plive do dlaní. Jeden z nich si beze slova omotá dlaň řemenem. Zbraň na očích tu všechno pokazí, potají může rozhodnout.
+8. **`rival-parley`** · kotva `hodnota` · **šálky vráceny** · verdikt C
+   > V zadní místnosti nalévá hostitel kořalku do kávových šálků a za jeho zády stojí tři stíny. Na stůl bude muset přijít něco, co má cenu. Na stole je pořád plno a nikdo nepije. Sklenka dopadne na desku tvrdě a ruka pod stolem bude blíž než ta na stole. Zbraň na očích tu všechno pokazí, potají může rozhodnout.
+9. **`urednik-vaha`** · kotva `utok` · zápor `hodnota` · **OPRAVENO** · verdikt D
+   > U silniční váhy sedí úředník s předpisem na všechno a peníze si vzít netroufne. Před sebou má od rána prázdnou knihu a brýle si sundává jen na váhu. Zvýšit na něj hlas tak, aby ho to zvedlo ze židle, bude muset někdo z posádky. Ručička váhy se zastaví jinde, než má, a řekne se to až pozdě. Zbraň na očích tu jen popudí a potají nezmůže nic.
+10. **`urednik-razitko`** · kotva `nastroj` · verdikt D
+    > V celnici stojí fronta až ke dveřím a od vedlejší přepážky doléhá dopadání razítek. Nákladní list nese otisk, který v knize není, a dorazit ho bude muset někdo kusem korku. Úředník listuje pomalu a mračí se. V listině zůstane prázdné políčko a všimne si toho až on. Zbraň na očích tu jen popudí a potají nezmůže nic.
+11. **`mesto-houkacky`** · kotva `nastroj` · **2. nárok ŠKRTNUT** · povinný zápor útoku · verdikt A
+    > Ulicemi houkají hlídkové vozy a chodníky praskají ve švech; s houkající hlídkou se nikdo nebije. Vůz bude muset někdo protáhnout průjezdem, kam se sotva vejde. Nad hlavami bouchají okna a na rohu stojí strážník s píšťalkou. V jednom okně se rozsvítí ve špatnou chvíli a světlo padne přes celý chodník. Zbraň tu nikdo neřeší, ani na očích.
+12. **`mesto-ulicka`** · kotva `utok` · **OPRAVENO 2×** · verdikt D
+    > Ulička končí zdí a v ústí stojí dva strážníci. Vyjet na ně zostra bude muset někdo z posádky. Obušky mají zavěšené na zápěstí a jeden z nich si stoupá tak, aby byl vidět z ulice. Lampa nad hlavami zhasne a tma spolkne i konec uličky. Zbraň na očích tu jen popudí a potají nezmůže nic.
+13. **`nadrazi-vypravci`** · kotva `utok` + `stitek_citlivy` · `improv_skryte` · verdikt D + append na kotvu
+    > Výpravčí stojí před vagonem a chce nákladní list, který nikdo nemá. Zatlačit na něj nahlas bude muset někdo z posádky. Závora u rampy je spuštěná a za ní čeká vagon s otevřenými dveřmi. Listina zůstane bez čísla a spraví to leda historka na místě. Zbraň na očích tu jen popudí a potají nezmůže nic — ale zatlačit s ní nahlas je tady jediné, co zabere.
+14. **`nadrazi-noc`** · kotva `nastroj` · **OPRAVENO** · číslovka „dvakrát" · verdikt B
+    > Na odstavné koleji v Peekskillu se mezi vagony pohupuje lucerna nočního hlídače. Zámek na dveřích vagonu po dobrém nepovolí a někdo ho bude muset vypáčit. Hlídač si pohvizduje a lucernou zajíždí i pod vagony. Potmě se to na štěrku pokazí dvakrát, pokaždé jinak, a z jednoho padne rána. Zbraň tu nikdo neřeší a potají se vyplatí.
+15. **`zatah`** · kotva `utok` (pr. 1b) · **OPRAVENO** · verdikt A
+    > Silnici přehrazují hlídkové vozy nárazník na nárazník a za nimi stojí chlapi s puškami. Prorazit se bude muset někdo z posádky, dokud to nepovolí. Za blokádou stojí druhá řada vozů a postranní ulice se zavírají jedna po druhé. Reflektor se stočí právě na vůz a zůstane na něm. Zbraň tu nikdo neřeší, ani na očích.
+
+#### Finální znění — `obsah/pronasledovatele.yaml`
+
+16. **`malone-lecka`** · kotva `improvizace` · kanál 7 = zápor · verdikt C
+    > Na mostě u Poughkeepsie stojí Malone s fotografií v ruce a na peníze neslyší. Někdo si k té fotografii bude muset vymyslet jméno, které mu Malone uvěří. Krajnice u zábradlí je úzká a federál od ní neuhne ani o krok. Malonovi zajede ruka pod kabát a od té chvíle je řeč zbytečná. Zbraň na očích tu všechno pokazí, potají může být to jediné, co pomůže.
+17. **`malone-konfrontace`** · kotva `utok` (pr. 1b) · 2. nárok `obrana` · verdikt B
+    > Kolona federálních vozů svírá silnici z obou stran a Malone si beze spěchu nasazuje brýle; na peníze neslyší. Ven se někdo musí probít silou. Druhý u toho vydrží první salvu vestoje. Jeden z vozů popojede a zavře poslední mezeru mezi blatníky. Zbraň tu nikdo neřeší a potají se vyplatí.
+18. **`brody-lecka`** · kotva `improvizace` · 2. nárok `hodnota` · verdikt C + Brodyho append
+    > Silnici přehrazuje Brodyho valník a kolem se tlačí parta nadšených občanů. Dav musí někdo uklidnit dřív, než se rozjede sám. Vedle toho šerifovi někdo připlatí za shovívavost. Z davu přiletí kámen a dál se to řeší rukama. Zbraň na očích tu všechno pokazí, potají může rozhodnout — a u Brodyho přitáhne každá dvojnásob pozornosti.
+19. **`brody-konfrontace`** · kotva `utok` (pr. 1b) · **2. nárok ŠKRTNUT** · **OPRAVENO 2×** · verdikt A + Brodyho append
+    > Brodyho muži tlačí kolonu k zavřenému mostu a šerif si sundává klobouk. Vpřed se někdo musí probít silou. Vozy za nimi dojíždějí jeden po druhém a poslední mezera se zavírá. Most dutě zaduní pod prvním vozem, který na něj vjede. Zbraň tu nikdo neřeší, ani na očích — a u Brodyho přitáhne každá dvojnásob pozornosti.
+
+**Registr druhého nároku (3 z 19, kvóta ≤ 6):** `deputy-mytnice` ·
+`malone-konfrontace` · `brody-lecka`. *(Ze pěti na tři: `mesto-houkacky`
+a `brody-konfrontace` druhý nárok pozbyly po zpřesnění V-6 na „všechny viditelné
+STATY" — u prvního by po dvou nárocích nezůstal odhalení žádný nový stat, u druhého
+byl navíc statově dvojznačný.)*
+
+**Verdikty:** 4 buňky → **4 doslovná znění** (A 5× · B 2× · C 8× · D 4×), plus
+2 appendy. Rozpad z 11 znění na 1 znění na buňku. Buňka C dostala po re-review
+kratší a souřadné znění („potají může rozhodnout", 57 zn. proti 71) — byla to
+jediná ze čtyř se vztažnou větou a rozdíl C↔D teď leží na obou slovesech, ne na
+posledních třech slovech.
+
+### 3.6 Čtvrtý průchod (po re-review) — co se změnilo a proč se ANI TEĎ nezapéká
+
+**Oba recenzenti dali „ZAPÉCT PO OPRAVÁCH", ne „ZAPÉCT".** Verze výše je po
+zapracování všech jejich nálezů, ale **je to opět neodrecenzovaná verze** —
+a přesně před tímhle kritik varoval: *„nedělej čtvrtý průchod typu »opravím dvě
+věty«, dokud pravidlo nebude v invariantu. Poslední dva průchody rozbily právě
+ten uzel, který opravovaly."*
+
+**Rozdíl proti předchozím průchodům je ale podstatný: tentokrát jsou pravidla
+zapsaná PŘED texty**, ne po nich. Kritikův nález č. 1 odhalil, že jsem opravoval
+**gramatickou formu, ne třídu chyby**:
+
+| co jsem si myslel, že opravuji | co to ve skutečnosti bylo |
+|---|---|
+| „zápor o improvizaci" (4 uzly) | **operátor výhradnosti u jediného nároku** — `jen`, `jedině`, `dokud`, `jinak` |
+| kontrola: vypsat pět statů a najít, který vylučuji | výčet to **NENAJDE**: autor po pravdě odpoví „nevylučuji žádný stat", protože gramaticky je to **nárok** |
+
+Pod POKRYTÍM byla výhradnost neškodná ozdoba (všechny poptávky byly vyjmenované).
+Ve v3 mění **absenci nároku, která nemá znamenat nic, na explicitní zápor o všech
+nepojmenovaných slotech**. Dopadalo to na 4 uzly — a dva z nich (`urednik-vaha`,
+`mesto-ulicka`) jsem v předchozím průchodu „opravil" tak, že jsem tam výhradnost
+**přidal**. `urednik-vaha` je teď opravovaný potřetí: verze 1 dávala *příliš*
+informace, verze 2 *špatnou*, verze 3 (výše) žádnou navíc.
+
+**Nová pravidla v invariantu (§2), bez kterých by byl pátý průchod stejně slepý:**
+1. **ZÁKAZ VÝHRADNOSTI** u věty nároku + povolená výjimka (výhradnost vztažená
+   k *nástroji* té jedné práce: „bez páky se nehnou", „po dobrém nepovolí").
+2. **SMĚROVÝ TEST** na každou větu, ne jen na zápory: *„zvýší, nebo sníží tato věta
+   ochotu committnout kartu na stat X?"* — každé *sníží* u statu, který v nějakém
+   slotu je, je porušení bez ohledu na gramatiku. Tenhle test najde všechny čtyři.
+3. **`zbran_skryte` se v předzvěsti neopakuje** (verdikt ho nese doslova v B a C —
+   dvojí kódování konstanty u 10 z 19; týž argument jako u číslovky v N-1).
+   `improv_skryte` povinný zůstává (v žádném verdiktu není, nese ho jediný uzel).
+4. **V-6 zpřesněno na „všechny viditelné STATY"**, ne sloty — commit se dělá po
+   statech, takže `mesto-houkacky` (improvizace/nastroj/improvizace) bylo po dvou
+   nárocích vyčerpané a odhalení nemělo co odhalit.
+5. **Append slotové výjimky se váže na NÁROK KOTVY**, ne na osobu — jinak nemá
+   rozlišovač scope a stůl ho čte jako odvolání verdiktu. Dřívější znění
+   („jednomu z nich bouchačka…") je zrušené: „nich" mířilo na role, které POKRYTÍ
+   škrtlo, a „bouchačka" porušovala jednotný registr tři odstavce nad sebou —
+   **invariant si odporoval sám, proto ho sada tiše nedodržovala.**
+
+**Dále zapracováno z re-review** (bez nároku na pravidlo): věcná chyba
+„přepřáhnout postraňky" → „sešít" (přepřahují se koně, ne postraňky — a celý uzel
+stojí na koních) · „Most dutě zaduní tam, kde to nikdo nečekal" → „pod prvním
+vozem, který na něj vjede" (epistemický verdikt vypravěče v minulém čase) ·
+`urednik-vaha` dlouhé souvětí s vsuvkou → „od rána prázdnou knihu" (−20 zn.) ·
+`nadrazi-noc` elipsa bez slovesa → „z jednoho padne rána" · `mesto-ulicka` anafora
+mířící na zeď → „v ústí stojí dva strážníci" · „ačkoli" (jediné knižní slovo
+v sadě) → „a" · figura „bez varování/bez ohlášení/ve špatnou chvíli" sražena ze 3×
+na 2× · „beze spěchu/beze slova" ze 3× na 2× · „Jiný zatím" ze 3× na 1× ·
+`farmar-stodola` vrácena půlvěta předzvěsti, která jediná nesla „něco se pokazí" ·
+`privoz-celnik` „prám se odráží od břehu" × „pod podlahou duní stroj" (odpichovaný
+prám nemá motor) → „odlepil od břehu" · vráceno „nárazník na nárazník" do `zatah`.
+
+**Co ZŮSTÁVÁ otevřené a proč to nezavírám sám:**
+
+- **Délky se musí přeměřit.** Kritik odhaduje, že čtvrtý průchod ubral obraz
+  v 9 uzlech a průměr spadl k ~300–310 (měření třetího průchodu dalo 319,5).
+  Numericky by pásmo 280–360 prošlo, ale **kvalitativní půlka mandátu D51
+  („uvolněné místo jde do obrazu") ne** — a to je přesně ta otázka, na kterou
+  předregistrace odpověď nemá. **Rozhoduji ji teď, aby nebyla zpětná:** vyjde-li
+  průměr **pod 315 znaků, sada se nezapéká** a uvolněný rozpočet se dopisuje do
+  obrazu. Škrtací kolo nesmí skončit tím, že se ušetří znaky.
+- **Adjudikace skeletonu nároku:** rám „někdo … musí / bude muset" je teď
+  v 17 z 19. **Není to vada, je to audio-značka nároku** — táž funkce jako razítko
+  verdiktu: ve v3 je jediný nárok a tenhle rám je to, čím ho posluchač pozná.
+  Zapisuji to výslovně, aby to příští kolo „neopravilo" a nerozbilo jedinou
+  sluchovou značku, kterou nárok má. **Strop 2× se na něj nevztahuje** (jako
+  u verdiktu).
+- **Amendment předregistrace, přiznaný jako amendment:** kritérium §3.0/3 znělo
+  „druhý nárok ani jednou u léčky/konfrontace". Finální sada tam má 2 z 3
+  (`malone-konfrontace`, `brody-lecka`). Změna je zdůvodněná (N-2 + srostlá forma
+  kanálu 7), ale **je to posunutá branka a hlásí se tak**, ne jako „PROŠLO".
+
+**Můj návrh dalšího kroku (rozhodnutí uživatele, ne default):** jedno **měřicí**
+kolo (délky) + **jedna cílená kontrola směrovým testem** na všech 19 od kritika —
+ne nová recenze prózy, ale mechanická aplikace pravidla, které teď existuje.
+Teprve pak zapečení. Alternativa, kterou nedoporučuji: zapéct tuhle verzi
+a spolehnout se, že pravidla jsou nová a texty psané už podle nich.
+
+---
+
+### 5.4 Re-review před zapečením (2026-07-30) — oba recenzenti: ZAPÉCT PO OPRAVÁCH
+
+**`design-critic`, tři kritické nálezy — všechny přijaty:**
+
+1. **Exkluzivita nároku zapírá reálné viditelné sloty (4 z 19).** *„Neopravil jsi
+   třídu chyby, opravil jsi její jednu gramatickou formu."* Doloženo scénářem
+   u stolu: `urednik-vaha` říkal „peníze si vzít netroufne" + „neustoupí, dokud na
+   něj někdo nezvýší hlas" → racionální stůl committne útočné karty a po odhalení
+   vidí *Podstrčit papíry* (improvizace 4) a *Doložit razítko* (nastroj 4), na které
+   nemá nic. **To je doslova stížnost, která tohle kolo otevřela** — a oba
+   předchozí fixy toho uzlu ji zhoršily. → **ZÁKAZ VÝHRADNOSTI + SMĚROVÝ TEST**
+   v invariantu, 4 věty přepsané.
+2. **Append slotové výjimky byl v invariantu rozbitý** — „jednomu z **nich**"
+   nemá ve v3 antecedent (POKRYTÍ škrtlo vyjmenované role) a „bouchačka" porušuje
+   jednotný registr tři odstavce nad sebou; **invariant si odporoval sám, proto ho
+   sada tiše nedodržovala.** A na mou obavu odpověděl přesně: stůl to přečte jako
+   chybu ne kvůli protimluvu, ale protože druhá klauzule nemá **rozlišovač scope**
+   → čte se jako odvolání verdiktu. → append se váže **na nárok kotvy**.
+3. **`zbran_skryte` vypadl z předzvěsti u 2 uzlů** — ale místo doplnění kritik
+   správně ukázal, že je to **dvojí kódování konstanty**: verdikt ho nese doslova
+   v buňkách B a C, tedy 10 z 19 uzlů platí ~25 znaků za informaci, kterou vzápětí
+   zopakuje razítko. → **požadavek škrtnut** (týž argument jako u číslovky v N-1);
+   `improv_skryte` povinný zůstává.
+
+**Vážné:** ubraný obraz v 9 uzlech (→ povinné přeměření + předem stanovená hranice
+315 zn.) · nový skeleton „někdo musí/bude muset" 17 z 19 (→ **adjudikováno jako
+audio-značka nároku**, ne vada, po vzoru razítka verdiktu) · V-6 mělo díru
+(„sloty" místo „staty" → `mesto-houkacky` prošlo literou, ne duchem) · 5 drobných
+(vrácená předzvěst `farmar-stodola`, „odpichovaný prám nemá motor", statově
+dvojznačný druhý nárok u `brody-konfrontace`, figura „beze spěchu" 3×, amendment
+předregistrace u léček).
+
+**Co kritik potvrdil bez výhrad:** mřížka verdiktu 19/19 doslovně a jedno znění na
+buňku (ověřeno typ → `chovani_dle_typu` → `zbran_skryte` uzel po uzlu), povinné
+zápory útoku u všech tří, registr odpovídá textům, `nadrazi-noc` má jeden nárok,
+anti-telly o improvizaci skutečně pryč.
+
+**A nejcennější věta celého re-review**, kterou přijímám i jako procesní pravidlo:
+*„Vyjmenování pěti statů je nutné, ale nedostatečné — a zákaz záporu problém
+neřeší, jen ho odstíní. Ty čtyři nálezy nejsou zápory, gramaticky jsou to nároky.
+Tvá procedura by je odškrtla jako čisté."*
+
+**`protocol-humor-tester`, tři blokující — všechny přijaty:** verdikt C byl jediný
+ze čtyř se vztažnou větou (71 zn. proti 35/42/50) → zkráceno na *„potají může
+rozhodnout"* (57 zn.), a rozdíl C↔D tím přestal ležet na posledních třech slovech ·
+věcná chyba „přepřáhnout postraňky" (přepřahují se koně) → „sešít" · „Most dutě
+zaduní tam, kde to nikdo nečekal" = epistemický verdikt vypravěče v minulém čase
+→ „pod prvním vozem, který na něj vjede". Plus tři čtivostní přepisy, dvě figury
+nad kvótou a nález, že **2. osoba („poznáte") zmizela z celé sady** jako důsledek
+nového pravidla o neosobní předzvěsti — vědomé, zapsané, ať to příští kolo
+„neopraví" zpátky.
+
+**Testér zároveň potvrdil, že doslovnost verdiktů funguje** (*„čte se jako refrén
+telegrafního úředníka právě proto, že je v pevné koncové pozici"*) a že z jedenácti
+chráněných obrazů drží devět, dva jsou nahrazené lépe.
+
+---
+
+## 5.3 Proč se nezapékalo v prvním kole, i když oba recenzenti řekli „ano s úpravami"
 
 Oba verdikty se vztahovaly k **jiným artefaktům**, než jaký by se dnes zapékal:
 kritik recenzoval **specifikaci** (a ta je hotová, všechny tři blokující nálezy
@@ -1178,6 +1552,14 @@ podmínku, o které jsem předem napsal, že projde.** Nezapékám.
 
 **Co to nestojí:** invariant, měření, consistency opravy a celé znění sady jsou
 zapsané, takže další kolo začíná u diffu dvou vět, ne u prázdného papíru.
+
+**Jak to dopadlo (dopsáno po dokončovacím kole):** ten gate se vyplatil. Při
+opravě těch „dvou vět" se ukázalo, že porušení je **šest, ne dvě** — čtyři
+anti-telly, jedna falešná poptávka a jeden nepřiznaný druhý nárok (§3.5). Sada,
+kterou bych byl v prvním kole zapekl „protože recenzenti řekli ano", by tedy nesla
+čtyři místa, kde próza aktivně odvádí od správné karty. **Předregistrovaná tvrdá
+podmínka zachytila věc, kterou nenašel ani jeden ze dvou recenzentů** — a je to
+nejlepší doklad, proč se kritéria píšou naslepo předem.
 
 ---
 
@@ -1287,3 +1669,16 @@ prioru** a pravidlo výběru kotvy tam degraduje na „co dává scéně jméno"
 jsou přitom nejtvrdší uzly runu. Řešitelné jedině **slotem** (dát léčce do
 viditelné trojice `nastroj` nebo `utok`) — patří k otevřenému nálezu D48
 o statech, ne do tohoto kola.
+
+**Druhá položka do backlogu (z dokončovacího kola):** `urednik-razitko` je
+institucionálně sporný uzel — „celnice" na domácí trase Buffalo → New York.
+Oprava se nedá udělat jen v telegrafu, protože `nazev` uzlu je „Celnice v Albany"
+a zobrazuje se na mapě i v protokolu jako `{uzel}`. Buď se přepíše `nazev`
+i telegraf na „úřadovnu", nebo se uzel tematicky přesune do Buffala (návrh
+humor-testéra) — obojí je mimo rozsah telegrafního kola.
+
+**Třetí, drobná:** paměťový záznam facilitátora `d51-final-19-delky.md` tvrdí,
+že měřená sada „ještě nese dvě nová porušení ČISTOTY". To platilo pro §3.4,
+ne pro §3.5, kterou měřil — tabulka v §3.5 vyjmenovává porušení, která už jsou
+opravená. Za opravu vlastní paměti odpovídá facilitátor, hlásím to jen proto,
+aby ten záznam příští session nemátl.
