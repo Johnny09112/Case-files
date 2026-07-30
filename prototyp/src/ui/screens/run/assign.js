@@ -3,9 +3,13 @@
  * Rozdělení committnutých věcí do odhalených slotů („rozděl 4 karty do 4 slotů
  * co nejméně špatně") + gamble jako jednorázová záchrana.
  *
- * Prahy jsou tady poprvé vidět — a rovnou s vysvětlením, z čeho vznikly
- * (anotace `misto: 'slot'` z vysvětlující vrstvy). Tohle je místo, kde se hráč
- * učí, že kotva je stálá a šum ne.
+ * **Prahy tady vidět NEJSOU (D51).** Kanon je „prahy skryté před vyhodnocením,
+ * odhalené po" (design-dokument §4.5 a §10) — obrazovka proto ukazuje jen
+ * KOTVU a rozpětí šumu (anotace `misto: 'slot'` z vysvětlující vrstvy).
+ * Kotva je stálá a naučitelná, takže learnabilita zůstává; finální zašuměný
+ * práh by z „rozděl co nejméně špatně" udělal dopočitatelnou aritmetiku
+ * a rozcházel by se s botem simulační brány, který prahy při přiřazení nezná.
+ * Přesný práh i jeho rozklad patří na obrazovku výsledku (`vysledek.js`).
  *
  * **Hlavní prvek obrazovky je PRÓZA situace** (fáze 2.2, nález 1. sezení lidské
  * brány): autorský text se 4 mezerami je kanon (§4.3) a slotové řádky bez něj
@@ -95,7 +99,7 @@ export function pohledPrirazeni(ctx) {
       { class: 'spis-hlavicka' },
       h('p', { class: 'formular-popisek' }, 'odhaleno — teď se dělí'),
       h('h1', {}, nazevSituace(content, situace)),
-      h('p', { class: 'napoveda' }, 'Klikni na věc, pak na mezeru v textu (nebo na roli v rozpisu). Práh je vidět; kotva se opakuje, šum ne.')
+      h('p', { class: 'napoveda' }, 'Klikni na věc, pak na mezeru v textu (nebo na roli v rozpisu). Vidíš kotvu, ne práh — kotva se opakuje, šum se dorolí a ukáže se až po vyhodnocení.')
     ),
     nevidiViditelnost.length > 0
       ? h(
@@ -212,7 +216,8 @@ export function pohledPrirazeni(ctx) {
       {
         class: `mezera${karta ? ' mezera-plna' : ' mezera-prazdna'}`,
         disabled: !karta && !vybranaKarta,
-        title: s ? `role ${slotIndex + 1}: ${s.role} — ${popisStatSlotu(s)}, práh ${s.prah}` : '',
+        // Tooltip nesmí obcházet D51: kotva ano, finální práh ne.
+        title: s ? `role ${slotIndex + 1}: ${s.role} — ${popisStatSlotu(s)}, kotva ${s.kotva} (práh až po vyhodnocení)` : '',
         onclick: () => (karta ? akce.zrusPrirazeni(slotIndex) : akce.prirad(slotIndex)),
       },
       karta ? `„${karta.nazev}"` : MEZERA,
@@ -239,7 +244,10 @@ export function pohledPrirazeni(ctx) {
         'div',
         { class: 'okraj-postava-radka' },
         h('strong', {}, `${s.slot_index + 1}. ${s.role}`),
-        h('span', { class: 'napoveda' }, `${popisStatSlotu(s)} · práh ${s.prah} · ${s.viditelnost === 'skryta' ? 'skrytá role' : 'viditelná role'}`)
+        // Mechanický řádek roli popisuje statem a viditelností; kotvu a rozpětí
+        // šumu nese anotace pod ním (jediné znění, sdílené s obrazovkou
+        // výsledku). Práh sem nepatří — D51.
+        h('span', { class: 'napoveda' }, `${popisStatSlotu(s)} · ${s.viditelnost === 'skryta' ? 'skrytá role' : 'viditelná role'}`)
       ),
       a ? h('p', { class: 'napoveda', title: a.detail ?? '' }, a.veta) : null,
       h('p', { class: 'hod-vypocet' }, karta ? `→ „${karta.nazev}"` : '→ (prázdné, klikni pro přiřazení vybrané věci)')

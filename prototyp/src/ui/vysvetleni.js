@@ -42,6 +42,9 @@ export const MISTO = /** @type {const} */ ({ SLOT: 'slot', OKRAJ: 'okraj', SPIS:
  * @property {Record<string,string>} [pronasledovatele] id → název
  * @property {Record<string,{text: string}>} [cile] cil_id → definice cíle
  * @property {Record<string,string>} [stitky] stitek_id → název (např. GANGSTER → Gangster)
+ * @property {number} [sumRozsah] rozsah šumu prahu z pravidel (rules.sumRozsah,
+ *   ADR-003 — hodnota se sem předává, nikdy se tady nehardcoduje). Bez něj
+ *   anotace odhalení řekne jen kotvu, rozpětí šumu vynechá.
  */
 
 /**
@@ -73,6 +76,13 @@ function novaKniha(ctx, events, out) {
     rusi: /** @type {{typ: string, cil: string}|null} */ (null),
     /** nodeIndex → situace_id (pro popis odkazů). */
     situaceUzlu: /** @type {Map<number, string>} */ (new Map()),
+    /**
+     * `nodeIndex:slot_index` → kotva a šum odhaleného slotu (D51). Rozklad
+     * „práh = kotva ± šum" se smí vypsat teprve u `slot_resolved`, kde už je
+     * práh legálně vidět — `situation_revealed` ho nese jen jako data, ne jako
+     * text pro hráče. Fold to unese: kniha si kotvu/šum zapamatuje z odhalení.
+     */
+    slotyUzlu: /** @type {Map<string, {kotva: number, sum: number}>} */ (new Map()),
     /** hrac_id → aktivní trvalé postihy (pro řetězec: kde vznikly). */
     aktivniPostihy: /** @type {Map<string, {postih_id: string, druh: string, seq: number, nodeIndex: number}[]>} */ (new Map()),
     /** Poslední gamble (pro zpětné doplnění, jak tažená karta dopadla). */
@@ -241,6 +251,81 @@ const TYP_MISTA_PRAVIDLO = {
 };
 
 /**
+ * Rozklad prahu na kotvu a šum — jediná věta, která smí padnout teprve
+ * u vyhodnocení (D51). Kotvu a šum bere z knihy (zapsala je `situation_revealed`
+ * téhož uzlu); když v knize nejsou (vrstva volaná nad výřezem logu bez
+ * odhalení), vrátí prázdno a `detail` zůstane jako dřív — nikdy nedomýšlí.
+ */
+function rozkladPrahu(e, k) {
+  const s = k.slotyUzlu.get(`${e.nodeIndex}:${e.slot_index}`);
+  if (!s) return '';
+  return `Práh ${e.prah} = kotva ${s.kotva} ${s.sum === 0 ? 'bez šumu' : znamenko(s.sum)}.`;
+}
+
+/**
+ * Tělo anotací `slot_resolved` — vytažené z tabulky handlerů, aby se rozklad
+ * prahu dal přišít ke KAŽDÉ větvi jednou (větví je devět, `detail` si každá
+ * skládá po svém).
+ */
+function slotResolvedAnotace(e, k) {
+  // Gamble je v logu PŘED resolucí, takže „jak to dopadlo" jde doplnit až tady.
+  // Fold to umí: anotace už v Map je a drží se na ni reference (§4.1).
+  if (k.gamble && e.karta_id === k.gamble.tazena) {
+    const gambleAnotace = k.out.get(k.gamble.seq)?.[0];
+    if (gambleAnotace) {
+      gambleAnotace.detail += ` Tažená věc ${e.zasah ? 'vyšla' : 'nevyšla'} — slot ${e.slot_index + 1}.`;
+    }
+    k.gamble = null;
+  }
+  const zaklad = { misto: MISTO.SLOT, slot_index: e.slot_index, razitko: e.zasah ? 'PROŠLO' : 'NEPROŠLO' };
+  if (e.duvod === 'neobsazeno') {
+    return [{
+      ...zaklad,
+      veta: 'Slot nikdo neobsadil — automatický propad.',
+      detail: 'Do slotu se nedostala žádná věc: buď je postava složená, nebo měla postihem zmenšenou ruku a committnula míň karet.',
+    }];
+  }
+  const vec = nazevVeci(k, e.karta_id);
+  const kdo = `„${vec}" — ${jmenoHrace(k, e.hrac_id)}`;
+  switch (e.duvod) {
+    case 'proslo':
+      return [{ ...zaklad, veta: `${statSHodnotou(e.stat, e.stat_hodnota)} proti prahu ${e.prah}.`, detail: kdo }];
+    case 'nizky_stat':
+      return [{ ...zaklad, veta: `Chtělo to ${popisStatu4(e.stat)} ${e.prah}, „${vec}" má ${e.stat_hodnota}.`, detail: kdo }];
+    case 'kombi_neuplny':
+      return [{ ...zaklad, veta: `Kombi slot chce OBA staty nad práh ${e.prah}: „${vec}" má ${statSHodnotou(e.stat, e.stat_hodnota)}.`, detail: kdo }];
+    case 'stat_zrusen':
+      return [{
+        ...zaklad,
+        veta: `${k.pronasledovatel ?? 'Pronásledovatel'} ruší ${popisStatu4(e.stat)} — „${vec}" se počítá jako 0 proti prahu ${e.prah}.`,
+        detail: `${kdo} · Rušení platí v celém runu, ne jen v tomhle slotu.`,
+      }];
+    case 'gangster_auto_fail':
+      return [{
+        ...zaklad,
+        veta: `„${vec}" je zbraň ve viditelné roli — padá bez ohledu na staty.`,
+        detail: `${kdo} · Telegraf to hlásil předem: zbraň na očích tady neprojde.`,
+      }];
+    case 'postih_lock_stitek':
+    case 'postih_lock_viditelnost': {
+      const zdroj = najdiPostih(k, e.hrac_id, e.postih_efekt);
+      const nazev = zdroj ? nazevPostihu(k, zdroj.postih_id) : 'Postih';
+      const veta = e.duvod === 'postih_lock_stitek'
+        ? `${nazev} — zbraň v ruce neudržíš, „${vec}" propadá bez ohledu na staty.`
+        : `${nazev} — do ${e.viditelnost === 'skryta' ? 'skryté' : 'viditelné'} role nic neprosadíš, „${vec}" propadá.`;
+      return [{
+        ...zaklad,
+        veta,
+        detail: `${kdo} · Zámkový postih je tvrdé pravidlo nad staty, stejná třída jako štítek.`,
+        ...(zdroj ? { odkaz: { seq: zdroj.seq, popis: popisUzlu(k, zdroj.nodeIndex) } } : {}),
+      }];
+    }
+    default:
+      return [{ ...zaklad, veta: `Slot vyhodnocen (${e.duvod}).`, detail: kdo }];
+  }
+}
+
+/**
  * Handlery per typ události. Prázdné pole = událost vědomě BEZ anotace
  * (§5 návrhu) — musí tu ale být, aby nespadla do `neznama`.
  * @type {Record<string, (e: object, k: ReturnType<typeof novaKniha>) => Anotace[]>}
@@ -260,78 +345,48 @@ const HANDLERS = {
   // Čistě měřicí událost (ADR-010) — anotaci nenese.
   [EVENT.ASSIGN_CONTEXT]: () => [],
 
-  // JÁDRO UČENÍ: práh se rozepisuje na stálou (naučitelnou) kotvu a per-instance šum.
+  /**
+   * JÁDRO UČENÍ: kotva je stálá a naučitelná, šum ne. Anotace proto při
+   * rozdělování říká jen KOTVU a rozpětí šumu — **finální zašuměný práh se
+   * z ní nesmí dopočítat** (D51; kanon design-dokument §4.5 a §10: „prahy
+   * skryté před, odhalené po vyhodnocení"). Do D51 tu stálo
+   * „práh 2 = kotva 4 −2", což hráči na assign obrazovce dávalo hotovou
+   * aritmetiku a rozcházelo se s botem, na kterém stojí simulační brána
+   * (bot prahy při přiřazení nezná). Rozklad se přesunul k `slot_resolved`.
+   *
+   * Událost `situation_revealed` prah dál NESE — je to datový kanál pro
+   * simulaci; zákaz je na jeho zobrazení, ne na jeho existenci.
+   */
   [EVENT.SITUATION_REVEALED]: (e, k) => {
     k.situaceUzlu.set(e.nodeIndex, e.situace_id);
-    return e.sloty.map((s) => ({
-      misto: MISTO.SLOT,
-      slot_index: s.slot_index,
-      veta: `${s.role}: práh ${s.prah} = kotva ${s.kotva} ${s.sum === 0 ? 'bez šumu' : znamenko(s.sum)}.`,
-      detail: [
-        `Chce ${popisStatu4(s.stat)}${s.typ_prahu === 'kombi_oba' ? ' (OBA staty)' : ''}`,
-        s.viditelnost === 'skryta' ? 'skrytá role — telegraf ji hlásil jen počtem' : 'viditelná role',
-        s.stitek_citlivy ? `výjimka ze štítku: ${nazevStitku(k, s.stitek_citlivy)} projde i na očích` : null,
-        'Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.',
-      ].filter(Boolean).join(' · '),
-    }));
+    return e.sloty.map((s) => {
+      k.slotyUzlu.set(`${e.nodeIndex}:${s.slot_index}`, { kotva: s.kotva, sum: s.sum });
+      return {
+        misto: MISTO.SLOT,
+        slot_index: s.slot_index,
+        veta: `${s.role}: kotva ${s.kotva}${k.ctx.sumRozsah ? `, šum ±${k.ctx.sumRozsah}` : ''} — přesný práh až po vyhodnocení.`,
+        detail: [
+          `Chce ${popisStatu4(s.stat)}${s.typ_prahu === 'kombi_oba' ? ' (OBA staty)' : ''}`,
+          s.viditelnost === 'skryta' ? 'skrytá role — telegraf ji hlásil jen počtem' : 'viditelná role',
+          s.stitek_citlivy ? `výjimka ze štítku: ${nazevStitku(k, s.stitek_citlivy)} projde i na očích` : null,
+          'Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.',
+        ].filter(Boolean).join(' · '),
+      };
+    });
   },
 
+  /**
+   * Tady je práh legálně vidět („po vyhodnocení se práh vždy ukáže", §4.11),
+   * takže sem patří i rozklad na kotvu a šum — do D51 svítil už při
+   * rozdělování. Rozklad se přišívá do `detail` každé anotace slotu jednotně
+   * (obrazovka výsledku detail vypisuje viditelně, ne jen do tooltipu).
+   */
   [EVENT.SLOT_RESOLVED]: (e, k) => {
-    // Gamble je v logu PŘED resolucí, takže „jak to dopadlo" jde doplnit až tady.
-    // Fold to umí: anotace už v Map je a drží se na ni reference (§4.1).
-    if (k.gamble && e.karta_id === k.gamble.tazena) {
-      const gambleAnotace = k.out.get(k.gamble.seq)?.[0];
-      if (gambleAnotace) {
-        gambleAnotace.detail += ` Tažená věc ${e.zasah ? 'vyšla' : 'nevyšla'} — slot ${e.slot_index + 1}.`;
-      }
-      k.gamble = null;
-    }
-    const zaklad = { misto: MISTO.SLOT, slot_index: e.slot_index, razitko: e.zasah ? 'PROŠLO' : 'NEPROŠLO' };
-    if (e.duvod === 'neobsazeno') {
-      return [{
-        ...zaklad,
-        veta: 'Slot nikdo neobsadil — automatický propad.',
-        detail: 'Do slotu se nedostala žádná věc: buď je postava složená, nebo měla postihem zmenšenou ruku a committnula míň karet.',
-      }];
-    }
-    const vec = nazevVeci(k, e.karta_id);
-    const kdo = `„${vec}" — ${jmenoHrace(k, e.hrac_id)}`;
-    switch (e.duvod) {
-      case 'proslo':
-        return [{ ...zaklad, veta: `${statSHodnotou(e.stat, e.stat_hodnota)} proti prahu ${e.prah}.`, detail: kdo }];
-      case 'nizky_stat':
-        return [{ ...zaklad, veta: `Chtělo to ${popisStatu4(e.stat)} ${e.prah}, „${vec}" má ${e.stat_hodnota}.`, detail: kdo }];
-      case 'kombi_neuplny':
-        return [{ ...zaklad, veta: `Kombi slot chce OBA staty nad práh ${e.prah}: „${vec}" má ${statSHodnotou(e.stat, e.stat_hodnota)}.`, detail: kdo }];
-      case 'stat_zrusen':
-        return [{
-          ...zaklad,
-          veta: `${k.pronasledovatel ?? 'Pronásledovatel'} ruší ${popisStatu4(e.stat)} — „${vec}" se počítá jako 0 proti prahu ${e.prah}.`,
-          detail: `${kdo} · Rušení platí v celém runu, ne jen v tomhle slotu.`,
-        }];
-      case 'gangster_auto_fail':
-        return [{
-          ...zaklad,
-          veta: `„${vec}" je zbraň ve viditelné roli — padá bez ohledu na staty.`,
-          detail: `${kdo} · Telegraf to hlásil předem: zbraň na očích tady neprojde.`,
-        }];
-      case 'postih_lock_stitek':
-      case 'postih_lock_viditelnost': {
-        const zdroj = najdiPostih(k, e.hrac_id, e.postih_efekt);
-        const nazev = zdroj ? nazevPostihu(k, zdroj.postih_id) : 'Postih';
-        const veta = e.duvod === 'postih_lock_stitek'
-          ? `${nazev} — zbraň v ruce neudržíš, „${vec}" propadá bez ohledu na staty.`
-          : `${nazev} — do ${e.viditelnost === 'skryta' ? 'skryté' : 'viditelné'} role nic neprosadíš, „${vec}" propadá.`;
-        return [{
-          ...zaklad,
-          veta,
-          detail: `${kdo} · Zámkový postih je tvrdé pravidlo nad staty, stejná třída jako štítek.`,
-          ...(zdroj ? { odkaz: { seq: zdroj.seq, popis: popisUzlu(k, zdroj.nodeIndex) } } : {}),
-        }];
-      }
-      default:
-        return [{ ...zaklad, veta: `Slot vyhodnocen (${e.duvod}).`, detail: kdo }];
-    }
+    const rozklad = rozkladPrahu(e, k);
+    return slotResolvedAnotace(e, k).map((a) => ({
+      ...a,
+      detail: [a.detail, rozklad].filter(Boolean).join(' · '),
+    }));
   },
 
   [EVENT.PENALTY_ADDED]: (e, k) => {
@@ -545,14 +600,20 @@ function situaceVlozenychSetkani(pronasledovatele) {
  * bez nich by nadpisy obrazovek i titulky listů protokolu pro ně padaly na
  * syrové id (viz `situaceVlozenychSetkani`).
  *
+ * `rules` je nepovinné a jediné, co si z něj vrstva bere, je `sumRozsah` —
+ * rozpětí šumu prahu, které anotace odhalení hlásí místo zakázaného finálního
+ * prahu (D51). Předává se, aby konstanta zůstala jen v `rules.js` (ADR-003).
+ *
  * @param {object} content výstup parseContent()
  * @param {Record<string,string>} [jmena] hrac_id → celé jméno postavy
+ * @param {{sumRozsah?: number}} [rules] pravidla (jen kvůli `sumRozsah`)
  * @returns {VysvetliCtx}
  */
-export function ctxZObsahu(content, jmena = {}) {
+export function ctxZObsahu(content, jmena = {}, rules = {}) {
   const mapa = (pole, klic) => Object.fromEntries(pole.map((x) => [x.id, x[klic] ?? x.id]));
   return {
     jmena,
+    sumRozsah: rules.sumRozsah,
     veci: mapa(content.veci, 'nazev'),
     postihy: mapa(content.postihy, 'nazev'),
     pronasledovatele: mapa(content.pronasledovatele, 'nazev'),

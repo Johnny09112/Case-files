@@ -39,25 +39,25 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
         "detail": "Chce obranu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 0,
-        "veta": "Držet nervy: práh 2 = kotva 4 −2.",
+        "veta": "Držet nervy: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 1,
-        "veta": "Zamluvit to: práh 5 = kotva 4 +1.",
+        "veta": "Zamluvit to: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce útok · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 2,
-        "veta": "Zastrašit gestem: práh 5 = kotva 4 +2.",
+        "veta": "Zastrašit gestem: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce nástroj · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 3,
-        "veta": "Najít skulinu: práh 2 = kotva 2 bez šumu.",
+        "veta": "Najít skulinu: kotva 2, šum ±2 — přesný práh až po vyhodnocení.",
       },
     ],
     "seq": 6,
@@ -77,7 +77,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
   {
     "anotace": [
       {
-        "detail": "„Otrlený výraz" — Frank Kowalski",
+        "detail": "„Otrlený výraz" — Frank Kowalski · Práh 2 = kotva 4 −2.",
         "misto": "slot",
         "razitko": "PROŠLO",
         "slot_index": 0,
@@ -90,7 +90,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
   {
     "anotace": [
       {
-        "detail": "„Dámský revolver" — Vincenc Bartoš · Telegraf to hlásil předem: zbraň na očích tady neprojde.",
+        "detail": "„Dámský revolver" — Vincenc Bartoš · Telegraf to hlásil předem: zbraň na očích tady neprojde. · Práh 5 = kotva 4 +1.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 1,
@@ -103,7 +103,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
   {
     "anotace": [
       {
-        "detail": "„Lopata" — Vincenc Bartoš",
+        "detail": "„Lopata" — Vincenc Bartoš · Práh 5 = kotva 4 +2.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 2,
@@ -116,7 +116,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
   {
     "anotace": [
       {
-        "detail": "„Dědkův kabát" — Rudolf Mazur",
+        "detail": "„Dědkův kabát" — Rudolf Mazur · Práh 2 = kotva 2 bez šumu.",
         "misto": "slot",
         "razitko": "PROŠLO",
         "slot_index": 3,
@@ -205,25 +205,25 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
         "detail": "Chce útok · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 0,
-        "veta": "Prorazit blokádu: práh 5 = kotva 4 +2.",
+        "veta": "Prorazit blokádu: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce nástroj · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 1,
-        "veta": "Strhnout do postranní: práh 2 = kotva 4 −2.",
+        "veta": "Strhnout do postranní: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 2,
-        "veta": "Zmizet v ulicích: práh 4 = kotva 4 bez šumu.",
+        "veta": "Zmizet v ulicích: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce obranu · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 3,
-        "veta": "Držet nervy u okna: práh 4 = kotva 3 +1.",
+        "veta": "Držet nervy u okna: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
       },
     ],
     "seq": 22,
@@ -232,7 +232,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
   {
     "anotace": [
       {
-        "detail": "„Mosazný boxer" — Frank Kowalski",
+        "detail": "„Mosazný boxer" — Frank Kowalski · Práh 5 = kotva 4 +2.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 0,
@@ -245,7 +245,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
   {
     "anotace": [
       {
-        "detail": "„Svářečka" — Cesare Fontana",
+        "detail": "„Svářečka" — Cesare Fontana · Práh 2 = kotva 4 −2.",
         "misto": "slot",
         "razitko": "PROŠLO",
         "slot_index": 1,
@@ -258,7 +258,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
   {
     "anotace": [
       {
-        "detail": "„Kastrol na hlavě" — Vincenc Bartoš",
+        "detail": "„Kastrol na hlavě" — Vincenc Bartoš · Práh 4 = kotva 4 bez šumu.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 2,
@@ -271,7 +271,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
   {
     "anotace": [
       {
-        "detail": "„Pytel cementu" — Rudolf Mazur",
+        "detail": "„Pytel cementu" — Rudolf Mazur · Práh 4 = kotva 3 +1.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 3,
@@ -340,25 +340,25 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
         "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 0,
-        "veta": "Uklidnit dav: práh 5 = kotva 4 +2.",
+        "veta": "Uklidnit dav: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce hodnotu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 1,
-        "veta": "Přimazat dlaň: práh 5 = kotva 4 +2.",
+        "veta": "Přimazat dlaň: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce obranu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 2,
-        "veta": "Kamenná tvář: práh 3 = kotva 3 bez šumu.",
+        "veta": "Kamenná tvář: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce útok · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 3,
-        "veta": "Kdyby padl výstřel: práh 5 = kotva 3 +2.",
+        "veta": "Kdyby padl výstřel: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
       },
     ],
     "seq": 35,
@@ -367,7 +367,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
   {
     "anotace": [
       {
-        "detail": "„Kněžský kolárek" — Frank Kowalski",
+        "detail": "„Kněžský kolárek" — Frank Kowalski · Práh 5 = kotva 4 +2.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 0,
@@ -380,7 +380,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
   {
     "anotace": [
       {
-        "detail": "„Zlaté hodinky" — Rudolf Mazur",
+        "detail": "„Zlaté hodinky" — Rudolf Mazur · Práh 5 = kotva 4 +2.",
         "misto": "slot",
         "razitko": "PROŠLO",
         "slot_index": 1,
@@ -393,7 +393,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
   {
     "anotace": [
       {
-        "detail": "„Pytel brambor" — Vincenc Bartoš",
+        "detail": "„Pytel brambor" — Vincenc Bartoš · Práh 3 = kotva 3 bez šumu.",
         "misto": "slot",
         "razitko": "PROŠLO",
         "slot_index": 2,
@@ -406,7 +406,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
   {
     "anotace": [
       {
-        "detail": "„Slzy na povel" — Cesare Fontana",
+        "detail": "„Slzy na povel" — Cesare Fontana · Práh 5 = kotva 3 +2.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 3,
@@ -556,25 +556,25 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
         "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 0,
-        "veta": "Utišit psy: práh 3 = kotva 4 −1.",
+        "veta": "Utišit psy: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce nástroj a improvizaci (OBA staty) · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 1,
-        "veta": "Zaklínit vrata: práh 2 = kotva 3 −1.",
+        "veta": "Zaklínit vrata: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce nástroj · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 2,
-        "veta": "Schovat bednu do sena: práh 2 = kotva 4 −2.",
+        "veta": "Schovat bednu do sena: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce obranu · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 3,
-        "veta": "Nedýchat, když jde kolem: práh 0 = kotva 2 −2.",
+        "veta": "Nedýchat, když jde kolem: kotva 2, šum ±2 — přesný práh až po vyhodnocení.",
       },
     ],
     "seq": 56,
@@ -594,7 +594,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
   {
     "anotace": [
       {
-        "detail": "„Konšelův prsten" — Frank Kowalski",
+        "detail": "„Konšelův prsten" — Frank Kowalski · Práh 3 = kotva 4 −1.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 0,
@@ -607,7 +607,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
   {
     "anotace": [
       {
-        "detail": "„Balík bankovek" — Vincenc Bartoš",
+        "detail": "„Balík bankovek" — Vincenc Bartoš · Práh 2 = kotva 3 −1.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 1,
@@ -620,7 +620,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
   {
     "anotace": [
       {
-        "detail": "„Petrolejová lampa" — Rudolf Mazur",
+        "detail": "„Petrolejová lampa" — Rudolf Mazur · Práh 2 = kotva 4 −2.",
         "misto": "slot",
         "razitko": "PROŠLO",
         "slot_index": 2,
@@ -633,7 +633,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
   {
     "anotace": [
       {
-        "detail": "„Kožená zástěra" — Vincenc Bartoš",
+        "detail": "„Kožená zástěra" — Vincenc Bartoš · Práh 0 = kotva 2 −2.",
         "misto": "slot",
         "razitko": "PROŠLO",
         "slot_index": 3,
@@ -692,25 +692,25 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
         "detail": "Chce útok · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 0,
-        "veta": "Probít se vpřed: práh 5 = kotva 4 +1.",
+        "veta": "Probít se vpřed: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce nástroj · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 1,
-        "veta": "Najít, kudy ujet: práh 2 = kotva 4 −2.",
+        "veta": "Najít, kudy ujet: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 2,
-        "veta": "Kličkovat mezi vozy: práh 5 = kotva 4 +1.",
+        "veta": "Kličkovat mezi vozy: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce obranu · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 3,
-        "veta": "Vydržet nápor: práh 2 = kotva 2 bez šumu.",
+        "veta": "Vydržet nápor: kotva 2, šum ±2 — přesný práh až po vyhodnocení.",
       },
     ],
     "seq": 69,
@@ -719,7 +719,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
   {
     "anotace": [
       {
-        "detail": "„Sekáček na led" — Frank Kowalski",
+        "detail": "„Sekáček na led" — Frank Kowalski · Práh 5 = kotva 4 +1.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 0,
@@ -732,7 +732,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
   {
     "anotace": [
       {
-        "detail": "„Zednická lžíce" — Cesare Fontana",
+        "detail": "„Zednická lžíce" — Cesare Fontana · Práh 2 = kotva 4 −2.",
         "misto": "slot",
         "razitko": "PROŠLO",
         "slot_index": 1,
@@ -745,7 +745,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
   {
     "anotace": [
       {
-        "detail": "„Hovězí vývar" — Vincenc Bartoš",
+        "detail": "„Hovězí vývar" — Vincenc Bartoš · Práh 5 = kotva 4 +1.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 2,
@@ -758,7 +758,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
   {
     "anotace": [
       {
-        "detail": "„Bedna kanadské" — Rudolf Mazur",
+        "detail": "„Bedna kanadské" — Rudolf Mazur · Práh 2 = kotva 2 bez šumu.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 3,
@@ -907,25 +907,25 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
         "detail": "Chce útok · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 0,
-        "veta": "Postavit se jim: práh 2 = kotva 4 −2.",
+        "veta": "Postavit se jim: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce obranu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 1,
-        "veta": "Ustát nápor: práh 2 = kotva 4 −2.",
+        "veta": "Ustát nápor: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 2,
-        "veta": "Vyklouznout stranou: práh 2 = kotva 4 −2.",
+        "veta": "Vyklouznout stranou: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce útok · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 3,
-        "veta": "Tasit včas a první: práh 2 = kotva 3 −1.",
+        "veta": "Tasit včas a první: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
       },
     ],
     "seq": 6,
@@ -934,7 +934,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Svářečka" — Vincenc Bartoš",
+        "detail": "„Svářečka" — Vincenc Bartoš · Práh 2 = kotva 4 −2.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 0,
@@ -947,7 +947,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Plechová vesta" — Vincenc Bartoš",
+        "detail": "„Plechová vesta" — Vincenc Bartoš · Práh 2 = kotva 4 −2.",
         "misto": "slot",
         "razitko": "PROŠLO",
         "slot_index": 1,
@@ -960,7 +960,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Banánový kanón" — Vincenc Bartoš",
+        "detail": "„Banánový kanón" — Vincenc Bartoš · Práh 2 = kotva 4 −2.",
         "misto": "slot",
         "razitko": "PROŠLO",
         "slot_index": 2,
@@ -973,7 +973,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Sekáček na led" — Vincenc Bartoš",
+        "detail": "„Sekáček na led" — Vincenc Bartoš · Práh 2 = kotva 3 −1.",
         "misto": "slot",
         "razitko": "PROŠLO",
         "slot_index": 3,
@@ -1051,25 +1051,25 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
         "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 0,
-        "veta": "Zamotat hlavu: práh 5 = kotva 4 +2.",
+        "veta": "Zamotat hlavu: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce nástroj · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 1,
-        "veta": "Přesunout z očí: práh 3 = kotva 3 bez šumu.",
+        "veta": "Přesunout z očí: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce hodnotu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 2,
-        "veta": "Přilepšit do dlaně: práh 5 = kotva 3 +2.",
+        "veta": "Přilepšit do dlaně: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce útok · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 3,
-        "veta": "Kdyby čenichal dál: práh 3 = kotva 3 bez šumu.",
+        "veta": "Kdyby čenichal dál: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
       },
     ],
     "seq": 20,
@@ -1078,7 +1078,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Konev na mléko" — Vincenc Bartoš",
+        "detail": "„Konev na mléko" — Vincenc Bartoš · Práh 5 = kotva 4 +2.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 0,
@@ -1091,7 +1091,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Starý kompas" — Vincenc Bartoš",
+        "detail": "„Starý kompas" — Vincenc Bartoš · Práh 3 = kotva 3 bez šumu.",
         "misto": "slot",
         "razitko": "PROŠLO",
         "slot_index": 1,
@@ -1104,7 +1104,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Zlaté hodinky" — Vincenc Bartoš · Rušení platí v celém runu, ne jen v tomhle slotu.",
+        "detail": "„Zlaté hodinky" — Vincenc Bartoš · Rušení platí v celém runu, ne jen v tomhle slotu. · Práh 5 = kotva 3 +2.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 2,
@@ -1117,7 +1117,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Pytel cementu" — Vincenc Bartoš",
+        "detail": "„Pytel cementu" — Vincenc Bartoš · Práh 3 = kotva 3 bez šumu.",
         "misto": "slot",
         "razitko": "PROŠLO",
         "slot_index": 3,
@@ -1246,25 +1246,25 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
         "detail": "Chce útok · viditelná role · výjimka ze štítku: Gangster projde i na očích · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 0,
-        "veta": "Zatlačit hrubě: práh 4 = kotva 3 +1.",
+        "veta": "Zatlačit hrubě: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce nástroj · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 1,
-        "veta": "Odsunout závoru: práh 2 = kotva 3 −1.",
+        "veta": "Odsunout závoru: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce hodnotu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 2,
-        "veta": "Podmáznout dlaň: práh 4 = kotva 3 +1.",
+        "veta": "Podmáznout dlaň: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce improvizaci · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 3,
-        "veta": "Zmást papírem: práh 5 = kotva 3 +2.",
+        "veta": "Zmást papírem: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
       },
     ],
     "seq": 39,
@@ -1273,7 +1273,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Řeznický hák" — Vincenc Bartoš",
+        "detail": "„Řeznický hák" — Vincenc Bartoš · Práh 4 = kotva 3 +1.",
         "misto": "slot",
         "razitko": "PROŠLO",
         "slot_index": 0,
@@ -1286,7 +1286,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Lopata" — Vincenc Bartoš",
+        "detail": "„Lopata" — Vincenc Bartoš · Práh 2 = kotva 3 −1.",
         "misto": "slot",
         "razitko": "PROŠLO",
         "slot_index": 1,
@@ -1299,7 +1299,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Pytel brambor" — Vincenc Bartoš · Rušení platí v celém runu, ne jen v tomhle slotu.",
+        "detail": "„Pytel brambor" — Vincenc Bartoš · Rušení platí v celém runu, ne jen v tomhle slotu. · Práh 4 = kotva 3 +1.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 2,
@@ -1312,7 +1312,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Kněžský kolárek" — Vincenc Bartoš",
+        "detail": "„Kněžský kolárek" — Vincenc Bartoš · Práh 5 = kotva 3 +2.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 3,
@@ -1401,25 +1401,25 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
         "detail": "Chce útok · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 0,
-        "veta": "Prorazit blokádu: práh 4 = kotva 4 bez šumu.",
+        "veta": "Prorazit blokádu: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce nástroj · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 1,
-        "veta": "Strhnout do postranní: práh 5 = kotva 4 +2.",
+        "veta": "Strhnout do postranní: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 2,
-        "veta": "Zmizet v ulicích: práh 2 = kotva 4 −2.",
+        "veta": "Zmizet v ulicích: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce obranu · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 3,
-        "veta": "Držet nervy u okna: práh 5 = kotva 3 +2.",
+        "veta": "Držet nervy u okna: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
       },
     ],
     "seq": 54,
@@ -1439,7 +1439,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Dědečkova brokovnice" — Vincenc Bartoš",
+        "detail": "„Dědečkova brokovnice" — Vincenc Bartoš · Práh 4 = kotva 4 bez šumu.",
         "misto": "slot",
         "razitko": "PROŠLO",
         "slot_index": 0,
@@ -1452,7 +1452,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Rezervní pneumatika" — Vincenc Bartoš",
+        "detail": "„Rezervní pneumatika" — Vincenc Bartoš · Práh 5 = kotva 4 +2.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 1,
@@ -1465,7 +1465,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Bedna kanadské" — Vincenc Bartoš",
+        "detail": "„Bedna kanadské" — Vincenc Bartoš · Práh 2 = kotva 4 −2.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 2,
@@ -1478,7 +1478,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Konšelův prsten" — Vincenc Bartoš",
+        "detail": "„Konšelův prsten" — Vincenc Bartoš · Práh 5 = kotva 3 +2.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 3,
@@ -1557,25 +1557,25 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
         "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 0,
-        "veta": "Zapřít totožnost: práh 5 = kotva 4 +1.",
+        "veta": "Zapřít totožnost: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce obranu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 1,
-        "veta": "Nedat na sobě znát: práh 3 = kotva 4 −1.",
+        "veta": "Nedat na sobě znát: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce nástroj · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 2,
-        "veta": "Objet ho stranou: práh 4 = kotva 4 bez šumu.",
+        "veta": "Objet ho stranou: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce útok · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 3,
-        "veta": "Kdyby sáhl po zbrani: práh 1 = kotva 3 −2.",
+        "veta": "Kdyby sáhl po zbrani: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
       },
     ],
     "seq": 69,
@@ -1584,7 +1584,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Hovězí vývar" — Vincenc Bartoš",
+        "detail": "„Hovězí vývar" — Vincenc Bartoš · Práh 5 = kotva 4 +1.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 0,
@@ -1597,7 +1597,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Provaz a kladka" — Vincenc Bartoš",
+        "detail": "„Provaz a kladka" — Vincenc Bartoš · Práh 3 = kotva 4 −1.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 1,
@@ -1610,7 +1610,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Kožená zástěra" — Vincenc Bartoš",
+        "detail": "„Kožená zástěra" — Vincenc Bartoš · Práh 4 = kotva 4 bez šumu.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 2,
@@ -1623,7 +1623,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Mosazný boxer" — Vincenc Bartoš",
+        "detail": "„Mosazný boxer" — Vincenc Bartoš · Práh 1 = kotva 3 −2.",
         "misto": "slot",
         "razitko": "PROŠLO",
         "slot_index": 3,
@@ -1692,25 +1692,25 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
         "detail": "Chce útok · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 0,
-        "veta": "Probít se ven: práh 3 = kotva 4 −1.",
+        "veta": "Probít se ven: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce obranu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 1,
-        "veta": "Ustát salvu: práh 2 = kotva 3 −1.",
+        "veta": "Ustát salvu: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 2,
-        "veta": "Strhnout do pole: práh 4 = kotva 3 +1.",
+        "veta": "Strhnout do pole: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
       },
       {
         "detail": "Chce útok · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 3,
-        "veta": "Krýt záda: práh 5 = kotva 3 +2.",
+        "veta": "Krýt záda: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
       },
     ],
     "seq": 82,
@@ -1719,7 +1719,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Uříznutá hlaveň" — Vincenc Bartoš",
+        "detail": "„Uříznutá hlaveň" — Vincenc Bartoš · Práh 3 = kotva 4 −1.",
         "misto": "slot",
         "razitko": "PROŠLO",
         "slot_index": 0,
@@ -1732,7 +1732,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Stříbrná placatka" — Vincenc Bartoš",
+        "detail": "„Stříbrná placatka" — Vincenc Bartoš · Práh 2 = kotva 3 −1.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 1,
@@ -1745,7 +1745,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Medvědí kožich" — Vincenc Bartoš",
+        "detail": "„Medvědí kožich" — Vincenc Bartoš · Práh 4 = kotva 3 +1.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 2,
@@ -1758,7 +1758,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Dámský revolver" — Vincenc Bartoš",
+        "detail": "„Dámský revolver" — Vincenc Bartoš · Práh 5 = kotva 3 +2.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 3,

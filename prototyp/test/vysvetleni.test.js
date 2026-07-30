@@ -73,17 +73,48 @@ const CTX = {
   situace: { 's1': 'Brod u farmy' },
   pronasledovatele: { 'agent-malone': 'Agent Malone', 'serif-brody': 'Okresní šerif Brody' },
   stitky: { GANGSTER: 'Gangster' },
+  // rules.sumRozsah — vrstva ho dostává zvenčí (ADR-003), ne z konstanty v kódu.
+  sumRozsah: 2,
 };
 
 describe('vysvetli — odhalení prahů (jádro učení, §5)', () => {
-  it('rozepisuje práh na kotvu a šum u každého slotu', () => {
+  it('hlásí kotvu a rozpětí šumu, NIKDY finální práh (D51)', () => {
     const anotace = vsechny(vysvetli(log({ type: EVENT.SITUATION_REVEALED, situace_id: 's1', typ: 'npc', typ_mista: 'npc', sloty: [slot(), slot({ slot_index: 1, kotva: 2, sum: -1, prah: 1 })] }), CTX));
     expect(anotace).toHaveLength(2);
     expect(anotace[0].misto).toBe(MISTO.SLOT);
     expect(anotace[0].slot_index).toBe(0);
-    expect(anotace[0].veta).toContain('práh 4 = kotva 3 +1');
-    expect(anotace[1].veta).toContain('práh 1 = kotva 2 −1');
+    expect(anotace[0].veta).toContain('kotva 3');
+    expect(anotace[0].veta).toContain('šum ±2');
+    expect(anotace[1].veta).toContain('kotva 2');
     expect(anotace[0].detail).toContain('naučitelná');
+  });
+
+  /**
+   * Kanonický zámek proti návratu vady z D36: anotace odhalení nesmí nést práh
+   * ani cokoli, z čeho se dopočítá (šum konkrétní instance). Test čte VŠECHNA
+   * textová pole anotace, ne jen větu — tooltip je taky únik.
+   */
+  it('ani ve větě, ani v detailu nesvítí práh nebo šum instance (D51)', () => {
+    const anotace = vsechny(vysvetli(log({
+      type: EVENT.SITUATION_REVEALED,
+      situace_id: 's1',
+      typ: 'npc',
+      typ_mista: 'npc',
+      // kotva 3, šum +1 → práh 4; a kotva 2, šum −1 → práh 1
+      sloty: [slot(), slot({ slot_index: 1, kotva: 2, sum: -1, prah: 1 })],
+    }), CTX));
+    for (const a of anotace) {
+      const text = `${a.veta} ${a.detail ?? ''}`;
+      expect(text).not.toMatch(/práh \d/i);
+      expect(text).not.toContain('+1');
+      expect(text).not.toContain('−1');
+    }
+  });
+
+  it('bez sumRozsah v ctx řekne jen kotvu (rozpětí šumu se nehádá)', () => {
+    const anotace = vsechny(vysvetli(log({ type: EVENT.SITUATION_REVEALED, situace_id: 's1', typ: 'npc', typ_mista: 'npc', sloty: [slot()] }), { ...CTX, sumRozsah: undefined }));
+    expect(anotace[0].veta).toContain('kotva 3');
+    expect(anotace[0].veta).not.toContain('šum ±');
   });
 
   it('u skrytého slotu a slotové výjimky to řekne v detailu', () => {
@@ -148,6 +179,56 @@ describe('vysvetli — důvody resoluce slotu (§5)', () => {
     expect(a.veta).toContain('neobsadil');
     expect(a.detail).toContain('složená');
     expect(a.detail).toContain('zmenšenou ruku');
+  });
+});
+
+/**
+ * D51: rozklad „práh = kotva ± šum" se z odhalení přesunul sem — po vyhodnocení
+ * se práh podle kanonu (§4.11) vždy ukáže, takže tady je legální i jeho původ.
+ */
+describe('vysvetli — rozklad prahu až u vyhodnocení (D51)', () => {
+  /** Odhalení + resoluce téhož slotu v jednom uzlu. */
+  function uzel(prepisSlotu = {}, prepisResoluce = {}) {
+    return log(
+      { type: EVENT.SITUATION_REVEALED, situace_id: 's1', typ: 'npc', typ_mista: 'npc', sloty: [slot(prepisSlotu)] },
+      resolved({ prah: 4, ...prepisResoluce })
+    );
+  }
+
+  it('detail resoluce nese práh rozepsaný na kotvu a šum', () => {
+    const a = vsechny(vysvetli(uzel(), CTX)).at(-1);
+    expect(a.detail).toContain('Práh 4 = kotva 3 +1');
+  });
+
+  it('nulový šum se řekne slovem, ne „+0"', () => {
+    const a = vsechny(vysvetli(uzel({ kotva: 4, sum: 0, prah: 4 }), CTX)).at(-1);
+    expect(a.detail).toContain('kotva 4 bez šumu');
+  });
+
+  it('rozklad se přišije i k větvi, která si detail skládá sama (stat_zrusen)', () => {
+    const events = log(
+      { type: EVENT.RUN_STARTED, pronasledovatel: 'agent-malone', rusi: { typ: 'stat', cil: 'hodnota' } },
+      { type: EVENT.SITUATION_REVEALED, situace_id: 's1', typ: 'npc', typ_mista: 'npc', sloty: [slot()] },
+      resolved({ zasah: false, duvod: 'stat_zrusen', stat: 'hodnota', stat_hodnota: 0, prah: 4 })
+    );
+    const a = vsechny(vysvetli(events, CTX)).at(-1);
+    expect(a.detail).toContain('celém runu');
+    expect(a.detail).toContain('Práh 4 = kotva 3 +1');
+  });
+
+  it('bez odhalení v logu (výřez) rozklad prostě chybí, nic se nedomýšlí', () => {
+    const a = vsechny(vysvetli(log(resolved()), CTX))[0];
+    expect(a.detail).not.toContain('kotva');
+  });
+
+  it('kotva a šum se páruje podle uzlu i slotu, ne globálně', () => {
+    const events = log(
+      { type: EVENT.SITUATION_REVEALED, nodeIndex: 1, situace_id: 's1', typ: 'npc', typ_mista: 'npc', sloty: [slot({ kotva: 3, sum: 1, prah: 4 })] },
+      { type: EVENT.SITUATION_REVEALED, nodeIndex: 2, situace_id: 's1', typ: 'npc', typ_mista: 'npc', sloty: [slot({ kotva: 2, sum: -1, prah: 1 })] },
+      resolved({ nodeIndex: 2, prah: 1, stat_hodnota: 4 })
+    );
+    const a = vsechny(vysvetli(events, CTX)).at(-1);
+    expect(a.detail).toContain('Práh 1 = kotva 2 −1');
   });
 });
 

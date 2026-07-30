@@ -17,7 +17,9 @@ const hraci = (n) => content.postavy.slice(0, n).map((p) => ({ id: p.id, jmeno: 
 /** Anotace jako prosté pole (Map se do snapshotu čte hůř). */
 function anotaceRunu(opts) {
   const events = playRun({ content, rules: RULES, spec: PRESETY.kompetentni, ...opts });
-  const mapa = vysvetli(events, ctxZObsahu(content, Object.fromEntries(opts.players.map((p) => [p.id, p.jmeno]))));
+  // RULES se předává stejně jako v `app.js` — bez něj by golden neviděl rozpětí
+  // šumu, které anotace odhalení hlásí místo zakázaného prahu (D51).
+  const mapa = vysvetli(events, ctxZObsahu(content, Object.fromEntries(opts.players.map((p) => [p.id, p.jmeno])), RULES));
   return [...mapa.entries()].map(([seq, anotace]) => ({ seq, typ: events.find((e) => e.seq === seq).type, anotace }));
 }
 
@@ -28,6 +30,20 @@ describe('golden anotace nad reálným obsahem', () => {
 
   it('seed 7, 4 hráči, Brody', () => {
     expect(anotaceRunu({ seed: 7, players: hraci(4), pronasledovatelId: 'serif-brody' })).toMatchSnapshot();
+  });
+
+  /**
+   * D51 nad REÁLNÝM obsahem: v celém runu nesmí žádná anotace odhalení situace
+   * vypsat konkrétní číslo prahu. Slovo „práh" tam být smí (věta slibuje, že se
+   * ukáže po vyhodnocení) — číslo za ním ne.
+   */
+  it('anotace odhalení nikde v runu neukáže číslo prahu', () => {
+    for (const { typ, anotace } of anotaceRunu({ seed: 7, players: hraci(4), pronasledovatelId: 'serif-brody' })) {
+      if (typ !== 'situation_revealed') continue;
+      for (const a of anotace) {
+        expect(`${a.veta} ${a.detail ?? ''}`).not.toMatch(/práh \d/i);
+      }
+    }
   });
 
   it('žádná anotace nezůstane s nedosazeným id místo českého názvu', () => {

@@ -127,7 +127,7 @@ znění patří do kódu vrstvy (úřední tón dle `prompty/protokol.md`).
 | Událost | Místo | Anotace |
 |---|---|---|
 | `telegraf_derived` | spis | „Telegraf slibuje tři viditelné role (hodnota, obrana, nástroj) a jednu skrytou. Zbraň na očích neprojde." + kdo ho nevidí (`nevidi`) |
-| `situation_revealed` | slot | **jádro učení:** „Práh 4 = kotva 3 + šum +1." Kotva je stálá a naučitelná, šum ±2 per instance |
+| `situation_revealed` | slot | **jádro učení:** „kotva 3, šum ±2 — přesný práh až po vyhodnocení." Kotva je stálá a naučitelná, šum ±2 per instance. **Změněno D51: rozklad prahu až při vyhodnocení** (původní znění „Práh 4 = kotva 3 + šum +1" ukazovalo finální zašuměný práh už při rozdělování, proti kanonu „prahy skryté před, odhalené po") |
 | `slot_resolved` `proslo` | slot | razítko PROŠLO + „nástroj 4 proti prahu 3" |
 | `slot_resolved` `nizky_stat` | slot | NEPROŠLO + „chtělo to nástroj 4, švára má 3" |
 | `slot_resolved` `kombi_neuplny` | slot | „kombi slot chce OBA staty nad práh; nástroj 4 stačí, improvizace 2 ne" |

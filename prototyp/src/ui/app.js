@@ -95,7 +95,7 @@ export function initApp(root) {
   function sync() {
     if (!S.run) return;
     S.udalosti = S.run.getEvents();
-    S.anotace = vysvetli(S.udalosti, ctxZObsahu(content, S.jmena));
+    S.anotace = vysvetli(S.udalosti, ctxZObsahu(content, S.jmena, RULES));
     for (const u of S.udalosti) {
       if (u.seq <= S.lastSeq) continue;
       S.lastSeq = u.seq;
