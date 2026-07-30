@@ -284,11 +284,19 @@ v `.claude/game-lead/brief.md`.
 **LIMIT OBNOVEN, WoZ ROZHODNUT (D53–D54, 2026-07-30):** kreativní interpretace
 vyhrává (mandát AI vrstvy pro fázi 3; čeština = kritérium volby poskytovatele,
 testovat baterií per kandidát). Fallback = fragmentová vrstva (D54).
-**Běží:** dokončení telegrafů (4 věty → směrový test → zapečení) + kolo
-separability (Denisa P0/#1, návrh mezislotové vazby s kontrafaktuálem).
-**Fronta:** fragmentový fallback (za telegrafy) → fáze 3 (prompt s kreativním
-mandátem + volba poskytovatele) → sezení 2–3 hráčů. **Po lidské bráně:**
-kombinatorický skladač karet + šíře situací (D54/2).
+**TELEGRAFY v3 ZAPEČENY (2026-07-30, `5c8e548`):** kontrolní průchod 19/19,
+4 věty opraveny (u `nadrazi-vypravci` oprava navíc zrušila vnitřní rozpor
+s nositelem `improv_skryte`), v témže commitu invariant do hlavičky
+`obsah/situace.yaml` + oprava kanonu odkládaná od D47 (design §3, MVP 6 kanálů,
+mrtvé K4d číslo nahrazeno). 316/316 testů, golden jen `verzeObsahu`,
+délky ⌀ 316,6 / max 352. Čtyřkolová sága uzavřena.
+**Běží:** kolo separability (Denisa P0/#1, návrh mezislotové vazby
+s kontrafaktuálem) + fragmentový fallback (D54, kód + obsahové kolo).
+**Fronta:** fáze 3 (prompt s kreativním mandátem + volba poskytovatele přes
+test češtiny) → sezení 2–3 hráčů. **Po lidské bráně:** kombinatorický skladač
+karet + šíře situací (D54/2). Backlog z telegrafového kola: zakrývací zkouška
+(od D49), `urednik-razitko` (celnice na domácí trase, sahá na `nazev`),
+úklid stray `prototyp/.claude/agent-memory/`.
 
 ### Co jde do lidské brány jako známé, vyčíslené odchylky
 
