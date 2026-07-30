@@ -12,7 +12,7 @@
 #   typ:       npc | lokace | zatah | lecka | konfrontace
 #              (lecka/konfrontace se autorují u pronásledovatelů, ne zde)
 #   svet:      1930 (default) | ...
-#   telegraf:  předzvěst před commitem, max 400 zn. (viz QA invariant níže)
+#   telegraf:  předzvěst před commitem, max 400 ZNAKŮ (viz QA invariant níže)
 #   text:      max ~5 vět; obsahuje přesně 4 mezery {VEC} + volně {kdo}.
 #              Mezery {VEC} se plní názvy zahraných věcí V POŘADÍ slotů níže.
 #   sloty:     přesně 4×:
@@ -35,71 +35,176 @@
 #   event:  (volitelné, jen část lokací) 3 flavor odbočky; engine losuje 1 ze 3.
 #           SIM-INERTNÍ — čistá příchuť BEZ mechanického efektu (D19).
 #
-# QA INVARIANT TELEGRAFU (D19 + D6; přepis 2026-07-29 — nález 3 lidské brány,
-# D47/D48/D49). Předchozí znění („zmiň VŠECHNY VIDITELNÉ staty“) je zrušené:
-# jmenování statů obcházelo learnabilitu slíbenou v design-dokument §4.5.
+# QA INVARIANT TELEGRAFU — v3 (D51/D52, 2026-07-30). ÚPLNÉ ZNĚNÍ, ODŮVODNĚNÍ
+# A HISTORIE PRŮCHODŮ: technika/telegraf-skrtaci-kolo-2026-07-30.md §2.
+#
+# Historie: „zmiň VŠECHNY VIDITELNÉ staty“ (do D47) → v2 „(A) POKRYTÍ: každý
+# viditelný slot má nárok“ (D47–D49) → v3: POKRYTÍ ŠKRTNUTO. Důvod: první dohraný
+# run u člověka (playtesty/2026-07-29) — „telegraf neříká nic a ještě víc mate“.
+# Nebyla to vada exekuce D49, ale vada SPECIFIKACE: telegraf nesl PĚT položek,
+# které si hráč držel v hlavě naráz, po jednom přečtení, před slepým commitem.
+# Léčí se POČET POLOŽEK (5 → 3), NE délka — hráč sám řekl, že text smí být delší,
+# takže uvolněné místo jde do OBRAZU (⌀ 317 zn., beze změny proti D49).
 #
 # Telegraf je PŘEDZVĚST, ne výčet rolí. Je to PRÓZA = lidský rendering signálu,
 # který engine DERIVUJE ze slotů (`deriveTelegrafSignal`, prototyp/src/engine/
-# resolve.js). Signál se NEautoruje — próza jen musí zůstat věrná.
-# Od D47 je mechanický výčet („co z toho plyne“) v UI NATIVNĚ SKRYTÝ, takže
-# v defaultním režimu je tenhle text JEDINÝ nositel informace před commitem.
+# resolve.js). Signál se NEautoruje — próza jen musí zůstat věrná: nesmí tvrdit
+# nic, co signál vyvrací. Od D47/D50 je mechanický výčet („co z toho plyne“) v UI
+# nativně SKRYTÝ (viditelný jen na 1. uzlu relace nebo se zapnutým ulehčením),
+# takže v defaultním režimu je tenhle text JEDINÝ nositel informace před commitem.
 # Informaci nese OBRAZ (překážka, člověk, předmět, gesto), ne jméno statu.
 #
 # --- JÁDRO: NÁROK JE SLOVESO, NE KULISA ---------------------------------------
 # Scéna smí obsahovat cokoli — úředníka, který se dívá, zámek, blok pokut. Kulisa
-# NIC neprozrazuje. Kanál je „obsazen“ teprve tím, že próza přiřkne POSÁDCE práci
-# („bude třeba…“, „zbude…“, „jde to jedině tak, že…“). Z toho dvě pravidla:
-#   (A) POKRYTÍ  — každý VIDITELNÝ slot má v próze právě jeden nárok.
+# NIC neprozrazuje. Nárok vzniká teprve tím, že próza přiřkne POSÁDCE práci
+# („bude třeba…“, „zbude…“). Z toho dvě pravidla:
+#   (A) KOTVA    — právě JEDEN viditelný slot dostane nárok. Povinný.
+#                  (v2 žádalo nárok pro KAŽDÝ viditelný slot — to je ŠKRTNUTO.)
 #   (B) ČISTOTA  — próza nepřiřkne posádce žádný nárok, který není slotem.
-# Porušení (B) je dražší než porušení (A): otevírá past (tým committne kartu na
-# poptávku, která ve slotech není), kdežto (A) jen zdražuje jeden slot.
+#                  Po škrtu POKRYTÍ je to nejdražší pravidlo sady: falešná
+#                  poptávka je chyba, kterou hráč nemá jak odhalit.
 # Pořadí nároků je VOLNÉ — commit je naslepo, pořadí rolí je pro něj irelevantní.
 #
-# MARKÉR HRANICE NÁROKU (dodatek po 1. obsahovém kole — bez něj je (A) splněné
-# jen v autorském čtení, ne pro hráče):
+# PRAVIDLO PODMĚTU (kontrola ČISTOTY, téměř grepovatelná): VĚT S PODMĚTEM POSÁDKA
+# JE PŘESNĚ TOLIK, KOLIK JE NÁROKŮ (1, výjimečně 2). Ostatní věty mají podmětem
+# SCÉNU a neobsahují „někdo / jiný / bude třeba / musí / zbude / jde to jedině“.
+# DOVĚTEK: nárok vzniká i tehdy, když práci přiřkne NPC svým PŘÁNÍM („chce…“,
+# „nedá, dokud…“) — takové věty se POČÍTAJÍ do nároků. Grep to nenajde.
+#
+# --- ZÁKAZ VÝHRADNOSTI (nejdražší pravidlo v3) --------------------------------
+# VĚTA NÁROKU NESMÍ OBSAHOVAT OPERÁTOR VÝHRADNOSTI vztažený ke splnění scény:
+# „jen“, „jedině“, „jinak“, „dokud ne…“, „nic jiného“, ani jeho disjunktivní
+# formu („…, nebo se dál nepojede“).
+#   ✗ „Ustoupí JEDINĚ tomu, kdo na ně vyjede zostra.“
+#   ✓ „Zostra na ně vyjet bude muset někdo z posádky.“
+# POVOLENÁ VÝJIMKA: výhradnost vztažená k NÁSTROJI té jedné práce („bez páky se
+# nehnou“, „po dobrém nepovolí“) — tam se nic jiného nezapírá.
+# PROČ TO VE V2 NEBYLO POTŘEBA: dokud próza jmenovala všechny poptávky, byla
+# výhradnost neškodná ozdoba. Po škrtu POKRYTÍ mění ABSENCI nároku — která nemá
+# znamenat NIC — na EXPLICITNÍ ZÁPOR o všech nepojmenovaných slotech. Je to
+# anti-tell v gramatickém převleku nároku.
+#
+# --- SMĚROVÝ TEST (druhá polovina kontroly; bez něj to nefunguje) -------------
+# Na KAŽDOU větu, ne jen na zápory: „Zvýší, nebo SNÍŽÍ tato věta ochotu stolu
+# committnout kartu na stat X?“ Každé SNÍŽÍ u statu, který je v nějakém slotu
+# (viditelném i skrytém), je porušení — bez ohledu na gramatickou formu.
+# Výčet statů sám chytá jen zápory; tenhle test chytá i výhradnost a „NPC to
+# nezajímá“ obraty. Doloženo: 4 z 19 uzlů prošly výčtem a směrovým testem ne.
+#
+# MARKÉR HRANICE NÁROKU:
 #   KOMBI slot        = „a zároveň / a přitom“ v TÉŽE klauzuli.
 #   dva různé sloty   = oddělené AKTÉREM nebo tečkou („Někdo… jiný…“),
 #                       nikdy jen spojkou „a“.
 #   jeden slot        = jedno sloveso, jeden objekt; druhý obraz se škrtá.
 #
-# --- ZÁPORNÉ TVRZENÍ (povolené, cenné, omezené) --------------------------------
-# Stat se smí výslovně VYLOUČIT („peníze si vzít netroufne“) — ale JEN stat, který
-# není v žádném slotu, ani skrytém, a nejvýš jednou za telegraf. Bot celý trend
-# zná, takže tím člověk nedostane víc než on. Zákaz u skrytých slotů je proto,
-# aby próza neodváděla od toho, co se pokazí.
+# --- ROZPOČET POLOŽEK (jádro v3) ----------------------------------------------
+# POLOŽKA = jedna věc, kterou si hráč musí odnést z JEDNOHO přečtení:
+#   (1) každý NÁROK (KOMBI slot = JEDNA položka, i když má dva požadavky)
+#   (2) PŘEDZVĚST skrytých (počet + skrytá improvizace dohromady) = JEDNA
+#   (3) VERDIKT ZBRANĚ včetně appendu = JEDNA
+#   (4) PŘIPOMÍNKA `rusi` (jen lecka/konfrontace) = JEDNA
+# CÍL 3 POLOŽKY, STROP 4. Záporné tvrzení se do položek NEPOČÍTÁ.
 #
-# --- ŠEST KANÁLŮ, KTERÉ PRÓZA MUSÍ NÉST (tolik jich derivuje engine) ----------
-# 1) TREND — pravidlo (A). Obraz je předmět, člověk nebo gesto, nikdy abstrakce;
-#    jeden slot = jeden nárok. Slovník NÁROKŮ níže.
-# 2) KOMBI SLOT (`stat: [a, b]`) — JEDEN nárok se dvěma požadavky výslovně
-#    spojenými do JEDNÉ práce („přibít a zároveň podložit něčím, co leží po ruce“).
-# 3) POČET SKRYTÝCH (`proti_srsti`) — číslovkou a FIKCÍ, spočítatelně, bez slova
-#    „skrytá“. Kostra „číslovka + až bude pozdě / bez varování“ je povolená, ale
-#    podstatné jméno MUSÍ být z téhle scény („Jedno prkno povolí, až bude pozdě
-#    couvnout“), nikdy abstraktní „věc“. Dvě skryté role má jediná situace
-#    (nadrazi-noc) — musí být citelně těžší, ne jen o číslovku jiná.
-# 4) SKRYTÝ ÚTOK / SKRYTÁ IMPROVIZACE (`zbran_skryte`, `improv_skryte`) — když
-#    jsou true, MUSÍ v próze být. Jsou to JEDINÉ skryté sloty, o kterých se mluví.
+# DOVOLENÝ DRUHÝ NÁROK — co přestalo být povinné, zůstává dovolené:
+#   · nejvýš JEDEN další viditelný slot;
+#   · NIKDY tam, kde by tím byly pojmenované VŠECHNY viditelné STATY scény —
+#     ne sloty, STATY (commit se dělá po statech). Odhalení musí zbýt aspoň jeden
+#     NEPOJMENOVANÝ STAT, jinak přestane být odhalením;
+#   · nejvýš u TŘETINY sady (dnes ≤ 6), s registrem id ve STAVU PŘEJÍMKY;
+#   · v `lecka`/`konfrontace` jen tehdy, je-li kanál 7 ve SROSTLÉ FORMĚ.
+#
+# --- JAK SE VYBERE KOTVA (pořadí pravidel) ------------------------------------
+# 1) Je-li ve scéně KOMBI slot, KOTVA je ON — je to jediný slot, který žádá JEDNU
+#    věc dobrou ve DVOU statech; neohlášený dělá z commitu loterii.
+# 1b) NENÍ-LI KOMBI a má-li scéna VIDITELNÝ ÚTOK-SLOT, u kterého zbraň na očích
+#    PROJDE (`zbran_projde = ano`), je KOTVA TEN SLOT. Je to JEDINÉ místo ve hře,
+#    kde je GANGSTER karta ve viditelné roli správná hra, verdikt o tom mlčí
+#    (mluví jen o toleranci) a chybný commit v konfrontaci UKONČÍ RUN.
+# 2) Jinak je KOTVA nárok, KTERÝ HRÁČ Z TYPU UZLU NEUHODNE (typ je na mapě):
+#      lokace/zatah — nářadí a improvizace jsou ve viditelné trojici 5/5, peníze
+#                     a klid 0/5 → informativní je útok, peníze, klid.
+#      npc          — řeč 9/12, peníze 8/12, klid 8/12, ÚTOK jen 4/12 →
+#                     informativní je ÚTOK, o to víc, že u npc zbraň na očích
+#                     propadá, takže „zatlačit“ je pobídka i past zároveň.
+#    KRITÉRIEM JE INFORMAČNÍ HODNOTA, NE SPLNITELNOST: viditelný útok-slot u npc
+#    obslouží ~4 karty ze 40, a telegraf ho přesto jmenuje — hráčovým úkolem je
+#    ROZHODNOUT, ne dostat splnitelný úkol. Je to přiznaná SÁZKA.
+# 3) Nedá-li 2 odpověď, vyhrává nárok, který dává scéně jméno nebo je fyzicky
+#    nevyhnutelný. U `zatah`/`lecka`/`konfrontace` je pravidlo 3 PRIMÁRNÍ (po 1
+#    a 1b): tam hráč typ místa před commitem nikde nevidí (vkládají se z prahů
+#    Žáru), takže odchylku od prioru není z čeho poznat.
+# 4) ZÁKAZ: kotva se NEVYBÍRÁ podle výšky kotvy slotu — z čitelnosti by se stala
+#    obtížnostní páka (zakázáno D47 §13.2). Je to zákaz KRITÉRIA, ne tvrzení
+#    o ortogonalitě k obtížnosti: naměřeno, že pravidlo 1 vybírá v obou KOMBI
+#    scénách nejnižší kotvu scény.
+#
+# --- ZÁPORNÉ TVRZENÍ (po škrtu POKRYTÍ cennější než dřív) ---------------------
+# Stat se smí výslovně VYLOUČIT („peníze si vzít netroufne“) — ale JEN stat, který
+# není v žádném slotu, ani skrytém, a nejvýš jednou za telegraf (dva jen v JEDNÉ
+# klauzuli: „nechce zaplaceno ani se s nikým bít“).
+# POVINNÝ ZÁPOR: je-li `zbran_projde = ano` A ÚTOK není v žádném slotu, MUSÍ
+# telegraf útok výslovně vyloučit („a bít se tu nebude s kým“). Dopadá na 3 z 19.
+# Bez toho zní verdikt „Zbraň tu nikdo neřeší“ jako POBÍDKA ve scéně, kde
+# útok-slot vůbec není. Je to jediná mitigace přiznané ceny škrtu, která nestojí
+# ani jednu položku.
+# STROP: zápor o TÉMŽE statu nejvýš 3× v sadě (jen VOLITELNÉ; povinné a `rusi`
+# se nepočítají) — jinak sada učí „hodnota je past“, ač je nárokem v 8 slotech.
+# JAK SE KONTROLUJE: NEČTI větu a neptej se „je to zápor?“. Vypiš VŠECH PĚT statů
+# uzlu, odškrtni, které jsou v nějakém slotu, a teprve pak hledej, o kterém próza
+# tvrdí, že nepomůže. POZOR NA `improvizace` — všechny nalezené anti-telly mířily
+# na ni (je to jediný stat s NEPŘEDMĚTNOU poptávkou, takže se vylučuje nejsnáz).
+# ANTI-TELL JE HORŠÍ NEŽ MLČENÍ: mlčení neinformuje, anti-tell aktivně odvádí.
+#
+# --- KANÁLY: CO PRÓZA NESE A CO VĚDOMĚ NENESE ---------------------------------
+# Engine derivuje ŠEST kanálů, próza od v3 nese jen PODMNOŽINU: z `trend` jen
+# JEDEN slot (kotvu). Próza tedy říká MÉNĚ než signál — VĚDOMÁ ODCHYLKA ve
+# prospěch čitelnosti, NE drift, a nesmí se „opravovat“ doplněním nároků. Kdo
+# bude chtít POKRYTÍ vrátit (potřetí), musí nejdřív vrátit viditelnost
+# mechanického řádku (D47/D50).
+# 1) KOTVA — pravidlo (A). Obraz je předmět, člověk nebo gesto, nikdy abstrakce.
+# 2) KOMBI SLOT (`stat: [a, b]`) — je vždy kotvou a nese se jako JEDEN nárok se
+#    dvěma požadavky v JEDNÉ práci („přibít a zároveň podložit něčím po ruce“).
+# 3+4) PŘEDZVĚST — JEDNA věta, že se něco pokazí, nesená PŘEDMĚTEM Z TÉHLE SCÉNY
+#    (vidle, lucerna, ručička váhy, štěrk), nikdy abstraktní „věc“. Je vždy
+#    NEOSOBNÍ: podmětem je scéna, ne posádka, a markéry nároku se v ní nepoužívají.
+#    ČÍSLOVKA JEN TAM, KDE `proti_srsti` ≠ 1 (v sadě jediné `nadrazi-noc`) —
+#    počet „jedna“ je konstanta u 18 z 19, kterou hráč zná po druhém uzlu, a
+#    vyčíslovat ji znamená platit skeletonem za nulu: přesně tenhle požadavek
+#    vyrobil v D49 skeleton „Jedna věc se rozhodne bez vás…“ v 17 z 19 telegrafů.
+#    `zbran_skryte` SE V PŘEDZVĚSTI NEOPAKUJE — buňky B a C verdiktu ho nesou
+#    doslova, takže by to bylo dvojí kódování konstanty u 10 z 19. Smí ho nést
+#    obrazem, nemusí. `improv_skryte` POVINNÝ ZŮSTÁVÁ: v žádném verdiktu není
+#    a v celé sadě ho nese jediný uzel (`nadrazi-vypravci`).
 #    O statu jiného skrytého slotu se MLČÍ (D47/R1) — ani kladně, ani záporně.
-# 5) VERDIKT ZBRANĚ — jedna věta, smysl z uzavřené mřížky, doporučeně poslední.
-#    Mluví VÝHRADNĚ o toleranci místa, nikdy o tom, jestli se zbraň hodí — to je
-#    práce trendu. Zdroj pravdy obsah/stitky.yaml `chovani_dle_typu`, ne typ uzlu
-#    odhadem.
-#      zbran_projde=ano,        zbran_skryte=false → „Zbraně se tu nikdo nelekne.“
-#      zbran_projde=ano,        zbran_skryte=true  → „…nikoho nevyplaší a schovaná
-#                                                    se vyplatí.“
-#      zbran_projde=jen_skryte, zbran_skryte=true  → „Na očích zbraň všechno pokazí,
-#                                                    potají může být to jediné, co
-#                                                    pomůže.“
-#      zbran_projde=jen_skryte, zbran_skryte=false → „Sáhnout tu pod kabát jen
-#                                                    popudí, a schovaná zbraň
-#                                                    nezmůže nic.“
-#    Slovesa a obrazy se smějí přizpůsobit situaci; SMYSL a jeho dvě osy
-#    (na očích / potají) se měnit nesmí.
-# 6) SLOTOVÁ VÝJIMKA (`stitek_citlivy: GANGSTER`) — je-li přítomna, připoj
-#    k verdiktu („Tomuhle chlapovi bouchačka pusu zavře; jinak…“). Bez toho si
-#    próza a strojový signál protiřečí (resolve.js).
+# 5) VERDIKT ZBRANĚ — jedna věta, POSLEDNÍ. Mluví VÝHRADNĚ o toleranci místa,
+#    nikdy o tom, jestli se zbraň hodí. Zdroj pravdy obsah/stitky.yaml
+#    `chovani_dle_typu`, ne typ uzlu odhadem.
+#    ZNĚNÍ JE NORMATIVNÍ, NE PŘÍKLADNÉ — cituje se DOSLOVNĚ. (Pravidlo „slovesa
+#    se smějí přizpůsobit, smysl ne“ v praxi NEDRŽELO: vyrobilo 11 znění na
+#    4 buňky, s největším rozptylem u dvou buněk, které se liší jen tím, jestli
+#    skrytá zbraň pomáhá — posluchač je rozlišoval na POSLEDNÍCH TŘECH SLOVECH
+#    dvou téměř identických vět. To je auto-fail karty za přeslechnutí.)
+#    PARADIGMA: pevný rám „Zbraň … na očích …, potají …“, variabilní je KONEC.
+#      zbran_projde=ano,        zbran_skryte=false → „Zbraň tu nikdo neřeší,
+#                                                    ani na očích.“
+#      zbran_projde=ano,        zbran_skryte=true  → „Zbraň tu nikdo neřeší
+#                                                    a potají se vyplatí.“
+#      zbran_projde=jen_skryte, zbran_skryte=true  → „Zbraň na očích tu všechno
+#                                                    pokazí, potají může rozhodnout.“
+#      zbran_projde=jen_skryte, zbran_skryte=false → „Zbraň na očích tu jen popudí
+#                                                    a potají nezmůže nic.“
+#    LEXIKÁLNÍ REGISTR JE JEDNOTNÝ: vždy „zbraň“ (ne bouchačka/železo) a vždy osa
+#    „na očích / potají“. Ať ta věta zní jako DORAŽENÁ KLAUZULE TELEGRAMU — po
+#    druhém uzlu ji stůl čte jako razítko a smí ji přeslechnout bez ztráty obsahu.
+#    KOMPENZACE ZA TU PEVNOST PATŘÍ O VĚTU DŘÍV: rozvolni POZICI PŘEDZVĚSTI.
+#    VE V3 SE TENTO KANÁL NESMÍ ZATMAVIT ANI O SLOVO — po škrtu POKRYTÍ už absence
+#    útok-nároku NEZNAMENÁ, že se tu nebije, takže inferenci „bouchačku necháme
+#    doma“ nese jen verdikt a případný zápor. Bot ho navíc čte s JISTOTOU.
+# 6) SLOTOVÁ VÝJIMKA (`stitek_citlivy: GANGSTER`) — append ZA verdikt, vázaný na
+#    NÁROK KOTVY, ne na osobu (jinak nemá rozlišovač scope a stůl to čte jako
+#    ODVOLÁNÍ verdiktu): „— ale na tohohle chlapa zabere i zatlačit s ní nahlas.“
+#    Spojka je ADITIVNÍ („i“), nikdy exkluzivní. Není-li `stitek_citlivy` slot
+#    zároveň KOTVOU, je to nález a řeší se výběrem kotvy, ne appendem.
 # 7) JEN V `lecka`/`konfrontace`: PŘIPOMÍNKA PRAVIDLA `rusi` pronásledovatele
 #    („peníze na něj neplatí“ / „u Brodyho přitáhne dvojnásob pozornosti“).
 #    NENÍ to sedmý derivovaný kanál — pravidlo je run-wide a viditelné od startu.
@@ -140,20 +245,63 @@
 # komentáře k NPC — to je motor protokolu a každý takový vtip v telegrafu je
 # smích, který protokol už nevydělá.
 #
-# --- ROZSAH A TEMPO -----------------------------------------------------------
-# 3–5 vět, STROP 400 znaků, cíl ~350 (D48; předběžné číslo, potvrdí je stopky na
-# dalším sezení lidské brány). Nejvýš JEDNA věta bez kanálu. Rozpočet na UZEL:
-# telegraf + `text` ≤ 670 zdrojových znaků — roste-li telegraf, krátí se `text`.
-# Telegraf je scéna PŘEDEM: neosobně, v přítomném čase, nikdy nepředjímá výsledek.
-# `text` je táž scéna POTOM: v minulém čase a se jmény.
-# KAŽDÝ TELEGRAF SE MĚŘÍ, NEODHADUJE (dvakrát se to spletlo o 30–50 znaků).
+# --- KAM SMÍ TÉCT UVOLNĚNÉ MÍSTO ----------------------------------------------
+# Do věty NÁROKU a do PŘEDZVĚSTI. NE do úvodní expozice scény: tu hráč dostane
+# ještě dvakrát (pole `text` a PRVNÍ VĚTA PROTOKOLU). Rozvine-li telegraf scénu
+# na dvě věty, protokol má o jednu větu pointy míň.
 #
-# --- STAV PŘEJÍMKY (D49, 2026-07-29) ------------------------------------------
-# Znění i sada 19 telegrafů jsou zapečeny po AUTORSKÉM A RECENZNÍM CHECKLISTU
-# (generátor → design-critic → protocol-humor-tester → opravné kolo → ověření PM
-# proti derivovanému signálu a změřené délky). ZAKRÝVACÍ ZKOUŠKA (6 čtenářů,
-# 8 telegrafů, srovnávací rameno proti staré sadě) je OTEVŘENÁ POLOŽKA — protokol
-# a rozhodovací pravidla viz technika/telegraf-invariant-navrh-2026-07-29.md §13.
+# --- HUMOR (dělicí čára proti protokolu) --------------------------------------
+# Smí plynout ze SUCHÉHO POJMENOVÁNÍ hrozivé věci („parta nadšených občanů“,
+# „úředník s předpisem na všechno“). NESMÍ ze srovnání, pomlčkové pointy ani
+# komentáře k NPC — to je motor protokolu.
+# OPERAČNÍ TEST: ŠKRTNI DRUHOU POLOVINU VĚTY. Přežije-li obraz sám a pořád hrozí,
+# byl ten ocásek narátorova poznámka a patří do protokolu. Zakázán je hodnotící
+# PREDIKÁT nad obrazem („tři chlapi, kteří se nebaví“); dovolena je hodnotící
+# JMENNÁ FRÁZE („parta nadšených občanů“) — ironie je uvnitř substantiva.
+#
+# --- ROZSAH, JEDNOTKA A TEMPO -------------------------------------------------
+# 3–5 vět, STROP 400 znaků (D48), CÍL ~320 (D51) — a ten cíl je STŘED PÁSMA
+# 300–360, NE pokyn ke krácení. Nejvýš DVĚ věty bez položky.
+# JEDNOTKA = ZNAKY: `String.length` v JS nad naparsovaným řetězcem, bez
+# accent-foldu. NE bajty (diakritika je dvoubajtová, nadhodnotí to o ~10 %).
+# Rozpočet na UZEL: telegraf + `text` ≤ 670 ZDROJOVÝCH znaků (tj. `text`
+# s nedosazenými `{VEC}`/`{kdo}`; po dosazení naroste o ~25 %, to je v tom stropu
+# započítané). Telegraf je scéna PŘEDEM: neosobně, v přítomném čase, nikdy
+# nepředjímá výsledek. `text` je táž scéna POTOM: v minulém čase a se jmény.
+# KAŽDÝ TELEGRAF SE MĚŘÍ, NEODHADUJE — a měří ho někdo, kdo umí spustit kód
+# (dvakrát se to spletlo o 30–50 znaků a jednou z toho byl spor o jednotku).
+#
+# --- PŘEJÍMKA v3 (7 bodů, per telegraf; nahrazuje proceduru D49) --------------
+#   1) KOTVA je právě jeden viditelný slot, vybraná dle pořadí 1 → 1b → 2 → 3.
+#   2) ČISTOTA přes PRAVIDLO PODMĚTU — a každý nárok se čte PROTI POLI `text`
+#      téhož uzlu, ne proti jménu role (jméno role je zkratka; `text` říká, co se
+#      v tom slotu doopravdy dělá).
+#   3) PŘEDZVĚST nese předmět ze scény + `improv_skryte`, je-li true; číslovku
+#      jen tam, kde `proti_srsti` ≠ 1.
+#   4) VERDIKT je DOSLOVNĚ jeden ze čtyř řetězců + pevný append. Kontroluje se
+#      ZNĚNÍ, ne smysl: sestav tabulku buňka → uzel → znění a spočítej RŮZNÁ
+#      znění na buňku. Musí být 1. (Rozpad na 11 znění se čtením po jednom
+#      telegrafu NENAJDE.)
+#   5) POVINNÝ ZÁPOR tam, kde `zbran_projde = ano` a útok není v žádném slotu;
+#      u `lecka`/`konfrontace` navíc kanál 7 ve srostlé formě.
+#   6) ŽÁDNÝ ANTI-TELL — kontrola VÝČTEM pěti statů, ne čtením.
+#   7) SMĚROVÝ TEST NA KAŽDOU VĚTU + ZÁKAZ VÝHRADNOSTI. Bod 6 sám NESTAČÍ:
+#      výhradnost je gramaticky NÁROK a výčtem projde.
+#
+# --- STAV PŘEJÍMKY (v3, D51 + D52, 2026-07-30) --------------------------------
+# Znění invariantu i sada 19 telegrafů jsou zapečeny po řetězci: generátor →
+# design-critic NA SPECIFIKACI (dřív než na texty) → protocol-humor-tester na sadě
+# → opravné kolo → dokončovací kolo → re-review obou → MECHANICKÁ APLIKACE
+# směrového testu (2 průchody: 15/19, po cílené opravě 4 vět 19/19) → délky
+# změřené kódem. Sada se třikrát NEZAPEKLA, protože ji držel předregistrovaný gate
+# ČISTOTY; historie a citace viz report.
+# DÉLKY (znaky): min ~284 · max ~351 · průměr ~317. Strop 400 i rozpočet uzlu 670
+# splněny 19/19.
+# REGISTR DRUHÉHO NÁROKU (3 z 19): deputy-mytnice · agent-malone/konfrontace ·
+# serif-brody/lecka.
+# ZAKRÝVACÍ ZKOUŠKA JE POŘÁD OTEVŘENÁ POLOŽKA (od D49) — protokol viz
+# technika/telegraf-invariant-navrh-2026-07-29.md §13; po v3 se zjednodušuje
+# (ptá se na jednu poptávku, ne na tři).
 #
 # Cílový počet pro MVP: 7 témat × 2 varianty = 14 + 1 speciální Zátah.
 
@@ -165,7 +313,7 @@ situace:
     nazev: Farmářův brod
     typ: npc
     svet: 1930
-    telegraf: "Vůz sedí v brodě po nápravy a na břehu už čeká farmář s vidlemi. Za vytažení si řekne sazbu, kterou bude nutné vysolit; někdo u toho snese jeho řev bez hnutí. Jiný musí udržet postraňky, než koně vůz vytrhnou. Ty vidle se jednou zvednou bez varování a rozhodne to, kdo je rychlejší. Na očích zbraň všechno pokazí, potají může být to jediné, co pomůže."
+    telegraf: "Vůz sedí v brodě po nápravy a na břehu už čeká farmář s vidlemi. Postraňky jsou zpuchřelé; někdo je bude muset sešít, než koně vůz vytrhnou. Proud pod koly přerovnává kameny. Ty vidle se zvednou bez ohlášení a dál to bude o rychlosti. Zbraň na očích tu všechno pokazí, potají může rozhodnout."
     text: >
       Kola zapadla doprostřed brodu a na břehu už čeká farmář s vidlemi. {kdo} mu
       nabídl {VEC} za vytažení, {kdo} držel hlas mírný pomocí {VEC} a {kdo} zapřáhl
@@ -184,7 +332,7 @@ situace:
     nazev: Statkářova stodola
     typ: lokace
     svet: 1930
-    telegraf: "Farmář vás nechá přespat ve stodole a u vrat leží jeho smečka. Psy musí něco utišit hned, a co to bude, poznáte teprve podle nich. Vrata se musí zaklínit a zároveň podepřít tím, co leží po ruce; bednu pak někdo zahrabe do sena hlouběji, než sahá ruka. Lucerna projde kolem jedinkrát a poznáte to pozdě. Zbraně se tu nikdo nelekne."
+    telegraf: "Statkář za nocleh nechce ani dolar a bít se tu nebude s kým. U vrat leží jeho smečka a nespí; seno za nimi je vlhké až k trámům. Vrata bude muset někdo zaklínit a zároveň podepřít tím, co leží po ruce. Lucerna projde kolem stání jedinkrát a mimo její světlo se stodola nedá přečíst. Zbraň tu nikdo neřeší, ani na očích."
     text: >
       Ve stodole to páchne senem a psi u vrat nespí. {kdo} tišil smečku pomocí
       {VEC}, {kdo} zaklínil vrata {VEC} a {kdo} zahrabal bednu do sena s {VEC}.
@@ -210,7 +358,7 @@ situace:
     nazev: Mýtnice za Batavií
     typ: npc
     svet: 1930
-    telegraf: "U mýtné boudy natahuje zástupce šerifa ruku po silničním poplatku a sazbu si určuje sám. Vysolit ji bude muset někdo z vás. Jiný zatím odvede řeč k pokažené pumpě, další u toho ani nezvedne oči. Jednou mu ruka sjede z bloku pokut níž a bude to o pěstech. Zbraň na očích tu všechno rozbije, potají bývá poslední záchranou."
+    telegraf: "U mýtné boudy natahuje zástupce šerifa ruku po silničním poplatku a sazbu si určuje sám; vysolit ji bude muset někdo z posádky. Jiný zatím odvede řeč k pumpě, která na dvoře netočí ani kapku. Ruka mu sjede z bloku pokut níž a bude to o pěstech. Zbraň na očích tu všechno pokazí, potají může rozhodnout."
     text: >
       Zpoza závory vystoupil zástupce šerifa a poklepal na blok pokut. {kdo} mu
       vtiskl do dlaně {VEC}, {kdo} odvedl řeč stranou pomocí {VEC} a {kdo} u toho
@@ -229,7 +377,7 @@ situace:
     nazev: Hlídka na senecké silnici
     typ: npc
     svet: 1930
-    telegraf: "Postarší strážník stojí vozem napříč silnicí a leští si odznak. Někdo musí vydržet, jak si vás pomalu měří; jiný mu zatím nenápadně přilepší do kapsy. Na zadním kole se cestou uvolnily matice a chtějí dotáhnout, než pojedete dál. Jednou zvedne hlas a bude pozdě couvat; rozhodne to hrubá síla. Na očích zbraň všechno pokazí, potají může být to jediné, co pomůže."
+    telegraf: "Postarší strážník stojí vozem napříč silnicí a leští si odznak. Na zadním kole se cestou uvolnily matice a někdo je bude muset dotáhnout. Strážník si zatím prohlíží tabulku vozu, číslo po číslo. Odznak dopadne zpátky na kapsu dřív, než kdo domluví. Zbraň na očích tu všechno pokazí, potají může rozhodnout."
     text: >
       Strážník postavil vůz napříč a založil ruce. {kdo} udržel nervy na uzdě za
       {VEC}, {kdo} mu strčil něco na přilepšenou v podobě {VEC} a {kdo} spravil,
@@ -251,7 +399,7 @@ situace:
     nazev: Starý most přes Mohawk
     typ: lokace
     svet: 1930
-    telegraf: "Příjezd na most přes Mohawk drží zrezivělá závora, kterou roky nikdo nezvedl. Prkna za ní jsou prohnilá: bude je třeba přibít a zároveň podložit něčím, co leží po ruce. Uprostřed zeje díra a cestu kolem ní si vymyslíte až na místě. Jedno prkno povolí, až bude pozdě couvnout. Zbraň tu nikoho nevyplaší."
+    telegraf: "Příjezd na most přes Mohawk drží zrezivělá závora, kterou roky nikdo nezvedl, a bít se tu nebude s kým. Prkna za ní jsou prohnilá: bude je třeba přibít a zároveň podložit něčím, co leží po ruce. Uprostřed zeje díra a pod ní jde řeka. Jedno prkno povolí, až bude pozdě couvnout. Zbraň tu nikdo neřeší, ani na očích."
     text: >
       Před vozem se táhl most jak vytlučené zuby. {kdo} zvedal závoru {VEC}, {kdo}
       zpevňoval prkna {VEC} a {kdo} navedl kola přes díru s {VEC}. A {kdo} se
@@ -274,7 +422,7 @@ situace:
     nazev: Přívoz přes Hudson
     typ: npc
     svet: 1930
-    telegraf: "Prám se odráží od břehu a celník obchází náklad s nosem u plachty. Někdo mu musí zamotat hlavu řečí o svatbě v Albany; jiný zatím dostane bedny z dohledu, samy se bez páky nehnou. Další zaplatí, aby se celník díval jinam. Jednou strhne plachtu a půjde o to, kdo je rychlejší. Vytažená zbraň tu všechno pokazí, schovaná může rozhodnout."
+    telegraf: "Prám se odlepil od břehu a celník obchází náklad s nosem u plachty. Bedny se bez páky z dohledu nehnou a někdo se do toho musí dát dřív, než celník dojde na konec. Pod podlahou duní stroj a paluba je od stříkající vody klouzavá. Plachta sklouzne sama a pak jde o to, kdo se pohne dřív. Zbraň na očích tu všechno pokazí, potají může rozhodnout."
     text: >
       Prám se odrazil od břehu a celník obcházel náklad s nosem u plachty. {kdo}
       mu zamotal hlavu pomocí {VEC}, {kdo} přesunul náklad z očí do {VEC} a {kdo}
@@ -296,7 +444,7 @@ situace:
     nazev: Zátaras u Verony
     typ: npc
     svet: 1930
-    telegraf: "Napříč silnicí stojí vozy konkurence a chlapi z nich vystupují beze spěchu. Někdo se do nich musí opřít dřív, než se srovnají; kdo stojí vpředu, ten první nápor přijme bez uhnutí. Cestu stranou uvidíte teprve podle toho, kudy se rozestoupí. Jeden z nich se rozmáchne bez varování a rozhodne to, kdo udeří dřív. Na očích zbraň všechno pokazí, potají může být to jediné, co pomůže."
+    telegraf: "Napříč silnicí stojí vozy konkurence a chlapi z nich vystupují jeden po druhém. Někdo se do nich musí opřít dřív, než se srovnají do řady. Vpředu si jeden zapaluje, druhý si plive do dlaní. Jeden z nich si beze slova omotá dlaň řemenem. Zbraň na očích tu všechno pokazí, potají může rozhodnout."
     text: >
       Napříč silnicí stály vozy rivalů a chlapi si plivali do dlaní. {kdo} se jim
       postavil s {VEC}, {kdo} ustál první nápor za {VEC} a {kdo} se pokusil
@@ -315,7 +463,7 @@ situace:
     nazev: Zadní místnost v Utice
     typ: npc
     svet: 1930
-    telegraf: "V zadní místnosti nalévá hostitel a za jeho zády stojí tři stíny. Na stůl se bude muset položit něco, co má cenu; mluvit u toho smí jen jeden a nesmí zaváhat. Zastrašit se přitom nikdo nesmí dát. Jedna sklenka dopadne na stůl tvrdě a od té chvíle jde o rychlost. Zbraň na stole všechno rozbije, pod stolem může rozhodnout."
+    telegraf: "V zadní místnosti nalévá hostitel kořalku do kávových šálků a za jeho zády stojí tři stíny. Na stůl bude muset přijít něco, co má cenu. Na stole je pořád plno a nikdo nepije. Sklenka dopadne na desku tvrdě a ruka pod stolem bude blíž než ta na stole. Zbraň na očích tu všechno pokazí, potají může rozhodnout."
     text: >
       Boss nalil a pokynul k židli, za jeho zády tři stíny. {kdo} položil na stůl
       {VEC}, {kdo} držel řeč uhlazenou pomocí {VEC} a {kdo} se nedal zastrašit za
@@ -337,7 +485,7 @@ situace:
     nazev: Silniční váha u Amsterdamu
     typ: npc
     svet: 1930
-    telegraf: "U silniční váhy sedí úředník s předpisem na všechno a peníze si vzít netroufne. Chce listinu, která před ním obstojí; razítko, které v knize chybí, se nadělá leda kusem gumy. Když ani to nepomůže, zbude na něj zvýšit hlas. Ručička váhy se jednou zastaví jinde, než čekáte, a dozvíte se to pozdě. Sáhnout tu pod kabát jen popudí, a schovaná zbraň nezmůže nic."
+    telegraf: "U silniční váhy sedí úředník s předpisem na všechno a peníze si vzít netroufne. Před sebou má od rána prázdnou knihu a brýle si sundává jen na váhu. Zvýšit na něj hlas tak, aby ho to zvedlo ze židle, bude muset někdo z posádky. Ručička váhy se zastaví jinde, než má, a řekne se to až pozdě. Zbraň na očích tu jen popudí a potají nezmůže nic."
     text: >
       Úředník naklepal razítko a založil si brýle. {kdo} mu podstrčil {VEC}, {kdo}
       doložil chybějící razítko pomocí {VEC} a {kdo} zvýšil hlas s {VEC}. Celou
@@ -356,7 +504,7 @@ situace:
     nazev: Celnice v Albany
     typ: npc
     svet: 1930
-    telegraf: "V celnici stojí fronta až ke dveřím a od vedlejší přepážky sem doléhá dopadání razítek. Váš list musí projít jako pravý; chybějící otisk dorazí někdo jiný razítkem vyřezaným z korku. Kdo chce dřív na řadu, ten si připlatí. Jedno políčko v listině zůstane prázdné a poznáte to pozdě. Sáhnout pod kabát tu jen popudí, a ani schovaná zbraň nepomůže."
+    telegraf: "V celnici stojí fronta až ke dveřím a od vedlejší přepážky doléhá dopadání razítek. Nákladní list nese otisk, který v knize není, a dorazit ho bude muset někdo kusem korku. Úředník listuje pomalu a mračí se. V listině zůstane prázdné políčko a všimne si toho až on. Zbraň na očích tu jen popudí a potají nezmůže nic."
     text: >
       Za přepážkou přebíral úředník listiny a mračil se na prázdné políčko. {kdo}
       mu předložil věrohodný list pomocí {VEC}, {kdo} dorazil chybějící razítko
@@ -378,7 +526,7 @@ situace:
     nazev: Yonkerské ulice v poplachu
     typ: lokace
     svet: 1930
-    telegraf: "Ulicemi houkají hlídkové vozy a chodníky praskají ve švech; v tom davu musí někdo vypadat, že sem odjakživa patří. Vůz se protáhne průjezdem, kam se sotva vejde. Za sebou musí zůstat něco, co pošle pátrání jinam. V jednom okně nad ulicí se rozsvítí a poznáte to pozdě. V té tlačenici zbraň nikoho nevyplaší."
+    telegraf: "Ulicemi houkají hlídkové vozy a chodníky praskají ve švech; s houkající hlídkou se nikdo nebije. Vůz bude muset někdo protáhnout průjezdem, kam se sotva vejde. Nad hlavami bouchají okna a na rohu stojí strážník s píšťalkou. V jednom okně se rozsvítí ve špatnou chvíli a světlo padne přes celý chodník. Zbraň tu nikdo neřeší, ani na očích."
     text: >
       Sirény houkaly ze všech ulic a chodník byl k prasknutí. {kdo} splynul s davem
       pomocí {VEC}, {kdo} zajel do postranní s {VEC} a {kdo} zahodil stopu za {VEC}.
@@ -401,7 +549,7 @@ situace:
     nazev: Slepá ulička v Bronxu
     typ: npc
     svet: 1930
-    telegraf: "Ulička končí zdí a dva strážníci stojí v jejím ústí. Někdo musí zůstat stát, dokud nedomluví; jiný na ně mezitím vybalí historku, která je zdrží. Když ani to nezabere, zbude vyjet na ně zostra. Jedna lampa nad uličkou zhasne bez varování a poznáte to pozdě. Na očích zbraň jen popudí a potají nezmůže vůbec nic."
+    telegraf: "Ulička končí zdí a v ústí stojí dva strážníci. Vyjet na ně zostra bude muset někdo z posádky. Obušky mají zavěšené na zápěstí a jeden z nich si stoupá tak, aby byl vidět z ulice. Lampa nad hlavami zhasne a tma spolkne i konec uličky. Zbraň na očích tu jen popudí a potají nezmůže nic."
     text: >
       Ulička končila zdí a dva strážníci ji zatarasili. {kdo} držel nervy pevně za
       {VEC}, {kdo} je zkoušel zamluvit pomocí {VEC} a {kdo} zvedl ruku s {VEC}.
@@ -423,7 +571,7 @@ situace:
     nazev: Překladiště v Syracuse
     typ: npc
     svet: 1930
-    telegraf: "Výpravčí stojí rozkročený před vagonem a chce nákladní list, který nemáte. Ustoupí jedině tomu, kdo na něj zatlačí nahlas; závoru u rampy pak odsune někdo jiný. Za to, že se otočí zády, si řekne o svoje. Jedna listina zůstane bez čísla a bude se muset zamluvit. Tomuhle chlapovi bouchačka pusu zavře; jinak tu sáhnout pod kabát jen popudí a schovaná zbraň nezmůže nic."
+    telegraf: "Výpravčí stojí před vagonem a chce nákladní list, který nikdo nemá. Zatlačit na něj nahlas bude muset někdo z posádky. Závora u rampy je spuštěná a za ní čeká vagon s otevřenými dveřmi. Listina zůstane bez čísla a spraví to leda historka na místě. Zbraň na očích tu jen popudí a potají nezmůže nic — ale na tohohle chlapa zabere i zatlačit s ní nahlas."
     text: >
       Výpravčí se rozkročil před vagonem a natáhl ruku po listu, který jste neměli.
       {kdo} na něj zatlačil hrubě s {VEC}, {kdo} odsunul závoru {VEC} a {kdo} mu
@@ -442,7 +590,7 @@ situace:
     nazev: Odstavený vagon v Peekskillu
     typ: lokace
     svet: 1930
-    telegraf: "Na odstavné koleji v Peekskillu se mezi vagony pohupuje lucerna nočního hlídače. Projít kolem něj jde jedině tak, že si najdete jméno, kterému uvěří. Pak zbývá vagon, jehož dveře drží zámek a po dobrém nepovolí. Potmě se to pokazí hned dvakrát, pokaždé jinak, a jednou z toho ranou. Zbraň tu nikoho nevyplaší a schovaná se vyplatí."
+    telegraf: "Na odstavné koleji v Peekskillu se mezi vagony pohupuje lucerna nočního hlídače. Zámek na dveřích vagonu po dobrém nepovolí a někdo ho bude muset vypáčit. Hlídač si pohvizduje a lucernou zajíždí i pod vagony. Potmě se to na štěrku pokazí dvakrát, pokaždé jinak, a z jednoho padne rána. Zbraň tu nikdo neřeší a potají se vyplatí."
     text: >
       Mezi odstavenými vagony se míhalo světlo hlídačovy lucerny. {kdo} proklouzl
       kolem něj pomocí {VEC}, {kdo} páčil dveře vagonu {VEC} a {kdo} ztuhl ve stínu
@@ -468,7 +616,7 @@ situace:
     nazev: Zátah na páté silnici
     typ: zatah
     svet: 1930
-    telegraf: "Silnici přehrazují hlídkové vozy a ven vede jen průraz; někdo do něj musí tlačit, dokud to nepovolí. Vůz pak strhne do postranní někdo jiný, dřív než se blokáda zavře. Zmizet v ulicích půjde jedině cestou, kterou nikdo nečeká. Jeden z reflektorů se otočí přímo na vás a poznáte to pozdě. Zbraně se tu nikdo nelekne."
+    telegraf: "Silnici přehrazují hlídkové vozy nárazník na nárazník a za nimi stojí chlapi s puškami. Prorazit tu řadu plechu bude muset někdo z posádky. Za blokádou stojí druhá řada vozů a postranní ulice se zavírají jedna po druhé. Reflektor se stočí právě na vůz a zůstane na něm. Zbraň tu nikdo neřeší, ani na očích."
     text: >
       Za zatáčkou stála zátaras z hlídkových vozů a reflektory bily do očí. {kdo}
       se pokusil prorazit s {VEC}, {kdo} strhl vůz do postranní pomocí {VEC} a {kdo}

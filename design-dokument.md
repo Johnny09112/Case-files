@@ -105,7 +105,12 @@ s nákladem = razítko **DORUČENO**. Ztratíš náklad nebo tě dožene šerif 
 **Průběh jednoho maso-uzlu:**
 
 1. **Telegraf** — polda vyklepe krátký úvod (co se blíží, ne přesně jak). Sděluje
-   trend (jaké staty situace nejspíš chce) i kolik rolí půjde „proti srsti".
+   **jednu** práci, kterou to místo chce — tu pro scénu charakteristickou, typicky
+   takovou, kterou by hráč z typu uzlu neuhodl — dále **předzvěst**, že něco půjde
+   „proti srsti", a **verdikt o zbrani** (snese to místo železo na očích?). Zbytek
+   rolí se pojmenuje teprve při odhalení textu; telegraf tedy říká **méně** než
+   signál, který engine derivuje, a je to vědomá odchylka ve prospěch čitelnosti
+   (D51/D52 — invariant a odůvodnění v hlavičce `obsah/situace.yaml`).
 2. **Commit dle telegrafu** — tým committne **přesně tolik karet, kolik je slotů**
    (viz §4.3), *než* uvidí celý text.
 3. **Odhalení textu** — teprve teď se ukáže plný text situace se **4 sloty**

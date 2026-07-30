@@ -1373,7 +1373,7 @@ nejlepší a co je designová změna). Poloopravu nedělám.
 3. **`deputy-mytnice`** · kotva `hodnota` · 2. nárok `improvizace` · verdikt C
    > U mýtné boudy natahuje zástupce šerifa ruku po silničním poplatku a sazbu si určuje sám; vysolit ji bude muset někdo z posádky. Jiný zatím odvede řeč k pumpě, která na dvoře netočí ani kapku. Ruka mu sjede z bloku pokut níž a bude to o pěstech. Zbraň na očích tu všechno pokazí, potají může rozhodnout.
 4. **`deputy-hlidka`** · kotva `nastroj` · verdikt C
-   > Postarší strážník stojí vozem napříč silnicí a leští si odznak. Na zadním kole se cestou uvolnily matice a někdo je dotáhne, nebo se dál nepojede. Strážník si zatím prohlíží tabulku vozu, číslo po číslo. Odznak dopadne zpátky na kapsu dřív, než kdo domluví. Zbraň na očích tu všechno pokazí, potají může rozhodnout.
+   > Postarší strážník stojí vozem napříč silnicí a leští si odznak. Na zadním kole se cestou uvolnily matice a někdo je bude muset dotáhnout. Strážník si zatím prohlíží tabulku vozu, číslo po číslo. Odznak dopadne zpátky na kapsu dřív, než kdo domluví. Zbraň na očích tu všechno pokazí, potají může rozhodnout.
 5. **`most-prohnila-prkna`** · kotva KOMBI · povinný zápor útoku · verdikt A
    > Příjezd na most přes Mohawk drží zrezivělá závora, kterou roky nikdo nezvedl, a bít se tu nebude s kým. Prkna za ní jsou prohnilá: bude je třeba přibít a zároveň podložit něčím, co leží po ruce. Uprostřed zeje díra a pod ní jde řeka. Jedno prkno povolí, až bude pozdě couvnout. Zbraň tu nikdo neřeší, ani na očích.
 6. **`privoz-celnik`** · kotva `nastroj` · **OPRAVENO** · verdikt C
@@ -1391,16 +1391,16 @@ nejlepší a co je designová změna). Poloopravu nedělám.
 12. **`mesto-ulicka`** · kotva `utok` · **OPRAVENO 2×** · verdikt D
     > Ulička končí zdí a v ústí stojí dva strážníci. Vyjet na ně zostra bude muset někdo z posádky. Obušky mají zavěšené na zápěstí a jeden z nich si stoupá tak, aby byl vidět z ulice. Lampa nad hlavami zhasne a tma spolkne i konec uličky. Zbraň na očích tu jen popudí a potají nezmůže nic.
 13. **`nadrazi-vypravci`** · kotva `utok` + `stitek_citlivy` · `improv_skryte` · verdikt D + append na kotvu
-    > Výpravčí stojí před vagonem a chce nákladní list, který nikdo nemá. Zatlačit na něj nahlas bude muset někdo z posádky. Závora u rampy je spuštěná a za ní čeká vagon s otevřenými dveřmi. Listina zůstane bez čísla a spraví to leda historka na místě. Zbraň na očích tu jen popudí a potají nezmůže nic — ale zatlačit s ní nahlas je tady jediné, co zabere.
+    > Výpravčí stojí před vagonem a chce nákladní list, který nikdo nemá. Zatlačit na něj nahlas bude muset někdo z posádky. Závora u rampy je spuštěná a za ní čeká vagon s otevřenými dveřmi. Listina zůstane bez čísla a spraví to leda historka na místě. Zbraň na očích tu jen popudí a potají nezmůže nic — ale na tohohle chlapa zabere i zatlačit s ní nahlas.
 14. **`nadrazi-noc`** · kotva `nastroj` · **OPRAVENO** · číslovka „dvakrát" · verdikt B
     > Na odstavné koleji v Peekskillu se mezi vagony pohupuje lucerna nočního hlídače. Zámek na dveřích vagonu po dobrém nepovolí a někdo ho bude muset vypáčit. Hlídač si pohvizduje a lucernou zajíždí i pod vagony. Potmě se to na štěrku pokazí dvakrát, pokaždé jinak, a z jednoho padne rána. Zbraň tu nikdo neřeší a potají se vyplatí.
 15. **`zatah`** · kotva `utok` (pr. 1b) · **OPRAVENO** · verdikt A
-    > Silnici přehrazují hlídkové vozy nárazník na nárazník a za nimi stojí chlapi s puškami. Prorazit se bude muset někdo z posádky, dokud to nepovolí. Za blokádou stojí druhá řada vozů a postranní ulice se zavírají jedna po druhé. Reflektor se stočí právě na vůz a zůstane na něm. Zbraň tu nikdo neřeší, ani na očích.
+    > Silnici přehrazují hlídkové vozy nárazník na nárazník a za nimi stojí chlapi s puškami. Prorazit tu řadu plechu bude muset někdo z posádky. Za blokádou stojí druhá řada vozů a postranní ulice se zavírají jedna po druhé. Reflektor se stočí právě na vůz a zůstane na něm. Zbraň tu nikdo neřeší, ani na očích.
 
 #### Finální znění — `obsah/pronasledovatele.yaml`
 
 16. **`malone-lecka`** · kotva `improvizace` · kanál 7 = zápor · verdikt C
-    > Na mostě u Poughkeepsie stojí Malone s fotografií v ruce a na peníze neslyší. Někdo si k té fotografii bude muset vymyslet jméno, které mu Malone uvěří. Krajnice u zábradlí je úzká a federál od ní neuhne ani o krok. Malonovi zajede ruka pod kabát a od té chvíle je řeč zbytečná. Zbraň na očích tu všechno pokazí, potají může rozhodnout.
+    > Na mostě u Poughkeepsie stojí Malone s fotografií v ruce a na peníze neslyší. Někdo si k té fotografii bude muset vymyslet jméno, které mu Malone uvěří. Krajnice u zábradlí je úzká a federál od ní neuhne ani o krok. Malonovi zajede ruka pod kabát a fotografie zůstane ležet na kapotě. Zbraň na očích tu všechno pokazí, potají může rozhodnout.
 17. **`malone-konfrontace`** · kotva `utok` (pr. 1b) · 2. nárok `obrana` · verdikt B
     > Kolona federálních vozů svírá silnici z obou stran a Malone si beze spěchu nasazuje brýle; na peníze neslyší. Ven se někdo musí probít silou. Druhý u toho vydrží první salvu vestoje. Jeden z vozů popojede a zavře poslední mezeru mezi blatníky. Zbraň tu nikdo neřeší a potají se vyplatí.
 18. **`brody-lecka`** · kotva `improvizace` · 2. nárok `hodnota` · verdikt C + Brodyho append
@@ -1593,6 +1593,55 @@ který je **doslova rolí viditelného slotu** (`zatah` „Strhnout do postrann�
 hranice A posunula ke „route-images", padnou další dva uzly. **Nerozhoduji to sám
 v tomto kole** — je to přesně ta třída otázky, kde se pravidlo dolaďuje na
 hraničních případech, a mandát zní zastavit.
+
+---
+
+### 5.6 D52 — cílená oprava, kontrolní průchod 19/19, ZAPEČENO
+
+*Rozhodnutí uživatele D52: opravit **přesně** ty čtyři věty z §5.5, nechat ověřit,
+a při 19/19 zapéct. Hraniční figura „cesta ven se zavírá" rozhodnuta jako urgence
+— neotvírala se.*
+
+| uzel | bylo | je |
+|---|---|---|
+| `deputy-hlidka` | „…někdo je dotáhne, **nebo se dál nepojede**" | „…a někdo je **bude muset dotáhnout**" |
+| `nadrazi-vypravci` | „…**je tady jediné, co zabere**" | „…— ale na tohohle chlapa **zabere i** zatlačit s ní nahlas" |
+| `zatah` | „Prorazit se bude muset někdo z posádky, **dokud to nepovolí**" | „**Prorazit tu řadu plechu** bude muset někdo z posádky" |
+| `malone-lecka` | „…a **od té chvíle je řeč zbytečná**" | „…a **fotografie zůstane ležet na kapotě**" |
+
+**Kontrolní průchod (`design-critic`, 4 opravené + 3 namátkou nezměněné):
+7/7 PROŠEL → celá sada 19/19.** Kritik ověřoval každou opravu proti účelu, ne jen
+proti liteře, a u dvou z nich doložil, že oprava je **lepší, než byl původní
+záměr**:
+
+- **`nadrazi-vypravci`:** aditivní „i" nejen odstranilo „jediné", ale **zrušilo
+  rozpor** se sousední větou o historce — staré znění stavělo „zatlačit" a
+  „historku" do disjunkce, a tím rušilo jediného nositele `improv_skryte` v celé
+  sadě. Nové znění navíc **signalizuje slotovou výjimku líp než předtím**:
+  „s ní" má jednoznačný antecedent (`Zbraň` je jediné femininum ve větě verdiktu)
+  a váže zbraň na kotvu, kdežto staré znění zbraň nezmiňovalo vůbec.
+- **`malone-lecka`:** rozdíl je v tom, že eskalace je nově **aditivní** („dojde
+  i na tohle") místo **nahrazující** („od té chvíle"). Kritikova poznámka, kterou
+  přebírám jako mez pravidla: *kdyby aditivní eskalace sama porušovala směrový
+  test, byla by předzvěst skrytého útoku nemožná u 9 z 12 npc/lecka scén — to
+  nemůže být kritérium.* Zároveň to označil za nejtěsnější ze čtyř (fotografie je
+  předmět kotvy) — **věta k poslechu u stolu**, ne k přepsání.
+
+**Délky:** kritikův přepočet delt (−8, −7, +2, +6 ≈ −7 zn. na sadu) drží průměr
+na ~317 zn., tedy nad prahem 315. Potvrzeno měřením při zapékacím commitu.
+
+**ZAPEČENO** do `obsah/situace.yaml` (invariant v3 do hlavičky + 15 telegrafů)
+a `obsah/pronasledovatele.yaml` (4 telegrafy), v témže commitu **oprava kanonu**
+dle blokátoru z `projekt/stav.md`:
+- `design-dokument.md` §3 krok 1 — telegraf už neslibuje „trend i počet rolí",
+  ale jednu práci + předzvěst + verdikt, s přiznáním, že próza říká méně než signál;
+- `prototyp-mvp.md` Předpoklady simu — **šest** kanálů místo tří, podmnožina
+  v próze, a varování, že model asymetrii v3 nemodeluje a `memorizacni` není její
+  horní mez;
+- `prototyp-mvp.md` ř. 65 — mrtvé K4d číslo „3p jen 7,9" (rameno `optimal`)
+  nahrazeno hodnotami z ramene `kompetentní`, na kterém je gate definován.
+
+**Tím padá „připraveno, nezapsáno" potřetí odložené od D47.**
 
 ---
 

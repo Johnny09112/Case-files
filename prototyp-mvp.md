@@ -62,7 +62,9 @@ se nechystá.
 
 - **SPLNĚNO:** K1 pro 1p/2p (57,3 / 67,1 %) · **K5 varianta D 9,72 %**
   (6/6 bloků — poprvé od pivotu v3, bez dotyku Maloneho identity, D35) ·
-  K2 floor (20,6 %, 5/6 bloků) · K4d (9,1 b., ale 3p jen 7,9) · K5f pooled
+  K2 floor (20,6 %, 5/6 bloků) · K4d (rameno `kompetentní`: 1p 18,6 · 2p 22,1 ·
+  3p 24,6 · 4p 22,8 b. proti τ = 6; dřívější citace „3p jen 7,9" byla z ramene
+  `optimal`, tedy z jiného gate — přeměřeno D47 §9) · K5f pooled
   (77,6 %) i podíl proher ve finále (97,7 %) · K7 (všechny 4 podmínky) · K8.
 - **NEPLNÍ a nezakrývá se — ZNÁMÁ, VYČÍSLENÁ ODCHYLKA nesená do lidské brány
   (D39, varianta a):** **K1 3p 77,5 % a 4p 79,7 %** proti stropu 70 (6/6 bloků)
@@ -89,8 +91,15 @@ nevynucovalo a co-op výběr karet neumělo zahrát.*
 
 **Předpoklady simu (D19):** commit **naslepo**; **kotvy 2–4** (práh 0 zakázán),
 **šum uniform ±2 s clampem do [0, stat-max]** (od kalibrace-2 2026-07-24); kombinovaný slot = „oba staty ≥ kotva" (střídmě). **Telegraf:
-signál (`trend`, `proti_srsti`, `zbraň_projde`) derivuje engine ze slotů**, próza je
-lidský rendering s QA invariantem věrnosti; **fidelita telegrafu `p` = sweep knob.**
+engine derivuje ze slotů ŠEST kanálů** (`trend`, `proti_srsti`, `zbran_projde`,
+`zbran_skryte`, `improv_skryte`, `zbran_slot_vyjimka`; `resolve.js`), próza je
+lidský rendering s QA invariantem věrnosti a **od v3 (D51/D52) nese jen podmnožinu:
+jednu kotvu + předzvěst + verdikt** — próza tedy říká **méně** než signál, což je
+vědomá odchylka ve prospěch čitelnosti, ne drift. **Fidelita telegrafu `p` = sweep
+knob; pozor, model ji aplikuje na každou roli uniformně, takže asymetrii v3
+(jistota na jedné roli, nula na třech) nemodeluje** — a rameno `memorizacni` není
+její horní mez (měřeno 2026-07-30: dokonalá znalost slotů je u 2p–4p o 4–10 b.
+horší než čtení telegrafu, ta ramena se liší cílením commitu, ne informací).
 Sdílený standardní balík ~40 (líz patří lízajícímu); prémiový osobní loadout je
 post-MVP. **Botí strategie:** commit informovaný/naivní/stat-monokultury (+ **commit-fázový
 model pro postih `hide_telegraf`** — bot committne bez trendu; + `nahodny`
