@@ -255,6 +255,22 @@ je při přiřazení nezná) — jádro „rozděl co nejméně špatně" se hra
 aritmetika. Vada vznikla v katalogu §5 návrhu 2.1 (D36, prošlo PM review).
 **Rozhodnutí uživatele: oprava úniku prahů · telegraf škrtací kolo vs.
 zakrývací zkouška · fallback rovnocenný vs. přiznaně chudší · verdikt WoZ.**
+**D51 EXEKUCE (2026-07-30):** (1) **Únik prahů OPRAVEN** (`b59b08e`) — assign
+ukazuje jen kotvu/šum, rozklad až s razítkem; 3 úniky ucpány, 316/316 testů,
+engine 0 diff, zámek v testech. (2) **Škrtací kolo telegrafů: invariant v3
+hotov (POKRYTÍ škrtnuto, 3 položky, pravidlo 1b pro finále), 19 telegrafů
+přepsáno, ale sada NEZAPEČENA** — kolo našlo 2 nová porušení ČISTOTY
+(`privoz-celnik` anti-tell, `urednik-vaha` trojité pokrytí) a předregistrace
+zakazuje zapéct; znění v reportu
+[[../technika/telegraf-skrtaci-kolo-2026-07-30|technika/telegraf-skrtaci-kolo-2026-07-30.md]],
+dokončovací kolo = diff dvou vět + re-review. **BLOKÁTOR zapékacího commitu
+(žádost kritika): spolu se sadou se MUSÍ zapsat oprava kanonu o kanálech
+telegrafu** — „připraveno, nezapsáno" už dvakrát selhalo. Vedlejší: sim měřidlo
+pro sázku v3 neexistuje (bot se znalostí slotů je pro tým horší než bot čtoucí
+telegraf — ramena se liší cílením, ne informací) → brána je čistě lidská;
+stray `prototyp/.claude/agent-memory/` na úklid (backlog). Consistency opravy
+z D51/3 zapsány (mozek-operace §4.10, obtížnost v MVP, jednotka délky =
+znaky, výtka „bajty" vyvrácena měřením).
 
 ### Co jde do lidské brány jako známé, vyčíslené odchylky
 
