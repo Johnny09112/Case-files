@@ -17,6 +17,7 @@ import pronasledovateleYaml from '../../../obsah/pronasledovatele.yaml?raw';
 import cileYaml from '../../../obsah/cile.yaml?raw';
 import postavyYaml from '../../../obsah/postavy.yaml?raw';
 import sablonyYaml from '../../../prompty/fallback-sablony.yaml?raw';
+import fragmentyYaml from '../../../prompty/fallback-fragmenty.yaml?raw';
 import { load } from 'js-yaml';
 
 import { parseContent } from '../content/loader.js';
@@ -25,6 +26,7 @@ import { createRun } from '../engine/state.js';
 import { EVENT } from '../engine/events.js';
 
 import { createVyberSablon, zapisSituace, zapisFinale } from './protocol-fill.js';
+import { createVyberFragmentu } from './protocol-fragments.js';
 import { vysvetli, ctxZObsahu } from './vysvetleni.js';
 import { obrazovkaSetup } from './screens/setup.js';
 import { obrazovkaRun } from './screens/run/index.js';
@@ -44,6 +46,7 @@ export function initApp(root) {
     postavy: postavyYaml,
   });
   const sablony = load(sablonyYaml).sablony;
+  const fragmenty = load(fragmentyYaml).fragmenty;
 
   const S = novyStav();
 
@@ -69,6 +72,12 @@ export function initApp(root) {
       onboardingRozbor: false,
       /** @type {Record<string, string>} */ jmena: {},
       vyber: createVyberSablon(sablony, Math.random),
+      /**
+       * Fragmentová vrstva (D54(1)) — na rozdíl od pásmové NELOSUJE: seed runu
+       * ji plně určuje, takže týž spis se dá znovu přečíst i reprodukovat
+       * z exportovaného logu. Přeseeduje se v `otevriSpis()`, až je seed znám.
+       */
+      vyberFragmentu: createVyberFragmentu(fragmenty, 0),
       /** Kompletní log (pro obrazovky, které hledají událost podle seq). */
       udalosti: /** @type {object[]} */ ([]),
       /** Anotace vysvětlující vrstvy: seq → Anotace[]. */
@@ -140,7 +149,7 @@ export function initApp(root) {
     const sekce = {
       cislo: S.protokol.length + 1,
       titulek: ctxProtokolu.situace[udalosti.find((u) => u.type === EVENT.SITUATION_REVEALED)?.situace_id] ?? `uzel ${udalosti[0].nodeIndex}`,
-      odstavce: zapisSituace(udalosti, ctxProtokolu, S.vyber),
+      odstavce: zapisSituace(udalosti, ctxProtokolu, S.vyber, S.vyberFragmentu),
     };
     S.protokol.push(sekce);
     S.fronta.push({ nodeIndex: udalosti[0].nodeIndex, udalosti, sekce, vyklepano: false });
@@ -200,6 +209,7 @@ export function initApp(root) {
         return { id: p.id, jmeno: p.jmeno };
       });
       S.jmena = Object.fromEntries(players.map((p) => [p.id, p.jmeno]));
+      S.vyberFragmentu = createVyberFragmentu(fragmenty, S.seed);
       S.run = createRun({ seed: S.seed, content, rules: RULES, players });
       S.obrazovka = 'run';
       S.briefing = true;

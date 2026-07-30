@@ -1,0 +1,135 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`golden fallback protokol nad runem WoZ testu > dnešní pásmová vrstva (kontrolní rameno bez fragmentů) 1`] = `
+[
+  {
+    "odstavce": [
+      "Na uvedeném místě obstály dvě úlohy ze čtyř. Zbylé dvě role skončily bez užitku — ať už tím, že je zastal nevhodný kus, nebo tím, že je nezastal nikdo. Podezřelý Bartoš je od té chvíle ve spisu veden s následkem „Naražené rameno“. Náklad zůstal na voze.",
+    ],
+    "titulek": "Překladiště v Syracuse",
+  },
+  {
+    "odstavce": [
+      "Zjištěno, že v tomto bodě trasy nedošlo k ničemu, co by zakládalo úřední úkon. Všechny čtyři úlohy obstály; následek žádný, ztráta žádná. Při odjezdu se z místa ztratil ještě jeden kus, jehož původ zůstává neobjasněn a objasněn nebude.",
+    ],
+    "titulek": "Odstavený vagon v Peekskillu",
+  },
+  {
+    "odstavce": [
+      "Průchod tímto bodem trasy hodnotím jako uspokojivý, byť ne úplný. Jedna ze čtyř úloh nedopadla; následky z toho neplynou žádné, na nákladu ani na osobách. Stav nákladu: šest beden. Hlášení k místu jsem přijal ústně a dále je nešířil.",
+    ],
+    "titulek": "Zátaras u Verony",
+  },
+  {
+    "odstavce": [
+      "Spis k tomuto bodu trasy nevyznívá ani dobře, ani zle, což je na téhle silnici nadprůměr. Dvě úlohy ze čtyř zůstaly nezvládnuté. Co z toho komu zůstalo, se dozvím z hlášení okrsku, až nějaké dorazí.",
+    ],
+    "titulek": "Starý most přes Mohawk",
+  },
+  {
+    "odstavce": [
+      "Pozornost zákona v tomto úseku vzrostla natolik, že byla přes noc zřízena silniční kontrola, v hlášení vedená jako Zátah na páté silnici. Obě průjezdné cesty byly svedeny na ni; jinudy se projet nedalo. Průběh zaznamenávám níže.",
+      "Na uvedeném místě obstály dvě úlohy ze čtyř. Zbylé dvě role skončily bez užitku — ať už tím, že je zastal nevhodný kus, nebo tím, že je nezastal nikdo. Podezřelý Bartoš je od té chvíle ve spisu veden s následkem „Zvonění v uších“. Náklad zůstal na voze.",
+    ],
+    "titulek": "Zátah na páté silnici",
+  },
+  {
+    "odstavce": [
+      "V bodě hlášeném jako Most u Poughkeepsie byla nastražena léčka; pronásledovatel znal cestu předem, což mě přivádí k otázce, od koho. Vystoupit z vozu nikdo nestihl. Výsledek zaznamenávám níže.",
+      "Tento bod trasy je nutno označit za průšvih v plném úředním významu slova. K dispozici byly „Petrolejová lampa“, „Mosazný boxer“, „Rezervní pneumatika“ a „Řeznický hák“; k čemu to bylo, spis neuvádí, neboť role zůstaly nezvládnuté tak jako tak. Podezřelý Bartoš je veden s těžkým následkem „Otřes mozku“, který se sám nespraví. Náklad se ztenčil o jedna bedna, zbývá pět beden. Pozornost zákona v okolí tím citelně vzrostla.",
+    ],
+    "titulek": "Most u Poughkeepsie",
+  },
+  {
+    "odstavce": [
+      "Pozornost zákona dostoupila vrcholu a došlo k přímé konfrontaci s pronásledovatelem. O nákladu i o osobách rozhodl jediný střet, bez možnosti odvolání. Výsledek uvádím níže, bez příkras.",
+      "K úkonům jsou ve spisu vedeny „Uříznutá hlaveň“, „Starý kompas“, „Slzy na povel“ a „Dámský revolver“; volba nástrojů k jednotlivým rolím vzbuzuje otázky, na které tu nikdo neodpoví. Polovina úloh vyšla, polovina nikoli, což zdejší poměry vystihuje přesně. Podezřelý Bartoš je veden s následkem „Naražené rameno“; jak dlouho mu vydrží, se neuvádí. (Zapisuji bez soucitu, byť s pochopením.)",
+    ],
+    "titulek": "Kolona na albanské poštovní silnici",
+  },
+  {
+    "odstavce": [
+      "Průběh v tomto bodě trasy hodnotím jako selhání, byť se k němu nikdo výslovně nepřihlásil. Ze čtyř úloh obstála nanejvýš jediná; zda ostatní ztroskotaly pro nezpůsobilost, nebo pro nepřítomnost, spis neuvádí. Z vozu se poroučelo, co drželo hůř než ostatní; stav nákladu: čtyři bedny. Pozornost zákona tím v okolí vzrostla, což poznamenávám bez zadostiučinění.",
+      "Podezřelý Bartoš dosáhl počtu následků, po kterém už není k ničemu, a byl odklizen do vozu. Co bylo lehčího, ztrácí se ležením; co těžšího, nikoli. Kdy se posadí, nechává spis otevřené. Do té doby je veden jako nezpůsobilý.",
+    ],
+    "titulek": "Mýtnice za Batavií",
+  },
+  {
+    "odstavce": [
+      "Náklad byl navzdory všemu doručen na místo určení; stav nákladu při předání: čtyři bedny. Kdo jej předával, rozplynul se dřív, než stačil kdokoli zapsat jméno správně. Spis se tímto uzavírá razítkem DORUČENO. (Zdejší úřad k věci dále nic nemá; ostatně nikdy neměl.)",
+    ],
+    "titulek": "Uzavření spisu — DORUCENO",
+  },
+]
+`;
+
+exports[`golden fallback protokol nad runem WoZ testu > s fragmentovou vrstvou 1`] = `
+[
+  {
+    "odstavce": [
+      "Na uvedeném místě obstály dvě úlohy ze čtyř. Zbylé dvě role skončily bez užitku — ať už tím, že je zastal nevhodný kus, nebo tím, že je nezastal nikdo. Podezřelý Bartoš je od té chvíle ve spisu veden s následkem „Naražené rameno“. Náklad zůstal na voze.",
+      "Bez závady je vedena položka „Zatlačit hrubě“; zasloužil se o to kus zapsaný jako „Dědečkova brokovnice“. Obstarat položku „Odsunout závoru“ měl předmět vedený jako „Kanystr benzínu“; na tu práci byl krátký. U úkonu zapsaného jako „Podmáznout dlaň“ byla rozhodná vlastnost vyřazena a kus „Hovězí vývar“ tím pozbyl smyslu. Předmět zapsaný jako „Kněžský kolárek“ obstál v úkonu vedeném jako „Zmást papírem“, což zaznamenávám bez dalšího.",
+    ],
+    "titulek": "Překladiště v Syracuse",
+  },
+  {
+    "odstavce": [
+      "Opatření v tomto bodě trasy nenavrhuji žádné, což mě na téhle silnici potkává zřídka. Důvod uvádím tento: čtyři úlohy, čtyři zdařilé konce. Odjezd proběhl i s kusem navíc, po kterém se dosud nikdo nesháněl.",
+      "Předmět zapsaný jako „Provaz a kladka“ obstál v úkonu vedeném jako „Proklouznout kolem“, což zaznamenávám bez dalšího. Zdařilo se: k úloze vedené jako „Vypáčit vagon“ byl přiřazen předmět zapsaný jako „Lopata“ a účelu vyhověl. Proti úloze vedené jako „Ztuhnout ve stínu“ stál předmět zapsaný jako „Kastrol na hlavě“ a nehnul se ani o píď. K položce „Kdyby se probudil“ postačil kus vedený jako „Páčidlo“; dál se už nikdo nevyptával.",
+    ],
+    "titulek": "Odstavený vagon v Peekskillu",
+  },
+  {
+    "odstavce": [
+      "Průchod tímto bodem trasy hodnotím jako uspokojivý, byť ne úplný. Jedna ze čtyř úloh nedopadla; následky z toho neplynou žádné, na nákladu ani na osobách. Stav nákladu: šest beden. Hlášení k místu jsem přijal ústně a dále je nešířil.",
+      "Nedostatečnost nutno přiznat — k úloze vedené jako „Postavit se jim“ byl přiřazen předmět „Bedna kanadské“ a nestačil. Předmět zapsaný jako „Plechová vesta“ obstál v úkonu vedeném jako „Ustát nápor“, což zaznamenávám bez dalšího. Úkon zapsaný jako „Vyklouznout stranou“ vyřídil předmět vedený jako „Konev na mléko“ způsobem, který spis raději nerozvádí. Bez závady je vedena položka „Tasit včas a první“; zasloužil se o to kus zapsaný jako „Ukradený samopal“.",
+    ],
+    "titulek": "Zátaras u Verony",
+  },
+  {
+    "odstavce": [
+      "Spis k tomuto bodu trasy nevyznívá ani dobře, ani zle, což je na téhle silnici nadprůměr. Dvě úlohy ze čtyř zůstaly nezvládnuté. Co z toho komu zůstalo, se dozvím z hlášení okrsku, až nějaké dorazí.",
+      "Kus vedený jako „Kožená zástěra“ byl na položku „Zvednout závoru“ zjevně krátký; spis to konstatuje bez údivu. Úloha vedená jako „Zpevnit prkna“ žádala dvojí způsobilost; kus zapsaný jako „Medvědí kožich“ přinesl jen jednu. Úkon zapsaný jako „Projet dírou“ vyřídil předmět vedený jako „Schovaná pistole“ způsobem, který spis raději nerozvádí. Bez závady je vedena položka „Nedat to na sobě“; zasloužil se o to kus zapsaný jako „Tlustá bible“.",
+    ],
+    "titulek": "Starý most přes Mohawk",
+  },
+  {
+    "odstavce": [
+      "Pozornost zákona v tomto úseku vzrostla natolik, že byla přes noc zřízena silniční kontrola, v hlášení vedená jako Zátah na páté silnici. Obě průjezdné cesty byly svedeny na ni; jinudy se projet nedalo. Průběh zaznamenávám níže.",
+      "Na uvedeném místě obstály dvě úlohy ze čtyř. Zbylé dvě role skončily bez užitku — ať už tím, že je zastal nevhodný kus, nebo tím, že je nezastal nikdo. Podezřelý Bartoš je od té chvíle ve spisu veden s následkem „Zvonění v uších“. Náklad zůstal na voze.",
+      "Kus vedený jako „Banánový kanón“ byl na položku „Prorazit blokádu“ zjevně krátký; spis to konstatuje bez údivu. Předmět zapsaný jako „Svářečka“ obstál v úkonu vedeném jako „Strhnout do postranní“, což zaznamenávám bez dalšího. Nedostatečnost nutno přiznat — k úloze vedené jako „Zmizet v ulicích“ byl přiřazen předmět „Sekáček na led“ a nestačil. Bez závady je vedena položka „Držet nervy u okna“; zasloužil se o to kus zapsaný jako „Pytel cementu“.",
+    ],
+    "titulek": "Zátah na páté silnici",
+  },
+  {
+    "odstavce": [
+      "V bodě hlášeném jako Most u Poughkeepsie byla nastražena léčka; pronásledovatel znal cestu předem, což mě přivádí k otázce, od koho. Vystoupit z vozu nikdo nestihl. Výsledek zaznamenávám níže.",
+      "Průběh v tomto bodě trasy nelze označit jinak než jako selhání. Podezřelý Bartoš je veden s těžkým následkem „Otřes mozku“; k jeho odstranění by bylo třeba víc než ochoty. Stav nákladu: pět beden. Hlášení o rozruchu doputovalo na okrsek dřív, než z místa kdokoli odjel.",
+      "Kus vedený jako „Petrolejová lampa“ byl na položku „Zapřít totožnost“ zjevně krátký; spis to konstatuje bez údivu. Ve věci vedené jako „Nedat na sobě znát“ selhal kus zapsaný jako „Mosazný boxer“, a nikoli nešťastnou náhodou. Nedostatečnost nutno přiznat — k úloze vedené jako „Objet ho stranou“ byl přiřazen předmět „Rezervní pneumatika“ a nestačil. Zdařilo se: k úloze vedené jako „Kdyby sáhl po zbrani“ byl přiřazen předmět zapsaný jako „Řeznický hák“ a účelu vyhověl.",
+    ],
+    "titulek": "Most u Poughkeepsie",
+  },
+  {
+    "odstavce": [
+      "Pozornost zákona dostoupila vrcholu a došlo k přímé konfrontaci s pronásledovatelem. O nákladu i o osobách rozhodl jediný střet, bez možnosti odvolání. Výsledek uvádím níže, bez příkras.",
+      "Spis k tomuto bodu trasy nevyznívá ani dobře, ani zle, což je na téhle silnici nadprůměr. Dvě úlohy ze čtyř zůstaly nezvládnuté. Co z toho komu zůstalo, se dozvím z hlášení okrsku, až nějaké dorazí.",
+      "Předmět zapsaný jako „Uříznutá hlaveň“ obstál v úkonu vedeném jako „Probít se ven“, což zaznamenávám bez dalšího. Předmět vedený jako „Starý kompas“ měl v úkonu zapsaném jako „Ustát salvu“ vydržet; povolil hned zkraje. Zdařilo se: k úloze vedené jako „Strhnout do pole“ byl přiřazen předmět zapsaný jako „Slzy na povel“ a účelu vyhověl. Důraz, který se u úlohy vedené jako „Krýt záda“ očekával, kus zapsaný jako „Dámský revolver“ nepřinesl.",
+    ],
+    "titulek": "Kolona na albanské poštovní silnici",
+  },
+  {
+    "odstavce": [
+      "Průběh v tomto bodě trasy hodnotím jako selhání, byť se k němu nikdo výslovně nepřihlásil. Ze čtyř úloh obstála nanejvýš jediná; zda ostatní ztroskotaly pro nezpůsobilost, nebo pro nepřítomnost, spis neuvádí. Z vozu se poroučelo, co drželo hůř než ostatní; stav nákladu: čtyři bedny. Pozornost zákona tím v okolí vzrostla, což poznamenávám bez zadostiučinění.",
+      "U úkonu zapsaného jako „Silniční poplatek“ byla rozhodná vlastnost vyřazena a kus „Balík bankovek“ tím pozbyl smyslu. Ve věci vedené jako „Zamluvit to“ selhal kus zapsaný jako „Dědkův kabát“, a nikoli nešťastnou náhodou. Předmět zapsaný jako „Pytel brambor“ obstál v úkonu vedeném jako „Klidná tvář“, což zaznamenávám bez dalšího. Kus vedený jako „Stříbrná placatka“ byl na položku „Kdyby přituhlo“ zjevně krátký; spis to konstatuje bez údivu.",
+      "Podezřelý Bartoš dosáhl počtu následků, po kterém už není k ničemu, a byl odklizen do vozu. Co bylo lehčího, ztrácí se ležením; co těžšího, nikoli. Kdy se posadí, nechává spis otevřené. Do té doby je veden jako nezpůsobilý.",
+    ],
+    "titulek": "Mýtnice za Batavií",
+  },
+  {
+    "odstavce": [
+      "Náklad byl navzdory všemu doručen na místo určení; stav nákladu při předání: čtyři bedny. Kdo jej předával, rozplynul se dřív, než stačil kdokoli zapsat jméno správně. Spis se tímto uzavírá razítkem DORUČENO. (Zdejší úřad k věci dále nic nemá; ostatně nikdy neměl.)",
+    ],
+    "titulek": "Uzavření spisu — DORUCENO",
+  },
+]
+`;

@@ -14,19 +14,17 @@
  * pole `jmeno` z obsah/postavy.yaml.
  */
 import { EVENT } from '../engine/events.js';
+import { zapisSloty } from './protocol-fragments.js';
+import { dosad, prijmeni } from './protocol-text.js';
+
+// Re-export: `prijmeni` i `dosad` sem importuje zbytek UI (assign.js,
+// situace-text.js, testy) — modul `protocol-text.js` je jen rozdělení kvůli
+// cyklu s fragmentovou vrstvou, ne změna veřejného rozhraní.
+export { dosad, prijmeni };
 
 /** Nouzová věta, kdyby pro kombinaci neexistovala žádná šablona. */
 export const NOUZOVY_ZAZNAM =
   'Průběh v tomto bodě zaznamenán bez podrobností; spis doplní vyšetřovatel dodatečně.';
-
-/**
- * Příjmení = poslední slovo celého jména („Vincenc Bartoš" → „Bartoš").
- * @param {string} celeJmeno
- */
-export function prijmeni(celeJmeno) {
-  const slova = String(celeJmeno).trim().split(/\s+/);
-  return slova[slova.length - 1];
-}
 
 const BEDNY_SLOVY = [
   'žádná bedna',
@@ -45,19 +43,6 @@ const BEDNY_SLOVY = [
  */
 export function frazeBeden(n) {
   return BEDNY_SLOVY[n] ?? `${n} beden`;
-}
-
-/**
- * Dosadí hodnoty do placeholderů {klic}. Neznámé placeholdery nechává být
- * (šablona smí zmínit jen to, co jí `podminka` zaručuje — chybějící hodnota
- * je chyba šablony, ne dosazení).
- * @param {string} text
- * @param {Record<string, string|number>} hodnoty
- */
-export function dosad(text, hodnoty) {
-  return text.replace(/\{(\w+)\}/g, (cely, klic) =>
-    klic in hodnoty ? String(hodnoty[klic]) : cely
-  );
 }
 
 /** Úvodní šablona dle typu místa (jen vložená/speciální setkání ji mají). */
@@ -85,17 +70,27 @@ export function sedi(sablona, stav) {
  * Stavový výběr šablon: filtruje dle pásma + podmínky a losuje bez opakování
  * v řadě (tatáž šablona nepadne dvakrát po sobě, pokud je z čeho vybírat).
  *
+ * `opts.bezVeci` upřednostní varianty BEZ placeholderu `{veci}`. Používá se,
+ * když nad odstavcem běží fragmentová vrstva (D54(1)) a věci jmenuje ona:
+ * dvojí vyjmenování týchž čtyř kusů ve dvou sousedních odstavcích je přesně ta
+ * únava, kterou kvótuje pravidlo N6 hlavičky sady. Je to PREFERENCE, ne filtr —
+ * když v pásmu jiná varianta není, pásmo se stejně napíše.
+ *
  * @param {object[]} sablony seznam z fallback-sablony.yaml
  * @param {() => number} [rand] zdroj náhody [0,1) — v testech deterministický
- * @returns {(pasmo: string, stav?: {postih?: boolean, bedna?: boolean}) =>
- *   {id: string|null, text: string}}
+ * @returns {(pasmo: string, stav?: {postih?: boolean, bedna?: boolean},
+ *   opts?: {bezVeci?: boolean}) => {id: string|null, text: string}}
  */
 export function createVyberSablon(sablony, rand = Math.random) {
   /** @type {Map<string, string>} poslední vylosované id per pásmo */
   const posledni = new Map();
-  return function vyber(pasmo, stav = {}) {
+  return function vyber(pasmo, stav = {}, opts = {}) {
     let kandidati = sablony.filter((s) => s.pasmo === pasmo && sedi(s, stav));
     if (kandidati.length === 0) return { id: null, text: NOUZOVY_ZAZNAM };
+    if (opts.bezVeci) {
+      const bezVyctu = kandidati.filter((s) => !String(s.text).includes('{veci}'));
+      if (bezVyctu.length > 0) kandidati = bezVyctu;
+    }
     if (kandidati.length > 1 && posledni.has(pasmo)) {
       const bezPosledni = kandidati.filter((s) => s.id !== posledni.get(pasmo));
       if (bezPosledni.length > 0) kandidati = bezPosledni;
@@ -121,13 +116,19 @@ export function createVyberSablon(sablony, rand = Math.random) {
  * dokumentace šablon), takže by protokol tvrdil jméno, které mechanika
  * nedala.
  *
+ * FRAGMENTOVÁ VRSTVA (D54(1), volitelný `vyberFragmentu`): za pásmovým
+ * odstavcem přibude odstavec s jednou větou na slot — teprve on říká, KTERÁ věc
+ * byla v KTERÉ roli a jak dopadla (`protocol-fragments.js`). Když běží, pásmový
+ * odstavec se vybírá s preferencí variant bez `{veci}`.
+ *
  * @param {object[]} udalosti události jednoho uzlu z logu enginu
  * @param {{jmena: Record<string,string>, veci: Record<string,string>,
  *   situace: Record<string,string>, postihy: Record<string,string>}} ctx
  * @param {ReturnType<typeof createVyberSablon>} vyber
+ * @param {ReturnType<typeof import('./protocol-fragments.js').createVyberFragmentu>} [vyberFragmentu]
  * @returns {string[]} hotové odstavce
  */
-export function zapisSituace(udalosti, ctx, vyber) {
+export function zapisSituace(udalosti, ctx, vyber, vyberFragmentu) {
   const odhaleni = udalosti.find((u) => u.type === EVENT.SITUATION_REVEALED);
   const pasmoUdalost = udalosti.find((u) => u.type === EVENT.BAND_RESOLVED);
   const sloty = udalosti.filter((u) => u.type === EVENT.SLOT_RESOLVED);
@@ -142,11 +143,13 @@ export function zapisSituace(udalosti, ctx, vyber) {
   const pasmoUvodu = PASMO_UVODU[odhaleni?.typ_mista];
   if (pasmoUvodu) odstavce.push(dosad(vyber(pasmoUvodu).text, { uzel }));
 
+  const vetySlotu = vyberFragmentu ? zapisSloty(udalosti, ctx, vyberFragmentu) : [];
+
   if (pasmoUdalost) {
     const postih = postihy[0] ?? null;
     const stav = { postih: postih != null, bedna: (pasmoUdalost.naklad_ztrata ?? 0) > 0 };
     odstavce.push(
-      dosad(vyber(pasmoUdalost.pasmo, stav).text, {
+      dosad(vyber(pasmoUdalost.pasmo, stav, { bezVeci: vetySlotu.length > 0 }).text, {
         // {jmeno} JEN z příjemce postihu — mechanika jinak žádnou osobu
         // neurčila (viz JSDoc výše i hlavička fallback-sablony.yaml).
         ...(postih ? { jmeno: prijmeni(ctx.jmena?.[postih.hrac_id] ?? postih.hrac_id) } : {}),
@@ -158,6 +161,8 @@ export function zapisSituace(udalosti, ctx, vyber) {
       })
     );
   }
+
+  if (vetySlotu.length > 0) odstavce.push(vetySlotu.join(' '));
 
   for (const kolaps of kolapsy) {
     odstavce.push(
