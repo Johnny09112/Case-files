@@ -107,6 +107,20 @@ etnika, pohlaví ani dětí.
 
 ## Poznámky agenta (log zásadních doporučení/rozhodnutí)
 
+- [2026-07-30] **Review hráčského zážitku (na vyžádání uživatele), 5 nálezů.**
+  P0: (1) rozdělení do slotů je separabilní přiřazovací úloha — sloty na sobě
+  nezávisí, optimum je spočitatelné → padá pilíř „hádka" i obrana proti
+  quarterbackingu; D51 opravil jistotu, ne separabilitu; doporučena jedna
+  mezislotová vazba (favorit: sdílený rozpočet napříč sloty → Žár), vlastním
+  kolem a kontrafaktuálně. (2) Zážitek visí na netestované AI vrstvě, fallback
+  není podlaha (plochý `{veci}`) → fragmentová vrstva bez ohledu na verdikt WoZ;
+  doporučení k WoZ: B-lite. (3) Commit naslepo bez atribuce — chybí ukazatel
+  „dosaženo X / dosažitelné Y" v UI (ne jen v promptu); zakrývací zkouška
+  přestala být hygiena a je gate. P1: (4) 15 situací s pevnými texty nese 2–3
+  runy → ohrožuje metriku 3 (dobrovolný další run); scope otázka, odhad potřeby
+  30–40. (5) Sólo je nejslabší buňka matice zážitku a jediná pravidelně
+  testovaná → nález #1 je v sólu neviditelný; potřeba jedno sezení se 2–3 lidmi
+  před další sólo iterací.
 - [2026-07-30] Onboarding proveden. Pilíře potvrzeny uživatelem ve variantě
   „nedostatek / hádka / protokol"; „mechanika rozhoduje, AI vypráví" vedena jako
   neporušitelný princip, ne pilíř. Cílovka = stolní co-op parta **+ streameři**.
