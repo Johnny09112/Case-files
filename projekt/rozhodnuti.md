@@ -13,6 +13,23 @@ architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.m
 
 ## 2026-07-30
 
+- **D52 (ROZHODNUTÍ UŽIVATELE) — dokončení telegrafů agentním kolem po zvednutí
+  limitu (ne PM v zastoupení); hranice A = urgence; kolo separability se otevírá.**
+  Kontext: směrový test dal 15/19 (report §5.5) a předregistrované pravidlo
+  zastavilo zapečení; současně účet narazil na měsíční limit útraty, takže
+  agentní kola dočasně selhávají. (1) **Telegrafy:** 4 neprošlé věty
+  (`deputy-hlidka`, `nadrazi-vypravci`, `zatah`, `malone-lecka` — operátory
+  výhradnosti) opraví krátké agentní kolo (designer opraví, kritik znovu pustí
+  směrový test, pak zapečení dle blokátoru: sada + invariant + oprava kanonu
+  v jednom commitu) **až po zvednutí limitu** — uživatel odmítl PM zastoupení,
+  procesní čistota má přednost před rychlostí. (2) **Hraniční otázka figury
+  „cesta ven se zavírá":** drží se kritikova interpretace (urgence, texty
+  procházejí); přísnost hranice rozhodnou data zakrývací zkoušky, ne
+  interpretační spor. (3) **Separabilita slotů (Denisa P0/#1):** kolo se
+  otevírá po zvednutí limitu, ve frontě ZA telegrafy — mandát: game-designer
+  navrhne jednu mezislotovou vazbu (favorit sdílený rozpočet → Žár),
+  kontrafaktuální měření, prověrka kritika, schvaluje uživatel. Změna mechaniky
+  → před případnou další kalibrací, ne po ní.
 - **D51 (ROZHODNUTÍ UŽIVATELE) — únik prahů se opravuje dle kanonu, telegrafy
   jdou do škrtacího kola, fallback se rozhodne po WoZ čtení.** Podklad:
   konceptové kolo [[../technika/koncept-kreativita-navrh-2026-07-30|technika/koncept-kreativita-navrh-2026-07-30.md]]

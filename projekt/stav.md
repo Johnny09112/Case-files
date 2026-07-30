@@ -271,6 +271,16 @@ telegraf — ramena se liší cílením, ne informací) → brána je čistě li
 stray `prototyp/.claude/agent-memory/` na úklid (backlog). Consistency opravy
 z D51/3 zapsány (mozek-operace §4.10, obtížnost v MVP, jednotka délky =
 znaky, výtka „bajty" vyvrácena měřením).
+**SMĚROVÝ TEST 15/19 A LIMIT ÚČTU (D52, 2026-07-30):** 5. průchod zastavil
+zapečení dle předregistrace (4 věty s operátory výhradnosti, report §5.5)
+a účet narazil na měsíční limit útraty — agentní kola dočasně selhávají.
+**Fronta po zvednutí limitu (D52):** (1) krátké kolo telegrafů — oprava 4 vět
+→ směrový test → zapečení (sada + invariant + kanon jedním commitem);
+(2) kolo separability slotů (Denisa P0/#1) — návrh mezislotové vazby
++ kontrafaktuál + kritik, schvaluje uživatel. Hranice A = urgence (rozhodne
+zakrývací zkouška). **U uživatele dál: slepé čtení WoZ testu + zvednutí
+limitu.** Nový agent `denisa` (game-dev-lead) onboardována, 5 nálezů
+v `.claude/game-lead/brief.md`.
 
 ### Co jde do lidské brány jako známé, vyčíslené odchylky
 
