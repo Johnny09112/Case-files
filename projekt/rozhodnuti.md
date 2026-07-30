@@ -11,6 +11,25 @@ ukazatel na archiv.*
 architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.md]]
 (přesunuto 2026-07-24).
 
+## 2026-07-30
+
+- **D51 (ROZHODNUTÍ UŽIVATELE) — únik prahů se opravuje dle kanonu, telegrafy
+  jdou do škrtacího kola, fallback se rozhodne po WoZ čtení.** Podklad:
+  konceptové kolo [[../technika/koncept-kreativita-navrh-2026-07-30|technika/koncept-kreativita-navrh-2026-07-30.md]]
+  + PM verifikace úniku (assign.js:243 vs. design ř. 165/295 vs. bot).
+  (1) **Prahy:** při rozdělování jen kotva/trend, přesný práh až s razítkem při
+  vyhodnocení — řádek katalogu §5 návrhu 2.1 (situation_revealed s rozkladem
+  prahu) se TÍMTO MĚNÍ (D51 přebíjí D36 v tomto bodě; vada prošla PM review,
+  přiznáno). (2) **Telegrafy:** škrtací kolo hned — revize invariantu (škrt
+  kanálu POKRYTÍ, cíl „3 položky na ~320 znacích s víc obrazem") → přepis →
+  zakrývací zkouška až na výsledku. (3) **Fallback (rovnocenný vs. přiznaně
+  chudší):** odloženo do slepého čtení WoZ testu uživatelem. Poznámky:
+  kontrolní rameno WoZ už existuje (režim A = kanonický prompt, týž model);
+  otázka „zná bot prahy při přiřazení?" zodpovězena PM (nezná — jen oracle),
+  takže oprava úniku hru a měření srovnává, ne rozjíždí. Drobné consistency
+  nálezy (mozek-operace v §4.10, obtížnost v MVP, jednotka délky telegrafu)
+  se přibalují do škrtacího kola.
+
 ## 2026-07-29
 
 - **D50 — UI: mechanický řádek telegrafu skryt, ulehčení a onboarding
