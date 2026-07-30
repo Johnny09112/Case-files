@@ -3,7 +3,9 @@
 *Stav ke 2026-07-30, `game-designer` dle mandátu D51 + dokončovacího kola.
 **Invariant v3 je hotový a po re-review doplněný o pravidla, která kolo objevilo
 teprve použitím na hotové texty (zákaz výhradnosti, směrový test — §2, §3.6).
-Sada 19 telegrafů prošla ČTYŘMI průchody a do `obsah/` se ANI TEĎ NEZAPSALA:**
+Sada 19 telegrafů prošla čtyřmi průchody a mechanickou kontrolou směrovým testem,
+která dala **15/19 — do `obsah/` se proto NEZAPSALA** (§5.5, čtyři neprošlé texty
+s citacemi; dle mandátu se neopravují a rozhoduje uživatel).**
 oba recenzenti dali „ZAPÉCT PO OPRAVÁCH", jejich nálezy jsou zapracované (§3.5),
 ale výsledná verze je opět nerecenzovaná a **délky se musí přeměřit** — kritik
 doloženě odhaduje, že čtvrtý průchod ubral obraz v 9 uzlech. Předem, aby to nebylo
@@ -1556,6 +1558,41 @@ nového pravidla o neosobní předzvěsti — vědomé, zapsané, ať to příš
 **Testér zároveň potvrdil, že doslovnost verdiktů funguje** (*„čte se jako refrén
 telegrafního úředníka právě proto, že je v pevné koncové pozici"*) a že z jedenácti
 chráněných obrazů drží devět, dva jsou nahrazené lépe.
+
+---
+
+### 5.5 Mechanická aplikace směrového testu (2026-07-30) — **15 z 19, ZAPEČENÍ ZASTAVENO**
+
+*Poslední kolo pod mandátem D51: `design-critic` dostal zadání provést přesně to,
+co sám navrhl — mechanicky aplikovat zákaz výhradnosti a směrový test na 19 znění
+z §3.5. Žádné přepisy, žádná nová recenze. Rozhodovací pravidlo bylo dané předem:
+19/19 → zapečení, cokoli jiného → stop a rozhoduje uživatel. **Vyšlo 15/19, takže
+se nezapéká a já podle mandátu neopravuji.***
+
+| id | co porušuje |
+|---|---|
+| **`deputy-hlidka`** | „…někdo je dotáhne, **nebo se dál nepojede**." — disjunktivní forma zakázaného „jinak"; z nástrojové práce dělá jedinou branku uzlu → sníží ochotu na `obrana` (viditelný, **kotva 4**, nejvyšší v uzlu) a `hodnota` (viditelný, kotva 3) |
+| **`nadrazi-vypravci`** | „…ale zatlačit s ní nahlas **je tady jediné, co zabere**." — doslovné „jediné" ve větě, kterou invariant sám váže na nárok kotvy. Navíc **popírá předchozí větu** „spraví to leda historka na místě", tedy ruší jediný nositel `improv_skryte` v celé sadě |
+| **`zatah`** | „Prorazit se bude muset někdo z posádky, **dokud to nepovolí**." — „dokud ne…" ze zakázaného výčtu, vztažené k povolení blokády, ne k nástroji práce → sníží ochotu na `nastroj` i `improvizace`, **oba viditelné s kotvou 4** |
+| **`malone-lecka`** | „Malonovi zajede ruka pod kabát a **od té chvíle je řeč zbytečná**." — čisté A: devalvuje `improvizace`, což je **kotva toho uzlu** (kotva 4). Táž próza tím zpětně ruší svůj vlastní nárok z věty 2 |
+
+**Tři ze čtyř leží v uzlech, které §3.5 hlásí jako „OPRAVENO"** — pravidlo bylo
+zapsané před texty, ale na tyhle čtyři věty se nepoužilo. Dvě porušení jsou
+doslovné operátory ze zakázaného výčtu, které měl autor (já) najít grepem.
+
+**Kritik zároveň drží hranici pravidla poctivě** a nepřestřelil ji: „jedinkrát"
+(podmět lucerna), „jen na váhu" (podmět úředník), „po dobrém nepovolí" a „bez páky
+se nehnou" (výhradnost vztažená k nástroji práce) prošly správně, protože pravidlo
+míří na věty **nároku**, ne na kulisu.
+
+**Jedna otázka, kterou vrací k rozhodnutí designérovi (nehlásí ji jako blokátor):**
+figura „cesta ven se zavírá" stojí ve třech uzlech a ve dvou z nich míří na objekt,
+který je **doslova rolí viditelného slotu** (`zatah` „Strhnout do postranní",
+`brody-konfrontace` „Najít, kudy ujet"). Pustil ji jako obraz urgence, ne marnosti
+(průběhové „se zavírá"), a přiznává, že je to interpretační rozhodnutí: kdyby se
+hranice A posunula ke „route-images", padnou další dva uzly. **Nerozhoduji to sám
+v tomto kole** — je to přesně ta třída otázky, kde se pravidlo dolaďuje na
+hraničních případech, a mandát zní zastavit.
 
 ---
 

@@ -65,6 +65,19 @@ rameno/metriku jako „strop", ověř, že se od referenčního ramena liší **
 proměnnou, o které se mluví**. Když striktně lepší vstup dá horší výsledek, měřím
 politiku, ne informaci — a nález je o modelu, ne o designu.
 
+**Pátá instance, tentokrát o MÉ VLASTNÍ opravě (škrtací kolo telegrafů, 2026-07-30):**
+opravoval jsem třídu chyby „anti-tell o statu, který ve slotech je" a napsal na to
+výčtovou kontrolu (vypiš pět statů, najdi, který vylučuji). Kritik doložil, že jsem
+opravil **gramatickou formu, ne třídu**: tatáž chyba se ve 4 uzlech vyskytovala jako
+**operátor výhradnosti** („jen“, „jedině“, „dokud“, „jinak“), který je gramaticky
+NÁROK, takže mou kontrolou projde — autor po pravdě odpoví „nevylučuji žádný stat“.
+Dva z těch uzlů jsem do toho stavu uvedl teprve předchozí „opravou“.
+**How to apply:** když píšu kontrolní proceduru na nalezenou chybu, formuluj ji
+**směrově** („snižuje tato věta ochotu hráče committnout na stat X?“), ne
+**formálně** („obsahuje větu typu Y?“). Formální kontrola chytí instance, které jsem
+už viděl, a mine ty, které mají týž efekt jinou syntaxí. A: opravuji-li potřetí týž
+uzel, je vada ve specifikaci, ne v textu.
+
 **Zobecněné pravidlo:** než navrhnu redefinici metriky jako „lék", **ověř matematiku
 proti enginu / požádej facilitátora o kontrafaktuál** — teoretická redefinice může
 být no-op nebo mířit na špatný driver. Dvakrát mě teorie (efekt vs. měření) svedla.

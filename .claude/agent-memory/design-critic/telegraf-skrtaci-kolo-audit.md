@@ -47,6 +47,18 @@ potom opravit.
    zapečená sada D49 byla měřená ve znacích a správně. Poučení: u délek měř
    dřív, než tvrdím, že se měřilo špatně.
 
+**Mechanická brána A/B na finální sadě §3.5 (2026-07-30, poslední kolo D51):**
+aplikován SMĚROVÝ TEST + ZÁKAZ VÝHRADNOSTI na každou větu všech 19.
+**Výsledek 15/19 → zapečení se zastavuje** (pravidlo bylo 19/19 = zapéct).
+Neprošly: `deputy-hlidka` („nebo se dál nepojede"), `nadrazi-vypravci` (append
+„je tady jediné, co zabere"), `zatah` („dokud to nepovolí"), `malone-lecka`
+(„od té chvíle je řeč zbytečná" proti improvizaci = kotva uzlu).
+Konvence, kterou jsem při tom zavedl a je třeba ji držet i příště: **normativní
+verdikt zbraně a appendy kanálu 7 se A/B testem nehodnotí** (jsou to pevné
+řetězce věrné signálu, „jen popudí" tam není porušení) a **B se vztahuje jen na
+věty nároku** — „jen/jedinkrát" v kulise neporušuje nic. Route-images
+(„poslední mezera se zavírá") jsem pustil jako obraz tlaku, ne devalvaci statu.
+
 **Blokující nálezy (a jak s nimi designér naložil — DOPLNIT po rozhodnutí):**
 B-1 pravidlo 2 maže útok-nárok v obou konfrontacích, kde `zbran_projde=ano`
 a viditelný útok-slot má kotvu 4, a druhý nárok je tam zakázaný → znovu se
