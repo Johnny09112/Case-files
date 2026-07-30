@@ -1082,7 +1082,29 @@ Součet `telegraf` + `text` je u všech 19 pod rozpočtem uzlu 670 (max 595,
 znaky, takže vázající limit je STROP 400, ne rozpočet uzlu.** Nová sada má tedy
 proti cíli ~320 pohodlnou rezervu a „místo pro obraz" není teoretické.
 
-### 4.2 Finální sada — ZMĚŘENO (2026-07-30, `playtest-facilitator`)
+### 4.2b Sada po 4. průchodu — ZMĚŘENO (2026-07-30, `playtest-facilitator`)
+
+| jednotka | min | max | průměr |
+|---|---|---|---|
+| **znaky** | **284** (`mesto-ulicka`) | **351** (`nadrazi-vypravci`) | **317,8** |
+
+- **Strop 400 i rozpočet uzlu 670: splněny 19/19** (nejtěsnější uzel
+  `malone-lecka` 577/670).
+- **Průměr 317,8 je NAD předem zapsanou hranicí 315** (§3.6), takže kritikova
+  obava z ubraného obrazu se **nepotvrdila**: čtvrtý průchod ubral 1,7 znaku
+  průměrně, ne 10–20. Sada tedy **neselhává na délce** — drží ji jen to, že je
+  po opravách nerecenzovaná.
+- Rozptyl se zúžil (284–351 proti 285–358), což je očekávaný důsledek
+  normalizace verdiktů.
+
+**A jeden nález, který měření vyrobilo mimochodem a je věcný:** `malone-lecka`
+nesl **staré znění verdiktu C** („potají může být to jediné, co pomůže") místo
+sjednoceného — takže tvrzení „C 8× → jedno doslovné znění" bylo fakticky 7 + 1.
+**Opraveno.** Je to čtvrtý případ v tomto kole, kdy strojová kontrola našla to,
+co tři čtení nenašla — a přesně proto přejímka v3 žádá **tabulku buňka → uzel →
+znění**, ne čtení po jednom telegrafu.
+
+### 4.2 Sada po 3. průchodu — ZMĚŘENO (2026-07-30, `playtest-facilitator`)
 
 Měřeno stejnou metodikou jako §4.1 (`String.length` nad naparsovaným řetězcem,
 `text` s nedosazenými `{VEC}`/`{kdo}`), znění z §3.5.
@@ -1376,7 +1398,7 @@ nejlepší a co je designová změna). Poloopravu nedělám.
 #### Finální znění — `obsah/pronasledovatele.yaml`
 
 16. **`malone-lecka`** · kotva `improvizace` · kanál 7 = zápor · verdikt C
-    > Na mostě u Poughkeepsie stojí Malone s fotografií v ruce a na peníze neslyší. Někdo si k té fotografii bude muset vymyslet jméno, které mu Malone uvěří. Krajnice u zábradlí je úzká a federál od ní neuhne ani o krok. Malonovi zajede ruka pod kabát a od té chvíle je řeč zbytečná. Zbraň na očích tu všechno pokazí, potají může být to jediné, co pomůže.
+    > Na mostě u Poughkeepsie stojí Malone s fotografií v ruce a na peníze neslyší. Někdo si k té fotografii bude muset vymyslet jméno, které mu Malone uvěří. Krajnice u zábradlí je úzká a federál od ní neuhne ani o krok. Malonovi zajede ruka pod kabát a od té chvíle je řeč zbytečná. Zbraň na očích tu všechno pokazí, potají může rozhodnout.
 17. **`malone-konfrontace`** · kotva `utok` (pr. 1b) · 2. nárok `obrana` · verdikt B
     > Kolona federálních vozů svírá silnici z obou stran a Malone si beze spěchu nasazuje brýle; na peníze neslyší. Ven se někdo musí probít silou. Druhý u toho vydrží první salvu vestoje. Jeden z vozů popojede a zavře poslední mezeru mezi blatníky. Zbraň tu nikdo neřeší a potají se vyplatí.
 18. **`brody-lecka`** · kotva `improvizace` · 2. nárok `hodnota` · verdikt C + Brodyho append
