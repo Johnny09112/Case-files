@@ -290,8 +290,24 @@ s nositelem `improv_skryte`), v témže commitu invariant do hlavičky
 `obsah/situace.yaml` + oprava kanonu odkládaná od D47 (design §3, MVP 6 kanálů,
 mrtvé K4d číslo nahrazeno). 316/316 testů, golden jen `verzeObsahu`,
 délky ⌀ 316,6 / max 352. Čtyřkolová sága uzavřena.
-**Běží:** kolo separability (Denisa P0/#1, návrh mezislotové vazby
-s kontrafaktuálem) + fragmentový fallback (D54, kód + obsahové kolo).
+**FRAGMENTOVÝ FALLBACK HOTOV A PŘIJAT PM (2026-07-30, D54(1)):** kód `94125a2`
++ opravy po review `739c4b2` + 42 fragmentů po dvou recenzích `68abef2`;
+PM nezávisle: 375/375 testů, lint čistý, tón drží. Fallback nově říká, která
+věc v které roli co udělala.
+**SEPARABILITA DOMĚŘENA (2026-07-30, `5a312ae`) — POCTIVÝ NEGATIVNÍ VÝSLEDEK
+se strukturálním nálezem:** tři vazby (RÁMUS ×2 definice, podmíněný rámus, H-1)
+padly na předregistrovaných kill-kritériích (RÁMUS mj. zrušil 98 % daně za
+hlučné hraní a vystřelil K1 o 24–32 b.). Hlavní zjištění: **cena monotónní ve
+váženém součtu přes dvojice (karta, slot) je vždy sveditelná na ceník** → celá
+rodina „sdílený rozpočet → Žár" je mrtvá; cena vázaná na vzájemnou polohu karet
+zůstává neprozkoumaná. Kritik: zapracováno, souhlasí se zamítnutím. Vedlejší
+nález pro záznam (nejednat, D39 drží): cena 3 bez rozpočtu by dostala K1 všech
+počtů do gate — K3 neměřeno. **OTEVŘENÁ OTÁZKA PRO UŽIVATELE: přeformulovat
+Denisa P0/#1 z „chybí mezislotová vazba" na „chybí divergence cílů"** —
+úspěšná vazba by quarterbacking spíš zhoršila (Hanabi/The Crew vs. Pandemic);
+volba: otevřít osu tajných cílů (proti D44), nebo pilíř „hádka" nechat jako
+simulací nepodložený na sezení 2–3 hráčů. Drobné doplňky (§4.9/MVP znění Žáru
+u commitu, komentář `state.js:582`) do backlogu.
 **Fronta:** fáze 3 (prompt s kreativním mandátem + volba poskytovatele přes
 test češtiny) → sezení 2–3 hráčů. **Po lidské bráně:** kombinatorický skladač
 karet + šíře situací (D54/2). Backlog z telegrafového kola: zakrývací zkouška
