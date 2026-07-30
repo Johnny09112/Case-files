@@ -286,9 +286,15 @@ describe('zapisSituace — zapojení fragmentové vrstvy do protokolu', () => {
 });
 
 describe.skipIf(!MA_FRAGMENTY)('kontrakt reálné sady prompty/fallback-fragmenty.yaml', () => {
-  it('má rozumný počet fragmentů (mandát D54(1): ~20–30)', () => {
-    expect(REALNE_FRAGMENTY.length).toBeGreaterThanOrEqual(20);
-    expect(REALNE_FRAGMENTY.length).toBeLessThanOrEqual(36);
+  /**
+   * Mandát D54(1) zněl ~20–30. Po review zvednuto na 42 (strop v hlavičce sady)
+   * z expozičního důvodu: pásmová vrstva losuje ~9× za run, fragmentová ~36× —
+   * stejný rozpočet při 4× expozici garantuje refrén. Rezerva na jednu opravnou
+   * dvojici, dál se opravuje PŘEPISEM, ne přírůstkem.
+   */
+  it('drží strop sady (~40–42, +rezerva)', () => {
+    expect(REALNE_FRAGMENTY.length).toBeGreaterThanOrEqual(38);
+    expect(REALNE_FRAGMENTY.length).toBeLessThanOrEqual(44);
   });
 
   it('id jsou unikátní a kebab-case', () => {
@@ -332,6 +338,19 @@ describe.skipIf(!MA_FRAGMENTY)('kontrakt reálné sady prompty/fallback-fragment
 
   it('žádná ASCII uvozovka (rozbíjí YAML scalar — na tom shořela sada v2)', () => {
     for (const f of REALNE_FRAGMENTY) expect(f.text, f.id).not.toContain('"');
+  });
+
+  /**
+   * Hlavička sady měří ŠABLONU, kdežto hráč čte text PO DOSAZENÍ (+20–30 znaků:
+   * {role} ~16, {vec} ~19). Dokud se jednotka neurčila, „~60–120" a skutečných
+   * 145 si odporovaly, aniž kdokoli porušil pravidlo. Testuje se obojí.
+   */
+  it('drží i strop po dosazení (150 znaků), ne jen strop šablony', () => {
+    const nejdelsi = { vec: 'Rezervní pneumatika', role: 'Nedýchat, když jde kolem', jmeno: 'Kowalski' };
+    for (const f of REALNE_FRAGMENTY) {
+      const po = f.text.replace(/\{(\w+)\}/g, (c, k) => nejdelsi[k] ?? c);
+      expect(po.length, `${f.id} po dosazení`).toBeLessThanOrEqual(150);
+    }
   });
 
   it('fragment je JEDNA věta rozumné délky', () => {

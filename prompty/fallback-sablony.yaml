@@ -36,7 +36,7 @@
 #   text:     hotový protokol, 3–5 vět, jeden odstavec.
 #
 # ------------------------------------------------------------------------------
-# PĚT PRAVIDEL, KTERÁ VZNIKLA Z NÁLEZŮ — NEEDITOVAT ZPĚT
+# PRAVIDLA, KTERÁ VZNIKLA Z NÁLEZŮ — NEEDITOVAT ZPĚT
 # ------------------------------------------------------------------------------
 # 1) POJISTNÁ VARIANTA (bez `podminka`) musí být pravdivá v CELÉM pásmu, ne jen
 #    dosaditelná — hraje přesně ve stavech, které nikdo jiný nepokrývá. Konkrétně
@@ -65,6 +65,18 @@
 #    proto nepočítají osoby a nepoužívají množné číslo osob — mluví o ÚLOHÁCH, ROLÍCH,
 #    VOZE a NÁKLADU, případně o jedné jmenované osobě u postihu. Nepředělávat zpět na
 #    „podezřelí“. (N3; rozhodnuto 2026-07-28.)
+# 6) PÁSMO NESMÍ TVRDIT NEZNALOST ROZDĚLENÍ. Od D54(1) stojí HNED POD pásmovým
+#    odstavcem fragmentová vrstva (prompty/fallback-fragmenty.yaml), která slot po
+#    slotu vypíše, která věc byla v které roli a jak dopadla. Klauzule typu „zda
+#    ztroskotaly pro nezpůsobilost, nebo pro nepřítomnost, spis neuvádí“ nebo „k čemu
+#    to bylo, spis neuvádí“ proto spis usvědčují ze lži o sobě samém — o řádek níž to
+#    uvádí, čtyřikrát a jmenovitě. Vyšetřovatel smí ODMÍTNOUT KOMENTÁŘ („k ostatním
+#    nemám co dodat nad rámec zápisu“), nesmí předstírat NEVĚDOMOST. Totéž platí pro
+#    {veci}: vedle nich stojí přesnější výčet, takže je HODNOŤ, nevyjmenovávej (N6).
+#    (Nález obou recenzentů 2026-07-30; opraveno u nasledky-1, prusvih-2, prusvih-5.
+#    Runtime filtr `bezVeci`, který tyhle šablony dřív potlačoval, byl ZRUŠEN —
+#    půlil zásobníky a v PRŮŠVIHU umlčel hlášení o ztracené bedně; na potlačení
+#    kódem se nespoléhá, řeší se PŘEPISEM a žádná varianta s {bedny} se neškrtá.)
 #
 # PLACEHOLDERY (engine dosazuje; co `podminka` nezaručuje, se v textu nesmí objevit):
 #   {jmeno}  příjmení postavy = poslední slovo pole `jmeno` z obsah/postavy.yaml
@@ -186,7 +198,7 @@ sablony:
   - id: fb-v3-nasledky-1
     pasmo: "2/4_S_NASLEDKY"
     podminka: {postih: ano, bedna: ne}
-    text: "Na uvedeném místě obstály dvě úlohy ze čtyř. Zbylé dvě role skončily bez užitku — ať už tím, že je zastal nevhodný kus, nebo tím, že je nezastal nikdo. Podezřelý {jmeno} je od té chvíle ve spisu veden s následkem „{postih}“. Náklad zůstal na voze."
+    text: "Na uvedeném místě obstály dvě úlohy ze čtyř. Zbylé dvě hodnotím jako promarněné, každou po svém. Podezřelý {jmeno} je od té chvíle ve spisu veden s následkem „{postih}“. Náklad zůstal na voze."
 
   - id: fb-v3-nasledky-2
     pasmo: "2/4_S_NASLEDKY"
@@ -218,7 +230,7 @@ sablony:
   - id: fb-v3-prusvih-2
     pasmo: "≤1/4_PRUSVIH"
     podminka: {postih: ano, bedna: ano}
-    text: "Tento bod trasy je nutno označit za průšvih v plném úředním významu slova. K dispozici byly {veci}; k čemu to bylo, spis neuvádí, neboť role zůstaly nezvládnuté tak jako tak. Podezřelý {jmeno} je veden s těžkým následkem „{postih}“, který se sám nespraví. Náklad se ztenčil o {bedny}, zbývá {naklad}. Pozornost zákona v okolí tím citelně vzrostla."
+    text: "Tento bod trasy je nutno označit za průšvih v plném úředním významu slova. K dispozici byly {veci}; sestavu hodnotím jako nedomyšlenou, a to je nejmírnější slovo, které mě napadá. Podezřelý {jmeno} je veden s těžkým následkem „{postih}“, který se sám nespraví. Náklad se ztenčil o {bedny}, zbývá {naklad}. Pozornost zákona v okolí tím citelně vzrostla."
 
   - id: fb-v3-prusvih-3
     pasmo: "≤1/4_PRUSVIH"
@@ -232,7 +244,7 @@ sablony:
 
   - id: fb-v3-prusvih-5
     pasmo: "≤1/4_PRUSVIH"
-    text: "Průběh v tomto bodě trasy hodnotím jako selhání, byť se k němu nikdo výslovně nepřihlásil. Ze čtyř úloh obstála nanejvýš jediná; zda ostatní ztroskotaly pro nezpůsobilost, nebo pro nepřítomnost, spis neuvádí. Z vozu se poroučelo, co drželo hůř než ostatní; stav nákladu: {naklad}. Pozornost zákona tím v okolí vzrostla, což poznamenávám bez zadostiučinění."
+    text: "Průběh v tomto bodě trasy hodnotím jako selhání, byť se k němu nikdo výslovně nepřihlásil. Ze čtyř úloh obstála nanejvýš jediná; k ostatním nemám co dodat nad rámec zápisu. Z vozu se poroučelo, co drželo hůř než ostatní; stav nákladu: {naklad}. Pozornost zákona tím v okolí vzrostla, což poznamenávám bez zadostiučinění."
 
   # ============================================================
   # ÚVODNÍ ODSTAVCE dle typu situace
