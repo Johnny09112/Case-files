@@ -276,9 +276,16 @@ export function buildPromptInput(udalosti, ctx) {
   const deltaZar = zary.reduce((a, z) => a + (z.delta ?? 0), 0);
   const zarDuvody = [...new Set(zary.map((z) => ZAR_DUVOD_LABEL[z.duvod] ?? z.duvod))];
   const prahPrekrocen = zary.find((z) => z.prah_prekrocen);
-  let serifText = deltaZar > 0 ? `šerif postoupil o ${deltaZar} pole blíž` : 'šerif beze změny';
+  // Žár umí klesat (konfrontace), takže znaménko se odvozuje z hodnoty — jinak
+  // by záporná změna vyšla jako „+-7" a šerif by se hlásil jako „beze změny",
+  // ačkoli o sedm polí ustoupil (nález design-critica V-Žár).
+  const zarText = deltaZar === 0 ? '0' : `${deltaZar > 0 ? '+' : ''}${deltaZar}`;
+  let serifText;
+  if (deltaZar > 0) serifText = `šerif postoupil o ${deltaZar} pole blíž`;
+  else if (deltaZar < 0) serifText = `šerif ustoupil o ${Math.abs(deltaZar)} pole zpět`;
+  else serifText = 'šerif beze změny';
   if (prahPrekrocen) serifText += `; práh ${prahPrekrocen.prah_prekrocen} překročen`;
-  radky.push(`  Žár:     ${deltaZar === 0 ? '0' : `+${deltaZar}`} — ${zarDuvody.length ? zarDuvody.join(' a ') : 'beze změny'}; ${serifText}`);
+  radky.push(`  Žár:     ${zarText} — ${zarDuvody.length ? zarDuvody.join(' a ') : 'beze změny'}; ${serifText}`);
 
   const ztraceno = pasmoU.naklad_ztrata ?? 0;
   radky.push(`  bedny:   ${ztraceno > 0 ? `ztraceno ${ztraceno}` : '0'}${ztraceno > 0 ? ' (PRŮŠVIH)' : ''}; náklad ${pasmoU.zbyva_beden}`);

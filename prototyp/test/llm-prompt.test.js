@@ -256,3 +256,36 @@ describe('buildPromptInput — chybějící resoluce spadne srozumitelně', () =
     expect(() => buildPromptInput([{ seq: 1, nodeIndex: 1, type: EVENT.CREDIT_FLOW, delta: 1, duvod: 'truhla', zustatek: 1 }], CTX)).toThrow(/resoluc/i);
   });
 });
+
+/**
+ * Regrese: Žár umí klesat (konfrontace), engine loguje záporný `delta`
+ * (state.js `changeHeat`). Dřívější znění lepilo „+" natvrdo a šerifa hlásilo
+ * podle `delta > 0`, takže −7 vyšlo jako „+-7 … šerif beze změny" — protokol
+ * by pak popíral vlastní mechaniku (nález design-critica).
+ */
+describe('buildPromptInput — znaménko Žáru a směr šerifa', () => {
+  const zarUdalost = (delta) => ({
+    seq: 7, nodeIndex: 3, type: EVENT.ZAR_MOVE,
+    delta, duvod: 'pasmo', nova_pozice: 3, prah_prekrocen: null,
+  });
+
+  it('záporný Žár se zapíše se znaménkem minus a šerif ustupuje', () => {
+    const out = buildPromptInput(zakladniUzel({ extra: [zarUdalost(-7)] }), CTX);
+    expect(out).toMatch(/Žár:\s+-7/);
+    expect(out).toMatch(/šerif ustoupil o 7 pole zpět/);
+    expect(out).not.toContain('+-');
+    expect(out).not.toMatch(/-7[^\n]*šerif beze změny/);
+  });
+
+  it('kladný Žár si drží „+" a šerif postupuje', () => {
+    const out = buildPromptInput(zakladniUzel({ extra: [zarUdalost(2)] }), CTX);
+    expect(out).toMatch(/Žár:\s+\+2/);
+    expect(out).toMatch(/šerif postoupil o 2 pole blíž/);
+  });
+
+  it('nulová změna Žáru zůstává „0" a šerif beze změny', () => {
+    const out = buildPromptInput(zakladniUzel(), CTX);
+    expect(out).toMatch(/Žár:\s+0/);
+    expect(out).toMatch(/šerif beze změny/);
+  });
+});
