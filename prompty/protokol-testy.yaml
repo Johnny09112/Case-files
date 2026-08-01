@@ -3,13 +3,24 @@
 # Každý vstup, který dřív odhalil problém, sem patří — ať se regrese chytí příště.
 #
 # Jak se používá: na `vstup` se aplikuje aktuální systémový prompt z protokol.md
-# (produkční model třídy Haiku, klidně víc výstupů na vstup) a výstup se ověří
-# proti `ocekavani`. Změna/změkčení/zamlčení výsledku mechaniky = KRITICKÉ,
+# (produkční model Claude Haiku 4.5 dle D55, klidně víc výstupů na vstup) a výstup
+# se ověří proti `ocekavani`. Změna/změkčení/zamlčení výsledku mechaniky = KRITICKÉ,
 # ne stylistická drobnost.
 #
-# ŘEZ v3 (2026-07-23): vstup je ve formátu v3 z protokol.md (SITUACE / ROZDĚLENÍ /
-# VÝSLEDEK MECHANIKY / NÁSLEDKY). Staré v2 casy (UZEL/OSOBY/KARTY) jsou dole
-# v sekci ARCHIV a na prompt v0.3+ se NEaplikují.
+# ŘEZ v3 (2026-07-23): vstup je ve formátu v3 z protokol.md (SITUACE / PRAVIDLO RUNU /
+# ZÁCHRANA / ROZDĚLENÍ / VÝSLEDEK MECHANIKY / NÁSLEDKY). Staré v2 casy
+# (UZEL/OSOBY/KARTY) jsou dole v sekci ARCHIV a na prompt v0.3+ se NEaplikují.
+#
+# ŘEZ v0.4 (2026-08-01): vstupy doplněny o `PRAVIDLO RUNU`, `ZÁCHRANA` a
+# `MAX DOSAŽITELNÉ`. Přibyla skupina KREATIVNÍ CASY, která testuje mandát invence
+# (rule 5) a jeho pojistku (rule 4 — vymyšlený mechanický důsledek).
+#
+# POZOR na variantu mandátu: v0.4 je **plné B** — invence u KAŽDÉHO ze čtyř slotů,
+# s nerovným rozpočtem (sedící věc pár slov, nesedící celý záměr). Zamítnutá
+# alternativa B-lite (invence JEN u selhaných/nesedících) by měla opačná
+# `ocekavani` u prošlých slotů — kdyby se prompt někdy vrátil k B-lite, musí se
+# s ním překlopit i casy `hladky-pruchod-…`, `invence-selhany-slot-…`
+# a `invence-nesmi-opsat-text-veci`.
 #
 # Schéma:
 #   id:        kebab-case, unikátní
@@ -22,7 +33,7 @@
 #   zdroj:     odkud pochází vstupní data (snapshot znění)
 
 testy:
-  # ---------- v3 ----------
+  # ---------- v3: jádro (rule 2 / rule 3 / rule 4) ----------
   - id: banan-utok-selhal
     popis: >
       Rule 4 + jádro rule 3. Banánový kanón (improvizace 4, útok 2) commitnut do
@@ -31,15 +42,19 @@ testy:
       výsledek slotu zůstává selhání. Past: model povýší komickou fikci na úspěch,
       nebo naopak komiku zamlčí. Zároveň selhání „Zapřáhnout" (Zlaté hodinky,
       nástroj 1). Pásmo 2/4 S NÁSLEDKY → 1 lehký postih, žádná ztráta beden.
+      Bez gapu (MAX 2/4) — lépe to s těmito věcmi nešlo.
     zdroj: "obsah/situace.yaml farmar-brod + veci.yaml (2026-07-23)"
     vstup: |
       SITUACE: Farmář v brodě (npc) — Kola zapadla doprostřed brodu a na břehu čeká farmář s vidlemi.
+      PRAVIDLO RUNU: —
+      ZÁCHRANA: —
       ROZDĚLENÍ:
         Zaplatit za vytažení [viditelná]: podezřelý A — „Balík bankovek"
         Nezvednout hlas [viditelná]: podezřelý B — „Otrlený výraz"
         Zapřáhnout a táhnout [viditelná]: podezřelý C — „Zlaté hodinky"
         Kdyby začal vyvádět [skrytá]: podezřelý D — „Banánový kanón"
       VÝSLEDEK MECHANIKY: pásmo S NÁSLEDKY 2/4
+        MAX DOSAŽITELNÉ: 2/4
         Zaplatit za vytažení: zásah (práh 3; „Balík bankovek" mělo hodnota 5)
         Nezvednout hlas: zásah (práh 2; „Otrlený výraz" mělo obrana 4)
         Zapřáhnout a táhnout: selhání (práh 3; „Zlaté hodinky" mělo nástroj 1)
@@ -53,12 +68,13 @@ testy:
         loot: —
     ocekavani:
       musi:
-        - "zapsat, že slot „Zapřáhnout" i slot „Kdyby vyváděl" (banán) SELHALY"
+        - "zapsat, že slot „Zapřáhnout“ i slot „Kdyby vyváděl“ (banán) SELHALY"
         - "zapsat postih podezřelého D (naražené rameno) jako fikci"
-        - "placeholdery „podezřelý A/B/C/D", 3–5 vět, suchý úřední tón, 3. osoba"
+        - "placeholdery „podezřelý A/B/C/D“, 3–5 vět, ≤800 znaků, suchý úřední tón, 3. osoba"
       nesmi:
         - "tvrdit, že banán / útočná role uspěl(a) — komická fikce NEMĚNÍ výsledek slotu (KRITICKÉ)"
         - "tvrdit ztrátu jakékoli bedny (náklad zůstává 6) ani pohyb Žáru/šerifa"
+        - "vinit posádku ze špatného rozdělení — MAX DOSAŽITELNÉ je rovné dosaženému (2/4)"
         - "vymyslet vlastní jméno podezřelého místo placeholderu"
         - "vtipkovat explicitně, emoji, hovorovost, anachronismus"
 
@@ -69,16 +85,20 @@ testy:
       staty (šerif/rival zbraň uvidí). Nejzáludnější past: model vidí útok 5 ≥
       práh a napíše zásah — to je změna výsledku. Zároveň banán ve skryté útočné
       roli také selhal (útok 2). Pásmo PRŮŠVIH ≤1/4 → těžký postih, ztráta beden,
-      pohyb Žáru (i z hlučnosti GANGSTER).
+      pohyb Žáru (i z hlučnosti GANGSTER). MAX 2/4 = velký gap: brokovnice patřila
+      do SKRYTÉ role, kde by prošla.
     zdroj: "obsah/situace.yaml rival-prepad + veci.yaml + stitky.yaml GANGSTER (2026-07-23)"
     vstup: |
       SITUACE: Přepadení rivalů (npc) — Napříč silnicí stály vozy rivalů a chlapi si plivali do dlaní.
+      PRAVIDLO RUNU: —
+      ZÁCHRANA: —
       ROZDĚLENÍ:
         Postavit se jim [viditelná]: podezřelý A — „Dědečkova brokovnice"
         Ustát nápor [viditelná]: podezřelý B — „Zpěv opilce"
         Vyklouznout stranou [viditelná]: podezřelý C — „Páčidlo"
         Tasit včas a první [skrytá]: podezřelý D — „Banánový kanón"
       VÝSLEDEK MECHANIKY: pásmo PRŮŠVIH 0/4
+        MAX DOSAŽITELNÉ: 2/4
         Postavit se jim: selhání (práh 3; „Dědečkova brokovnice" mělo útok 5; důvod: zbraň na očích u NPC)
         Ustát nápor: selhání (práh 3; „Zpěv opilce" mělo obrana 2)
         Vyklouznout stranou: selhání (práh 3; „Páčidlo" mělo improvizace 1)
@@ -92,11 +112,12 @@ testy:
         loot: —
     ocekavani:
       musi:
-        - "zapsat, že role „Postavit se jim" (brokovnice) SELHALA — smí uvést, že zbraň byla na očích"
+        - "zapsat, že role „Postavit se jim“ (brokovnice) SELHALA — smí uvést, že zbraň byla na očích"
         - "zapsat těžký postih podezřelého A, ztrátu 1 bedny (náklad 5) a pohyb šerifa/Žáru s důvodem"
       nesmi:
         - "tvrdit, že brokovnice / útočná role uspěla kvůli vysokému útoku (KRITICKÉ — auto-fail se nemění)"
         - "tvrdit jiný počet ztracených beden než 1, nebo že se Žár/šerif nehnul"
+        - "tvrdit, že to nešlo lépe — MAX DOSAŽITELNÉ (2/4) je nad dosaženým (0/4)"
         - "vymyslet vlastní jméno podezřelého místo placeholderu"
         - "vtipkovat explicitně, emoji, hovorovost, anachronismus"
 
@@ -106,16 +127,23 @@ testy:
       TÁŽ Dědečkova brokovnice ve skryté roli v LOKACI projde (eso_v_lokaci —
       nikdo ji nevidí). Riziko: model dodá dramatičnost/následky, které nepadly,
       nebo naopak zapíše brokovnici jako selhání ze setrvačnosti. Musí zmínit loot
-      a +2 kredity, nic navíc.
+      a +2 kredity, nic navíc. Od v0.4 také **test ROZPOČTU mandátu na nejhorším
+      terénu**: všechny čtyři sloty prošly a tři ze čtyř věcí k roli sedí, takže
+      plné B tu má nejmíň materiálu a nejvíc chuti vyrobit vatu. Rule 5 invenci
+      žádá i tady, ale „pár slov" — hlídá se znakový strop, neopakování figury
+      a to, že invence neopisuje text věci.
     zdroj: "obsah/situace.yaml farmar-stodola + veci.yaml + stitky.yaml (2026-07-23)"
     vstup: |
       SITUACE: Statkářova stodola (lokace) — Ve stodole to páchne senem a psi u vrat nespí; statkář obchází s lucernou.
+      PRAVIDLO RUNU: —
+      ZÁCHRANA: —
       ROZDĚLENÍ:
         Utišit psy [viditelná]: podezřelý A — „Falešný odznak"
         Zaklínit vrata [viditelná]: podezřelý B — „Starý kompas"
         Schovat bednu do sena [viditelná]: podezřelý C — „Svářečka"
         Nedýchat, když jde kolem [skrytá]: podezřelý D — „Dědečkova brokovnice"
       VÝSLEDEK MECHANIKY: pásmo HLADCE+LOOT 4/4
+        MAX DOSAŽITELNÉ: 4/4
         Utišit psy: zásah (práh 3; „Falešný odznak" mělo improvizace 5)
         Zaklínit vrata: zásah (kombi práh 2; „Starý kompas" mělo nástroj 3 i improvizace 3)
         Schovat bednu do sena: zásah (práh 3; „Svářečka" mělo nástroj 5)
@@ -131,9 +159,12 @@ testy:
       musi:
         - "zapsat hladký průchod všech čtyř rolí bez potíží"
         - "zmínit loot (líznutá věc navíc) a přírůstek kreditů (+2)"
+        - "dodržet znakový strop ≤800 zn. a 3–5 vět i při čtyřech licencovaných invencích"
       nesmi:
         - "tvrdit jakýkoli postih, ztrátu bedny, zranění ani pohyb Žáru/šerifa (nic z toho nepadlo)"
         - "zapsat brokovnici jako selhání — ve skryté roli v lokaci prošla"
+        - "opsat u sedících věcí text karty místo záměru (svářečka „spojí, co se rozpadlo“, odznak „zamáváš jím zdálky“) — invence musí přidat ZÁMĚR, ne parafrázi"
+        - "použít u dvou a více slotů tutéž větnou vazbu nebo figuru (rule 6; vzorec B5′)"
         - "vymyslet vlastní jméno podezřelého místo placeholderu"
         - "vtipkovat explicitně, emoji, hovorovost, anachronismus"
 
@@ -146,16 +177,19 @@ testy:
     zdroj: "obsah/situace.yaml mesto-ulicka + postihy.yaml + prototyp-mvp.md §složení (2026-07-23)"
     vstup: |
       SITUACE: Slepá ulička (npc) — Ulička končila zdí a dva strážníci ji zatarasili.
+      PRAVIDLO RUNU: —
+      ZÁCHRANA: —
       ROZDĚLENÍ:
         Držet nervy [viditelná]: podezřelý A — „Otrlený výraz"
         Zamluvit to [viditelná]: podezřelý B — „Falešný odznak"
         Zastrašit gestem [viditelná]: podezřelý C — „Zpěv opilce"
-        Najít skulinu [skrytá]: podezřelý D — „Perlový náhrdelník"
+        Najít skulinu [skrytá]: podezřelý D — „Slzy na povel"
       VÝSLEDEK MECHANIKY: pásmo S NÁSLEDKY 2/4
+        MAX DOSAŽITELNÉ: 2/4
         Držet nervy: zásah (práh 3; „Otrlený výraz" mělo obrana 4)
         Zamluvit to: zásah (práh 3; „Falešný odznak" mělo improvizace 5)
         Zastrašit gestem: selhání (práh 3; „Zpěv opilce" mělo útok 0)
-        Najít skulinu: selhání (práh 2; „Perlový náhrdelník" mělo nástroj 0)
+        Najít skulinu: selhání (práh 2; „Slzy na povel" mělo nástroj 0)
       NÁSLEDKY:
         postihy: podezřelý C — „Mlha v hlavě" (lehký, těžko pozná, kdo ho sleduje)
         složení: podezřelý C leží v autě (3. postih)
@@ -166,7 +200,7 @@ testy:
     ocekavani:
       musi:
         - "zapsat, že podezřelý C je vyřazen a leží v autě (složen)"
-        - "zapsat, že sloty „Zastrašit gestem" a „Najít skulinu" selhaly"
+        - "zapsat, že sloty „Zastrašit gestem“ a „Najít skulinu“ selhaly"
       nesmi:
         - "nechat složeného podezřelého C dále aktivně jednat ve slotech nebo situaci"
         - "složení zamlčet, nebo naopak tvrdit ztrátu bedny/zranění/Žár, které nepadly"
@@ -182,12 +216,15 @@ testy:
     zdroj: "obsah/situace.yaml urednik-razitko + veci.yaml knezsky-kolarek (2026-07-23)"
     vstup: |
       SITUACE: Chybějící razítko (npc) — Za přepážkou přebíral úředník listiny a mračil se na prázdné políčko; sledují ho shora.
+      PRAVIDLO RUNU: —
+      ZÁCHRANA: —
       ROZDĚLENÍ:
         Věrohodný list [viditelná]: podezřelý A — „Falešný odznak"
         Dorazit razítko [viditelná]: podezřelý B — „Kněžský kolárek"
         Něco navíc [viditelná]: podezřelý C — „Balík bankovek"
         Ani nemrknout [skrytá]: podezřelý D — „Otrlený výraz"
       VÝSLEDEK MECHANIKY: pásmo HLADCE 3/4
+        MAX DOSAŽITELNÉ: 3/4
         Věrohodný list: zásah (práh 3; „Falešný odznak" mělo improvizace 5)
         Dorazit razítko: selhání (práh 3; „Kněžský kolárek" mělo nástroj 0)
         Něco navíc: zásah (práh 2; „Balík bankovek" mělo hodnota 5)
@@ -201,13 +238,317 @@ testy:
         loot: —
     ocekavani:
       musi:
-        - "zapsat, že role „Dorazit razítko" (kněžský kolárek) SELHALA — přes fikci o nedotknutelném faráři"
+        - "zapsat, že role „Dorazit razítko“ (kněžský kolárek) SELHALA — přes fikci o nedotknutelném faráři"
         - "zapsat celkově zdolanou situaci (3/4) a +1 kredit; náklad zůstává 6"
       nesmi:
-        - "tvrdit, že kolárek / razítková role uspěla, protože „faráře nikdo neprohledává" (KRITICKÉ)"
+        - "tvrdit, že kolárek / razítková role uspěla, protože „faráře nikdo neprohledává“ (KRITICKÉ)"
         - "tvrdit postih, ztrátu bedny, zranění ani pohyb Žáru, které nepadly"
         - "vymyslet vlastní jméno podezřelého místo placeholderu"
         - "vtipkovat explicitně, emoji, hovorovost, anachronismus"
+
+  # ---------- v0.4: KREATIVNÍ CASY (mandát invence rule 5 + pojistka rule 4) ----------
+  - id: invence-selhany-slot-nesedici-vec
+    popis: >
+      JÁDRO MANDÁTU (rule 4). Léčka agenta Malonea, PRŮŠVIH. Tři selhané sloty,
+      v nichž věc k roli naprosto nesedí: petrolejová lampa na zapření totožnosti,
+      mosazný boxer na klidnou tvář, řeznický hák je naopak SEDÍCÍ pojistka, na
+      kterou nedošlo. Nález playtestu 2026-07-29 („lampa na opravu auta") byl přesně
+      to, co režim bez mandátu produkuje: doslovné „zapřel totožnost s lampou
+      v podpaží" bez obhajoby pokusu. Test: dostanou selhané sloty ZPŮSOB a ZÁMĚR?
+      A zůstal řeznický hák (sedící, prošlý, nedošlo na něj) u konstatování?
+    zdroj: "technika/woz-test-2026-07-30.md uzel 7 + obsah/veci.yaml (2026-07-30)"
+    vstup: |
+      SITUACE: Most u Poughkeepsie (lecka) — Uprostřed mostu stál agent Malone s fotografií v ruce a nikam nespěchal.
+      PRAVIDLO RUNU: hodnota se počítá jako 0 (agent Malone nebere úplatky)
+      ZÁCHRANA: líznuto „Petrolejová lampa" místo „Zednická lžíce"
+      ROZDĚLENÍ:
+        Zapřít totožnost [viditelná]: podezřelý A — „Petrolejová lampa"
+        Nedat na sobě znát [viditelná]: podezřelý B — „Mosazný boxer"
+        Objet ho stranou [viditelná]: podezřelý C — „Rezervní pneumatika"
+        Kdyby sáhl po zbrani [skrytá]: podezřelý D — „Řeznický hák"
+      VÝSLEDEK MECHANIKY: pásmo PRŮŠVIH 1/4
+        MAX DOSAŽITELNÉ: 1/4
+        Zapřít totožnost: selhání (práh 5; „Petrolejová lampa" mělo improvizace 2)
+        Nedat na sobě znát: selhání (práh 5; „Mosazný boxer" mělo obrana 3)
+        Objet ho stranou: selhání (práh 5; „Rezervní pneumatika" mělo nástroj 4)
+        Kdyby sáhl po zbrani: zásah (práh 2; „Řeznický hák" mělo útok 4)
+      NÁSLEDKY:
+        postihy: podezřelý A — „Otřes mozku" (těžký, věci drží v ruce, ale co který kus umí, mu splývá; drží do vyléčení)
+        složení: —
+        kredity: 0; konto 7
+        Žár: +3 — PRŮŠVIH a dvakrát hlučné hraní; šerif postoupil na poslední značku
+        bedny: ztraceno 1 (PRŮŠVIH); náklad 5
+        loot: —
+    ocekavani:
+      musi:
+        - "u KAŽDÉHO ze tří selhaných slotů uvést ZPŮSOB a ZÁMĚR použití (obhajobu pokusu), ne holé „s X neuspěl“"
+        - "zapsat všechna tři selhání jako selhání a „Kdyby sáhl po zbrani“ jako jediný zásah"
+        - "zapsat těžký postih (otřes mozku), ztrátu 1 bedny (náklad 5) a pohyb Žáru o tři pole s důvodem"
+        - "3–5 vět, ≤800 znaků — rozpočet patří třem selhaným slotům, řeznický hák (sedící, na který nedošlo) unese pár slov"
+      nesmi:
+        - "nechat selhaný slot u doslovného konstatování bez obhajoby (regrese nálezu 2026-07-29)"
+        - "věnovat řeznickému háku stejný prostor jako selhaným slotům — rozpočet je nerovný (rule 5)"
+        - "vymyslet PŘÍČINU selhání („nestačilo to, protože byl slabý“, „lampa byla moc slabá“) — prahy jsou skryté (rule 5)"
+        - "obrátit kterýkoli slot na opačný výsledek (KRITICKÉ)"
+        - "napsat, že podezřelému došly peníze / měl málo peněz — hodnota je zrušena PRAVIDLEM RUNU"
+        - "vymyslet vlastní jméno podezřelého místo placeholderu"
+
+  - id: solo-jedna-osoba-ctyri-sloty
+    popis: >
+      SÓLO KLAUZULE (rule 2, v0.4). Tentýž podezřelý A ve všech čtyřech slotech.
+      Past doložená ve WoZ uzlu 1: v kooperaci jsou čtyři rekvizity čtyři lidé,
+      v sólu je to jeden muž, který naráz drží brokovnici, nosí kolárek, nabízí
+      termosku a lije benzín na čep — klaun. Test: pozná model, že jde o JEDNU
+      osobu? Neopakuje „podezřelý A" čtyřikrát? Nedrží čtyři věci současně?
+      Zároveň: brokovnice ve viditelné roli u NPC = auto-fail (zbraň na očích).
+    zdroj: "technika/woz-test-2026-07-30.md uzel 1 + §3.4 (2026-07-30)"
+    vstup: |
+      SITUACE: Překladiště v Syracuse (npc) — Výpravčí obcházel rampu s knihou a chtěl nákladní list.
+      PRAVIDLO RUNU: hodnota se počítá jako 0 (agent Malone nebere úplatky)
+      ZÁCHRANA: —
+      ROZDĚLENÍ:
+        Zatlačit hrubě [viditelná]: podezřelý A — „Dědečkova brokovnice"
+        Odsunout závoru [viditelná]: podezřelý A — „Kanystr benzínu"
+        Podmáznout dlaň [viditelná]: podezřelý A — „Hovězí vývar"
+        Zmást papírem [skrytá]: podezřelý A — „Kněžský kolárek"
+      VÝSLEDEK MECHANIKY: pásmo S NÁSLEDKY 2/4
+        MAX DOSAŽITELNÉ: 3/4
+        Zatlačit hrubě: zásah (práh 5; „Dědečkova brokovnice" mělo útok 5; důvod: slotová výjimka — bouchačka tu výpravčímu zavře pusu)
+        Odsunout závoru: selhání (práh 5; „Kanystr benzínu" mělo nástroj 4)
+        Podmáznout dlaň: selhání (práh 3; „Hovězí vývar" mělo hodnota 1; důvod: hodnota zrušena PRAVIDLEM RUNU)
+        Zmást papírem: zásah (práh 1; „Kněžský kolárek" mělo improvizace 4)
+      NÁSLEDKY:
+        postihy: podezřelý A — „Naražené rameno" (lehký, do kapes sahá pomaleji)
+        složení: —
+        kredity: 0; konto 0
+        Žár: +2 — tasená zbraň a pásmo; šerif postoupil o dvě pole
+        bedny: 0; náklad 6
+        loot: —
+    ocekavani:
+      musi:
+        - "psát o JEDNÉ osobě, která zvládala čtyři úlohy — označení „podezřelý A“ nejvýš dvakrát, dál „jmenovaný“/„týž“"
+        - "zapsat oba zásahy jako zásahy a obě selhání jako selhání"
+        - "zapsat postih, pohyb Žáru o dvě pole s důvodem (zbraň na očích); náklad zůstává 6"
+      nesmi:
+        - "vytvořit z podezřelého A víc osob (např. „jeden z podezřelých… druhý…“) (KRITICKÉ pro sólo)"
+        - "popsat čtyři rekvizity držené současně v jedné scéně"
+        - "napsat, že mu na úplatek nestačily peníze — hodnota je zrušena PRAVIDLEM RUNU"
+        - "tvrdit ztrátu bedny nebo kredity, které nepadly"
+
+  - id: zachrana-vytazena-vec-k-nicemu
+    popis: >
+      ZÁCHRANA ve vstupu (v0.4, woz §5e). Hráč utratil záchranu, aby naslepo líznul
+      „Balík bankovek" — a PRAVIDLO RUNU říká, že hodnota se počítá jako 0. Tedy
+      vytáhl přesně to, co proti Maloneovi nemá cenu. To je hotová pointa uzlu,
+      kterou prompt do v0.3 nedostával vůbec. Test: zmíní model záchranu (jednou
+      vsuvkou, ne odstavcem)? A nezmění selhání úplatku na „měl málo peněz"?
+      Zároveň složení: třetí postih, podezřelý A leží v autě.
+    zdroj: "technika/woz-test-2026-07-30.md uzel 9 (2026-07-30)"
+    vstup: |
+      SITUACE: Mýtnice za Batavií (npc) — U mýtné boudy natáhl zástupce šerifa ruku po silničním poplatku.
+      PRAVIDLO RUNU: hodnota se počítá jako 0 (agent Malone nebere úplatky)
+      ZÁCHRANA: líznuto „Balík bankovek" místo „Gumový váček"
+      ROZDĚLENÍ:
+        Silniční poplatek [viditelná]: podezřelý A — „Balík bankovek"
+        Zamluvit to [viditelná]: podezřelý B — „Dědkův kabát"
+        Klidná tvář [viditelná]: podezřelý C — „Pytel brambor"
+        Kdyby přituhlo [skrytá]: podezřelý D — „Stříbrná placatka"
+      VÝSLEDEK MECHANIKY: pásmo PRŮŠVIH 1/4
+        MAX DOSAŽITELNÉ: 1/4
+        Silniční poplatek: selhání (práh 3; „Balík bankovek" mělo hodnota 5; důvod: hodnota zrušena PRAVIDLEM RUNU)
+        Zamluvit to: selhání (práh 5; „Dědkův kabát" mělo improvizace 2)
+        Klidná tvář: zásah (práh 0; „Pytel brambor" mělo obrana 4)
+        Kdyby přituhlo: selhání (práh 2; „Stříbrná placatka" mělo útok 0)
+      NÁSLEDKY:
+        postihy: žádné
+        složení: podezřelý A leží v autě (3. postih; lehké zápisy smazány, těžký otřes mozku drží)
+        kredity: 0; konto 7
+        Žár: +2 — PRŮŠVIH; šerif postoupil o dvě pole
+        bedny: ztraceno 1 (PRŮŠVIH); náklad 4
+        loot: —
+    ocekavani:
+      musi:
+        - "zmínit záchranu (líznutý balík bankovek) nejvýš jednou vsuvkou — pointa, ne odstavec"
+        - "zapsat, že poplatek NEBYL zaplacen, protože peníze na téhle trase neplatí (PRAVIDLO RUNU)"
+        - "zapsat složení podezřelého A (leží v autě), ztrátu 1 bedny (náklad 4) a Žár +2"
+      nesmi:
+        - "napsat, že balík bankovek nestačil / že měl málo peněz (KRITICKÉ — hodnota je zrušena, ne nízká)"
+        - "tvrdit, že zástupce peníze přijal nebo si je vzal (vymyšlené předání majetku)"
+        - "tvrdit nový postih — žádný nepadl, místo něj přišlo složení"
+        - "nechat složeného podezřelého A dále jednat"
+
+  - id: gap-proti-maximu
+    popis: >
+      MAX DOSAŽITELNÉ s gapem (v0.4, woz §5e). Zátah, pásmo 2/4, ale s týmiž věcmi
+      šlo dosáhnout 3/4 — jedno pásmo se prohrálo rozdělením. Protokol to SMÍ nést
+      jako promarněnou příležitost (vtip na účet posádky). Test: rozezná model gap
+      a nezaměňuje ho s tragédií? Zároveň dvě selhání s nesedícími věcmi (banán na
+      blokádu, sekáček na led na zmizení v ulicích) → mandát invence.
+    zdroj: "technika/woz-test-2026-07-30.md uzel 6 (2026-07-30)"
+    vstup: |
+      SITUACE: Zátah na pětce (zatah) — Silnici přehradily hlídkové vozy a reflektory bily do očí.
+      PRAVIDLO RUNU: —
+      ZÁCHRANA: —
+      ROZDĚLENÍ:
+        Prorazit blokádu [viditelná]: podezřelý A — „Banánový kanón"
+        Strhnout do postranní [viditelná]: podezřelý B — „Svářečka"
+        Zmizet v ulicích [viditelná]: podezřelý C — „Sekáček na led"
+        Držet nervy u okna [skrytá]: podezřelý D — „Pytel cementu"
+      VÝSLEDEK MECHANIKY: pásmo S NÁSLEDKY 2/4
+        MAX DOSAŽITELNÉ: 3/4
+        Prorazit blokádu: selhání (práh 3; „Banánový kanón" mělo útok 2)
+        Strhnout do postranní: zásah (práh 5; „Svářečka" mělo nástroj 5)
+        Zmizet v ulicích: selhání (práh 5; „Sekáček na led" mělo improvizace 2)
+        Držet nervy u okna: zásah (práh 1; „Pytel cementu" mělo obrana 3)
+      NÁSLEDKY:
+        postihy: podezřelý D — „Zvonění v uších" (lehký, příští varování neslyší)
+        složení: —
+        kredity: 0; konto 7
+        Žár: +2 — hlučné hraní a pásmo; šerif postoupil o dvě pole
+        bedny: 0; náklad 6
+        loot: —
+    ocekavani:
+      musi:
+        - "zapsat obě selhání a oba zásahy dle mechaniky"
+        - "u obou selhaných slotů (banán, sekáček) dopsat obhajobu pokusu — způsob a záměr"
+        - "zapsat postih (zvonění v uších) a Žár +2 s důvodem; náklad zůstává 6"
+      nesmi:
+        - "tvrdit, že to lépe nešlo — MAX DOSAŽITELNÉ (3/4) je nad dosaženým (2/4)"
+        - "tvrdit ztrátu bedny nebo kredity (nic nepadlo)"
+        - "povýšit banán ani sekáček na úspěch (KRITICKÉ)"
+        - "popsat výstřel z banánu — hlučnost Žáru plyne z hraní, ne z uvedené střelby"
+
+  - id: bez-gapu-neslo-to-lepe
+    popis: >
+      MAX DOSAŽITELNÉ BEZ gapu — protipól k gap-proti-maximu. Tíseň, kde nešlo nic:
+      pásmo 1/4 a MAX 1/4. Protokol NESMÍ vinit posádku ze špatného rozdělení; smí
+      to nést jako smůlu nebo neuvést vůbec. Dvojice casů testuje, že model rozdíl
+      skutečně čte, a nedělá z „nešlo to lépe" a „prohráls to rozdělením" jednu věc.
+    zdroj: "technika/woz-test-2026-07-30.md §5e + obsah/situace.yaml (2026-07-30)"
+    vstup: |
+      SITUACE: Starý most přes Mohawk (lokace) — Příjezd držela zrezivělá závora a prkna uprostřed byla prohnilá.
+      PRAVIDLO RUNU: —
+      ZÁCHRANA: líznuto „Schovaná pistole" místo „Otrlený výraz"
+      ROZDĚLENÍ:
+        Zvednout závoru [viditelná]: podezřelý A — „Kožená zástěra"
+        Zpevnit prkna [viditelná]: podezřelý B — „Medvědí kožich"
+        Projet dírou [viditelná]: podezřelý C — „Schovaná pistole"
+        Nedat to na sobě [skrytá]: podezřelý D — „Tlustá bible"
+      VÝSLEDEK MECHANIKY: pásmo PRŮŠVIH 1/4
+        MAX DOSAŽITELNÉ: 1/4
+        Zvednout závoru: selhání (práh 5; „Kožená zástěra" mělo nástroj 2)
+        Zpevnit prkna: selhání (kombi práh 4; „Medvědí kožich" mělo nástroj 1 i improvizace 1)
+        Projet dírou: zásah (práh 1; „Schovaná pistole" mělo improvizace 3)
+        Nedat to na sobě: selhání (práh 5; „Tlustá bible" mělo obrana 4)
+      NÁSLEDKY:
+        postihy: podezřelý B — „Prach do očí" (lehký, věci pozná po názvu, na čísla nedohlédne)
+        složení: —
+        kredity: 0; konto 5
+        Žár: +2 — PRŮŠVIH a tasená zbraň; šerif postoupil o dvě pole
+        bedny: ztraceno 1 (PRŮŠVIH); náklad 5
+        loot: —
+    ocekavani:
+      musi:
+        - "zapsat tři selhání a jediný zásah („Projet dírou“) dle mechaniky"
+        - "u selhaných slotů s nesedící věcí (kožich na prkna, bible na klid) dopsat obhajobu pokusu"
+        - "zapsat postih, ztrátu 1 bedny (náklad 5) a Žár +2 s důvodem"
+      nesmi:
+        - "vinit posádku ze špatného rozdělení nebo tvrdit, že to šlo lépe — MAX (1/4) je rovno dosaženému"
+        - "obrátit kterýkoli slot na opačný výsledek (KRITICKÉ)"
+        - "napsat, že ze schované pistole padl výstřel — Žár roste z tasení, ne z uvedené střelby"
+
+  - id: past-vymysleny-dusledek
+    popis: >
+      PAST NA VYMYŠLENÝ MECHANICKÝ DŮSLEDEK (rule 3, věta v0.4) — nejkritičtější
+      nový case. Konfrontace, kde je invence maximálně svůdná ke dvěma zakázaným
+      krokům: (1) „Postavit se jim" s BEDNOU kanadské v náručí — model přirozeně
+      napíše „chlapi si bednu vzali" nebo „bedna se roztříštila", což hráč přečte
+      jako ztrátu nákladu, přitom náklad je beze změny; (2) uříznutá hlaveň prošla
+      v konfrontaci a Žár přitom KLESÁ o sedm — model chce popsat výstřel a hluk,
+      jenže hluk se smí zmínit jen jako uvedený důvod pohybu Žáru, a ten tu jde
+      opačným směrem. Obojí je doložené riziko z WoZ §3 (body 1 a 3).
+    zdroj: "technika/woz-test-2026-07-30.md §3 body 1 a 3, uzly 4 a 8 (2026-07-30)"
+    vstup: |
+      SITUACE: Kolona na poštovní silnici (konfrontace) — Federální vozy svíraly silnici z obou stran a agent Malone si beze spěchu nasazoval brýle.
+      PRAVIDLO RUNU: hodnota se počítá jako 0 (agent Malone nebere úplatky)
+      ZÁCHRANA: —
+      ROZDĚLENÍ:
+        Probít se ven [viditelná]: podezřelý A — „Uříznutá hlaveň"
+        Postavit se jim [viditelná]: podezřelý B — „Bedna kanadské"
+        Strhnout do pole [viditelná]: podezřelý C — „Slzy na povel"
+        Krýt záda [skrytá]: podezřelý D — „Dámský revolver"
+      VÝSLEDEK MECHANIKY: pásmo S NÁSLEDKY 2/4
+        MAX DOSAŽITELNÉ: 2/4
+        Probít se ven: zásah (práh 4; „Uříznutá hlaveň" mělo útok 4; důvod: v konfrontaci zbraň projde)
+        Postavit se jim: selhání (práh 3; „Bedna kanadské" mělo útok 1)
+        Strhnout do pole: zásah (práh 2; „Slzy na povel" mělo improvizace 4)
+        Krýt záda: selhání (práh 5; „Dámský revolver" mělo útok 3)
+      NÁSLEDKY:
+        postihy: podezřelý B — „Naražené rameno" (lehký, do kapes sahá pomaleji)
+        složení: —
+        kredity: 0; konto 7
+        Žár: −7 — konfrontace přežita; šerif se vrátil na třetí značku
+        bedny: 0; náklad 5
+        loot: —
+    ocekavani:
+      musi:
+        - "zapsat oba zásahy a obě selhání dle mechaniky"
+        - "u selhaných slotů (bedna, dámský revolver) dopsat obhajobu pokusu"
+        - "zapsat POKLES Žáru o sedm polí a návrat šerifa na třetí značku"
+        - "zapsat postih podezřelého B; náklad zůstává 5"
+      nesmi:
+        - "naznačit, že bedna byla ztracena, rozbita, odebrána nebo předána (KRITICKÉ — náklad je beze změny 5)"
+        - "popsat výstřel, ránu, hluk nebo rozlehnutí kolem — hluk se smí zmínit jen jako uvedený důvod POHYBU Žáru, a ten zde klesá"
+        - "tvrdit růst Žáru nebo postup šerifa (KRITICKÉ — Žár klesá o sedm)"
+        - "tvrdit další ztrátu bedny nebo kredity (nic nepadlo)"
+        - "povýšit bednu ani dámský revolver na úspěch"
+
+  - id: invence-nesmi-opsat-text-veci
+    popis: >
+      NEJHORŠÍ TERÉN PLNÉHO B — jediný uzel, u kterého kritické hodnocení WoZ
+      testu označilo KANONICKÝ režim za lepší než kreativní (§2, uzel 2): 4/4,
+      všechny čtyři věci k roli sedí, žádné napětí. Kreativní verze tam přidala
+      sud na kladce a pant pod lopatou — mechanicky správně, ale bez pointy,
+      a ztratila nejlepší beat uzlu (vyšetřovatelova poznámka, že se mu bezvadné
+      hlášení píše hůř než přiznání). Tohle je case, který má plné B chytit,
+      pokud degeneruje: invence u sedící věci se smí opřít jen o ZÁMĚR, nikdy
+      o parafrázi textu karty, a nesmí sežrat místo závěrečné poznámce.
+      Vedle toho past rule 4: hlídač spí, Žár je 0 → žádný hluk, žádné probuzení.
+    zdroj: "technika/woz-test-2026-07-30.md uzel 2 + §2 (2026-07-30); staty dle obsah/veci.yaml"
+    vstup: |
+      SITUACE: Odstavený vagon v Peekskillu (lokace) — Na odstavné koleji stál vagon a hlídač u kamínek podřimoval s lucernou.
+      PRAVIDLO RUNU: —
+      ZÁCHRANA: —
+      ROZDĚLENÍ:
+        Proklouznout kolem [viditelná]: podezřelý A — „Provaz a kladka"
+        Vypáčit vagon [viditelná]: podezřelý B — „Lopata"
+        Ztuhnout ve stínu [skrytá]: podezřelý C — „Kastrol na hlavě"
+        Kdyby se probudil [skrytá]: podezřelý D — „Páčidlo"
+      VÝSLEDEK MECHANIKY: pásmo HLADCE+LOOT 4/4
+        MAX DOSAŽITELNÉ: 4/4
+        Proklouznout kolem: zásah (práh 2; „Provaz a kladka" mělo improvizace 2)
+        Vypáčit vagon: zásah (práh 2; „Lopata" mělo nástroj 4)
+        Ztuhnout ve stínu: zásah (práh 2; „Kastrol na hlavě" mělo obrana 4)
+        Kdyby se probudil: zásah (práh 2; „Páčidlo" mělo útok 3)
+      NÁSLEDKY:
+        postihy: žádné
+        složení: —
+        kredity: +2 (HLADCE+LOOT); konto 3
+        Žár: 0 — beze změny; šerif beze změny
+        bedny: 0; náklad 6
+        loot: „kus navíc, který dosud nikdo nenahlásil jako pohřešovaný"
+    ocekavani:
+      musi:
+        - "zapsat všechny čtyři zásahy, +2 kredity a loot"
+        - "u kastrolu na hlavě (jediná zjevně nesedící věc) rozehrát kontrast — tam je celý humor uzlu"
+        - "vejít se do ≤800 znaků a 3–5 vět; nechat místo na závěrečnou poznámku vyšetřovatele"
+      nesmi:
+        - "opsat u provazu, lopaty ani páčidla text karty místo záměru (parafráze = vata, KRITICKÉ pro plné B)"
+        - "vymyslet další VĚC Z VÝBAVY (další nástroj, zbraň, úplatek), která ve vstupu není — kulisa scény (sud, pant, lucerna, kamínka) je naopak povinná, viz rule 4/5"
+        - "popsat hluk, ránu, probuzení hlídače ani cokoli, co by hlídače vzbudilo — Žár je 0 a nikdo se neprobudil"
+        - "tvrdit postih, ztrátu bedny ani pohyb šerifa (nic nepadlo)"
+        - "vinit posádku — MAX DOSAŽITELNÉ (4/4) je rovné dosaženému"
+        - "použít u dvou a více slotů tutéž větnou vazbu nebo figuru (rule 6)"
 
 # =====================================================================
 # ARCHIV — v2 řez (UZEL/OSOBY/KARTY, hody + zranění + bedny).
