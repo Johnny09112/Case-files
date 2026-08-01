@@ -405,10 +405,11 @@ variance doměřena (2sd = 3,22 < 6). Eskalace V1–V4 rozhodnuta uživatelem ja
 
 **Živé — blokují další fáze:**
 
-- **LLM poskytovatel NEROZHODNUT.** Blokuje fázi 3 (adaptér) a tím i test
-  kvality českého humoru, což je dle CLAUDE.md největší produktové riziko.
-  Volání drž abstrahované (ADR-004/007), levný model třídy Haiku, jedno volání
-  na uzel. Konzultace s `operations-economics` k rozpočtu je připravená.
+- ~~LLM poskytovatel NEROZHODNUT~~ — **ROZHODNUTO D55 (2026-07-30): Anthropic
+  Claude Haiku 4.5** (nájem, ne svatba; podklad technika/llm-ekonomika;
+  test češtiny = akceptační brána uvnitř fáze 3; cena se přehodnotí po lidské
+  bráně). **Fáze 3 ODBLOKOVÁNA a spuštěna.** Uživatel: nastavit
+  ANTHROPIC_API_KEY do prototyp/.env (hra bez klíče zůstává hratelná).
 - **Jazyková strategie CZ→EN** — kdy zařadit překlad a test anglických protokolů.
   Obsah vzniká a testuje se česky (rizikovější jazyk pro AI humor), primární
   Steam trh je anglický.

@@ -13,6 +13,17 @@ architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.m
 
 ## 2026-07-30
 
+- **D55 (ROZHODNUTÍ UŽIVATELE) — LLM poskytovatel: Anthropic Claude Haiku 4.5;
+  fáze 3 odblokována.** Nájem, ne svatba (ADR-004/007 drží přepnutí levné).
+  Důvody: jediný s existujícím přístupem uživatele; nejsilnější prior na
+  češtinu (WoZ psal model téže rodiny); cenový rozdíl při playtestovém objemu
+  v centech. Podklad: technika/llm-ekonomika-2026-07-30.md (worst-case
+  $0,052/run, ≤17 % marže z 9,99 €; pozor: prefix ~3k tok. nedosáhne na
+  minimum cache 4 096 tok. — optimalizovat až s reálným objemem). **Test
+  češtiny dle D53 = akceptační brána UVNITŘ fáze 3** (baterie humor-testéra
+  proti reálnému adaptéru). Přehodnocení ceny (Gemini Flash-Lite, Together
+  Mistral) po lidské bráně. Klíč si uživatel nastavuje sám do .env; hra bez
+  klíče zůstává plně hratelná (fragmentový fallback D54).
 - **D54 (ROZHODNUTÍ UŽIVATELE) — fallback = plnohodnotná fragmentová vrstva;
   kombinatorický skladač karet potvrzen jako budoucnost, po lidské bráně.**
   (1) **Fragmentový fallback:** kódové kolo (per-slot placeholdery
