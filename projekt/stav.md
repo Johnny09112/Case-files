@@ -1,7 +1,7 @@
 # Stav projektu
 
 *Živý dokument. Udržuje `project-manager` — aktualizuj po každém větším kroku.
-Poslední aktualizace: 2026-07-28.*
+Poslední aktualizace: 2026-08-02.*
 
 ## Aktuální fáze
 
@@ -408,8 +408,18 @@ variance doměřena (2sd = 3,22 < 6). Eskalace V1–V4 rozhodnuta uživatelem ja
 - ~~LLM poskytovatel NEROZHODNUT~~ — **ROZHODNUTO D55 (2026-07-30): Anthropic
   Claude Haiku 4.5** (nájem, ne svatba; podklad technika/llm-ekonomika;
   test češtiny = akceptační brána uvnitř fáze 3; cena se přehodnotí po lidské
-  bráně). **Fáze 3 ODBLOKOVÁNA a spuštěna.** Uživatel: nastavit
-  ANTHROPIC_API_KEY do prototyp/.env (hra bez klíče zůstává hratelná).
+  bráně). **FÁZE 3 POSTAVENA (2026-08-02, `52de198`+`f54784d`+`1c7a371`):**
+  adaptér dle ADR-004/007 (cache → Haiku 4.5 → 10s timeout → fragmentový
+  fallback; neblokující UI, hra bez klíče plně hratelná; 445 testů) + **prompt
+  v0.4 s PLNÝM kreativním mandátem B** — B-lite zamítnuto po adversariálním
+  kole (trigger nefiltruje: platí v 75 % slotů a jeho fuzzy půlka je na Haiku
+  nerozhodnutelná; bezpečnost nese pojistka o číslech, ne zúžení mandátu).
+  Opraveny 2 vady cestou (YAML baterie, znaménko Žáru). Běží opravné kolo
+  v0.4.1 (kredity dle rules.js + 3 další nálezy kritika + strop 900).
+  **Uživatel: `VITE_ANTHROPIC_API_KEY` do `prototyp/.env.local` a spustit
+  `npm run test:cestina`** (brána měří ručně psané vstupy baterie = test
+  kvality promptu; integrace vstupů z enginu = backlog po bráně). Backlog:
+  engine neloguje líznutou loot kartu (`drawCard()` bez události).
 - **Jazyková strategie CZ→EN** — kdy zařadit překlad a test anglických protokolů.
   Obsah vzniká a testuje se česky (rizikovější jazyk pro AI humor), primární
   Steam trh je anglický.
