@@ -15,6 +15,13 @@
 # `MAX DOSAŽITELNÉ`. Přibyla skupina KREATIVNÍ CASY, která testuje mandát invence
 # (rule 5) a jeho pojistku (rule 4 — vymyšlený mechanický důsledek).
 #
+# ŘEZ v0.4.1 (2026-08-02): (a) znakový strop zvednut 800 → 900 ve všech `ocekavani`;
+# (b) kredity v `vstup`ech srovnány se zapečeným enginem (HLADCE+LOOT +3, HLADCE +2 —
+# `prototyp/src/engine/rules.js` `kredity`; dřívější +2/+1 byla próza z doby před
+# kalibrací-1); (c) přibyl case `solo-bohate-nasledky-strop-delky`, který strop 900
+# hlídá na nejhorším terénu. POZOR: kdyby se strop kdykoli vracel dolů, musí se
+# překlopit VŠECHNY čtyři starší casy se znakovým limitem, ne jen nový.
+#
 # POZOR na variantu mandátu: v0.4 je **plné B** — invence u KAŽDÉHO ze čtyř slotů,
 # s nerovným rozpočtem (sedící věc pár slov, nesedící celý záměr). Zamítnutá
 # alternativa B-lite (invence JEN u selhaných/nesedících) by měla opačná
@@ -70,7 +77,7 @@ testy:
       musi:
         - "zapsat, že slot „Zapřáhnout“ i slot „Kdyby vyváděl“ (banán) SELHALY"
         - "zapsat postih podezřelého D (naražené rameno) jako fikci"
-        - "placeholdery „podezřelý A/B/C/D“, 3–5 vět, ≤800 znaků, suchý úřední tón, 3. osoba"
+        - "placeholdery „podezřelý A/B/C/D“, 3–5 vět, ≤900 znaků, suchý úřední tón, 3. osoba"
       nesmi:
         - "tvrdit, že banán / útočná role uspěl(a) — komická fikce NEMĚNÍ výsledek slotu (KRITICKÉ)"
         - "tvrdit ztrátu jakékoli bedny (náklad zůstává 6) ani pohyb Žáru/šerifa"
@@ -151,15 +158,15 @@ testy:
       NÁSLEDKY:
         postihy: žádné
         složení: —
-        kredity: +2 (HLADCE+LOOT); konto 10
+        kredity: +3 (HLADCE+LOOT); konto 11
         Žár: 0 — beze změny; šerif beze změny
         bedny: 0; náklad 6
         loot: „Petrolejová lampa"
     ocekavani:
       musi:
         - "zapsat hladký průchod všech čtyř rolí bez potíží"
-        - "zmínit loot (líznutá věc navíc) a přírůstek kreditů (+2)"
-        - "dodržet znakový strop ≤800 zn. a 3–5 vět i při čtyřech licencovaných invencích"
+        - "zmínit loot (líznutá věc navíc) a přírůstek kreditů (+3)"
+        - "dodržet znakový strop ≤900 zn. a 3–5 vět i při čtyřech licencovaných invencích"
       nesmi:
         - "tvrdit jakýkoli postih, ztrátu bedny, zranění ani pohyb Žáru/šerifa (nic z toho nepadlo)"
         - "zapsat brokovnici jako selhání — ve skryté roli v lokaci prošla"
@@ -232,14 +239,14 @@ testy:
       NÁSLEDKY:
         postihy: žádné
         složení: —
-        kredity: +1 (HLADCE); konto 9
+        kredity: +2 (HLADCE); konto 10
         Žár: 0 — beze změny; šerif beze změny
         bedny: 0; náklad 6
         loot: —
     ocekavani:
       musi:
         - "zapsat, že role „Dorazit razítko“ (kněžský kolárek) SELHALA — přes fikci o nedotknutelném faráři"
-        - "zapsat celkově zdolanou situaci (3/4) a +1 kredit; náklad zůstává 6"
+        - "zapsat celkově zdolanou situaci (3/4) a +2 kredity; náklad zůstává 6"
       nesmi:
         - "tvrdit, že kolárek / razítková role uspěla, protože „faráře nikdo neprohledává“ (KRITICKÉ)"
         - "tvrdit postih, ztrátu bedny, zranění ani pohyb Žáru, které nepadly"
@@ -284,7 +291,7 @@ testy:
         - "u KAŽDÉHO ze tří selhaných slotů uvést ZPŮSOB a ZÁMĚR použití (obhajobu pokusu), ne holé „s X neuspěl“"
         - "zapsat všechna tři selhání jako selhání a „Kdyby sáhl po zbrani“ jako jediný zásah"
         - "zapsat těžký postih (otřes mozku), ztrátu 1 bedny (náklad 5) a pohyb Žáru o tři pole s důvodem"
-        - "3–5 vět, ≤800 znaků — rozpočet patří třem selhaným slotům, řeznický hák (sedící, na který nedošlo) unese pár slov"
+        - "3–5 vět, ≤900 znaků — rozpočet patří třem selhaným slotům, řeznický hák (sedící, na který nedošlo) unese pár slov"
       nesmi:
         - "nechat selhaný slot u doslovného konstatování bez obhajoby (regrese nálezu 2026-07-29)"
         - "věnovat řeznickému háku stejný prostor jako selhaným slotům — rozpočet je nerovný (rule 5)"
@@ -412,6 +419,7 @@ testy:
         - "zapsat obě selhání a oba zásahy dle mechaniky"
         - "u obou selhaných slotů (banán, sekáček) dopsat obhajobu pokusu — způsob a záměr"
         - "zapsat postih (zvonění v uších) a Žár +2 s důvodem; náklad zůstává 6"
+        - "DIAGNOSTIKA (neblokující, v0.4.1): aspoň část generací gap skutečně ZAZNAMENÁ — jednou vsuvkou, bez příčiny. Zaznamená-li ho 0 z 5, je `MAX DOSAŽITELNÉ` mrtvý řádek vstupu: platíme ho v každém volání, oracle ho počítá, a nic z něj neplyne. Ostatní casy hlídají jen opačný směr (že model gap nevymyslí), takže bez téhle položky projde 10/10 i model, který řádek ignoruje."
       nesmi:
         - "tvrdit, že to lépe nešlo — MAX DOSAŽITELNÉ (3/4) je nad dosaženým (2/4)"
         - "tvrdit ztrátu bedny nebo kredity (nic nepadlo)"
@@ -533,15 +541,15 @@ testy:
       NÁSLEDKY:
         postihy: žádné
         složení: —
-        kredity: +2 (HLADCE+LOOT); konto 3
+        kredity: +3 (HLADCE+LOOT); konto 4
         Žár: 0 — beze změny; šerif beze změny
         bedny: 0; náklad 6
         loot: „kus navíc, který dosud nikdo nenahlásil jako pohřešovaný"
     ocekavani:
       musi:
-        - "zapsat všechny čtyři zásahy, +2 kredity a loot"
+        - "zapsat všechny čtyři zásahy, +3 kredity a loot"
         - "u kastrolu na hlavě (jediná zjevně nesedící věc) rozehrát kontrast — tam je celý humor uzlu"
-        - "vejít se do ≤800 znaků a 3–5 vět; nechat místo na závěrečnou poznámku vyšetřovatele"
+        - "vejít se do ≤900 znaků a 3–5 vět; nechat místo na závěrečnou poznámku vyšetřovatele"
       nesmi:
         - "opsat u provazu, lopaty ani páčidla text karty místo záměru (parafráze = vata, KRITICKÉ pro plné B)"
         - "vymyslet další VĚC Z VÝBAVY (další nástroj, zbraň, úplatek), která ve vstupu není — kulisa scény (sud, pant, lucerna, kamínka) je naopak povinná, viz rule 4/5"
@@ -549,6 +557,70 @@ testy:
         - "tvrdit postih, ztrátu bedny ani pohyb šerifa (nic nepadlo)"
         - "vinit posádku — MAX DOSAŽITELNÉ (4/4) je rovné dosaženému"
         - "použít u dvou a více slotů tutéž větnou vazbu nebo figuru (rule 6)"
+
+  # ---------- v0.4.1: STROP DÉLKY ----------
+  - id: solo-bohate-nasledky-strop-delky
+    popis: >
+      STROP DÉLKY (v0.4.1, rule 1: 900 zn.). Nejhorší terén pro rozpočet: SÓLO uzel,
+      kde na protokol naráz doléhá VŠECHNO — čtyři obhajoby pokusu (rule 5), sólo
+      klauzule (rule 2), vsuvka o záchraně, gap proti MAX DOSAŽITELNÉMU, těžký
+      postih, ztráta bedny, pohyb Žáru s důvodem A závorka vyšetřovatele (rule 8).
+      Přesně na tomhle profilu se strop 800 ukázal jako těsný a model obětoval jako
+      první závorku — jedinou nepovinnou položku, a přitom podpisovou figuru celého
+      protokolu. Case hlídá obojí najednou: že se text vejde do 900 znaků A že se
+      z něj přitom nevytratí ani jeden následek ani ta závorka. Když se sem prompt
+      nevejde, NENÍ řešením škrtnout následek — to je porušení rule 3/7.
+      Vedlejší past: záchrana tu vytáhla jedinou věc, která nakonec zabrala
+      (obrácená pointa proti case `zachrana-vytazena-vec-k-nicemu`), takže model
+      má chuť z ní udělat celou větu místo vsuvky.
+      DOKLAD KE STROPU (2026-08-02): referenční protokol testéra na tento vstup má
+      **818 znaků / 5 vět** — a je to ÚSPORNÁ verze (jedna vsuvka, jedna závorka,
+      žádné rozvíjení kulisy). Nad starým stropem 800, pod novým 900.
+      POZOR — 818 je JEDNA generace, tedy 91 % nového stropu, a strop byl zvolen
+      ex post z téhož vzorku. Case se proto vyhodnocuje jako MÍRA přes víc generací,
+      ne z jednoho výstupu: **≥4 z 5 generací ≤900 znaků A 5 z 5 se závorkou
+      i všemi následky**. Padne-li první podmínka a druhá drží, je upovídaný model;
+      padne-li druhá, je těsný strop. Bez tohoto rozlišení se z casu nedá odvodit,
+      jestli se má příště hýbat promptem, nebo číslem.
+    zdroj: "obsah/situace.yaml privoz-celnik + veci.yaml + postihy.yaml ochrnuta-ruka (2026-08-02)"
+    vstup: |
+      SITUACE: Přívoz přes Hudson (npc) — Prám se odrazil od břehu a celník obcházel náklad s nosem u plachty.
+      PRAVIDLO RUNU: hodnota se počítá jako 0 (agent Malone nebere úplatky)
+      ZÁCHRANA: líznuto „Uříznutá hlaveň" místo „Otrlený výraz"
+      ROZDĚLENÍ:
+        Zamotat hlavu [viditelná]: podezřelý A — „Provaz a kladka"
+        Přesunout z očí [viditelná]: podezřelý A — „Kněžský kolárek"
+        Přilepšit do dlaně [viditelná]: podezřelý A — „Zlaté hodinky"
+        Kdyby čenichal dál [skrytá]: podezřelý A — „Uříznutá hlaveň"
+      VÝSLEDEK MECHANIKY: pásmo PRŮŠVIH 1/4
+        MAX DOSAŽITELNÉ: 2/4
+        Zamotat hlavu: selhání (práh 5; „Provaz a kladka" mělo improvizace 2)
+        Přesunout z očí: selhání (práh 3; „Kněžský kolárek" mělo nástroj 0)
+        Přilepšit do dlaně: selhání (práh 2; „Zlaté hodinky" mělo hodnota 5; důvod: hodnota zrušena PRAVIDLEM RUNU)
+        Kdyby čenichal dál: zásah (práh 4; „Uříznutá hlaveň" mělo útok 4; důvod: zbraň ve skryté roli projde)
+      NÁSLEDKY:
+        postihy: podezřelý A — „Ochrnutá ruka" (těžký, ruka visí jak cizí a zbraň v ní neudrží; drží do vyléčení)
+        složení: —
+        kredity: 0; konto 6
+        Žár: +3 — PRŮŠVIH a tasená zbraň (GANGSTER, hlučné); šerif postoupil o tři pole
+        bedny: ztraceno 1 (PRŮŠVIH); náklad 5
+        loot: —
+    ocekavani:
+      musi:
+        - "vejít se do ≤900 znaků a 3–5 vět PŘI PLNÉM NÁKLADU: čtyři obhajoby pokusu, sólo klauzule, vsuvka o záchraně, gap, těžký postih, ztráta bedny i pohyb Žáru"
+        - "uzavřít závorkou osobní poznámky vyšetřovatele — rule 8 od v0.4.1 určuje POŘADÍ ŠKRTÁNÍ (u stropu se škrtá kulisa, ne poznámka a ne následek), takže je to vynutitelné, ne jen přání testéra"
+        - "psát o JEDNÉ osobě, která zvládala čtyři úlohy po sobě — označení „podezřelý A“ nejvýš dvakrát, dál „jmenovaný“/„týž“"
+        - "zapsat tři selhání a jediný zásah („Kdyby čenichal dál“) dle mechaniky"
+        - "zapsat těžký postih (ochrnutá ruka), ztrátu 1 bedny (náklad 5) a Žár +3 s důvodem"
+      nesmi:
+        - "zamlčet nebo zkrátit kteroukoli položku NÁSLEDKŮ, aby se protokol vešel (KRITICKÉ — zamlčený následek je porušení rule 3/7, ne úspora znaků)"
+        - "překročit 900 znaků ani 5 vět"
+        - "napsat, že podezřelému nestačily peníze nebo že hodinky měly malou cenu — hodnota je ZRUŠENA PRAVIDLEM RUNU, ne nízká (KRITICKÉ)"
+        - "popsat výstřel z uříznuté hlavně ani ránu na palubě — Žár roste z tasení, ne z uvedené střelby"
+        - "vytvořit z podezřelého A víc osob ani ho nechat držet čtyři věci naráz (KRITICKÉ pro sólo)"
+        - "rozvést záchranu do vlastní věty místo vsuvky"
+        - "tvrdit, že to lépe nešlo — MAX DOSAŽITELNÉ (2/4) je nad dosaženým (1/4); gap se ale smí jen zaznamenat, nikdy zdůvodnit"
+        - "naznačit, že kterýkoli podezřelý skončil v rukou úřadů, přestal být s posádkou, byl ztotožněn (jméno, doklad, značka vozu) nebo odešel s újmou nad rámec zapsaného postihu — POJMOVĚ, ne jen těmi slovy z rule 4: „odvedli ho k sepsání“ i „nechali si ho stranou do rána“ jsou porušení (rule 4, v0.4.1)"
 
 # =====================================================================
 # ARCHIV — v2 řez (UZEL/OSOBY/KARTY, hody + zranění + bedny).

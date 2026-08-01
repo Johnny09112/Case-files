@@ -185,8 +185,11 @@ se testuje agentem `protocol-humor-tester` nad promptem `prompty/protokol.md`.
     (aby složení nebylo levnější než léčení).
 - **Kredity:** společné, **per-run** (nepřecházejí). Ceny v motelu: **směna karty
   = 3**, **léčení těžkého postihu = 6**. Příjmy: **truhla +4–6**, HLADCE+LOOT
-  **+2**, HLADCE **+1**. Orientačně: skvělý run ~13, medián ~7–9 (unese ≥2
-  ekonomická rozhodnutí), slabý ~4–5.
+  **+3**, HLADCE **+2** (zvednuto kalibrací-1, když kotva-patch ztenčil ekonomiku;
+  zapečeno v `prototyp/src/engine/rules.js` → `kredity`). Orientačně: skvělý run ~13,
+  medián ~7–9 (unese ≥2 ekonomická rozhodnutí), slabý ~4–5 — *tyto součty jsou ještě
+  z pásma +2/+1 a po zvednutí příjmů nebyly přeměřeny; ber je jako řádový odhad, ne
+  jako cíl.*
 - **Motel:** **větvová odbočka** (ne pevný uzel) — 2 příležitosti na mapě (mid a
   late); tým volí úkryt (léčení + směna) vs. hnát náklad dál.
 - **Mix míst** (páteř ~7 uzlů): **5 maso (NPC+lokace) / 1 truhla**, motel jako
