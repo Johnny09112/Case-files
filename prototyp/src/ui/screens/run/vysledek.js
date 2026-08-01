@@ -78,7 +78,14 @@ export function pohledVysledku(ctx) {
       'header',
       { class: 'spis-hlavicka' },
       h('p', { class: 'formular-popisek' }, 'výsledek — hráč vždy ví proč'),
-      h('h1', {}, `List ${sekce.cislo} — ${sekce.titulek}`)
+      h(
+        'h1',
+        {},
+        `List ${sekce.cislo} — ${sekce.titulek} `,
+        // Nenápadný indikátor režimu (fáze 3, ADR-004) — jen informace, odkud
+        // pochází text protokolu; nikdy modál ani varování.
+        h('span', { class: 'rezim-indikator', title: sekce.zdroj === 'ai' ? 'Protokol napsala AI' : 'Protokol z připravených šablon' }, sekce.zdroj === 'ai' ? 'AI' : 'šablony')
+      )
     ),
 
     prozaSituace(),

@@ -750,6 +750,20 @@ button.karta:hover:not(:disabled) {
   color: var(--zar-barva);
 }
 
+/* Nenápadný indikátor režimu protokolu (fáze 3, ADR-004) — jen informace,
+   žádné varování; drží se v hlavičce spisu vedle titulku sekce. */
+.rezim-indikator {
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--hrana);
+  border: 1px solid var(--hrana);
+  border-radius: 0.2rem;
+  padding: 0.05rem 0.3rem;
+  vertical-align: middle;
+}
+
 .protokol-list {
   background: var(--papir);
   border: 1px solid var(--hrana);

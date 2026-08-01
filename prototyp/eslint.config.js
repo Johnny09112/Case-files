@@ -16,6 +16,7 @@ export default [
         URL: 'readonly',
         TextEncoder: 'readonly',
         structuredClone: 'readonly',
+        Headers: 'readonly',
       },
     },
   },
@@ -30,6 +31,22 @@ export default [
         clearTimeout: 'readonly',
         Blob: 'readonly',
         HTMLElement: 'readonly',
+      },
+    },
+  },
+  {
+    // LLM adaptér běží v obou světech (browser přes Vite i Node přes Vitest/sim) —
+    // potřebuje síťové/časovací globals, které nejsou v základní sadě výše.
+    files: ['src/llm/**/*.js'],
+    languageOptions: {
+      globals: {
+        fetch: 'readonly',
+        crypto: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        AbortController: 'readonly',
+        TextEncoder: 'readonly',
+        Headers: 'readonly',
       },
     },
   },

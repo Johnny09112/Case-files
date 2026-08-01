@@ -28,6 +28,11 @@ import { EVENT } from '../engine/events.js';
 import { createVyberSablon, zapisSituace, zapisFinale } from './protocol-fill.js';
 import { createVyberFragmentu } from './protocol-fragments.js';
 import { vysvetli, ctxZObsahu } from './vysvetleni.js';
+import { createAdapter } from '../llm/adapter.js';
+import { createProvider } from '../llm/providers/index.js';
+import { createCache } from '../llm/cache.js';
+import { createLog } from '../llm/log.js';
+import { llmCtxZObsahu } from '../llm/prompt.js';
 import { obrazovkaSetup } from './screens/setup.js';
 import { obrazovkaRun } from './screens/run/index.js';
 import { obrazovkaKonec } from './screens/end.js';
@@ -47,6 +52,30 @@ export function initApp(root) {
   });
   const sablony = load(sablonyYaml).sablony;
   const fragmenty = load(fragmentyYaml).fragmenty;
+
+  /**
+   * LLM adaptér (fáze 3, architektura §2.3, ADR-004) — vzniká JEDNOU za
+   * relaci (ne za run), ať cache a log sbírají hit-rate napříč runy. Bez
+   * `VITE_ANTHROPIC_API_KEY` je `provider` `null` a adaptér VŽDY generuje
+   * fallbackem — hra je bez klíče plně hratelná (nikde se to nekontroluje
+   * podmínkou navíc, spadá to samo z chování adaptéru).
+   *
+   * `fallback` předaný sem NENÍ skutečná šablonová vrstva — ta už běží
+   * SYNCHRONNĚ ve `flushUzel()` (fragmentový/pásmový fallback, D54) a hráč ji
+   * vidí okamžitě, beze změny proti stavu před touto fází. Adaptér svůj
+   * `fallback` použije jen interně, když provider selže/chybí/timeoutuje;
+   * volající (`pokusOAdaptaci` níže) jeho návratovou hodnotu nikdy nečte —
+   * zajímá ho jen `zdroj === 'llm' | 'cache'` (kdy je co vyměnit).
+   */
+  const llmProvider = createProvider();
+  const llmCache = createCache();
+  const llmLog = createLog();
+  const llmAdapter = createAdapter({
+    provider: llmProvider,
+    fallback: () => '',
+    cache: llmCache,
+    log: llmLog,
+  });
 
   const S = novyStav();
 
@@ -150,10 +179,43 @@ export function initApp(root) {
       cislo: S.protokol.length + 1,
       titulek: ctxProtokolu.situace[udalosti.find((u) => u.type === EVENT.SITUATION_REVEALED)?.situace_id] ?? `uzel ${udalosti[0].nodeIndex}`,
       odstavce: zapisSituace(udalosti, ctxProtokolu, S.vyber, S.vyberFragmentu),
+      /** Zdroj TOHOTO odstavce pro nenápadný indikátor v hlavičce spisu. */
+      zdroj: /** @type {'sablony'|'ai'} */ ('sablony'),
     };
     S.protokol.push(sekce);
-    S.fronta.push({ nodeIndex: udalosti[0].nodeIndex, udalosti, sekce, vyklepano: false });
+    const polozka = { nodeIndex: udalosti[0].nodeIndex, udalosti, sekce, vyklepano: false };
+    S.fronta.push(polozka);
     S.bufferUzlu = [];
+    pokusOAdaptaci(sekce, polozka, udalosti);
+  }
+
+  /**
+   * Souběžný, NEBLOKUJÍCÍ pokus o lepšího vypravěče (fáze 3, ADR-004).
+   * `sekce.odstavce` už v tuhle chvíli nese hotový fallback text (viz výše) —
+   * hráč ho může vidět okamžitě, psací stroj na nic nečeká. Když LLM odpověď
+   * dorazí DŘÍV, než hráč sekci uvidí vyklepanou (`polozka.vyklepano ===
+   * false`), text i indikátor v hlavičce se tiše vymění a překreslí; když
+   * dorazí později (nebo vůbec — bez klíče, timeout, chyba), fallback zůstává
+   * beze změny a nic se nestane. Žádné modály, žádná chybová hlášení.
+   *
+   * `sekce`/`polozka` sdílí referenci s `S.protokol`/`S.fronta` (mutace tady
+   * se propíše i tam, i když `polozka` mezitím z fronty vypadla).
+   */
+  function pokusOAdaptaci(sekce, polozka, udalosti) {
+    const ctx = llmCtxZObsahu(content, S.jmena, S.run?.getState()?.kredity);
+    llmAdapter
+      .generate(udalosti, ctx)
+      .then((vysledek) => {
+        if (vysledek.zdroj !== 'llm' && vysledek.zdroj !== 'cache') return;
+        if (polozka.vyklepano) return; // hráč sekci už viděl vyklepanou — fallback zůstává
+        sekce.odstavce = [vysledek.text];
+        sekce.zdroj = 'ai';
+        render();
+      })
+      .catch(() => {
+        // `generate()` by nikdy neměl rejectovat (viz llm-adapter.test.js) —
+        // pojistka navíc jen chrání UI, kdyby to přesto nastalo.
+      });
   }
 
   /**
