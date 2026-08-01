@@ -414,8 +414,14 @@ variance doměřena (2sd = 3,22 < 6). Eskalace V1–V4 rozhodnuta uživatelem ja
   v0.4 s PLNÝM kreativním mandátem B** — B-lite zamítnuto po adversariálním
   kole (trigger nefiltruje: platí v 75 % slotů a jeho fuzzy půlka je na Haiku
   nerozhodnutelná; bezpečnost nese pojistka o číslech, ne zúžení mandátu).
-  Opraveny 2 vady cestou (YAML baterie, znaménko Žáru). Běží opravné kolo
-  v0.4.1 (kredity dle rules.js + 3 další nálezy kritika + strop 900).
+  Opraveny 2 vady cestou (YAML baterie, znaménko Žáru). **Opravné kolo v0.4.1
+  HOTOVO (`57730e3`, kritik „zapéct s výhradami", vše zapracováno):** kredity
+  dle rules.js (+3/+2, opraven i prototyp-mvp), příklad MAX přepočten (2/4),
+  ztráta nákladu dle D40, rule 4 pojmově (zranění/zadržení/ztotožnění), strop
+  900 + pořadí škrtání; PM nezávisle: 445/445. Otevřené drobnosti do backlogu:
+  rule 4 vs. NPC (do rozhodnutí platí přísnější čtení), K8 kaveát „medián
+  7–9 kreditů" možná z éry +2/+1 (game-designer ověří provenienci), Žár ve
+  2 starších casech baterie, `prompt.js` posílá `duvod` jen u auto-failu.
   **Uživatel: `VITE_ANTHROPIC_API_KEY` do `prototyp/.env.local` a spustit
   `npm run test:cestina`** (brána měří ručně psané vstupy baterie = test
   kvality promptu; integrace vstupů z enginu = backlog po bráně). Backlog:
