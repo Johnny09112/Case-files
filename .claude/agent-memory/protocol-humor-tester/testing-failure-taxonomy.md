@@ -501,6 +501,30 @@ Nevidí: vymyšlenou příčinu, zadržení, změkčený výsledek — ty se poz
 vstupu. Bez tohohle dělení vypadá 0/13 jako popření uživatelova dojmu, a PM z toho
 nemá jak rozhodnout, co blokuje KTEROU bránu.
 
+### J8 — DÉLKU ŽENE POČET NESEDÍCÍCH VĚCÍ, NE PÁSMO — A BATERIE TEN REŽIM NEVZORKUJE
+Nezávislý test absurdních karet (8 generací, týž prompt/model/teplota, táž cesta
+`buildPromptInput()`, ruka plná nesedících věcí) dal **8/8 přes strop, ⌀1138 zn.**
+Se 13 mými: **19/21**. Hlavička **21/21**. Mechanismus: každá nesedící věc si dle
+rule 5 vyžádá rozepsaný záměr, takže **při 4/4 nesedících je přetečení
+strukturální, ne náhodné**. Moje baterie má casy s 1–2 nesedícími věcmi —
+**režim 3–4 naráz nevzorkuje**, takže strop měřím na nejmírnějším terénu.
+- **Doplnit case se 3–4 nesedícími věcmi naráz.** Bez něj fix délky projde
+  baterií a padne v produkci.
+- **Obecně: u každého pravidla se ptej, který VSTUP ho maximálně zatěžuje,
+  a měj na něj case.** Pásmo a následky jsem hlídal, „kolik věcí nesedí" ne —
+  přitom je to jediná osa, která škáluje rozpočet rule 5.
+
+### J9 — CIZÍ BĚH JE REGRESNÍ DŮKAZ, KDYŽ ŠEL TOUTÉŽ CESTOU KÓDU
+Test absurdních karet nebyl testem promptu (šlo o obsah), a přesto přinesl
+**silnější důkaz než moje vlastní kolo** — protože vzorkoval režim, který baterie
+nekryje, a vyřešil moji výhradu n=1 u dvou metrik.
+- **U každého cizího běhu se ptej, jestli šel `buildPromptInput()` → produkční
+  prompt → produkční model.** Pokud ano, jsou to data, ne anekdota — a připoj je.
+- **Zároveň si přečti, jak cizí report čte MOJE čísla.** Ten report porovnal
+  hlavičku proti „13/13 → 2/13" z changelogu a ptal se, jestli je 8/8 regrese —
+  jenže to číslo patří **jazykové vadě**, ne hlavičce. Nekorigovaná záměna metrik
+  v cizím dokumentu se šíří dál jako fakt. **Korekci napiš adresně a hned.**
+
 ### J7 — STOP PODMÍNKA MŮŽE PADNOUT, A PŘESTO NEBÝT DŮVOD K JEJÍMU DŮSLEDKU
 Podmínka říkala: padne-li metrika, je to strop modelu → eskalace na dražší model.
 Data ale ukázala tři jiné příčiny (J1, J2, J5), všechny s levným prompt fixem.

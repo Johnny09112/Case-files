@@ -12,6 +12,9 @@ v0.4.2 mají doložený, levný a nevyzkoušený prompt fix, a jeden zásah je
 **měřitelná vlastní regrese**. Eskalovat teď znamená koupit si silnější model,
 aby zakryl brzdu délky, kterou jsme si sami odstranili.
 
+**Potvrzeno nezávislou replikací** (8 generací na jiné distribuci vstupů,
+§6): délka přes strop **19/21**, hlavička **21/21** napříč oběma sadami.
+
 ---
 
 ## 1. Stop podmínka (předregistrováno v changelogu v0.4.2)
@@ -186,11 +189,61 @@ vstupu vůbec pozná:
 **Nezablokované, drží potřetí:** obrácení výsledku 0/52 slotů · vymyšlený loot
 0/13 · závorka vyšetřovatele 13/13 · postihy a složení zapsány jako fikce.
 
-## 6. Procesní nálezy pro příští běh
+## 6. NEZÁVISLÉ POTVRZENÍ — test absurdních karet (8 generací, jiná distribuce)
+
+`technika/test-absurdni-karty-2026-08-02.md`: 8 reálných generací, **týž prompt
+v0.4.2, týž model, táž teplota, táž cesta `buildPromptInput()`**, ale zcela jiná
+distribuce vstupů (ruka plná záměrně nesedících věcí, sandbox mimo baterii).
+**Je to replikace, ne doplněk** — a padá přesně na tři metriky, o které se opírá
+doporučení v §4:
+
+| metrika | baterie (13) | absurdní run (8) | **součet (21)** |
+|---|---|---|---|
+| přes strop 900 | 11/13 (⌀1079) | **8/8** (⌀1138) | **19/21** |
+| hlavička (jakákoli) | 13/13 | **8/8** | **21/21** |
+| z toho doslovný markdown | 5/13 | 1/8 | 6/21 |
+| vymyšlená příčina | 13/13 | doložena 4 citacemi | — |
+| ZÁCHRANA zapsána | 0/2 | **0/1** | **0/3** |
+
+**Co to mění:** moje největší výhrada byla n=1 na buňku. **U délky a hlavičky je
+tím vyřešena** — dvě nezávislé sady na jiných vstupech dávají 19/21 a 21/21.
+Závěr §4.1 (vypuštění „3–5 vět" je vlastní regrese, ne strop modelu) **už není
+n=1 nález.** Kontrolní bod navrch: uzel 4 absurdního runu **neobsahoval žádnou
+absurdní kartu a stejně má 957 zn.** — přetečení není vlastností absurdního
+obsahu, ta ruka ho jen spolehlivě vyvolá.
+
+**Mechanismus, který ten test odkryl a moje baterie ne:** délku netlačí pásmo ani
+následky, ale **počet slotů, kde věc k roli nesedí**. Každá nesedící věc si podle
+rule 5 vyžádá rozepsaný záměr; při 4/4 nesedících je přetečení strukturální, ne
+náhodné. To je zároveň **doložená mezera mé baterie** — ta má casy s 1–2
+nesedícími věcmi, režim 3–4 najednou nevzorkuje. **Přijímám doporučení reportu:
+do `protokol-testy.yaml` přidat case se 3–4 nesedícími věcmi naráz.** Bez něj
+strop 900 měřím na terénu, kde je nejmírnější, a případný fix (a) z §4 by prošel
+baterií a padl v produkci.
+
+**Korekce cizího čtení v tom reportu (bod 2):** autor porovnává hlavičku proti
+číslu „13/13 → 2/13" z changelogu v0.4.2 a ptá se, jestli je 8/8 regrese nebo
+šum. **Ani jedno — to číslo patří jiné metrice** (tvrdá jazyková vada po snížení
+teploty), ne hlavičce. Hlavička nebyla nikdy naměřena jako klesající: 13/13
+v 1. běhu, 13/13 ve 3., 8/8 tady. **Data jsou dokonale konzistentní**, hypotéza
+„šum jednoho běhu" je vyloučena. Jeho druhé vysvětlení je správné a shoduje se
+s mým §4.3: model rozlišuje „policejní razítko" od „markdown nadpisu" a mezeru
+využívá systematicky — proto pozitivní pokyn (c), ne přísnější zákaz.
+
+**Nová data mimo mé osy:** sólo klauzule rule 2 překročena ve 2/8 (3× „podezřelý
+A" místo max 2×) — shoduje se s mými casy 7 a 13, tedy další neuzavřená třída.
+
+## 7. Procesní nálezy pro příští běh
 
 1. **Protokol nebyl dodržen** (n=1 místo n=3). U obou stop metrik to nevadí
    (efekt je mimo šum), u srovnání KRITICKÝCH casů 6/13 vs. 7/13 **ano** — ten
    rozdíl je při n=1 los. n=3 zabalit do běhu v0.4.3, ne kupovat zvlášť.
+   U délky a hlavičky je otázka n=1 **vyřešena replikací** (§6).
+4. **Sekundární běhy mimo baterii mají cenu regresního důkazu, když jdou toutéž
+   cestou kódu.** Absurdní run nebyl testem promptu a přinesl silnější důkaz než
+   moje vlastní kolo — protože vzorkoval režim, který baterie nekryje. **Ptej se
+   u každého cizího běhu, jestli nešel `buildPromptInput()`** — pokud ano, jsou
+   to data, ne anekdota.
 2. **Délku měřit bez titulkového řádku.** Jinak se strop měří na formátovém
    šumu a při jeho odstranění se tiše posune.
 3. **Casy 3 a 5 se vešly pod 900** (897, 852) a jsou to zároveň dva ze tří
