@@ -449,11 +449,20 @@ variance doměřena (2sd = 3,22 < 6). Eskalace V1–V4 rozhodnuta uživatelem ja
   zbylé blokátory jsou tvarem promptu (věty přes strop 13/13, formátový šum
   13/13, vymyšlená příčina 8/13, mizející věci 5/13, nová třída
   zamlčení/změkčení). Eskalace na jiný model NEdoporučena — Haiku češtinu umí.
-  **Běží opravné kolo:** teplota 0,5 zapečena; baterie na vstupy
-  z `buildPromptInput()` (potřetí doloženo, že ruční vstup je vlídnější než
-  produkce) + oprava strojového souhrnu beden; pak prompt v0.4.2 (5 cílených
-  zásahů) s review; stop podmínka 3. běhu: formátový šum a vymyšlená příčina
-  ≤ ~2/13.
+  **Opravné kolo HOTOVO (2026-08-02, `cf70757`+`5a233cd`+`2bf0e0f`, PM
+  nezávisle 472/472):** teplota 0,5 zapečena; baterie měří přes
+  `buildPromptInput()` (ruční vstup jen jako značená výjimka; konverze sama
+  odhalila 3 místa, kde byl ruční vstup vlídnější — loot se neloguje,
+  dekorativní PRAVIDLO RUNU, fikce u složení); „chybné číslo beden" byla
+  halucinace modelu, ne harness — kryje ji prompt; kreditové položky baterie
+  degradovány na diagnostiku + nový falzifikovatelný zákaz mispreportu.
+  **Prompt v0.4.2**: zákaz markdown rubrik a strojových souhrnů, vymyšlená
+  příčina samostatnou větou, věc slotu jmenovat doslovně, mrtvé „3–5 vět"
+  škrtnuto (0/39 generací ho kdy dodrželo), pass/fail slotu jednoznačně;
+  kritik „projde s výhradou", blokující nález (zastaralé 3–5 vět v 6
+  `ocekavani`) opraven, 4 vážné otevřené zapsány do changelogu pro čtení
+  3. běhu. **Stop podmínka 3. běhu (binární, per generace): formátový šum
+  ≤2/39 ∧ vymyšlená příčina ≤2/39. Uživatel: `npm run test:cestina`.**
 - **Jazyková strategie CZ→EN** — kdy zařadit překlad a test anglických protokolů.
   Obsah vzniká a testuje se česky (rizikovější jazyk pro AI humor), primární
   Steam trh je anglický.
