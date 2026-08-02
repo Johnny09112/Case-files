@@ -53,6 +53,42 @@
 # v rule 7; rozpor `popis`×`vstup` u `solo-jedna-osoba-ctyri-sloty`) tenhle řez
 # VĚDOMĚ neřeší — patří samostatnému obsahovému kolu (protocol-humor-tester).
 #
+# ŘEZ D55b (2026-08-02, obsahové kolo — dořešení §Nula A/B reportu):
+# (a) KREDITY ZE TŘÍ `musi` POLOŽEK VEN. `hladky-pruchod-loot…`,
+#     `fikce-veci-vs-mechanika` a `invence-nesmi-opsat-text-veci` vyžadovaly zápis
+#     kreditů; **rule 7 kredity ve výčtu následků nemá** (postihy, složení,
+#     šerif/Žár, bedny, loot) a rule 3/4 je zmiňuje jen jako číslo, které se NESMÍ
+#     změnit. Tři „selhání modelu" na bráně tak byla moje položka bez opory
+#     v promptu (§1 falzifikovatelnosti). Řešeno stejným vzorcem jako `loot`
+#     a `MAX DOSAŽITELNÉ`: `musi` → **DIAGNOSTIKA** (neblokující míra přes
+#     generace) + nový `nesmi` na ZKRESLENÍ čísla, což rule 4 vynucuje.
+#     Prompt tímto řezem NEEDITOVÁN — kdyby se kredity do rule 7 někdy doplnily,
+#     překlopí se všechny tři DIAGNOSTIKY zpět na `musi`.
+# (b) `popis` casu `solo-jedna-osoba-ctyri-sloty` ověřen proti `udalosti`
+#     a proti enginu; upřesněn (viz poznámka u casu).
+# Mimo rozsah tohoto řezu (nálezy k mechanické vrstvě, `udalosti` NEEDITOVÁNY —
+# patří vlastníkovi enginu, ne obsahovému kolu):
+#   * `duvod: slotova_vyjimka` (case `solo-jedna-osoba…`) není hodnota, kterou
+#     engine kdy emituje (`resolve.js`: proslo | nizky_stat | kombi_neuplny |
+#     stat_zrusen | gangster_auto_fail). MECHANISMUS je reálný —
+#     `slot.stitek_citlivy === 'GANGSTER'` (resolve.js ř. 142) štítek obchází
+#     a slot se dohodnotí ze statů — jen by nesl `duvod: proslo`. Na vykreslený
+#     vstup to NEMÁ vliv (`buildPromptInput()` větví jen na `gangster_auto_fail`),
+#     takže case měří dál správně; jde o kosmetické srovnání jednoho řetězce.
+#   * Žár nesedí s `rules.js` u šesti casů: `zaSNasledky: 1` chybí
+#     u `banan-utok-selhal` a `slozeni-lezi-v-aute` (obojí 2/4, žádný zar_move),
+#     `zaPrusvih: 2` je zapsán jako delta 1 u `brokovnice-auto-fail-viditelna`,
+#     `invence-selhany-slot-nesedici-vec`, `bez-gapu-neslo-to-lepe`
+#     a `solo-bohate-nasledky-strop-delky`. `ocekavani` těch casů se svými
+#     `udalosti` SOUHLASÍ, takže baterie je vnitřně konzistentní a testuje
+#     protokol správně — nesedí jen věrnost scénáře pravidlům.
+#   * `bez-gapu-neslo-to-lepe` nese `gamble` (tedy řádek ZÁCHRANA ve vstupu),
+#     ale žádnou položku `ocekavani` o něm. Vědomě neopraveno: rule 7 zmínku
+#     ZÁCHRANY ukládá („zmiň ji jednou vsuvkou"), takže `musi` by oporu mělo —
+#     jenže ZÁCHRANA je napříč dvěma běhy zmíněna 0 ze 7 a tutéž položku už
+#     nesou dva jiné casy. Třetí kopie by nepřidala informaci, jen další
+#     garantované selhání (§4d: mrtvé pravidlo).
+#
 # POZOR na variantu mandátu: v0.4 je **plné B** — invence u KAŽDÉHO ze čtyř slotů,
 # s nerovným rozpočtem (sedící věc pár slov, nesedící celý záměr). Zamítnutá
 # alternativa B-lite (invence JEN u selhaných/nesedících) by měla opačná
@@ -192,10 +228,12 @@ testy:
       Baseline 4/4 HLADCE+LOOT bez postihů. Zároveň kontrast k brokovnici-auto-fail:
       TÁŽ Dědečkova brokovnice ve skryté roli v LOKACI projde (eso_v_lokaci —
       nikdo ji nevidí). Riziko: model dodá dramatičnost/následky, které nepadly,
-      nebo naopak zapíše brokovnici jako selhání ze setrvačnosti. Musí zmínit
-      přírůstek kreditů (+3); loot samotný NEJDE testovat jako musí-položka (viz
-      DIAGNOSTIKA níže — `buildPromptInput()` posílá `loot: —` vždy, engine
-      nikdy neloguje id líznuté věci). Od v0.4 také **test ROZPOČTU mandátu na
+      nebo naopak zapíše brokovnici jako selhání ze setrvačnosti. Ani loot, ani
+      kredity (+3) NEJDOU testovat jako musí-položka (viz obě DIAGNOSTIKY níže:
+      `buildPromptInput()` posílá `loot: —` vždy a engine nikdy neloguje id
+      líznuté věci; kredity zase rule 7 ve výčtu následků vůbec nemá — D55b).
+      Falzifikovatelný je u obou jen opačný směr: model si je nesmí VYMYSLET
+      ani zkreslit. Od v0.4 také **test ROZPOČTU mandátu na
       nejhorším terénu**: všechny čtyři sloty prošly a tři ze čtyř věcí k roli
       sedí, takže plné B tu má nejmíň materiálu a nejvíc chuti vyrobit vatu.
       Rule 5 invenci žádá i tady, ale „pár slov" — hlídá se znakový strop,
@@ -230,10 +268,11 @@ testy:
     ocekavani:
       musi:
         - "zapsat hladký průchod všech čtyř rolí bez potíží"
-        - "zmínit přírůstek kreditů (+3)"
         - "dodržet znakový strop ≤900 zn. a 3–5 vět i při čtyřech licencovaných invencích"
         - "DIAGNOSTIKA (neblokující, D55): vstup nese `loot: —` (buildPromptInput() nikdy nejmenuje líznutou věc — engine ji neloguje, viz A/B report §5 bod 4 a §7). Nezapočítávat jako selhání, když protokol loot vůbec nezmíní — to je SPRÁVNĚ; tahle položka jen hlídá, že si model loot nevymyslí (viz nesmí níže)."
+        - "DIAGNOSTIKA KREDITŮ (neblokující, D55b — plné znění, ostatní casy sem odkazují): vstup nese `kredity: +3 (HLADCE+LOOT); konto 11` a `buildPromptInput()` ten řádek tiskne VŽDY, ale **rule 7 kredity ve výčtu následků nemá** (postihy, složení, šerif/Žár, bedny, loot) — rule 3/4 je zmiňují jen jako číslo, které se nesmí změnit. Zápis kreditů proto NENÍ kritérium (§1 falzifikovatelnosti; A/B report §5 bod 2 — dřívější `musi` vyrobilo tři falešná „selhání modelu“). Sleduj jen MÍRU přes generace: zmíní-li je model 0 z 5 i tam, kde padly, je `kredity:` mrtvé vstupní pole téže třídy jako ZÁCHRANA a MAX DOSAŽITELNÉ (§3 falzifikovatelnosti, §7 A/B reportu) — pak patří buď do výčtu rule 7, nebo z formátu vstupu ven. Rozhodnutí je designérovo, přeměření moje."
       nesmi:
+        - "uvést jiný přírůstek nebo stav kreditů, než jaký nese vstup (+3, konto 11) — zápis kreditů prompt neukládá, ale ZKRESLENÍ čísla porušuje rule 4 (falzifikovatelný směr téhož pole, D55b)"
         - "tvrdit jakýkoli postih, ztrátu bedny, zranění ani pohyb Žáru/šerifa (nic z toho nepadlo)"
         - "zapsat brokovnici jako selhání — ve skryté roli v lokaci prošla"
         - "vymyslet KONKRÉTNÍ líznutou věc navíc — vstup žádnou nejmenuje (KRITICKÉ, D55 nález)"
@@ -324,8 +363,10 @@ testy:
     ocekavani:
       musi:
         - "zapsat, že role „Dorazit razítko“ (kněžský kolárek) SELHALA — přes fikci o nedotknutelném faráři"
-        - "zapsat celkově zdolanou situaci (3/4) a +2 kredity; náklad zůstává 6"
+        - "zapsat celkově zdolanou situaci (3/4); náklad zůstává 6"
+        - "DIAGNOSTIKA KREDITŮ (neblokující, D55b): vstup nese `kredity: +2 (HLADCE); konto 10`, ale rule 7 kredity ve výčtu následků nemá — jejich zápis NENÍ kritérium (plné znění u casu `hladky-pruchod-loot-brokovnice-v-lokaci`). Počítá se jen, v kolika generacích je model zmíní."
       nesmi:
+        - "uvést jiný přírůstek nebo stav kreditů, než jaký nese vstup (+2, konto 10) — zkreslení čísla porušuje rule 4 (D55b)"
         - "tvrdit, že kolárek / razítková role uspěla, protože „faráře nikdo neprohledává“ (KRITICKÉ)"
         - "tvrdit postih, ztrátu bedny, zranění ani pohyb Žáru, které nepadly"
         - "vymyslet vlastní jméno podezřelého místo placeholderu"
@@ -402,7 +443,18 @@ testy:
       mimo obvyklé pravidlo), ne selže. `duvod` slotu proto NENÍ
       `gangster_auto_fail` a vstup u něj žádné „; důvod: …" nenese (produkce ho
       taky nedává, viz `buildPromptInput()`) — model má jen holý zásah k obhajobě.
-    zdroj: "technika/woz-test-2026-07-30.md uzel 1 + §3.4 (2026-07-30); popis opraven D55 (byl v rozporu s vlastním vstupem)"
+      OVĚŘENO D55b proti enginu: mechanismus je reálný — slot označený
+      `stitek_citlivy: 'GANGSTER'` štítek obchází a dohodnotí se ze statů
+      (`resolve.js` ř. 142; útok 5 ≥ práh 5 → zásah). Vykreslený vstup tedy říká
+      přesně „Zatlačit hrubě: zásah (práh 5; „Dědečkova brokovnice“ mělo útok 5)“
+      — bez jakéhokoli vysvětlení, proč zbraň na očích prošla. To je celá pointa:
+      model musí zásah obhájit ZPŮSOBEM a ZÁMĚREM (rule 5), ne příčinou (rule 5
+      zakazuje) — a nesmí si domyslet, že brokovnice naopak selhala.
+      (Jediná odchylka od enginu je kosmetická: `duvod: slotova_vyjimka` je
+      dokumentační nálepka, engine by v téhle větvi zapsal `proslo`. Na vstup to
+      nemá vliv — `buildPromptInput()` větví jen na `gangster_auto_fail` —
+      a `udalosti` se v obsahovém kole needitují; viz hlavička souboru, ŘEZ D55b.)
+    zdroj: "technika/woz-test-2026-07-30.md uzel 1 + §3.4 (2026-07-30); popis opraven D55, ověřen proti resolve.js D55b"
     udalosti:
       - type: situation_revealed
         nodeIndex: 0
@@ -441,7 +493,7 @@ testy:
       nesmi:
         - "vytvořit z podezřelého A víc osob (např. „jeden z podezřelých… druhý…“) (KRITICKÉ pro sólo)"
         - "popsat čtyři rekvizity držené současně v jedné scéně"
-        - "napsat, že mu na úplatek nestačily peníze — hodnota je zrušena PRAVIDLEM RUNU"
+        - "napsat, že mu na úplatek nestačily peníze — hodnota je ZRUŠENA PRAVIDLEM RUNU, ne nízká (POZOR na sílu pasti, D55b: vstup u toho slotu ukazuje „Hovězí vývar“ mělo hodnota 1 proti prahu 3, takže záměna „bylo to málo“ je tu čitelná z čísel; sesterský case `zachrana-vytazena-vec-k-nicemu` má stat 5 NAD prahem 3, a je proto jediný čistý důkaz. Padne-li položka tady a tam ne, je to slabina TOHOTO casu, ne modelu.)"
         - "tvrdit ztrátu bedny nebo kredity, které nepadly"
 
   - id: zachrana-vytazena-vec-k-nicemu
@@ -691,11 +743,13 @@ testy:
       postihy: {}
     ocekavani:
       musi:
-        - "zapsat všechny čtyři zásahy a +3 kredity"
+        - "zapsat všechny čtyři zásahy"
         - "u kastrolu na hlavě (jediná zjevně nesedící věc) rozehrát kontrast — tam je celý humor uzlu"
         - "vejít se do ≤900 znaků a 3–5 vět; nechat místo na závěrečnou poznámku vyšetřovatele"
         - "DIAGNOSTIKA (neblokující, D55): vstup nese `loot: —` (buildPromptInput() nikdy nejmenuje líznutou věc, viz case `hladky-pruchod-loot-…`); protokol NEMUSÍ loot zmiňovat, jen si nesmí žádný vymyslet (viz nesmí níže)"
+        - "DIAGNOSTIKA KREDITŮ (neblokující, D55b): vstup nese `kredity: +3 (HLADCE+LOOT); konto 4`, ale rule 7 kredity ve výčtu následků nemá — jejich zápis NENÍ kritérium (plné znění u casu `hladky-pruchod-loot-brokovnice-v-lokaci`). Počítá se jen, v kolika generacích je model zmíní."
       nesmi:
+        - "uvést jiný přírůstek nebo stav kreditů, než jaký nese vstup (+3, konto 4) — zkreslení čísla porušuje rule 4 (D55b)"
         - "opsat u provazu, lopaty ani páčidla text karty místo záměru (parafráze = vata, KRITICKÉ pro plné B)"
         - "vymyslet další VĚC Z VÝBAVY (další nástroj, zbraň, úplatek), která ve vstupu není — kulisa scény (sud, pant, lucerna, kamínka) je naopak povinná, viz rule 4/5"
         - "popsat hluk, ránu, probuzení hlídače ani cokoli, co by hlídače vzbudilo — Žár je 0 a nikdo se neprobudil"
