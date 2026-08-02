@@ -14,7 +14,8 @@
 /**
  * @typedef {{cas: number, klicExakt: string|null, klicHruby: string|null,
  *   prompt: string|null, rawOdpoved: string|null,
- *   zdroj: 'llm'|'cache'|'fallback', latenceMs: number, model: string|null}} LogZaznam
+ *   zdroj: 'llm'|'cache'|'fallback', latenceMs: number, model: string|null,
+ *   duvod: string|null}} LogZaznam
  */
 
 /**
@@ -36,6 +37,9 @@ export function createLog() {
         zdroj: vstup.zdroj,
         latenceMs: vstup.latenceMs,
         model: vstup.model ?? null,
+        // Proč se zdroj stal "fallback" (usekuto_max_tokens, nevalidni_delka, ...) —
+        // viz adapter.js `duvodNevalidity()`. `null` pro "llm"/"cache" (bez chyby).
+        duvod: vstup.duvod ?? null,
       };
       zaznamy.push(zaznam);
       return zaznam;

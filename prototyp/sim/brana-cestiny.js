@@ -71,6 +71,21 @@ export function nactiBaterii(cesta = BATERIE_CESTA) {
   return testy;
 }
 
+/**
+ * Čte `--temperature=X` z argumentů příkazové řádky (levné A/B proti bráně
+ * češtiny — návrh oprav bod 2, technika/brana-cestiny-vyhodnoceni-2026-08-02.md
+ * — beze změny kódu). Neplatná/chybějící hodnota se tiše ignoruje, provider
+ * pak sám dosadí `DEFAULT_TEMPERATURE`.
+ * @param {string[]} [argv]
+ * @returns {number|undefined}
+ */
+export function ziskejTeplotuZArgv(argv = process.argv.slice(2)) {
+  const arg = argv.find((a) => a.startsWith('--temperature='));
+  if (!arg) return undefined;
+  const hodnota = Number(arg.slice('--temperature='.length));
+  return Number.isFinite(hodnota) ? hodnota : undefined;
+}
+
 function dnesniDatum() {
   const d = new Date();
   const pad = (/** @type {number} */ n) => String(n).padStart(2, '0');
@@ -80,12 +95,15 @@ function dnesniDatum() {
 /**
  * @param {{test: {id: string, popis?: string, ocekavani?: {musi?: string[], nesmi?: string[]}}, text: string|null, chyba: string|null}[]} vysledky
  * @param {string} model
+ * @param {number} [temperature] hodnota použitá pro tenhle běh (CLI `--temperature=` nebo default) —
+ *   vypsáno do hlavičky logu, ať jde A/B kolo dohledat zpětně (návrh oprav bod 2)
  */
-export function renderMd(vysledky, model) {
+export function renderMd(vysledky, model, temperature) {
   const radky = [
     '# Akceptační brána češtiny — výstupy k lidskému hodnocení',
     '',
     `Model: ${model}`,
+    ...(temperature !== undefined ? [`Temperature: ${temperature}`] : []),
     `Datum: ${dnesniDatum()}`,
     `Počet testů: ${vysledky.length}`,
     '',
@@ -135,12 +153,15 @@ async function main() {
     return;
   }
 
-  const provider = createAnthropicProvider({ apiKey });
+  const teplotaZArgv = ziskejTeplotuZArgv();
+  const provider = createAnthropicProvider({ apiKey, temperature: teplotaZArgv });
   if (!provider) {
     console.error('Klíč byl předán, ale providera se z něj nepodařilo vytvořit — zkontroluj hodnotu VITE_ANTHROPIC_API_KEY.');
     process.exitCode = 1;
     return;
   }
+  const teplota = provider.temperature;
+  console.log(`Temperature: ${teplota}${teplotaZArgv !== undefined ? ' (z --temperature=)' : ' (default)'}`);
 
   const vysledky = [];
   for (const test of testy) {
@@ -155,7 +176,7 @@ async function main() {
 
   fs.mkdirSync(LOGS_DIR, { recursive: true });
   const cilovySoubor = path.join(LOGS_DIR, `brana-cestiny-${dnesniDatum()}.md`);
-  fs.writeFileSync(cilovySoubor, renderMd(vysledky, provider.model), 'utf8');
+  fs.writeFileSync(cilovySoubor, renderMd(vysledky, provider.model, teplota), 'utf8');
   console.log(`Hotovo — ${vysledky.length} výstupů uloženo do ${path.relative(REPO_ROOT, cilovySoubor)}.`);
   console.log('Hodnocení kvality češtiny/humoru je na člověku (protocol-humor-tester) — tenhle skript jen sbírá data.');
 }

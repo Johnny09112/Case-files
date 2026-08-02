@@ -25,6 +25,22 @@ function jeValidni(text) {
 }
 
 /**
+ * Brána češtiny D55 (technika/brana-cestiny-vyhodnoceni-2026-08-02.md): 8/13
+ * výstupů se useklo `MAX_TOKENS`em uprostřed slova a `jeValidni()` (jen délka)
+ * je propustila jako validní — hráč pak viděl fragment (porušení ADR-004).
+ * Provider vrací `stopReason` z `resp.stop_reason`; „max_tokens" znamená, že
+ * výstup je neúplný bez ohledu na to, jak vypadá text, a MUSÍ jít na fallback.
+ * @param {{text?: *, stopReason?: string|null}|null|undefined} odpoved
+ * @returns {string|null} důvod nevalidity pro log, nebo `null` když je vše v pořádku
+ */
+function duvodNevalidity(odpoved) {
+  if (!odpoved) return 'zadna_odpoved';
+  if (odpoved.stopReason === 'max_tokens') return 'usekuto_max_tokens';
+  if (!jeValidni(odpoved.text)) return 'nevalidni_delka';
+  return null;
+}
+
+/**
  * @param {Promise<*>} promise
  * @param {number} ms
  */
@@ -112,8 +128,9 @@ export function createAdapter({ provider = null, fallback, cache = createCache()
       return fallbackVysledek({ udalosti, ctx, zacatek, klicExakt, klicHruby, prompt });
     }
 
-    if (!odpoved || !jeValidni(odpoved.text)) {
-      return fallbackVysledek({ udalosti, ctx, zacatek, klicExakt, klicHruby, prompt, rawOdpoved: odpoved?.raw ?? odpoved?.text ?? null });
+    const duvod = duvodNevalidity(odpoved);
+    if (duvod) {
+      return fallbackVysledek({ udalosti, ctx, zacatek, klicExakt, klicHruby, prompt, rawOdpoved: odpoved?.raw ?? odpoved?.text ?? null, duvod });
     }
 
     const text = odpoved.text.trim();
@@ -128,8 +145,8 @@ export function createAdapter({ provider = null, fallback, cache = createCache()
     return dokoncit({ text, zdroj: 'llm', model, zacatek, klicExakt, klicHruby, prompt, rawOdpoved: odpoved.raw ?? text });
   }
 
-  /** @param {{udalosti: object[], ctx: object, zacatek: number, klicExakt: string|null, klicHruby: string|null, prompt: string|null, rawOdpoved?: *}} p */
-  function fallbackVysledek({ udalosti, ctx, zacatek, klicExakt, klicHruby, prompt, rawOdpoved = null }) {
+  /** @param {{udalosti: object[], ctx: object, zacatek: number, klicExakt: string|null, klicHruby: string|null, prompt: string|null, rawOdpoved?: *, duvod?: string|null}} p */
+  function fallbackVysledek({ udalosti, ctx, zacatek, klicExakt, klicHruby, prompt, rawOdpoved = null, duvod = null }) {
     let text;
     try {
       text = fallback(udalosti, ctx);
@@ -137,13 +154,13 @@ export function createAdapter({ provider = null, fallback, cache = createCache()
       // I fallback smí selhat (programátorská chyba v šablonách) — hra pořád nesmí spadnout.
       text = '';
     }
-    return dokoncit({ text, zdroj: 'fallback', model: null, zacatek, klicExakt, klicHruby, prompt, rawOdpoved });
+    return dokoncit({ text, zdroj: 'fallback', model: null, zacatek, klicExakt, klicHruby, prompt, rawOdpoved, duvod });
   }
 
-  /** @param {{text: string, zdroj: 'llm'|'cache'|'fallback', model: string|null, zacatek: number, klicExakt: string|null, klicHruby: string|null, prompt: string|null, rawOdpoved?: *}} p */
-  function dokoncit({ text, zdroj, model, zacatek, klicExakt, klicHruby, prompt, rawOdpoved = null }) {
+  /** @param {{text: string, zdroj: 'llm'|'cache'|'fallback', model: string|null, zacatek: number, klicExakt: string|null, klicHruby: string|null, prompt: string|null, rawOdpoved?: *, duvod?: string|null}} p */
+  function dokoncit({ text, zdroj, model, zacatek, klicExakt, klicHruby, prompt, rawOdpoved = null, duvod = null }) {
     const latenceMs = now() - zacatek;
-    log?.record({ cas: zacatek, klicExakt, klicHruby, prompt, rawOdpoved, zdroj, latenceMs, model });
+    log?.record({ cas: zacatek, klicExakt, klicHruby, prompt, rawOdpoved, zdroj, latenceMs, model, duvod });
     return { text, zdroj, latenceMs, klic: klicExakt, model };
   }
 

@@ -33,14 +33,22 @@ describe('createLog — záznam na volání + export do JSONL', () => {
     expect(JSON.parse(radky[1])).toMatchObject({ klicExakt: 'b', zdroj: 'fallback' });
   });
 
-  it('chybějící volitelná pole (klicHruby, model, rawOdpoved) se zapíší jako null, ne undefined', () => {
+  it('chybějící volitelná pole (klicHruby, model, rawOdpoved, duvod) se zapíší jako null, ne undefined', () => {
     const log = createLog();
     log.record({ cas: 1, klicExakt: 'a', zdroj: 'cache', latenceMs: 1 });
     const [z] = log.all();
     expect(z.klicHruby).toBeNull();
     expect(z.model).toBeNull();
     expect(z.rawOdpoved).toBeNull();
-    expect(JSON.parse(log.toJsonl())).toMatchObject({ klicHruby: null, model: null, rawOdpoved: null });
+    expect(z.duvod).toBeNull();
+    expect(JSON.parse(log.toJsonl())).toMatchObject({ klicHruby: null, model: null, rawOdpoved: null, duvod: null });
+  });
+
+  it('duvod (proč se sáhlo na fallback, např. "usekuto_max_tokens") se zapíše, když je zadán', () => {
+    const log = createLog();
+    log.record({ cas: 1, klicExakt: 'a', zdroj: 'fallback', latenceMs: 1, duvod: 'usekuto_max_tokens' });
+    const [z] = log.all();
+    expect(z.duvod).toBe('usekuto_max_tokens');
   });
 
   it('NIKDY nezaloguje klíč API — i kdyby ho volající omylem předal, whitelist polí ho odřízne', () => {

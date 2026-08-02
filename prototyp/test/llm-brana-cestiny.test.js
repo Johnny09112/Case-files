@@ -12,7 +12,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { nactiBaterii, renderMd } from '../sim/brana-cestiny.js';
+import { nactiBaterii, renderMd, ziskejTeplotuZArgv } from '../sim/brana-cestiny.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SKRIPT = path.join(__dirname, '..', 'sim', 'brana-cestiny.js');
@@ -91,6 +91,34 @@ describe('renderMd — markdown výstup pro lidské hodnocení', () => {
   it('vypíše CHYBA VOLÁNÍ, když selhalo API volání', () => {
     const md = renderMd([{ test: { id: 'case-2' }, text: null, chyba: 'timeout' }], 'model-x');
     expect(md).toContain('CHYBA VOLÁNÍ: timeout');
+  });
+
+  it('vypíše Temperature do hlavičky, když je zadaná (A/B kolo, návrh oprav bod 2)', () => {
+    const md = renderMd([{ test: { id: 'case-1' }, text: 'text', chyba: null }], 'model-x', 0.7);
+    expect(md).toContain('Temperature: 0.7');
+  });
+
+  it('bez zadané temperature hlavička řádek Temperature vůbec nemá (zpětná kompatibilita)', () => {
+    const md = renderMd([{ test: { id: 'case-1' }, text: 'text', chyba: null }], 'model-x');
+    expect(md).not.toContain('Temperature:');
+  });
+});
+
+describe('ziskejTeplotuZArgv — CLI --temperature= (levné A/B bez editace kódu)', () => {
+  it('rozparsuje --temperature=0.7 na číslo', () => {
+    expect(ziskejTeplotuZArgv(['--temperature=0.7'])).toBe(0.7);
+  });
+
+  it('bez argumentu vrátí undefined (provider dosadí default)', () => {
+    expect(ziskejTeplotuZArgv([])).toBeUndefined();
+  });
+
+  it('nesmyslnou hodnotu ignoruje a vrátí undefined', () => {
+    expect(ziskejTeplotuZArgv(['--temperature=nesmysl'])).toBeUndefined();
+  });
+
+  it('funguje i mezi jinými argumenty', () => {
+    expect(ziskejTeplotuZArgv(['node', 'sim/brana-cestiny.js', '--temperature=1'])).toBe(1);
   });
 });
 

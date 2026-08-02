@@ -6,7 +6,7 @@
  */
 import { describe, it, expect, vi } from 'vitest';
 import Anthropic from '@anthropic-ai/sdk';
-import { createAnthropicProvider, MODEL } from '../src/llm/providers/anthropic.js';
+import { createAnthropicProvider, MODEL, DEFAULT_TEMPERATURE } from '../src/llm/providers/anthropic.js';
 
 describe('createAnthropicProvider — bez klíče', () => {
   it('vrací null, když není žádný klíč (apiKey ani env)', () => {
@@ -63,5 +63,78 @@ describe('createAnthropicProvider — s klíčem (mock SDK klient)', () => {
     const create = vi.fn().mockRejectedValue(new Error('síť spadla'));
     const provider = createAnthropicProvider({ apiKey: 'k', clientFactory: () => ({ messages: { create } }) });
     await expect(provider.generate({ system: 's', prompt: 'p' })).rejects.toThrow('síť spadla');
+  });
+});
+
+describe('createAnthropicProvider — stop_reason (brána češtiny D55, useknutí)', () => {
+  it('generate() vrací stopReason z resp.stop_reason', async () => {
+    const create = vi.fn().mockResolvedValue({
+      content: [{ type: 'text', text: 'Protokol useklý upro' }],
+      stop_reason: 'max_tokens',
+    });
+    const provider = createAnthropicProvider({ apiKey: 'k', clientFactory: () => ({ messages: { create } }) });
+    const vysledek = await provider.generate({ system: 's', prompt: 'p' });
+    expect(vysledek.stopReason).toBe('max_tokens');
+  });
+
+  it('normální (neuseklá) odpověď má stopReason "end_turn"', async () => {
+    const create = vi.fn().mockResolvedValue({
+      content: [{ type: 'text', text: 'Protokol dokončený v pořádku, bez useknutí.' }],
+      stop_reason: 'end_turn',
+    });
+    const provider = createAnthropicProvider({ apiKey: 'k', clientFactory: () => ({ messages: { create } }) });
+    const vysledek = await provider.generate({ system: 's', prompt: 'p' });
+    expect(vysledek.stopReason).toBe('end_turn');
+  });
+
+  it('chybějící stop_reason v odpovědi (starý mock/edge-case) se vrátí jako null, ne undefined', async () => {
+    const create = vi.fn().mockResolvedValue({ content: [{ type: 'text', text: 'Text.' }] });
+    const provider = createAnthropicProvider({ apiKey: 'k', clientFactory: () => ({ messages: { create } }) });
+    const vysledek = await provider.generate({ system: 's', prompt: 'p' });
+    expect(vysledek.stopReason).toBeNull();
+  });
+
+  it('posílá max_tokens: 800 (rezerva nad strop 900 zn., viz komentář v anthropic.js)', async () => {
+    const create = vi.fn().mockResolvedValue({ content: [{ type: 'text', text: 'Text.' }] });
+    const provider = createAnthropicProvider({ apiKey: 'k', clientFactory: () => ({ messages: { create } }) });
+    await provider.generate({ system: 's', prompt: 'p' });
+    const [volani] = create.mock.calls[0];
+    expect(volani.max_tokens).toBe(800);
+  });
+});
+
+describe('createAnthropicProvider — temperature (brána češtiny D55, Vzorec 1)', () => {
+  // envTemperatureKey: '' = hermetické „env je prázdné" (stejný důvod jako envKey
+  // u API klíče v testech výše) — bez toho by test záviselo na tom, jestli má
+  // vývojář VITE_LLM_TEMPERATURE nastavené v .env.local.
+  it('bez explicitní hodnoty a bez env pošle DEFAULT_TEMPERATURE (0.5)', async () => {
+    const create = vi.fn().mockResolvedValue({ content: [{ type: 'text', text: 'Text.' }] });
+    const provider = createAnthropicProvider({ apiKey: 'k', envTemperatureKey: '', clientFactory: () => ({ messages: { create } }) });
+    expect(provider.temperature).toBe(DEFAULT_TEMPERATURE);
+    expect(DEFAULT_TEMPERATURE).toBe(0.5);
+    await provider.generate({ system: 's', prompt: 'p' });
+    const [volani] = create.mock.calls[0];
+    expect(volani.temperature).toBe(0.5);
+  });
+
+  it('explicitní opts.temperature přebije default (A/B, CLI --temperature= v sim/)', async () => {
+    const create = vi.fn().mockResolvedValue({ content: [{ type: 'text', text: 'Text.' }] });
+    const provider = createAnthropicProvider({ apiKey: 'k', temperature: 1.0, envTemperatureKey: '', clientFactory: () => ({ messages: { create } }) });
+    expect(provider.temperature).toBe(1.0);
+    await provider.generate({ system: 's', prompt: 'p' });
+    const [volani] = create.mock.calls[0];
+    expect(volani.temperature).toBe(1.0);
+  });
+
+  it('VITE_LLM_TEMPERATURE z env se použije, když opts.temperature není zadané', async () => {
+    const create = vi.fn().mockResolvedValue({ content: [{ type: 'text', text: 'Text.' }] });
+    const provider = createAnthropicProvider({ apiKey: 'k', envTemperatureKey: '0.7', clientFactory: () => ({ messages: { create } }) });
+    expect(provider.temperature).toBe(0.7);
+  });
+
+  it('nesmyslná hodnota env proměnné se ignoruje a padá se na default', async () => {
+    const create = vi.fn().mockResolvedValue({ content: [{ type: 'text', text: 'Text.' }] });
+    const provider = createAnthropicProvider({ apiKey: 'k', envTemperatureKey: 'nesmysl', clientFactory: () => ({ messages: { create } }) });
+    expect(provider.temperature).toBe(DEFAULT_TEMPERATURE);
   });
 });

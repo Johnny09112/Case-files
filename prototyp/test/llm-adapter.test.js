@@ -112,6 +112,54 @@ describe('createAdapter — nevalidní výstup', () => {
   });
 });
 
+describe('createAdapter — useknutý výstup (stop_reason "max_tokens", brána češtiny D55)', () => {
+  it('odpověď s validní délkou, ale stopReason "max_tokens" padne na fallback (ADR-004: hráč nesmí vidět fragment)', async () => {
+    const provider = {
+      model: 'x',
+      async generate() {
+        // Délkou naprosto validní text (>= 20 zn.) — dřív by tohle prošlo jako "llm".
+        return { text: 'Toto je useklý text uprostřed vě', raw: { stop_reason: 'max_tokens' }, stopReason: 'max_tokens' };
+      },
+    };
+    const adapter = createAdapter({ provider, fallback: fallbackText, now: () => 0 });
+    const vysledek = await adapter.generate(uzel(), CTX);
+    expect(vysledek.zdroj).toBe('fallback');
+    expect(vysledek.text).toBe(fallbackText());
+  });
+
+  it('zaloguje důvod "usekuto_max_tokens", ať se dá zpětně odlišit od jiných pádů na fallback', async () => {
+    const log = createLog();
+    const provider = {
+      model: 'x',
+      async generate() { return { text: 'Useklý text dostatečné délky na projití délkové validace.', raw: {}, stopReason: 'max_tokens' }; },
+    };
+    const adapter = createAdapter({ provider, fallback: fallbackText, log, now: () => 0 });
+    await adapter.generate(uzel(), CTX);
+    const [zaznam] = log.all();
+    expect(zaznam.zdroj).toBe('fallback');
+    expect(zaznam.duvod).toBe('usekuto_max_tokens');
+  });
+
+  it('normální dokončená odpověď (stopReason "end_turn") projde jako "llm" beze změny chování', async () => {
+    const provider = {
+      model: 'test-model',
+      async generate() { return { text: 'Odpověď z LLM, dostatečně dlouhá a dokončená v pořádku.', raw: {}, stopReason: 'end_turn' }; },
+    };
+    const adapter = createAdapter({ provider, fallback: fallbackText, now: () => 0 });
+    const vysledek = await adapter.generate(uzel(), CTX);
+    expect(vysledek.zdroj).toBe('llm');
+  });
+
+  it('fallback z jiné příčiny (prázdný text) zaloguje jiný důvod ("nevalidni_delka"), ne useknutí', async () => {
+    const log = createLog();
+    const provider = { model: 'x', async generate() { return { text: '', raw: {}, stopReason: 'end_turn' }; } };
+    const adapter = createAdapter({ provider, fallback: fallbackText, log, now: () => 0 });
+    await adapter.generate(uzel(), CTX);
+    const [zaznam] = log.all();
+    expect(zaznam.duvod).toBe('nevalidni_delka');
+  });
+});
+
 describe('createAdapter — logování', () => {
   it('každé volání zapíše log záznam se zdrojem a latencí, nikdy s API klíčem', async () => {
     const log = createLog();
