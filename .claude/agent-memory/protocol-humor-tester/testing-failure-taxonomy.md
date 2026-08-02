@@ -1,6 +1,6 @@
 ---
 name: testing-failure-taxonomy
-description: Znovupoužitelné vzorce, kde protokol, fallback šablony i telegrafy selhávají tónově, a jak je probíhat při testu humoru (kalibrace role, trvalá); vč. „vysvětlujícího ocásku", mřížky verdiktu zbraně, dobových reálií trasy a §H = prvního produkčního měření na Haiku 4.5 (0/13, čeština padá dřív než refrén)
+description: Znovupoužitelné vzorce, kde protokol, fallback šablony i telegrafy selhávají tónově, a jak je probíhat při testu humoru (kalibrace role, trvalá); vč. „vysvětlujícího ocásku", mřížky verdiktu zbraně, dobových reálií trasy, §H = prvního produkčního měření na Haiku 4.5 (0/13) a §I = A/B teploty jako třídiče nálezů jazyk × pravidla
 metadata:
   type: project
 ---
@@ -391,6 +391,50 @@ příští regresi měř proti „52/52 slotů drží", ne proti dojmu.
 zaznamenán **0 ze 4**. Přesně to, kvůli čemu byla diagnostická položka psaná
 ([[baterie-falzifikovatelnost]] §3). **Než se za pole platí další kolo, proměř je
 na 5 generacích.**
+
+## I. A/B TEPLOTY (2026-08-02, 2. běh brány) — dvě vrstvy se čistě oddělily
+Rameno A t=0,5 × rameno B t=1,0, táž baterie, `MAX_TOKENS` 800.
+Vyhodnocení: `technika/brana-cestiny-ab-2026-08-02.md`.
+
+### I1 — HYPOTÉZA TEPLOTY POTVRZENA, ALE JEN NA JAZYKU
+Tvrdá jazyková vada (nonword / cizí písmo / věta bez významu) **13/13 → 2/13**;
+cizí písmo z ramene A zmizelo; medián délky 956 → 866 zn. **Beze změny zůstalo
+všechno ostatní:** počet vět 13/13 přes strop, formátový šum 13/13, vymyšlená
+příčina 8/13, mizející věc 5/13, jména 3/13, KRITICKÉ casy 6 vs 6.
+- **Zákon, který si z toho odnes:** teplota je páka na *vzorkování slov*, ne na
+  *dodržování pravidel*. Když nález přežije změnu teploty v nezměněné frekvenci,
+  je to vada promptu — a naopak. **Používej A/B teploty jako TŘÍDIČ nálezů**, ne
+  jen jako opravu: rozdělí seznam na „jazyk" a „pravidla" levněji než cokoli jiného.
+- Nižší teplota **není monotónní zlepšení**: dva casy zregresovaly (popsaný výstřel
+  tam, kde v 1. běhu nebyl; chybné číslo beden ve strojovém bloku). Nehlas „lepší",
+  hlas „lepší v ose X, horší v ose Y".
+- **0,5 zapéct, dál neměřit.** Zbylé vady nemají teplotní tvar; níž jít ohrožuje D53.
+
+### I2 — MRTVÉ PRAVIDLO: „3–5 vět" má 0 dodržení ze 39 generací
+Tři běhy (400 tok./t=1,0 · 800/t=1,0 · 800/t=0,5), ani jednou. Haiku věty nepočítá;
+délku drží výhradně znakový strop. **Pravidlo, které za tři nezávislé konfigurace
+nikdy nesepnulo, není přísné — je mrtvé**, a v baterii dělá 13/13 „selhání" na
+položce, která nemůže projít ([[baterie-falzifikovatelnost]] §1).
+
+### I3 — FORMÁTOVÝ ŠUM VYRÁBÍ ČÍSELNÉ CHYBY (povýšeno z kosmetiky na KRITICKÉ)
+Model přidává markdown hlavičku (13/13) a strojový souhrn následků (5/13). V jednom
+casu ten souhrn tvrdil **„Bedny: 4"**, ačkoli próza nad ním měla ztrátu správně
+(náklad 5). **Formátový šum není jen daň z rozpočtu — je to druhý, nekontrolovaný
+kanál pro čísla.** Hlídej ho jako zdroj rule-3 vad, ne jako estetiku.
+
+### I4 — TŘÍDA „ZAMLČENÍ" JE ČASTĚJŠÍ NEŽ TŘÍDA „OBRÁCENÍ"
+52/52 slotů drží výsledek podruhé — obrácení se nestalo ani jednou za dva běhy.
+Zato **změkčení a zamlčení** je běžné: „k takovému kroku však nedošlo" (selhání
+vyprávěné jako netestované), „částečně uspěla" (změkčený zásah), složení zamlčené
+a nahrazené vymyšleným postihem. **Kontroluj proto ne „je výsledek obrácený?", ale
+„pozná hráč u každého slotu, jestli prošel?"** — první otázka projde, druhá padne.
+Lék je pozitivní požadavek na jednoznačnost, ne lexikální zákaz obratů (past
+přeširokého zákazu, [[prompt-variant-rozhodovani]]).
+
+### I5 — TŘÍDA SE PO OPRAVĚ PŘESTĚHUJE (E1b platí i na promptu)
+Rule 4 „zadržení" držela v casu, kde v 1. běhu padla — a padla v jiném („byl
+zadržen podezřelý A"). Slovo „zadržen" je přitom ve výčtu pravidla **obsaženo**.
+**Rozšiřovat výčet dál nemá smysl; rozhoduje pozice pravidla, ne jeho úplnost.**
 
 ## Stav promptu (snapshot: v0.4.1, 2026-08-02)
 v0.4.1 = opravné kolo nad v0.4 (pět bodů z review fáze 3): kredity +3/+2/0/0 dle

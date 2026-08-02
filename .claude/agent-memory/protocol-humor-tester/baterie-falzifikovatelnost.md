@@ -1,6 +1,6 @@
 ---
 name: baterie-falzifikovatelnost
-description: Jak psát regresní baterii protokolů, aby uměla selhat — čtyři zákony (test bez opory v promptu, tautologická položka, jednosměrné hlídání vstupního pole, strop zvolený ex post z jednoho vzorku); z kola v0.4.1, 2026-08-02
+description: Jak psát regresní baterii protokolů, aby uměla selhat — zákony o testu bez opory v promptu, tautologické položce, mrtvém vstupním poli, mrtvém pravidle (0 dodržení ze 39 generací), stropu zvoleném ex post a o tom, že průchod v jednom rameni A/B je los, ne důkaz
 metadata:
   type: project
 ---
@@ -101,6 +101,25 @@ u šesti slotů, produkce ho dopisuje **jen u `gangster_auto_fail`** (ř. 238).
 - **Pravidlo: ručně psaný vstup smí do baterie jen s poznámkou „optimistický vstup".
   Jinak generuj.** (Viz [[testing-failure-taxonomy]] C1 — zapsáno 2026-08-01
   a přesto zopakováno 2026-08-02.)
+
+## 4d. PRAVIDLO, KTERÉ NESEPNULO ZA TŘI KONFIGURACE, JE MRTVÉ (2026-08-02)
+„3–5 vět" (rule 1) nedodržel model **ani jednou ze 39 generací** napříč třemi
+nezávislými konfiguracemi (400 tok./t=1,0 · 800/t=1,0 · 800/t=0,5). Položka
+`3–5 vět` je proto v pěti casech garantované selhání — a garantovaně selhávající
+položka je zrcadlový obraz §1: **stejně nefalzifikovatelná jako položka, která
+projde vždycky.** Nese nulovou informaci a zároveň zkresluje verdikt k „model je
+slabý".
+- **Test:** existuje generace, ve které tahle položka PROŠLA? Když ne přes tři
+  konfigurace, je to kandidát na škrt v promptu i v baterii, ne na přísnější znění.
+- **Pozor na záměnu s §3:** mrtvé *vstupní pole* model ignoruje (0 zmínek);
+  mrtvé *pravidlo* model porušuje (0 dodržení). Diagnóza je opačná, lék podobný.
+
+## 4e. DRUHÉ RAMENO A/B JE PROTIDŮKAZ K „PROŠLO" V PRVNÍM
+Tři KRITICKÉ položky o penězích „prošly" v ramenu t=0,5 — a v ramenu t=1,0 na témž
+vstupu model napsal „podezřelý nedisponuje finančními prostředky", tedy přesně
+zakázané tvrzení. **Průchod v jednom rameni při n=1 není vlastnost pojistky, je to
+los.** Když máš dvě ramena, čti je jako jeden vzorek o dvou generacích: položka,
+která padne v kterémkoli z nich, je nespolehlivá, ne „většinou v pořádku".
 
 ## 5. PROCESNÍ: OPRAVA V YAML BATERII JE NÁCHYLNÁ NA SMAZANÝ KLÍČ
 Při vkládání položky mezi `musi:` a `nesmi:` jsem si jedním Edit voláním smazal

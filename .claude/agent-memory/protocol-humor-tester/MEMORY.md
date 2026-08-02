@@ -1,5 +1,5 @@
 # Paměť — protocol-humor-tester
 
-- [Taxonomie selhání protokolu](testing-failure-taxonomy.md) — vzorce A–H napříč protokolem, fallbacky, telegrafy i dokumentací promptu; §H = první produkční měření Haiku (0/13)
+- [Taxonomie selhání protokolu](testing-failure-taxonomy.md) — vzorce A–I napříč protokolem, fallbacky, telegrafy i dokumentací promptu; §H první měření Haiku, §I A/B teploty jako třídič
 - [Rozhodování mezi variantami promptu](prompt-variant-rozhodovani.md) — frekvence sepnutí triggeru, kolaps podmíněného pravidla na Haiku, čtyři pasti přeširokého zákazu, rozpočet délky
-- [Baterie musí umět selhat](baterie-falzifikovatelnost.md) — čtyři zákony návrhu regresních casů: test bez opory v promptu, tautologická položka, mrtvé vstupní pole, strop zvolený ex post
+- [Baterie musí umět selhat](baterie-falzifikovatelnost.md) — zákony návrhu casů: test bez opory v promptu, tautologie, mrtvé pole × mrtvé pravidlo, strop ex post, průchod v jednom rameni A/B = los
