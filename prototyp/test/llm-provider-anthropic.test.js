@@ -10,7 +10,9 @@ import { createAnthropicProvider, MODEL } from '../src/llm/providers/anthropic.j
 
 describe('createAnthropicProvider — bez klíče', () => {
   it('vrací null, když není žádný klíč (apiKey ani env)', () => {
-    expect(createAnthropicProvider({ apiKey: undefined, envKey: undefined })).toBeNull();
+    // envKey: '' = hermetické „env je prázdné"; undefined by propadl na reálný
+    // import.meta.env a test by selhal každému vývojáři s klíčem v .env.local
+    expect(createAnthropicProvider({ apiKey: undefined, envKey: '' })).toBeNull();
   });
 
   it('vrací null i pro prázdný string', () => {

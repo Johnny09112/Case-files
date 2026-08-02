@@ -6,7 +6,7 @@
   "description": "Důkazní materiál 1930 — digitální prototyp v0.1 (headless engine + simulátor + hot-seat UI)",
   "scripts": {
     "test": "vitest run",
-    "test:cestina": "node sim/brana-cestiny.js",
+    "test:cestina": "node --env-file-if-exists=.env.local sim/brana-cestiny.js",
     "sim": "node sim/run.js",
     "dev": "vite",
     "lint": "eslint ."

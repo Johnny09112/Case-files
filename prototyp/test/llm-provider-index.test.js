@@ -8,7 +8,8 @@ import { createProvider } from '../src/llm/providers/index.js';
 
 describe('createProvider', () => {
   it('bez klíče vrací null', () => {
-    expect(createProvider({ apiKey: undefined })).toBeNull();
+    // envKey: '' — viz llm-provider-anthropic.test.js (hermetičnost vůči .env.local)
+    expect(createProvider({ apiKey: undefined, envKey: '' })).toBeNull();
   });
 
   it('s klíčem (a injektovaným klientem) vrací provider s generate()', () => {
