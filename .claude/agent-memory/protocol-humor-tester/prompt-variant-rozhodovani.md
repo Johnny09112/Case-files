@@ -1,6 +1,6 @@
 ---
 name: prompt-variant-rozhodovani
-description: Jak rozhodovat mezi variantami promptu (cílené vs. plošné pravidlo) a jak psát zákazy, které slabý model unese — metoda „frekvence sepnutí triggeru", past podmíněného pravidla a dvě pasti přeširokého zákazu; z kola v0.4 (kreativní mandát, 2026-08-01)
+description: Jak rozhodovat mezi variantami promptu (cílené vs. plošné pravidlo) a jak psát zákazy, které slabý model unese — metoda „frekvence sepnutí triggeru", past podmíněného pravidla, pasti přeširokého zákazu, umístění pravidla v odstavci (pohřbená klauzule na Haiku nedrží) a pozitivní požadavek místo lexikálního zákazu; z kol v0.4–v0.4.2 (2026-08-01/02)
 metadata:
   type: project
 ---
@@ -83,6 +83,36 @@ Obojí jsem našel až tím, že jsem si podle vlastního pravidla zkusil napsat
 - **Po každém přidání pravidla projdi jeho SOUSEDY a hledej rozpor**, ne jen
   jeho vlastní znění. Dvě pravidla, z nichž každé samo o sobě dává smysl, se
   na slabém modelu sečtou do paralýzy.
+
+## 3b. UMÍSTĚNÍ PRAVIDLA JE STEJNĚ DŮLEŽITÉ JAKO JEHO ZNĚNÍ (v0.4.2, 2026-08-02)
+
+Zákaz vymyšlené PŘÍČINY („nikdy … PŘÍČINU (prahy jsou skryté, ‚nestačilo to,
+protože…' nepiš)") byl v promptu **správně formulovaný od v0.4** — a přesto padal
+v **8/13** casů napříč všemi třemi běhy brány. Nebyl špatně napsaný, byl **pohřbený
+uprostřed nejdelšího odstavce jako vedlejší věta**. Ve v0.4.2 vytažen na samostatnou
+závěrečnou větu rule 5.
+
+- **Než přitvrdíš znění pravidla, které padá, zkontroluj, kde v odstavci stojí.**
+  Na Haiku drží věty na začátku a na konci pravidla; klauzule v závorce uprostřed
+  souvětí se chová, jako by tam nebyla.
+- **Diagnostický znak:** pravidlo padá stabilně napříč teplotami i délkami tokenů,
+  ale jeho formulace obstojí při čtení. To není otázka slov, ale pozice.
+- **Vytažení, ne zdvojení.** Zapuštěnou klauzuli při vytažení SMAŽ — duplikát
+  prodlužuje cachovaný vstup a nic nekupuje.
+- Táž páka čeká na rule 4 (zadržení), která padá ze stejného důvodu (nález A6).
+
+## 3c. PROTI ZMĚKČENÍ VÝSLEDKU PIŠ POZITIVNÍ POŽADAVEK, NE LEXIKÁLNÍ ZÁKAZ
+
+Model zamlčuje výsledek dvěma opačnými směry naráz: selhání jako netestované
+(„k takovému kroku nedošlo") a zásah jako poloviční („částečně uspěla"). Zákaz
+obratů by musel vyjmenovat obojí — a je to pátý výskyt tvaru z §3.
+**Lék: obrátit směr.** „U každého ze čtyř slotů musí být z textu jednoznačně
+poznat, zda prošel, nebo selhal" (rule 3, v0.4.2) kryje obě strany jedinou větou
+a nedá se obejít jinou slovní zásobou.
+- Zrcadlí to [[baterie-falzifikovatelnost]] §1b: **u každého jevu existují dva
+  směry a ten pozitivní bývá vynutitelnější.** Platí pro prompt i pro baterii.
+- Bonus, který se vyplatí hledat: požadavek se kryl s **metrikou 6 (čitelnost)**
+  lidské brány. Pravidlo, které slouží dvěma bránám naráz, obhájíš snadněji.
 
 ## 4. VŽDY NAPIŠ UKÁZKU PODLE VLASTNÍHO NÁVRHU, NEŽ HO ODEVZDÁŠ
 

@@ -9,7 +9,7 @@ je **kontrakt na straně promptu** — drž ho v souladu s enginem (`prototyp-mv
 **Do modelu jde POUZE fenced blok „Systémový prompt" + strukturovaný vstup.**
 Formát, příklady a changelog jsou dokumentace pro tým, ne součást volání.
 
-## Systémový prompt (v0.4.1)
+## Systémový prompt (v0.4.2)
 
 ```
 Jsi vyšetřovatel policie státu New York, rok 1930. Sepisuješ na psacím stroji
@@ -19,8 +19,10 @@ tě nepřekvapí.
 Dostaneš strukturovaný popis situace a JEJÍ HOTOVÝ VÝSLEDEK (které role prošly,
 jaké padly následky). Tvůj úkol je výsledek zaznamenat do protokolu. Pravidla:
 
-1. 3–5 vět a nejvýše 900 znaků. Suchá úřední čeština ve třetí osobě, dobová
-   stylizace (1930, žádné anachronismy).
+1. Nejvýše 900 znaků. Suchá úřední čeština ve třetí osobě, dobová
+   stylizace (1930, žádné anachronismy). Piš souvislou prózu bez nadpisů,
+   hlaviček, rubrik a odrážek; nikdy nevypisuj rubriky vstupu ani strojový
+   výčet následků na konci — následky patří do prózy (bod 7), ne do bloku.
 2. Osoby označuj VÝHRADNĚ jako „podezřelý A", „podezřelý B", „podezřelý C",
    „podezřelý D" (skloňuj podle pádu). NIKDY nevymýšlej ani neuváděj vlastní
    jména — skutečná jména se dosadí až po tobě. Je-li ve všech čtyřech slotech
@@ -32,7 +34,8 @@ jaké padly následky). Tvůj úkol je výsledek zaznamenat do protokolu. Pravid
    VÝHRADNĚ z VÝSLEDKU MECHANIKY a NÁSLEDKŮ — nikdy z textu věci a nikdy
    z toho, co sám dopíšeš. Když text věci naznačuje jiný průběh (hladký úspěch,
    ztrátu či zisk beden, hluk), řídí se protokol mechanikou, ne fikcí věci.
-   Toto je nejtvrdší pravidlo protokolu.
+   U každého ze čtyř slotů musí být z textu jednoznačně poznat, zda prošel,
+   nebo selhal. Toto je nejtvrdší pravidlo protokolu.
 4. Co dopíšeš, NESMÍ naznačit změnu žádného ČÍSLA ze vstupu — beden, kreditů,
    Žáru, pozice šerifa, postihů ani složení. Nikdo neodejde se zraněním, nikdo není
    zadržen, zatčen, spoután, odveden ani zavřen a nikdo jinak neskončí v rukou
@@ -51,12 +54,13 @@ jaké padly následky). Tvůj úkol je výsledek zaznamenat do protokolu. Pravid
    (nabídnutý úplatek někdo přijme nebo odmítne) — náklad nikdy.
 5. U KAŽDÉHO ze čtyř slotů krátce dopiš, JAK a s jakým záměrem podezřelý tu věc
    v té roli použil — obhajobu pokusu. Vymýšlíš výhradně ZPŮSOB a ZÁMĚR; nikdy
-   výsledek a nikdy PŘÍČINU (prahy jsou skryté, „nestačilo to, protože…" nepiš).
+   výsledek. Věc ze slotu vždy pojmenuj jejím názvem ze vstupu.
    Sedí-li věc k roli samozřejmě, vystač si s pár slovy a místo nech tomu, co se
    nehodí — tam je pointa. Nevhodně zvolená věc je ZLATO protokolu, ne chyba
    k zamlčení: banán vyleštěný jako pistole v útočné roli, brokovnice tasená
    strážníkovi na očích, kněžský kolárek na pašeráka. Rozehraj ten kontrast
    úředně a vážně. ALE výsledek daného slotu se tím NEMĚNÍ — selhal-li, selhal.
+   Nikdy nepiš, PROČ se pokus zdařil nebo nezdařil (prahy jsou skryté).
 6. Nevtipkuješ. Humor smí plynout výhradně z kontrastu úředního jazyka
    a absurdity situace. Žádné emoji, hovorovost ani explicitní žertování.
    Neopakuj v jednom protokolu tutéž větnou figuru ani tutéž vazbu.
@@ -66,8 +70,9 @@ jaké padly následky). Tvůj úkol je výsledek zaznamenat do protokolu. Pravid
    MAX DOSAŽITELNÉ vyšší než počet zásahů, smíš to jednou zaznamenat — ale
    NEURČUJ, čí to byla chyba a proč. Co nepadlo, nezmiňuj.
 8. Nejvýše jednou smíš přidat krátkou osobní poznámku vyšetřovatele v závorce.
-   Blíží-li se text stropu, škrtej ROZVÍJENÍ KULISY — nikdy tuto poznámku a nikdy
-   položku NÁSLEDKŮ. Zamlčený následek není úspora znaků, je to porušení bodu 3.
+   Blíží-li se text stropu, škrtej ROZVÍJENÍ KULISY — nikdy tuto poznámku, nikdy
+   položku NÁSLEDKŮ a nikdy jednoznačnost výsledku slotu (bod 3). Zamlčený nebo
+   nejasný výsledek není úspora znaků, je to porušení bodu 3.
 ```
 
 ## Formát vstupu
@@ -198,6 +203,90 @@ selhaly) a „rameno si ani nenarazil" (postih padl).
 
 ## Changelog
 
+- **v0.4.2** (2026-08-02) — **pět cílených zásahů po A/B přeměření brány češtiny**
+  (`technika/brana-cestiny-ab-2026-08-02.md`, rameno A: t=0,5, 13 casů, 0/13,
+  6 KRITICKÝCH). Teplota 0,5 je zapečená a mimo rozsah tohoto kola — A/B doložilo,
+  že sjednotila **jazyk** (tvrdá jazyková vada 13/13 → 2/13), ale nehnula ani
+  jedním nálezem, který bránu blokuje. Zbylé vady mají tvar pravidla, ne tvar
+  vzorkování; proto se opravují tady. Všech pět zásahů je na straně **vstupu**,
+  který se cachuje — cenu volání to nemění a konzultaci s operations-economics
+  to nevyžadovalo. Strop 900 znaků zůstává nedotčen.
+  (1) **Rule 1: zákaz formátového šumu.** Přibylo „Piš souvislou prózu bez
+  nadpisů, hlaviček, rubrik a odrážek; nikdy nevypisuj rubriky vstupu ani souhrn
+  následků na konci." Markdown hlavička padla **13/13**, strojový souhrnný blok
+  5/13 — a v casu A10 ten blok **přímo vyrobil chybné číslo**: pod korektní prózou
+  („Jedna bedna nákladu zůstala na mostě") stálo „Bedny: 4", ačkoli náklad je 5.
+  Kořenová příčina je artefakt modelu, ne baterie ani harness; jedna věta proto
+  zavírá celou třídu naráz, včetně jednoho KRITICKÉHO nálezu.
+  (2) **Rule 5: zákaz vymyšlené PŘÍČINY vytažen na samostatnou závěrečnou větu**
+  — „Nikdy nepiš, PROČ se pokus zdařil nebo nezdařil (prahy jsou skryté)."
+  Zákaz v promptu byl **už od v0.4**, ale zapuštěný doprostřed nejdelšího odstavce
+  jako vedlejší věta („nikdy … PŘÍČINU (prahy jsou skryté, ‚nestačilo to,
+  protože…' nepiš)") — a padal v **8/13** casů napříč všemi třemi běhy. Doložený
+  vzorec: pravidlo pohřbené uvnitř dlouhého odstavce na Haiku nedrží, i když je
+  formulované správně. Zapuštěná klauzule je proto **nahrazena**, ne zdvojena
+  (kratší prompt = lépe cachovatelný); důvod „prahy jsou skryté" zůstal jako
+  závorka u nové věty. Táž páka je připravená pro rule 4 (zadržení), pokud tenhle
+  zásah zabere.
+  (3) **Rule 5: „Věc ze slotu vždy pojmenuj jejím názvem ze vstupu."** Věc ze
+  slotu zmizela nebo se zaměnila v **5–6/13** casů (A9: 4/4 věcí pryč, A4: „Slzy
+  na povel" zmizely). Bez názvu věci hráč nemá jak spárovat protokol s tím, co
+  do slotu vložil — je to zároveň požadavek čitelnosti (metrika 6 lidské brány).
+  (4) **Rule 1: vypuštěno „3–5 vět", zůstal jen znakový strop 900.** Počet vět je
+  **mrtvé pravidlo**: napříč třemi běhy (400 i 800 tokenů, teplota 1,0 i 0,5)
+  ho nedodržela **0 ze 39 generací**. Ponechání dělalo baterii nefalzifikovatelnou
+  — 13/13 casů „selhávalo" na položce, která nikdy neprojde, a šum přebíjel
+  signál (§1 zákona falzifikovatelnosti, viz baterie). Délku drží znakový strop,
+  který jediný se ve všech bězích prokázal jako funkční brzda. **Riziko: bez věty
+  o počtu vět může délka narůst** — je to vědomě přijaté, 900 zůstává jedinou
+  brzdou a příští běh ho měří.
+  (5) **Rule 3: pozitivní požadavek na čitelnost výsledku** — „U každého ze čtyř
+  slotů musí být z textu jednoznačně poznat, zda prošel, nebo selhal." Cílí na
+  zamlčení a změkčení výsledku slotu: A1 „k takovému kroku však nedošlo"
+  (selhaný slot vyprávěn jako netestovaný), A12 „avšak k incidentu nedošlo",
+  A7 „tato improvizace **částečně uspěla**" (změkčený zásah). **Lexikální zákaz
+  obratů („částečně", „k tomu nedošlo") byl zvážen a ZAMÍTNUT** — přeširoký zákaz
+  je past doložená ve v0.4 třikrát (hluk, předání věci, vymyšlené věci; pokaždé
+  se musel zpětně zužovat). Pozitivní požadavek kryje **obě** strany změkčení
+  naráz a je zároveň požadavkem metriky 6 (čitelnost) lidské brány. Umístěn do
+  rule 3, ne do rule 5: jde o výsledek, ne o obhajobu pokusu.
+  **VĚDOMĚ ODLOŽENO:** zobecnění rule 2 ze „podezřelých" na všechny osoby
+  I MÍSTA (nález „statek Novotného v Lipovicích" v A3, vymyšlená jména 3/13).
+  Reálný a doložený nález, ale drží se mimo tohle kolo, aby šlo změřit účinek
+  pěti zásahů zvlášť — kandidát na v0.4.3.
+  **STOP PODMÍNKA PRO 3. BĚH BRÁNY (přesná definice, ať se příště neodvozuje
+  znovu z paměti):** příští běh měří **13 casů × 3 generace = 39 generací**.
+  Pro každou GENERACI (ne case) vyhodnoť binárně dvě samostatné metriky:
+  „formátový šum" = generace obsahuje markdown nadpis, rubriku, odrážku nebo
+  strojově vyhlížející blok následků; „vymyšlená příčina" = generace obsahuje
+  větu vysvětlující, PROČ se pokus zdařil/nezdařil (nejen že se zdařil/nezdařil).
+  **Práh: ≤2 z 39 generací u KAŽDÉ z obou metrik samostatně** (ne dohromady,
+  ne na úrovni casů). Padne-li aspoň jedna metrika nad práh, není to otázka
+  znění promptu, ale **strop schopnosti modelu** (Haiku 4.5) — správným dalším
+  krokem se stává eskalace (jiný model jen na volání protokolu, nebo
+  dvouprůchodové generování); to je rozhodnutí operations-economics, ne testéra.
+  **Chybějící větev (vědomě nedořešeno v tomhle kole):** projdou-li obě metriky
+  práh, ale brána je i tak 0/13 (KRITICKÉ nálezy jinde — rule 3/4 obrácení,
+  zadržení, zamlčený následek), stop podmínka mlčí o dalším kroku; rozhodne
+  příští hodnotitel podle povahy zbylých nálezů, ne podle týhle podmínky.
+  **Design-critic prověrka (2026-08-02) k v0.4.2 před commitem** našla čtyři
+  další VÁŽNÉ nálezy nad rámec tohoto zápisu, ponechané jako otevřené otázky
+  na designéra/testéra (viz `.claude/agent-memory/design-critic/v042-prompt-audit.md`
+  pro plné znění): (a) nová rule-5 věta „Věc ze slotu vždy pojmenuj jejím
+  názvem ze vstupu" sedí uprostřed nejdelšího odstavce — přesně tam, odkud
+  zásah (2) ze stejného kola utíká se stejným zdůvodněním; (b) rule 3 (bod 5,
+  jednoznačnost výsledku) a rule 5 (bod 2, zákaz příčiny) mohou táhnout proti
+  sobě — model tlačený k jednoznačnosti bez povoleného „bezpříčinného" jazyka
+  selhání může sáhnout po vysvětlení, což by zvedlo právě tu metriku, kterou
+  bod (2) má snižovat; měřit obě metriky odděleně po běhu, ne slučovat; (c)
+  vzorový „dobrý výstup" v tomto souboru neplní doslovně nové pravidlo (b) —
+  „banán" místo „Banánového kanónu", věc „Otrlený výraz" beze jména vůbec —
+  hodnotitel potřebuje před během rozhodnout, jestli je to průchod, nebo
+  selhání ukázky; (d) přesun zákazu příčiny (2) zahodil i konkrétní protipříklad
+  („nestačilo to, protože…"), ne jen pozici — pokud (2) nezabere, nejde snadno
+  odlišit „špatná pozice" od „chybějící exemplář".
+  Příští běh měřit na **3 generacích na case**, ne na jedné: rozdíl v počtu
+  KRITICKÝCH casů se při n=1 nedá odlišit od losu.
 - **v0.4.1** (2026-08-02) — **opravné kolo po review fáze 3; pět bodů, žádná nová
   designová volba.** (1) **Kredity srovnány se zapečeným enginem: +3 / +2 / 0 / 0**
   (bylo +2 / +1 / 0). Zdroj pravdy je `prototyp/src/engine/rules.js`

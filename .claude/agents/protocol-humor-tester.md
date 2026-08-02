@@ -35,8 +35,8 @@ uvidí. Proto:
 - Drž se striktně jen toho, co říká systémový prompt — nedoplňuj vlastní vkus
   nad jeho rámec.
 - Aktivně **hledej, kde slabší model selže**: ztráta úředního tónu do hovorovosti,
-  sklouznutí k vtipkování, anachronismy, rozvláčnost přes 5 vět, a nejhorší ze všeho
-  změna/změkčení výsledku.
+  sklouznutí k vtipkování, anachronismy, rozvláčnost přes znakový strop, a nejhorší
+  ze všeho změna/změkčení výsledku.
 - Generuj **víc výstupů na jeden vstup** (klidně 3) a hodnoť i nejhorší z nich —
   v produkci hráč narazí i na ten špatný, ne jen na povedený.
 
@@ -47,7 +47,10 @@ Pro každý výstup projdi:
    mechaniky, čísla ani zranění. Porušení = **automaticky KRITICKÉ**, ne stylistická
    drobnost. Tohle je nejdůležitější kontrola; princip „mechanika rozhoduje, AI
    vypráví" tady stojí a padá.
-2. **Délka** — 3–5 vět.
+2. **Délka** — ≤900 znaků (rule 1). „3–5 vět" bylo v promptu v0.4.2 vypuštěno
+   jako nedodržitelné (0 z 39 generací napříč třemi běhy brány) — počet vět už
+   NENÍ kritérium, hlídej jen znakový strop. Ověř aktuální znění v
+   `prompty/protokol.md` před hodnocením, kdyby se prompt zas posunul.
 3. **Tón** — suchá úřední čeština, třetí osoba, osoby jménem a „podezřelý".
 4. **Humor** — plyne jen z kontrastu úřední řeči a absurdity, žádné explicitní
    vtipkování, emoji, hovorovost.

@@ -1,6 +1,6 @@
 ---
 name: baterie-falzifikovatelnost
-description: Jak psát regresní baterii protokolů, aby uměla selhat — zákony o testu bez opory v promptu, tautologické položce, mrtvém vstupním poli, mrtvém pravidle (0 dodržení ze 39 generací), stropu zvoleném ex post a o tom, že průchod v jednom rameni A/B je los, ne důkaz
+description: Jak psát regresní baterii protokolů, aby uměla selhat — zákony o testu bez opory v promptu (a jeho default léku: DIAGNOSTIKA + `nesmi` v tom směru, který prompt vynucuje), tautologické položce, mrtvém vstupním poli, mrtvém pravidle (0 dodržení ze 39 generací), stropu zvoleném ex post, průchodu v jednom rameni A/B jako losu a o ověřování ručně psaných polí `udalosti` proti enumu enginu
 metadata:
   type: project
 ---
@@ -31,6 +31,23 @@ pro zvednutí stropu na 1000, ačkoli je to jen chybějící věta v promptu.
   zvednutí stropu je výstup (5× dražší token). Když se diagnóza dá řešit oběma,
   **klauzule v promptu je ~5× levnější než uvolnění délky** — a v mém kole to
   nebylo zvažováno, dokud na to kritik neukázal.
+
+### 1b. LÉK NA POLOŽKU BEZ OPORY NENÍ ŠKRT, ALE OTOČENÍ SMĚRU (2026-08-02, kolo D55b)
+Když `musi` nemá oporu v promptu, nabízejí se dvě cesty — doplnit prompt, nebo
+položku smazat. **Existuje třetí, skoro vždy lepší:** rozložit ji na dvojici
+1. **DIAGNOSTIKA** (neblokující míra přes generace) — měří dál, ale neblokuje
+   verdikt a nevyrábí falešná „selhání modelu";
+2. **`nesmi` v tom směru, který prompt VYNUCUJE.**
+U kreditů to vyšlo přesně: rule 7 zápis kreditů neukládá (→ `musi` je neopřené),
+ale rule 4 zakazuje změnit jakékoli ČÍSLO ze vstupu (→ „uvést jiný přírůstek nebo
+stav kreditů, než jaký nese vstup" je plně opřené a falzifikovatelné). Škrt by
+pole umlčel úplně; tenhle tvar zachová obojí — měření i pojistku.
+- **Obecně: u každého vstupního pole existují dva směry** („zapiš ho" × „nezkresli
+  ho"). Prompt skoro vždy vynucuje jen ten druhý. **Testuj ten, který vynucuje.**
+- Týž vzorec už dřív posloužil na `loot` a `MAX DOSAŽITELNÉ` — od D55b je to
+  **default postup**, ne improvizace: `musi` bez opory → DIAGNOSTIKA + obrácené `nesmi`.
+- **Do baterie zapiš i podmínku návratu** („doplní-li se kredity do rule 7, překlopí
+  se DIAGNOSTIKY zpět na `musi`"), jinak se po změně promptu na zeslabení zapomene.
 
 ## 2. POLOŽKA `nesmi` OPSANÁ Z PRAVIDLA JE TAUTOLOGIE
 
@@ -101,6 +118,25 @@ u šesti slotů, produkce ho dopisuje **jen u `gangster_auto_fail`** (ř. 238).
 - **Pravidlo: ručně psaný vstup smí do baterie jen s poznámkou „optimistický vstup".
   Jinak generuj.** (Viz [[testing-failure-taxonomy]] C1 — zapsáno 2026-08-01
   a přesto zopakováno 2026-08-02.)
+
+### 4c′. PŘEVOD NA `udalosti` NEODSTRANÍ RUČNÍ FIKCI — jen ji schová do POLÍ
+Po převodu baterie na `ctx`+`udalosti` (D55) vypadá vstup jako produkční, protože
+prochází `buildPromptInput()`. Jenže **hodnoty polí pořád píše ruka** a nikdo je
+neověřuje proti enumu enginu. Doloženo D55b: case `solo-jedna-osoba-ctyri-sloty`
+nese `duvod: slotova_vyjimka`, ale `resolve.js` emituje výhradně
+`proslo | nizky_stat | kombi_neuplny | stat_zrusen | gangster_auto_fail`.
+Neprojevilo se to, protože `buildPromptInput()` větví jen na `gangster_auto_fail` —
+**vada byla neviditelná právě proto, že to pole nikdo nečte.**
+- **Ke každému ručně psanému poli `udalosti` najdi producenta v enginu** (`events.js`,
+  `resolve.js`), ne jen konzumenta v `buildPromptInput()`. Pole, které konzument
+  ignoruje, je nejnáchylnější na tichou fikci.
+- **Odděl „mechanismus neexistuje" od „řetězec nesedí".** Tady byl mechanismus
+  reálný (`slot.stitek_citlivy === 'GANGSTER'` štítek obchází), špatná byla jen
+  nálepka — verdikt „kosmetické", ne „scénář je vymyšlený". Ověř to, než to nahlásíš.
+- **Druhá polovina téhož:** čísla v `udalosti` ověř proti `rules.js`. D55b našlo
+  Žár nesedící s `zaPrusvih: 2` / `zaSNasledky: 1` u šesti casů. Baterie tím
+  netrpí (`ocekavani` se svými `udalosti` souhlasí), ale scénář neodpovídá hře —
+  a to je nález pro vlastníka enginu, ne pro obsahové kolo. **Nahlas, neopravuj.**
 
 ## 4d. PRAVIDLO, KTERÉ NESEPNULO ZA TŘI KONFIGURACE, JE MRTVÉ (2026-08-02)
 „3–5 vět" (rule 1) nedodržel model **ani jednou ze 39 generací** napříč třemi

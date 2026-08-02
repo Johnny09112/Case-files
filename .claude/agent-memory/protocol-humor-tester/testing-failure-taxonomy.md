@@ -436,27 +436,21 @@ Rule 4 „zadržení" držela v casu, kde v 1. běhu padla — a padla v jiném 
 zadržen podezřelý A"). Slovo „zadržen" je přitom ve výčtu pravidla **obsaženo**.
 **Rozšiřovat výčet dál nemá smysl; rozhoduje pozice pravidla, ne jeho úplnost.**
 
-## Stav promptu (snapshot: v0.4.1, 2026-08-02)
-v0.4.1 = opravné kolo nad v0.4 (pět bodů z review fáze 3): kredity +3/+2/0/0 dle
-`rules.js`; příklad MAX přepočten na 2/4; „ztráta nákladu jen v PRŮŠVIHU" vyvráceno
-(D40); **rule 4 nově kryje zranění osoby, zadržení i ztotožnění** (jméno, doklad,
-značka vozu), přičemž strkanice/tahanice zůstávají povolené; **strop délky 800 → 900
-zn.** a **rule 8 nově určuje pořadí škrtání** (u stropu se škrtá kulisa, nikdy
-poznámka a nikdy následek). Baterie má case `solo-bohate-nasledky-strop-delky`.
-OTEVŘENÉ, čeká na designéra: platí zákaz újmy z rule 4 i na PROTISTRANU (NPC)?
-Dnešní „nikdo" je univerzální a u prošlého útočného slotu v konfrontaci nechává
-rule 5 skoro bez materiálu.
+## Stav promptu — ZDE SE NEUDRŽUJE (ověř v `prompty/protokol.md`, changelog)
+Snapshoty verzí odsud odstraněny 2026-08-02: zestárnou tiše a jeden z nich už lhal
+(„v0.4 stále NEOTESTOVÁN na produkčním modelu" — mezitím proběhly dva běhy brány,
+viz §H a §I). **Zdroj pravdy je changelog v `prompty/protokol.md`**; verzi mandátu
+poznáš z rule 5, strop z rule 1, výčet následků z rule 7. Sem patří jen to, co
+v promptu NENÍ:
+- **OTEVŘENÁ otázka pro designéra (od v0.4.1, stále otevřená):** platí zákaz újmy
+  z rule 4 i na PROTISTRANU (NPC)? Dnešní „nikdo" je univerzální a u prošlého
+  útočného slotu v konfrontaci nechává rule 5 skoro bez materiálu.
+- Rozhodovací metodika pro varianty pravidel: [[prompt-variant-rozhodovani]].
+- Jak psát baterii, aby uměla selhat: [[baterie-falzifikovatelnost]].
 
-## Předchozí stav promptu (snapshot: v0.4, 2026-08-01)
-v0.4 = **kreativní mandát „plné B" dle D53** — rule 5 káže u KAŽDÉHO ze čtyř slotů
-dopsat ZPŮSOB a ZÁMĚR použití věci (nikdy výsledek, nikdy příčinu), s nerovným
-rozpočtem (sedící věc pár slov, nesedící celý záměr). Nová rule 4 = pojistka proti
-vymyšlenému mechanickému důsledku, stojí PŘED mandátem. Rule 1 má znakový strop
-800 zn. místo samotného počtu vět, rule 2 sólo klauzuli. Vstupní formát má navíc
-`PRAVIDLO RUNU`, `ZÁCHRANA`, `MAX DOSAŽITELNÉ n/4`.
-**Stále NEOTESTOVÁN na produkčním modelu** (Haiku 4.5, D55) — největší produktové
-riziko je tím pádem pořád neměřené; brána češtiny uvnitř fáze 3 je první měření.
-Rozhodovací metodika pro varianty pravidel je v [[prompt-variant-rozhodovani]].
+## A3–A5, C1 — třídy chyb otevřené kreativním mandátem (zapsáno v kole v0.4)
+Dodatky k sekcím A a C výše — dřív omylem zařazené pod dobový snapshot promptu,
+takže se špatně hledaly. Platí dál bez ohledu na verzi promptu.
 
 ### A3 — VYMYŠLENÝ MECHANICKÝ DŮSLEDEK (nová KRITICKÁ třída, otevřená mandátem v0.4)
 Od chvíle, kdy prompt modelu **káže vymýšlet**, přibyla třída chyby, kterou v0.3

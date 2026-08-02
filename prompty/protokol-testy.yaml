@@ -89,6 +89,19 @@
 #     nesou dva jiné casy. Třetí kopie by nepřidala informaci, jen další
 #     garantované selhání (§4d: mrtvé pravidlo).
 #
+# ŘEZ D55c (2026-08-02, design-critic prověrka promptu v0.4.2 — bod 1 „KRITICKÉ"):
+# prompt v0.4.2 (rule 1) vypustil „3–5 vět" (mrtvé pravidlo, 0 z 39 generací
+# napříč třemi běhy) a nechal jen znakový strop 900 zn. Baterie ale „3–5 vět"
+# / „5 vět" dál nesla jako `musi`/`nesmi` v šesti casech (`banan-utok-selhal`,
+# `hladky-pruchod-loot-brokovnice-v-lokaci`, `invence-selhany-slot-nesedici-vec`,
+# `invence-nesmi-opsat-text-veci`, `solo-bohate-nasledky-strop-delky` ×2) —
+# beze srovnání by 3. běh vyrobil pět falešných selhání na položce, kterou
+# prompt vědomě nedrží (přesně ta třída chyby, kterou vlastní odůvodnění
+# zásahu (4) v changelogu protokol.md popisuje). Odstraněno; znakový strop
+# zůstává jediným měřeným limitem délky. Souhlasně upraveno i
+# `.claude/agents/protocol-humor-tester.md` (bod „Délka" ve vlastní spec
+# hodnotitele nesl totéž zastaralé kritérium).
+#
 # POZOR na variantu mandátu: v0.4 je **plné B** — invence u KAŽDÉHO ze čtyř slotů,
 # s nerovným rozpočtem (sedící věc pár slov, nesedící celý záměr). Zamítnutá
 # alternativa B-lite (invence JEN u selhaných/nesedících) by měla opačná
@@ -164,7 +177,7 @@ testy:
       musi:
         - "zapsat, že slot „Zapřáhnout“ i slot „Kdyby vyváděl“ (banán) SELHALY"
         - "zapsat postih podezřelého D (naražené rameno) jako fikci"
-        - "placeholdery „podezřelý A/B/C/D“, 3–5 vět, ≤900 znaků, suchý úřední tón, 3. osoba"
+        - "placeholdery „podezřelý A/B/C/D“, ≤900 znaků, suchý úřední tón, 3. osoba"
       nesmi:
         - "tvrdit, že banán / útočná role uspěl(a) — komická fikce NEMĚNÍ výsledek slotu (KRITICKÉ)"
         - "tvrdit ztrátu jakékoli bedny (náklad zůstává 6) ani pohyb Žáru/šerifa"
@@ -268,7 +281,7 @@ testy:
     ocekavani:
       musi:
         - "zapsat hladký průchod všech čtyř rolí bez potíží"
-        - "dodržet znakový strop ≤900 zn. a 3–5 vět i při čtyřech licencovaných invencích"
+        - "dodržet znakový strop ≤900 zn. i při čtyřech licencovaných invencích"
         - "DIAGNOSTIKA (neblokující, D55): vstup nese `loot: —` (buildPromptInput() nikdy nejmenuje líznutou věc — engine ji neloguje, viz A/B report §5 bod 4 a §7). Nezapočítávat jako selhání, když protokol loot vůbec nezmíní — to je SPRÁVNĚ; tahle položka jen hlídá, že si model loot nevymyslí (viz nesmí níže)."
         - "DIAGNOSTIKA KREDITŮ (neblokující, D55b — plné znění, ostatní casy sem odkazují): vstup nese `kredity: +3 (HLADCE+LOOT); konto 11` a `buildPromptInput()` ten řádek tiskne VŽDY, ale **rule 7 kredity ve výčtu následků nemá** (postihy, složení, šerif/Žár, bedny, loot) — rule 3/4 je zmiňují jen jako číslo, které se nesmí změnit. Zápis kreditů proto NENÍ kritérium (§1 falzifikovatelnosti; A/B report §5 bod 2 — dřívější `musi` vyrobilo tři falešná „selhání modelu“). Sleduj jen MÍRU přes generace: zmíní-li je model 0 z 5 i tam, kde padly, je `kredity:` mrtvé vstupní pole téže třídy jako ZÁCHRANA a MAX DOSAŽITELNÉ (§3 falzifikovatelnosti, §7 A/B reportu) — pak patří buď do výčtu rule 7, nebo z formátu vstupu ven. Rozhodnutí je designérovo, přeměření moje."
       nesmi:
@@ -423,7 +436,7 @@ testy:
         - "u KAŽDÉHO ze tří selhaných slotů uvést ZPŮSOB a ZÁMĚR použití (obhajobu pokusu), ne holé „s X neuspěl“"
         - "zapsat všechna tři selhání jako selhání a „Kdyby sáhl po zbrani“ jako jediný zásah"
         - "zapsat těžký postih (otřes mozku), ztrátu 1 bedny (náklad 5) a pohyb Žáru o tři pole s důvodem"
-        - "3–5 vět, ≤900 znaků — rozpočet patří třem selhaným slotům, řeznický hák (sedící, na který nedošlo) unese pár slov"
+        - "≤900 znaků — rozpočet patří třem selhaným slotům, řeznický hák (sedící, na který nedošlo) unese pár slov"
       nesmi:
         - "nechat selhaný slot u doslovného konstatování bez obhajoby (regrese nálezu 2026-07-29)"
         - "věnovat řeznickému háku stejný prostor jako selhaným slotům — rozpočet je nerovný (rule 5)"
@@ -745,7 +758,7 @@ testy:
       musi:
         - "zapsat všechny čtyři zásahy"
         - "u kastrolu na hlavě (jediná zjevně nesedící věc) rozehrát kontrast — tam je celý humor uzlu"
-        - "vejít se do ≤900 znaků a 3–5 vět; nechat místo na závěrečnou poznámku vyšetřovatele"
+        - "vejít se do ≤900 znaků; nechat místo na závěrečnou poznámku vyšetřovatele"
         - "DIAGNOSTIKA (neblokující, D55): vstup nese `loot: —` (buildPromptInput() nikdy nejmenuje líznutou věc, viz case `hladky-pruchod-loot-…`); protokol NEMUSÍ loot zmiňovat, jen si nesmí žádný vymyslet (viz nesmí níže)"
         - "DIAGNOSTIKA KREDITŮ (neblokující, D55b): vstup nese `kredity: +3 (HLADCE+LOOT); konto 4`, ale rule 7 kredity ve výčtu následků nemá — jejich zápis NENÍ kritérium (plné znění u casu `hladky-pruchod-loot-brokovnice-v-lokaci`). Počítá se jen, v kolika generacích je model zmíní."
       nesmi:
@@ -816,14 +829,14 @@ testy:
       kredityPo: 6
     ocekavani:
       musi:
-        - "vejít se do ≤900 znaků a 3–5 vět PŘI PLNÉM NÁKLADU: čtyři obhajoby pokusu, sólo klauzule, vsuvka o záchraně, gap, těžký postih, ztráta bedny i pohyb Žáru"
+        - "vejít se do ≤900 znaků PŘI PLNÉM NÁKLADU: čtyři obhajoby pokusu, sólo klauzule, vsuvka o záchraně, gap, těžký postih, ztráta bedny i pohyb Žáru"
         - "uzavřít závorkou osobní poznámky vyšetřovatele — rule 8 od v0.4.1 určuje POŘADÍ ŠKRTÁNÍ (u stropu se škrtá kulisa, ne poznámka a ne následek), takže je to vynutitelné, ne jen přání testéra"
         - "psát o JEDNÉ osobě, která zvládala čtyři úlohy po sobě — označení „podezřelý A“ nejvýš dvakrát, dál „jmenovaný“/„týž“"
         - "zapsat tři selhání a jediný zásah („Kdyby čenichal dál“) dle mechaniky"
         - "zapsat těžký postih (ochrnutá ruka), ztrátu 1 bedny (náklad 5) a Žár +3 s důvodem"
       nesmi:
         - "zamlčet nebo zkrátit kteroukoli položku NÁSLEDKŮ, aby se protokol vešel (KRITICKÉ — zamlčený následek je porušení rule 3/7, ne úspora znaků)"
-        - "překročit 900 znaků ani 5 vět"
+        - "překročit 900 znaků"
         - "napsat, že podezřelému nestačily peníze nebo že hodinky měly malou cenu — hodnota je ZRUŠENA PRAVIDLEM RUNU, ne nízká (KRITICKÉ)"
         - "popsat výstřel z uříznuté hlavně ani ránu na palubě — Žár roste z tasení, ne z uvedené střelby"
         - "vytvořit z podezřelého A víc osob ani ho nechat držet čtyři věci naráz (KRITICKÉ pro sólo)"

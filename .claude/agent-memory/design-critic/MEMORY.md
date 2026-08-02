@@ -9,3 +9,7 @@
 - [muj-den V-3 audit](muj-den-v3-audit.md) — 2026-07-28: diagnóza platí, preregistrace ne; divergence-null jako nástroj; V-3 nemění rozhodnutí, jen obtížnost
 - [Telegraf invariant audit](telegraf-invariant-audit.md) — 2026-07-29: mech. řádek už v kódu → p≈1,0, teze návrhu obrácená; K4d stale po D35; STOPY nejsou partice
 - [Telegraf škrtací kolo audit](telegraf-skrtaci-kolo-audit.md) — 2026-07-30: v3 invariant SCHVÁLIT S ÚPRAVAMI; prior ověřen, ale nenaučitelný pro 5/19; útok lze zapřít jen ve 4/19
+- [Prompt v0.4 audit](prompt-v04-audit.md) — 2026-08-01: B-lite neobhájen (kolaps na A v 37,5 % uzlů), few-shot příklad má vadné MAX 3/4, formát ≠ prompt.js
+- [v0.4 prompt audit](v04-prompt-audit.md) — 2026-08-01 „plné B": otočka si protiřečí (rule 5 drží fuzzy trigger), vstup enginu nekoherentní, 7 blokujících vad
+- [v0.4.2 prompt prověrka](v042-prompt-audit.md) — 2026-08-02: PROJDE S VÝHRADOU; „3–5 vět" přežilo v baterii → zásah (4) je no-op, 3. běh by měřil šum
+- [Fragmentová vrstva audit](fragmentova-vrstva-audit.md) — 2026-07-30 D54(1): sadu NEZAPÉKAT (sebeprotiřečení, 6× tentýž tvar, +2:20 psacího stroje), kód po opravách
