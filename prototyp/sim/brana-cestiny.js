@@ -6,6 +6,15 @@
  * / uživatel) — kvalita českého humoru se strojově neposuzuje (jen `ocekavani.musi`/
  * `nesmi` v baterii se sem propisují jako připomínka, co hlídat).
  *
+ * VSTUP SE STAVÍ Z buildPromptInput() (D55 A/B report, §Nula) — každý case definuje
+ * scénář jako `ctx` + `udalosti` (stejný tvar jako reálný event log enginu), skript
+ * je prožene TOUTÉ funkcí, kterou volá produkce (`src/llm/prompt-input.js`). Ručně
+ * psaný `vstup` (string) je jen VÝJIMKA (historické casy, které se ještě nepřevedly) —
+ * kdykoli se použije, log ho označí `[RUČNÍ VSTUP — VÝJIMKA]`, ať je hned vidět, který
+ * výstup neprošel stejnou cestou jako hra. Důvod: baterie psaná rukou byla opakovaně
+ * vlídnější než to, co posílá `buildPromptInput()` v produkci (chybějící `důvod:`
+ * u slotů, jiné znění `PRAVIDLO RUNU`) — třetí doložený nález téže třídy.
+ *
  * NIKDY se nespouští automaticky (ne v CI, ne v `npm test`) — je to placené volání
  * skutečného modelu. `logs/` je v .gitignore.
  *
@@ -22,6 +31,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { load } from 'js-yaml';
 import { createAnthropicProvider } from '../src/llm/providers/anthropic.js';
 import { extractSystemPrompt } from '../src/llm/system-prompt.js';
+import { buildPromptInput } from '../src/llm/prompt-input.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(__dirname, '..');
@@ -39,10 +49,25 @@ function nactiSystemPrompt() {
 }
 
 /**
+ * Test je strojově použitelný, když má `id` a K TOMU buď (a) `udalosti` +
+ * `ctx` — normální cesta, vstup postaví `buildPromptInput()` stejně jako
+ * produkce — nebo (b) ruční `vstup` (string) — VÝJIMKA pro casy, které se
+ * ještě nepřevedly (viz hlavička souboru); `renderMd` ji v logu vyznačí.
+ * @param {object} t
+ */
+function jePouzitelnyTest(t) {
+  if (typeof t?.id !== 'string') return false;
+  if (typeof t?.vstup === 'string') return true;
+  return Array.isArray(t?.udalosti) && t.udalosti.length > 0 && typeof t?.ctx === 'object' && t.ctx !== null;
+}
+
+/**
  * Načte a validuje baterii. `protokol-testy.yaml` je souběžně rozšiřovaný jiným
  * agentem (viz zadání) — parser je proto tolerantní ke KLÍČŮM navíc a hlásí jen
- * skutečně chybějící/nepoužitelnou strukturu (chybí `testy`, nebo test bez `vstup`).
- * @returns {{id: string, popis?: string, vstup: string, ocekavani?: {musi?: string[], nesmi?: string[]}}[]}
+ * skutečně chybějící/nepoužitelnou strukturu (chybí `testy`, nebo test bez
+ * použitelného vstupu — ani `udalosti`+`ctx`, ani ruční `vstup`).
+ * @returns {{id: string, popis?: string, vstup?: string, udalosti?: object[],
+ *   ctx?: object, ocekavani?: {musi?: string[], nesmi?: string[]}}[]}
  */
 export function nactiBaterii(cesta = BATERIE_CESTA) {
   let surovy;
@@ -62,13 +87,32 @@ export function nactiBaterii(cesta = BATERIE_CESTA) {
       `${path.relative(MONOREPO_ROOT, cesta)}: klíč „testy" chybí nebo je prázdný — baterie není strojově použitelná, oprav strukturu nebo nahlas nález.`
     );
   }
-  const nepouzitelne = testy.filter((t) => typeof t?.vstup !== 'string' || typeof t?.id !== 'string');
+  const nepouzitelne = testy.filter((t) => !jePouzitelnyTest(t));
   if (nepouzitelne.length > 0) {
     throw new Error(
-      `${path.relative(MONOREPO_ROOT, cesta)}: ${nepouzitelne.length} test(ů) nemá „id" a/nebo „vstup" jako string — baterie se mezitím strukturálně rozešla se skriptem.`
+      `${path.relative(MONOREPO_ROOT, cesta)}: ${nepouzitelne.length} test(ů) nemá „id" a k tomu ani „udalosti"+„ctx", ani ruční „vstup" jako string — baterie se mezitím strukturálně rozešla se skriptem.`
     );
   }
   return testy;
+}
+
+/**
+ * Postaví vstup pro jeden test — VÝHRADNĚ přes `buildPromptInput()`, pokud
+ * case nese `udalosti`+`ctx` (normální cesta, shodná s produkcí); ruční
+ * `vstup` je jen výjimka (viz `jePouzitelnyTest`). `nactiBaterii()` už
+ * zaručila, že aspoň jedna z cest je dostupná.
+ * @param {{id: string, vstup?: string, udalosti?: object[], ctx?: object}} test
+ * @returns {{vstup: string, rucni: boolean}}
+ */
+export function vstupProTest(test) {
+  if (Array.isArray(test.udalosti) && test.ctx) {
+    try {
+      return { vstup: buildPromptInput(test.udalosti, test.ctx), rucni: false };
+    } catch (chyba) {
+      throw new Error(`test „${test.id}": buildPromptInput() selhalo (${chyba?.message ?? chyba})`);
+    }
+  }
+  return { vstup: test.vstup, rucni: true };
 }
 
 /**
@@ -93,12 +137,14 @@ function dnesniDatum() {
 }
 
 /**
- * @param {{test: {id: string, popis?: string, ocekavani?: {musi?: string[], nesmi?: string[]}}, text: string|null, chyba: string|null}[]} vysledky
+ * @param {{test: {id: string, popis?: string, ocekavani?: {musi?: string[], nesmi?: string[]}},
+ *   text: string|null, chyba: string|null, rucni?: boolean}[]} vysledky
  * @param {string} model
  * @param {number} [temperature] hodnota použitá pro tenhle běh (CLI `--temperature=` nebo default) —
  *   vypsáno do hlavičky logu, ať jde A/B kolo dohledat zpětně (návrh oprav bod 2)
  */
 export function renderMd(vysledky, model, temperature) {
+  const pocetRucnich = vysledky.filter((v) => v.rucni).length;
   const radky = [
     '# Akceptační brána češtiny — výstupy k lidskému hodnocení',
     '',
@@ -109,10 +155,15 @@ export function renderMd(vysledky, model, temperature) {
     '',
     'Kvalita humoru se NEposuzuje strojově (protocol-humor-tester / uživatel) —',
     'u každého testu je připomínka `musí`/`nesmí` z baterie, ať se hodnotí proti ní.',
+    'Vstup normálně staví `buildPromptInput()` ze strukturovaných `udalosti`+`ctx`',
+    '(shodně s produkcí); `[RUČNÍ VSTUP — VÝJIMKA]` znamená, že case ještě nese',
+    'ručně psaný `vstup` a neprošel stejnou cestou jako hra.',
+    ...(pocetRucnich > 0 ? [`Ručních vstupů v tomto běhu: ${pocetRucnich}/${vysledky.length}.`] : []),
     '',
   ];
-  for (const { test, text, chyba } of vysledky) {
+  for (const { test, text, chyba, rucni } of vysledky) {
     radky.push(`## ${test.id}`);
+    if (rucni) radky.push('', '**[RUČNÍ VSTUP — VÝJIMKA]** — neprošel `buildPromptInput()`.');
     if (test.popis) radky.push('', test.popis.trim());
     if (test.ocekavani?.musi?.length) {
       radky.push('', '**Musí:**', ...test.ocekavani.musi.map((m) => `- ${m}`));
@@ -166,11 +217,19 @@ async function main() {
   const vysledky = [];
   for (const test of testy) {
     process.stdout.write(`… ${test.id}\n`);
+    let vstup;
+    let rucni;
     try {
-      const { text } = await provider.generate({ system: systemPrompt, prompt: test.vstup });
-      vysledky.push({ test, text, chyba: null });
+      ({ vstup, rucni } = vstupProTest(test));
     } catch (chyba) {
-      vysledky.push({ test, text: null, chyba: String(chyba?.message ?? chyba) });
+      vysledky.push({ test, text: null, chyba: String(chyba?.message ?? chyba), rucni: false });
+      continue;
+    }
+    try {
+      const { text } = await provider.generate({ system: systemPrompt, prompt: vstup });
+      vysledky.push({ test, text, chyba: null, rucni });
+    } catch (chyba) {
+      vysledky.push({ test, text: null, chyba: String(chyba?.message ?? chyba), rucni });
     }
   }
 

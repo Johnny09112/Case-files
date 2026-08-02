@@ -2,8 +2,10 @@
 # Rostoucí sada testovacích vstupů pro prompt v prompty/protokol.md.
 # Každý vstup, který dřív odhalil problém, sem patří — ať se regrese chytí příště.
 #
-# Jak se používá: na `vstup` se aplikuje aktuální systémový prompt z protokol.md
-# (produkční model Claude Haiku 4.5 dle D55, klidně víc výstupů na vstup) a výstup
+# Jak se používá: `sim/brana-cestiny.js` postaví vstup z `ctx`+`udalosti` PŘES
+# `buildPromptInput()` (prototyp/src/llm/prompt-input.js) — stejnou funkci, kterou
+# volá produkce — a aplikuje na něj aktuální systémový prompt z protokol.md
+# (produkční model Claude Haiku 4.5 dle D55, klidně víc výstupů na vstup). Výstup
 # se ověří proti `ocekavani`. Změna/změkčení/zamlčení výsledku mechaniky = KRITICKÉ,
 # ne stylistická drobnost.
 #
@@ -22,6 +24,35 @@
 # hlídá na nejhorším terénu. POZOR: kdyby se strop kdykoli vracel dolů, musí se
 # překlopit VŠECHNY čtyři starší casy se znakovým limitem, ne jen nový.
 #
+# ŘEZ D55 (2026-08-02, A/B report technika/brana-cestiny-ab-2026-08-02.md, §Nula):
+# VŠECH 13 v3 casů převedeno z ručně psaného `vstup` (string) na strukturované
+# `ctx`+`udalosti` — TŘETÍ doložený nález, že ruční vstup byl vlídnější než to, co
+# posílá `buildPromptInput()` v produkci (chybějící `důvod:` u slotů kromě
+# gangster_auto_fail, jiné/žádné znění `PRAVIDLO RUNU`, žádný text lootu). Převod
+# odhalil tři konkrétní místa, kde starý ruční vstup zobrazoval víc, než produkce
+# kdy pošle:
+#   1. `loot:` je v `buildPromptInput()` VŽDY „—" (engine nikde neloguje id
+#      líznuté věci navíc — viz komentář ve funkci). Case
+#      `hladky-pruchod-loot-brokovnice-v-lokaci` dřív žádal „zmínit loot (líznutou
+#      věc)"; to je s aktuálním enginem TRVALE nesplnitelné, přepsáno na DIAGNOSTIKU
+#      (stejná třída jako mrtvá pole ZÁCHRANA/MAX DOSAŽITELNÉ, §7 A/B reportu).
+#   2. `PRAVIDLO RUNU` se v produkci objeví, jen když aspoň jeden SLOT TOHOTO UZLU
+#      nese `duvod: stat_zrusen` (typicky hodnota zrušená pronásledovatelem) — ne
+#      jen proto, že je pravidlo v běhu obecně platné. Dva casy
+#      (`invence-selhany-slot-nesedici-vec`, `past-vymysleny-dusledek`) měly ručně
+#      napsané „PRAVIDLO RUNU: hodnota se počítá jako 0…", ačkoli žádný ze čtyř
+#      slotů stat „hodnota" vůbec nepoužívá — v produkci by uzel dostal „—". Řádek
+#      odstraněn; jméno „agent Malone" zůstává v textu SITUACE jako scénická reálie.
+#   3. Složení (`character_folded`) má v `buildPromptInput()` pevný tvar
+#      „podezřelý X leží v autě (3. postih)" — bez prostoru pro doplňkovou fikci
+#      typu „lehké zápisy smazány, těžký otřes mozku drží" (case
+#      `zachrana-vytazena-vec-k-nicemu` ji dřív měl ručně dopsanou). Zkráceno na
+#      produkční tvar.
+# Sólo klauzule i skladba slotů/následků zůstaly beze změny — mění se jen TVAR
+# vstupu, ne co case testuje. Obsahové nálezy z A/B reportu (kredity bez opory
+# v rule 7; rozpor `popis`×`vstup` u `solo-jedna-osoba-ctyri-sloty`) tenhle řez
+# VĚDOMĚ neřeší — patří samostatnému obsahovému kolu (protocol-humor-tester).
+#
 # POZOR na variantu mandátu: v0.4 je **plné B** — invence u KAŽDÉHO ze čtyř slotů,
 # s nerovným rozpočtem (sedící věc pár slov, nesedící celý záměr). Zamítnutá
 # alternativa B-lite (invence JEN u selhaných/nesedících) by měla opačná
@@ -32,12 +63,26 @@
 # Schéma:
 #   id:        kebab-case, unikátní
 #   popis:     co case testuje a proč je rizikový
-#   vstup:     PŘESNĚ ve formátu vstupu z protokol.md. Fixní snapshot —
-#              NEodkazuje živě na obsah/*.yaml (znění se může drobně lišit).
+#   zdroj:     odkud pochází vstupní data (snapshot znění)
+#   ctx:       { jmena, veci, situace, postihy, kredityPo } — stejný tvar, jaký
+#              staví `llmCtxZObsahu()` v produkci. `jmena` je mapa hrac_id→celé
+#              jméno; POŘADÍ klíčů určuje placeholdery A–D (Object.keys pořadí).
+#              `veci`/`situace`/`postihy` jsou mapy id→(název | {nazev, text}).
+#              `kredityPo` je nouzový zdroj řádku „kredity: …; konto n", když
+#              uzel sám nenese `credit_flow` (žádná změna kreditů).
+#   udalosti:  pole událostí JEDNOHO uzlu přesně ve tvaru, jaký loguje engine
+#              (architektura.md §2.2 v3, `src/engine/events.js` EVENT.*) —
+#              situation_revealed, slot_resolved (4×), band_resolved a volitelně
+#              penalty_added / character_folded / credit_flow / zar_move / gamble.
+#              `sim/brana-cestiny.js` je prožene `buildPromptInput()` — TOUTÉŽ
+#              funkcí jako produkce — a výsledný text jde do modelu.
+#   vstup:     VÝJIMKA — ruční text přesně ve formátu z protokol.md, jen pro
+#              casy, které se ještě nepřevedly na `ctx`+`udalosti`. Log ho
+#              vyznačí `[RUČNÍ VSTUP — VÝJIMKA]` (viz `sim/brana-cestiny.js`).
+#              V TÉTO baterii žádný v3 case ruční `vstup` už nepoužívá.
 #   ocekavani:
 #     musi:    seznam vlastností, které protokol MUSÍ splnit
 #     nesmi:   seznam vlastností, které protokol NESMÍ obsahovat
-#   zdroj:     odkud pochází vstupní data (snapshot znění)
 
 testy:
   # ---------- v3: jádro (rule 2 / rule 3 / rule 4) ----------
@@ -51,28 +96,34 @@ testy:
       nástroj 1). Pásmo 2/4 S NÁSLEDKY → 1 lehký postih, žádná ztráta beden.
       Bez gapu (MAX 2/4) — lépe to s těmito věcmi nešlo.
     zdroj: "obsah/situace.yaml farmar-brod + veci.yaml (2026-07-23)"
-    vstup: |
-      SITUACE: Farmář v brodě (npc) — Kola zapadla doprostřed brodu a na břehu čeká farmář s vidlemi.
-      PRAVIDLO RUNU: —
-      ZÁCHRANA: —
-      ROZDĚLENÍ:
-        Zaplatit za vytažení [viditelná]: podezřelý A — „Balík bankovek"
-        Nezvednout hlas [viditelná]: podezřelý B — „Otrlený výraz"
-        Zapřáhnout a táhnout [viditelná]: podezřelý C — „Zlaté hodinky"
-        Kdyby začal vyvádět [skrytá]: podezřelý D — „Banánový kanón"
-      VÝSLEDEK MECHANIKY: pásmo S NÁSLEDKY 2/4
-        MAX DOSAŽITELNÉ: 2/4
-        Zaplatit za vytažení: zásah (práh 3; „Balík bankovek" mělo hodnota 5)
-        Nezvednout hlas: zásah (práh 2; „Otrlený výraz" mělo obrana 4)
-        Zapřáhnout a táhnout: selhání (práh 3; „Zlaté hodinky" mělo nástroj 1)
-        Kdyby začal vyvádět: selhání (práh 3; „Banánový kanón" mělo útok 2)
-      NÁSLEDKY:
-        postihy: podezřelý D — „Naražené rameno" (lehký, do kapes sahá pomaleji)
-        složení: —
-        kredity: 0; konto 8
-        Žár: 0 — beze změny; šerif beze změny
-        bedny: 0; náklad 6
-        loot: —
+    udalosti:
+      - type: situation_revealed
+        nodeIndex: 0
+        situace_id: farmar-brod
+        typ: npc
+        sloty:
+          - {slot_index: 0, role: "Zaplatit za vytažení"}
+          - {slot_index: 1, role: "Nezvednout hlas"}
+          - {slot_index: 2, role: "Zapřáhnout a táhnout"}
+          - {slot_index: 3, role: "Kdyby začal vyvádět"}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 0, karta_id: balik-bankovek, hrac_id: p1, stat: hodnota, stat_hodnota: 5, prah: 3, typ_prahu: jednostat, viditelnost: viditelna, zasah: true, duvod: proslo}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 1, karta_id: otrleny-vyraz, hrac_id: p2, stat: obrana, stat_hodnota: 4, prah: 2, typ_prahu: jednostat, viditelnost: viditelna, zasah: true, duvod: proslo}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 2, karta_id: zlate-hodinky, hrac_id: p3, stat: nastroj, stat_hodnota: 1, prah: 3, typ_prahu: jednostat, viditelnost: viditelna, zasah: false, duvod: nizky_stat}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 3, karta_id: bananovy-kanon, hrac_id: p4, stat: utok, stat_hodnota: 2, prah: 3, typ_prahu: jednostat, viditelnost: skryta, zasah: false, duvod: nizky_stat}
+      - {type: band_resolved, nodeIndex: 0, pasmo: "2/4_S_NASLEDKY", zasahy: 2, max_achievable_zasahy: 2, naklad_ztrata: 0, zbyva_beden: 6}
+      - {type: penalty_added, nodeIndex: 0, hrac_id: p4, postih_id: narazene-rameno, tier: lehky}
+    ctx:
+      jmena: {p1: "Vincenc Bartoš", p2: "Frank Kowalski", p3: "Eddie Klein", p4: "Sam Rossi"}
+      veci:
+        balik-bankovek: "Balík bankovek"
+        otrleny-vyraz: "Otrlený výraz"
+        zlate-hodinky: "Zlaté hodinky"
+        bananovy-kanon: "Banánový kanón"
+      situace:
+        farmar-brod: {nazev: "Farmář v brodě", text: "Kola zapadla doprostřed brodu a na břehu čeká farmář s vidlemi."}
+      postihy:
+        narazene-rameno: {nazev: "Naražené rameno", text: "Do kapes sahá pomaleji."}
+      kredityPo: 8
     ocekavani:
       musi:
         - "zapsat, že slot „Zapřáhnout“ i slot „Kdyby vyváděl“ (banán) SELHALY"
@@ -95,28 +146,36 @@ testy:
       pohyb Žáru (i z hlučnosti GANGSTER). MAX 2/4 = velký gap: brokovnice patřila
       do SKRYTÉ role, kde by prošla.
     zdroj: "obsah/situace.yaml rival-prepad + veci.yaml + stitky.yaml GANGSTER (2026-07-23)"
-    vstup: |
-      SITUACE: Přepadení rivalů (npc) — Napříč silnicí stály vozy rivalů a chlapi si plivali do dlaní.
-      PRAVIDLO RUNU: —
-      ZÁCHRANA: —
-      ROZDĚLENÍ:
-        Postavit se jim [viditelná]: podezřelý A — „Dědečkova brokovnice"
-        Ustát nápor [viditelná]: podezřelý B — „Zpěv opilce"
-        Vyklouznout stranou [viditelná]: podezřelý C — „Páčidlo"
-        Tasit včas a první [skrytá]: podezřelý D — „Banánový kanón"
-      VÝSLEDEK MECHANIKY: pásmo PRŮŠVIH 0/4
-        MAX DOSAŽITELNÉ: 2/4
-        Postavit se jim: selhání (práh 3; „Dědečkova brokovnice" mělo útok 5; důvod: zbraň na očích u NPC)
-        Ustát nápor: selhání (práh 3; „Zpěv opilce" mělo obrana 2)
-        Vyklouznout stranou: selhání (práh 3; „Páčidlo" mělo improvizace 1)
-        Tasit včas a první: selhání (práh 3; „Banánový kanón" mělo útok 2)
-      NÁSLEDKY:
-        postihy: podezřelý A — „Zlomené žebro" (těžký, sahá po míň věcech, drží do vyléčení)
-        složení: —
-        kredity: 0; konto 8
-        Žár: +2 — PRŮŠVIH a tasená brokovnice (GANGSTER, hlučné); šerif postoupil o dvě pole blíž
-        bedny: ztraceno 1 (PRŮŠVIH); náklad 5
-        loot: —
+    udalosti:
+      - type: situation_revealed
+        nodeIndex: 0
+        situace_id: rival-prepad
+        typ: npc
+        sloty:
+          - {slot_index: 0, role: "Postavit se jim"}
+          - {slot_index: 1, role: "Ustát nápor"}
+          - {slot_index: 2, role: "Vyklouznout stranou"}
+          - {slot_index: 3, role: "Tasit včas a první"}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 0, karta_id: dedeckova-brokovnice, hrac_id: p1, stat: utok, stat_hodnota: 5, prah: 3, typ_prahu: jednostat, viditelnost: viditelna, zasah: false, duvod: gangster_auto_fail}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 1, karta_id: zpev-opilce, hrac_id: p2, stat: obrana, stat_hodnota: 2, prah: 3, typ_prahu: jednostat, viditelnost: viditelna, zasah: false, duvod: nizky_stat}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 2, karta_id: pacidlo, hrac_id: p3, stat: improvizace, stat_hodnota: 1, prah: 3, typ_prahu: jednostat, viditelnost: viditelna, zasah: false, duvod: nizky_stat}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 3, karta_id: bananovy-kanon, hrac_id: p4, stat: utok, stat_hodnota: 2, prah: 3, typ_prahu: jednostat, viditelnost: skryta, zasah: false, duvod: nizky_stat}
+      - {type: band_resolved, nodeIndex: 0, pasmo: "≤1/4_PRUSVIH", zasahy: 0, max_achievable_zasahy: 2, naklad_ztrata: 1, zbyva_beden: 5}
+      - {type: penalty_added, nodeIndex: 0, hrac_id: p1, postih_id: zlomene-zebro, tier: tezky}
+      - {type: zar_move, nodeIndex: 0, delta: 1, duvod: prusvih, prah_prekrocen: null}
+      - {type: zar_move, nodeIndex: 0, delta: 1, duvod: hlucne_GANGSTER, prah_prekrocen: null}
+    ctx:
+      jmena: {p1: "Vincenc Bartoš", p2: "Frank Kowalski", p3: "Eddie Klein", p4: "Sam Rossi"}
+      veci:
+        dedeckova-brokovnice: "Dědečkova brokovnice"
+        zpev-opilce: "Zpěv opilce"
+        pacidlo: "Páčidlo"
+        bananovy-kanon: "Banánový kanón"
+      situace:
+        rival-prepad: {nazev: "Přepadení rivalů", text: "Napříč silnicí stály vozy rivalů a chlapi si plivali do dlaní."}
+      postihy:
+        zlomene-zebro: {nazev: "Zlomené žebro", text: "Sahá po míň věcech, drží do vyléčení."}
+      kredityPo: 8
     ocekavani:
       musi:
         - "zapsat, že role „Postavit se jim“ (brokovnice) SELHALA — smí uvést, že zbraň byla na očích"
@@ -133,43 +192,51 @@ testy:
       Baseline 4/4 HLADCE+LOOT bez postihů. Zároveň kontrast k brokovnici-auto-fail:
       TÁŽ Dědečkova brokovnice ve skryté roli v LOKACI projde (eso_v_lokaci —
       nikdo ji nevidí). Riziko: model dodá dramatičnost/následky, které nepadly,
-      nebo naopak zapíše brokovnici jako selhání ze setrvačnosti. Musí zmínit loot
-      a +2 kredity, nic navíc. Od v0.4 také **test ROZPOČTU mandátu na nejhorším
-      terénu**: všechny čtyři sloty prošly a tři ze čtyř věcí k roli sedí, takže
-      plné B tu má nejmíň materiálu a nejvíc chuti vyrobit vatu. Rule 5 invenci
-      žádá i tady, ale „pár slov" — hlídá se znakový strop, neopakování figury
-      a to, že invence neopisuje text věci.
+      nebo naopak zapíše brokovnici jako selhání ze setrvačnosti. Musí zmínit
+      přírůstek kreditů (+3); loot samotný NEJDE testovat jako musí-položka (viz
+      DIAGNOSTIKA níže — `buildPromptInput()` posílá `loot: —` vždy, engine
+      nikdy neloguje id líznuté věci). Od v0.4 také **test ROZPOČTU mandátu na
+      nejhorším terénu**: všechny čtyři sloty prošly a tři ze čtyř věcí k roli
+      sedí, takže plné B tu má nejmíň materiálu a nejvíc chuti vyrobit vatu.
+      Rule 5 invenci žádá i tady, ale „pár slov" — hlídá se znakový strop,
+      neopakování figury a to, že invence neopisuje text věci.
     zdroj: "obsah/situace.yaml farmar-stodola + veci.yaml + stitky.yaml (2026-07-23)"
-    vstup: |
-      SITUACE: Statkářova stodola (lokace) — Ve stodole to páchne senem a psi u vrat nespí; statkář obchází s lucernou.
-      PRAVIDLO RUNU: —
-      ZÁCHRANA: —
-      ROZDĚLENÍ:
-        Utišit psy [viditelná]: podezřelý A — „Falešný odznak"
-        Zaklínit vrata [viditelná]: podezřelý B — „Starý kompas"
-        Schovat bednu do sena [viditelná]: podezřelý C — „Svářečka"
-        Nedýchat, když jde kolem [skrytá]: podezřelý D — „Dědečkova brokovnice"
-      VÝSLEDEK MECHANIKY: pásmo HLADCE+LOOT 4/4
-        MAX DOSAŽITELNÉ: 4/4
-        Utišit psy: zásah (práh 3; „Falešný odznak" mělo improvizace 5)
-        Zaklínit vrata: zásah (kombi práh 2; „Starý kompas" mělo nástroj 3 i improvizace 3)
-        Schovat bednu do sena: zásah (práh 3; „Svářečka" mělo nástroj 5)
-        Nedýchat, když jde kolem: zásah (práh 2; „Dědečkova brokovnice" mělo obrana 2; zbraň v lokaci nikoho neplaší)
-      NÁSLEDKY:
-        postihy: žádné
-        složení: —
-        kredity: +3 (HLADCE+LOOT); konto 11
-        Žár: 0 — beze změny; šerif beze změny
-        bedny: 0; náklad 6
-        loot: „Petrolejová lampa"
+    udalosti:
+      - type: situation_revealed
+        nodeIndex: 0
+        situace_id: statkarova-stodola
+        typ: lokace
+        sloty:
+          - {slot_index: 0, role: "Utišit psy"}
+          - {slot_index: 1, role: "Zaklínit vrata"}
+          - {slot_index: 2, role: "Schovat bednu do sena"}
+          - {slot_index: 3, role: "Nedýchat, když jde kolem"}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 0, karta_id: falesny-odznak, hrac_id: p1, stat: improvizace, stat_hodnota: 5, prah: 3, typ_prahu: jednostat, viditelnost: viditelna, zasah: true, duvod: proslo}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 1, karta_id: stary-kompas, hrac_id: p2, stat: [nastroj, improvizace], stat_hodnota: [3, 3], prah: 2, typ_prahu: kombi_oba, viditelnost: viditelna, zasah: true, duvod: proslo}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 2, karta_id: svarecka, hrac_id: p3, stat: nastroj, stat_hodnota: 5, prah: 3, typ_prahu: jednostat, viditelnost: viditelna, zasah: true, duvod: proslo}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 3, karta_id: dedeckova-brokovnice, hrac_id: p4, stat: obrana, stat_hodnota: 2, prah: 2, typ_prahu: jednostat, viditelnost: skryta, zasah: true, duvod: proslo}
+      - {type: band_resolved, nodeIndex: 0, pasmo: "4/4_HLADCE_LOOT", zasahy: 4, max_achievable_zasahy: 4, naklad_ztrata: 0, zbyva_beden: 6}
+      - {type: credit_flow, nodeIndex: 0, delta: 3, duvod: hladce_loot, zustatek: 11}
+    ctx:
+      jmena: {p1: "Vincenc Bartoš", p2: "Frank Kowalski", p3: "Eddie Klein", p4: "Sam Rossi"}
+      veci:
+        falesny-odznak: "Falešný odznak"
+        stary-kompas: "Starý kompas"
+        svarecka: "Svářečka"
+        dedeckova-brokovnice: "Dědečkova brokovnice"
+      situace:
+        statkarova-stodola: {nazev: "Statkářova stodola", text: "Ve stodole to páchne senem a psi u vrat nespí; statkář obchází s lucernou."}
+      postihy: {}
     ocekavani:
       musi:
         - "zapsat hladký průchod všech čtyř rolí bez potíží"
-        - "zmínit loot (líznutá věc navíc) a přírůstek kreditů (+3)"
+        - "zmínit přírůstek kreditů (+3)"
         - "dodržet znakový strop ≤900 zn. a 3–5 vět i při čtyřech licencovaných invencích"
+        - "DIAGNOSTIKA (neblokující, D55): vstup nese `loot: —` (buildPromptInput() nikdy nejmenuje líznutou věc — engine ji neloguje, viz A/B report §5 bod 4 a §7). Nezapočítávat jako selhání, když protokol loot vůbec nezmíní — to je SPRÁVNĚ; tahle položka jen hlídá, že si model loot nevymyslí (viz nesmí níže)."
       nesmi:
         - "tvrdit jakýkoli postih, ztrátu bedny, zranění ani pohyb Žáru/šerifa (nic z toho nepadlo)"
         - "zapsat brokovnici jako selhání — ve skryté roli v lokaci prošla"
+        - "vymyslet KONKRÉTNÍ líznutou věc navíc — vstup žádnou nejmenuje (KRITICKÉ, D55 nález)"
         - "opsat u sedících věcí text karty místo záměru (svářečka „spojí, co se rozpadlo“, odznak „zamáváš jím zdálky“) — invence musí přidat ZÁMĚR, ne parafrázi"
         - "použít u dvou a více slotů tutéž větnou vazbu nebo figuru (rule 6; vzorec B5′)"
         - "vymyslet vlastní jméno podezřelého místo placeholderu"
@@ -182,28 +249,35 @@ testy:
       nebo naopak nechá složeného aktivně jednat nad rámec „leží v autě". Musí
       zapsat, že C je vyřazen a leží v autě; nesmí mu přisoudit další akci ve slotech.
     zdroj: "obsah/situace.yaml mesto-ulicka + postihy.yaml + prototyp-mvp.md §složení (2026-07-23)"
-    vstup: |
-      SITUACE: Slepá ulička (npc) — Ulička končila zdí a dva strážníci ji zatarasili.
-      PRAVIDLO RUNU: —
-      ZÁCHRANA: —
-      ROZDĚLENÍ:
-        Držet nervy [viditelná]: podezřelý A — „Otrlený výraz"
-        Zamluvit to [viditelná]: podezřelý B — „Falešný odznak"
-        Zastrašit gestem [viditelná]: podezřelý C — „Zpěv opilce"
-        Najít skulinu [skrytá]: podezřelý D — „Slzy na povel"
-      VÝSLEDEK MECHANIKY: pásmo S NÁSLEDKY 2/4
-        MAX DOSAŽITELNÉ: 2/4
-        Držet nervy: zásah (práh 3; „Otrlený výraz" mělo obrana 4)
-        Zamluvit to: zásah (práh 3; „Falešný odznak" mělo improvizace 5)
-        Zastrašit gestem: selhání (práh 3; „Zpěv opilce" mělo útok 0)
-        Najít skulinu: selhání (práh 2; „Slzy na povel" mělo nástroj 0)
-      NÁSLEDKY:
-        postihy: podezřelý C — „Mlha v hlavě" (lehký, těžko pozná, kdo ho sleduje)
-        složení: podezřelý C leží v autě (3. postih)
-        kredity: 0; konto 8
-        Žár: 0 — beze změny; šerif beze změny
-        bedny: 0; náklad 6
-        loot: —
+    udalosti:
+      - type: situation_revealed
+        nodeIndex: 0
+        situace_id: slepa-ulicka
+        typ: npc
+        sloty:
+          - {slot_index: 0, role: "Držet nervy"}
+          - {slot_index: 1, role: "Zamluvit to"}
+          - {slot_index: 2, role: "Zastrašit gestem"}
+          - {slot_index: 3, role: "Najít skulinu"}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 0, karta_id: otrleny-vyraz, hrac_id: p1, stat: obrana, stat_hodnota: 4, prah: 3, typ_prahu: jednostat, viditelnost: viditelna, zasah: true, duvod: proslo}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 1, karta_id: falesny-odznak, hrac_id: p2, stat: improvizace, stat_hodnota: 5, prah: 3, typ_prahu: jednostat, viditelnost: viditelna, zasah: true, duvod: proslo}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 2, karta_id: zpev-opilce, hrac_id: p3, stat: utok, stat_hodnota: 0, prah: 3, typ_prahu: jednostat, viditelnost: viditelna, zasah: false, duvod: nizky_stat}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 3, karta_id: slzy-na-povel, hrac_id: p4, stat: nastroj, stat_hodnota: 0, prah: 2, typ_prahu: jednostat, viditelnost: skryta, zasah: false, duvod: nizky_stat}
+      - {type: band_resolved, nodeIndex: 0, pasmo: "2/4_S_NASLEDKY", zasahy: 2, max_achievable_zasahy: 2, naklad_ztrata: 0, zbyva_beden: 6}
+      - {type: penalty_added, nodeIndex: 0, hrac_id: p3, postih_id: mlha-v-hlave, tier: lehky}
+      - {type: character_folded, nodeIndex: 0, hrac_id: p3}
+    ctx:
+      jmena: {p1: "Vincenc Bartoš", p2: "Frank Kowalski", p3: "Eddie Klein", p4: "Sam Rossi"}
+      veci:
+        otrleny-vyraz: "Otrlený výraz"
+        falesny-odznak: "Falešný odznak"
+        zpev-opilce: "Zpěv opilce"
+        slzy-na-povel: "Slzy na povel"
+      situace:
+        slepa-ulicka: {nazev: "Slepá ulička", text: "Ulička končila zdí a dva strážníci ji zatarasili."}
+      postihy:
+        mlha-v-hlave: {nazev: "Mlha v hlavě", text: "Těžko pozná, kdo ho sleduje."}
+      kredityPo: 8
     ocekavani:
       musi:
         - "zapsat, že podezřelý C je vyřazen a leží v autě (složen)"
@@ -221,28 +295,32 @@ testy:
       (nástroj, práh 3) — kolárek má nástroj 0 → selhání. Model má sklon narativně
       povýšit fikci věci na úspěch. Kontrola: protokol drží selhání dle mechaniky.
     zdroj: "obsah/situace.yaml urednik-razitko + veci.yaml knezsky-kolarek (2026-07-23)"
-    vstup: |
-      SITUACE: Chybějící razítko (npc) — Za přepážkou přebíral úředník listiny a mračil se na prázdné políčko; sledují ho shora.
-      PRAVIDLO RUNU: —
-      ZÁCHRANA: —
-      ROZDĚLENÍ:
-        Věrohodný list [viditelná]: podezřelý A — „Falešný odznak"
-        Dorazit razítko [viditelná]: podezřelý B — „Kněžský kolárek"
-        Něco navíc [viditelná]: podezřelý C — „Balík bankovek"
-        Ani nemrknout [skrytá]: podezřelý D — „Otrlený výraz"
-      VÝSLEDEK MECHANIKY: pásmo HLADCE 3/4
-        MAX DOSAŽITELNÉ: 3/4
-        Věrohodný list: zásah (práh 3; „Falešný odznak" mělo improvizace 5)
-        Dorazit razítko: selhání (práh 3; „Kněžský kolárek" mělo nástroj 0)
-        Něco navíc: zásah (práh 2; „Balík bankovek" mělo hodnota 5)
-        Ani nemrknout: zásah (práh 3; „Otrlený výraz" mělo obrana 4)
-      NÁSLEDKY:
-        postihy: žádné
-        složení: —
-        kredity: +2 (HLADCE); konto 10
-        Žár: 0 — beze změny; šerif beze změny
-        bedny: 0; náklad 6
-        loot: —
+    udalosti:
+      - type: situation_revealed
+        nodeIndex: 0
+        situace_id: chybejici-razitko
+        typ: npc
+        sloty:
+          - {slot_index: 0, role: "Věrohodný list"}
+          - {slot_index: 1, role: "Dorazit razítko"}
+          - {slot_index: 2, role: "Něco navíc"}
+          - {slot_index: 3, role: "Ani nemrknout"}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 0, karta_id: falesny-odznak, hrac_id: p1, stat: improvizace, stat_hodnota: 5, prah: 3, typ_prahu: jednostat, viditelnost: viditelna, zasah: true, duvod: proslo}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 1, karta_id: knezsky-kolarek, hrac_id: p2, stat: nastroj, stat_hodnota: 0, prah: 3, typ_prahu: jednostat, viditelnost: viditelna, zasah: false, duvod: nizky_stat}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 2, karta_id: balik-bankovek, hrac_id: p3, stat: hodnota, stat_hodnota: 5, prah: 2, typ_prahu: jednostat, viditelnost: viditelna, zasah: true, duvod: proslo}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 3, karta_id: otrleny-vyraz, hrac_id: p4, stat: obrana, stat_hodnota: 4, prah: 3, typ_prahu: jednostat, viditelnost: skryta, zasah: true, duvod: proslo}
+      - {type: band_resolved, nodeIndex: 0, pasmo: "3/4_HLADCE", zasahy: 3, max_achievable_zasahy: 3, naklad_ztrata: 0, zbyva_beden: 6}
+      - {type: credit_flow, nodeIndex: 0, delta: 2, duvod: hladce, zustatek: 10}
+    ctx:
+      jmena: {p1: "Vincenc Bartoš", p2: "Frank Kowalski", p3: "Eddie Klein", p4: "Sam Rossi"}
+      veci:
+        falesny-odznak: "Falešný odznak"
+        knezsky-kolarek: "Kněžský kolárek"
+        balik-bankovek: "Balík bankovek"
+        otrleny-vyraz: "Otrlený výraz"
+      situace:
+        chybejici-razitko: {nazev: "Chybějící razítko", text: "Za přepážkou přebíral úředník listiny a mračil se na prázdné políčko; sledují ho shora."}
+      postihy: {}
     ocekavani:
       musi:
         - "zapsat, že role „Dorazit razítko“ (kněžský kolárek) SELHALA — přes fikci o nedotknutelném faráři"
@@ -263,29 +341,42 @@ testy:
       to, co režim bez mandátu produkuje: doslovné „zapřel totožnost s lampou
       v podpaží" bez obhajoby pokusu. Test: dostanou selhané sloty ZPŮSOB a ZÁMĚR?
       A zůstal řeznický hák (sedící, prošlý, nedošlo na něj) u konstatování?
-    zdroj: "technika/woz-test-2026-07-30.md uzel 7 + obsah/veci.yaml (2026-07-30)"
-    vstup: |
-      SITUACE: Most u Poughkeepsie (lecka) — Uprostřed mostu stál agent Malone s fotografií v ruce a nikam nespěchal.
-      PRAVIDLO RUNU: hodnota se počítá jako 0 (agent Malone nebere úplatky)
-      ZÁCHRANA: líznuto „Petrolejová lampa" místo „Zednická lžíce"
-      ROZDĚLENÍ:
-        Zapřít totožnost [viditelná]: podezřelý A — „Petrolejová lampa"
-        Nedat na sobě znát [viditelná]: podezřelý B — „Mosazný boxer"
-        Objet ho stranou [viditelná]: podezřelý C — „Rezervní pneumatika"
-        Kdyby sáhl po zbrani [skrytá]: podezřelý D — „Řeznický hák"
-      VÝSLEDEK MECHANIKY: pásmo PRŮŠVIH 1/4
-        MAX DOSAŽITELNÉ: 1/4
-        Zapřít totožnost: selhání (práh 5; „Petrolejová lampa" mělo improvizace 2)
-        Nedat na sobě znát: selhání (práh 5; „Mosazný boxer" mělo obrana 3)
-        Objet ho stranou: selhání (práh 5; „Rezervní pneumatika" mělo nástroj 4)
-        Kdyby sáhl po zbrani: zásah (práh 2; „Řeznický hák" mělo útok 4)
-      NÁSLEDKY:
-        postihy: podezřelý A — „Otřes mozku" (těžký, věci drží v ruce, ale co který kus umí, mu splývá; drží do vyléčení)
-        složení: —
-        kredity: 0; konto 7
-        Žár: +3 — PRŮŠVIH a dvakrát hlučné hraní; šerif postoupil na poslední značku
-        bedny: ztraceno 1 (PRŮŠVIH); náklad 5
-        loot: —
+      PRAVIDLO RUNU (D55): produkce ho ukáže, jen když ho nese SLOT tohoto uzlu
+      (`duvod: stat_zrusen`) — žádný ze čtyř slotů tu stat „hodnota" nepoužívá,
+      takže vstup teď nese „PRAVIDLO RUNU: —", stejně jako by to poslala hra.
+      „Agent Malone" zůstává jako scénická reálie v textu SITUACE.
+    zdroj: "technika/woz-test-2026-07-30.md uzel 7 + obsah/veci.yaml (2026-07-30); PRAVIDLO RUNU upraveno D55"
+    udalosti:
+      - type: situation_revealed
+        nodeIndex: 0
+        situace_id: most-u-poughkeepsie
+        typ: lecka
+        sloty:
+          - {slot_index: 0, role: "Zapřít totožnost"}
+          - {slot_index: 1, role: "Nedat na sobě znát"}
+          - {slot_index: 2, role: "Objet ho stranou"}
+          - {slot_index: 3, role: "Kdyby sáhl po zbrani"}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 0, karta_id: petrolejova-lampa, hrac_id: p1, stat: improvizace, stat_hodnota: 2, prah: 5, typ_prahu: jednostat, viditelnost: viditelna, zasah: false, duvod: nizky_stat}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 1, karta_id: mosazny-boxer, hrac_id: p2, stat: obrana, stat_hodnota: 3, prah: 5, typ_prahu: jednostat, viditelnost: viditelna, zasah: false, duvod: nizky_stat}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 2, karta_id: rezervni-pneumatika, hrac_id: p3, stat: nastroj, stat_hodnota: 4, prah: 5, typ_prahu: jednostat, viditelnost: viditelna, zasah: false, duvod: nizky_stat}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 3, karta_id: reznicky-hak, hrac_id: p4, stat: utok, stat_hodnota: 4, prah: 2, typ_prahu: jednostat, viditelnost: skryta, zasah: true, duvod: proslo}
+      - {type: band_resolved, nodeIndex: 0, pasmo: "≤1/4_PRUSVIH", zasahy: 1, max_achievable_zasahy: 1, naklad_ztrata: 1, zbyva_beden: 5}
+      - {type: penalty_added, nodeIndex: 0, hrac_id: p1, postih_id: otres-mozku, tier: tezky}
+      - {type: zar_move, nodeIndex: 0, delta: 1, duvod: prusvih, prah_prekrocen: null}
+      - {type: zar_move, nodeIndex: 0, delta: 1, duvod: hlucne_utok, prah_prekrocen: null}
+      - {type: zar_move, nodeIndex: 0, delta: 1, duvod: hlucne_utok, prah_prekrocen: null}
+    ctx:
+      jmena: {p1: "Vincenc Bartoš", p2: "Frank Kowalski", p3: "Eddie Klein", p4: "Sam Rossi"}
+      veci:
+        petrolejova-lampa: "Petrolejová lampa"
+        mosazny-boxer: "Mosazný boxer"
+        rezervni-pneumatika: "Rezervní pneumatika"
+        reznicky-hak: "Řeznický hák"
+      situace:
+        most-u-poughkeepsie: {nazev: "Most u Poughkeepsie", text: "Uprostřed mostu stál agent Malone s fotografií v ruce a nikam nespěchal."}
+      postihy:
+        otres-mozku: {nazev: "Otřes mozku", text: "Věci drží v ruce, ale co který kus umí, mu splývá; drží do vyléčení."}
+      kredityPo: 7
     ocekavani:
       musi:
         - "u KAŽDÉHO ze tří selhaných slotů uvést ZPŮSOB a ZÁMĚR použití (obhajobu pokusu), ne holé „s X neuspěl“"
@@ -297,7 +388,6 @@ testy:
         - "věnovat řeznickému háku stejný prostor jako selhaným slotům — rozpočet je nerovný (rule 5)"
         - "vymyslet PŘÍČINU selhání („nestačilo to, protože byl slabý“, „lampa byla moc slabá“) — prahy jsou skryté (rule 5)"
         - "obrátit kterýkoli slot na opačný výsledek (KRITICKÉ)"
-        - "napsat, že podezřelému došly peníze / měl málo peněz — hodnota je zrušena PRAVIDLEM RUNU"
         - "vymyslet vlastní jméno podezřelého místo placeholderu"
 
   - id: solo-jedna-osoba-ctyri-sloty
@@ -307,35 +397,47 @@ testy:
       v sólu je to jeden muž, který naráz drží brokovnici, nosí kolárek, nabízí
       termosku a lije benzín na čep — klaun. Test: pozná model, že jde o JEDNU
       osobu? Neopakuje „podezřelý A" čtyřikrát? Nedrží čtyři věci současně?
-      Zároveň: brokovnice ve viditelné roli u NPC = auto-fail (zbraň na očích).
-    zdroj: "technika/woz-test-2026-07-30.md uzel 1 + §3.4 (2026-07-30)"
-    vstup: |
-      SITUACE: Překladiště v Syracuse (npc) — Výpravčí obcházel rampu s knihou a chtěl nákladní list.
-      PRAVIDLO RUNU: hodnota se počítá jako 0 (agent Malone nebere úplatky)
-      ZÁCHRANA: —
-      ROZDĚLENÍ:
-        Zatlačit hrubě [viditelná]: podezřelý A — „Dědečkova brokovnice"
-        Odsunout závoru [viditelná]: podezřelý A — „Kanystr benzínu"
-        Podmáznout dlaň [viditelná]: podezřelý A — „Hovězí vývar"
-        Zmást papírem [skrytá]: podezřelý A — „Kněžský kolárek"
-      VÝSLEDEK MECHANIKY: pásmo S NÁSLEDKY 2/4
-        MAX DOSAŽITELNÉ: 3/4
-        Zatlačit hrubě: zásah (práh 5; „Dědečkova brokovnice" mělo útok 5; důvod: slotová výjimka — bouchačka tu výpravčímu zavře pusu)
-        Odsunout závoru: selhání (práh 5; „Kanystr benzínu" mělo nástroj 4)
-        Podmáznout dlaň: selhání (práh 3; „Hovězí vývar" mělo hodnota 1; důvod: hodnota zrušena PRAVIDLEM RUNU)
-        Zmást papírem: zásah (práh 1; „Kněžský kolárek" mělo improvizace 4)
-      NÁSLEDKY:
-        postihy: podezřelý A — „Naražené rameno" (lehký, do kapes sahá pomaleji)
-        složení: —
-        kredity: 0; konto 0
-        Žár: +2 — tasená zbraň a pásmo; šerif postoupil o dvě pole
-        bedny: 0; náklad 6
-        loot: —
+      POZOR (D55, nález A/B reportu §5 bod 3): tenhle case NENÍ o GANGSTER
+      auto-failu — brokovnice tu ve viditelné roli u NPC PROJDE (slotová výjimka,
+      mimo obvyklé pravidlo), ne selže. `duvod` slotu proto NENÍ
+      `gangster_auto_fail` a vstup u něj žádné „; důvod: …" nenese (produkce ho
+      taky nedává, viz `buildPromptInput()`) — model má jen holý zásah k obhajobě.
+    zdroj: "technika/woz-test-2026-07-30.md uzel 1 + §3.4 (2026-07-30); popis opraven D55 (byl v rozporu s vlastním vstupem)"
+    udalosti:
+      - type: situation_revealed
+        nodeIndex: 0
+        situace_id: prekladiste-syracuse
+        typ: npc
+        sloty:
+          - {slot_index: 0, role: "Zatlačit hrubě"}
+          - {slot_index: 1, role: "Odsunout závoru"}
+          - {slot_index: 2, role: "Podmáznout dlaň"}
+          - {slot_index: 3, role: "Zmást papírem"}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 0, karta_id: dedeckova-brokovnice, hrac_id: p1, stat: utok, stat_hodnota: 5, prah: 5, typ_prahu: jednostat, viditelnost: viditelna, zasah: true, duvod: slotova_vyjimka}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 1, karta_id: kanystr-benzinu, hrac_id: p1, stat: nastroj, stat_hodnota: 4, prah: 5, typ_prahu: jednostat, viditelnost: viditelna, zasah: false, duvod: nizky_stat}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 2, karta_id: hovezi-vyvar, hrac_id: p1, stat: hodnota, stat_hodnota: 1, prah: 3, typ_prahu: jednostat, viditelnost: viditelna, zasah: false, duvod: stat_zrusen, pronasledovatel_efekt: {typ: stat, cil: hodnota}}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 3, karta_id: knezsky-kolarek, hrac_id: p1, stat: improvizace, stat_hodnota: 4, prah: 1, typ_prahu: jednostat, viditelnost: skryta, zasah: true, duvod: proslo}
+      - {type: band_resolved, nodeIndex: 0, pasmo: "2/4_S_NASLEDKY", zasahy: 2, max_achievable_zasahy: 3, naklad_ztrata: 0, zbyva_beden: 6}
+      - {type: penalty_added, nodeIndex: 0, hrac_id: p1, postih_id: narazene-rameno, tier: lehky}
+      - {type: zar_move, nodeIndex: 0, delta: 1, duvod: hlucne_GANGSTER, prah_prekrocen: null}
+      - {type: zar_move, nodeIndex: 0, delta: 1, duvod: s_nasledky, prah_prekrocen: null}
+    ctx:
+      jmena: {p1: "Vincenc Bartoš"}
+      veci:
+        dedeckova-brokovnice: "Dědečkova brokovnice"
+        kanystr-benzinu: "Kanystr benzínu"
+        hovezi-vyvar: "Hovězí vývar"
+        knezsky-kolarek: "Kněžský kolárek"
+      situace:
+        prekladiste-syracuse: {nazev: "Překladiště v Syracuse", text: "Výpravčí obcházel rampu s knihou a chtěl nákladní list."}
+      postihy:
+        narazene-rameno: {nazev: "Naražené rameno", text: "Do kapes sahá pomaleji."}
+      kredityPo: 0
     ocekavani:
       musi:
         - "psát o JEDNÉ osobě, která zvládala čtyři úlohy — označení „podezřelý A“ nejvýš dvakrát, dál „jmenovaný“/„týž“"
         - "zapsat oba zásahy jako zásahy a obě selhání jako selhání"
-        - "zapsat postih, pohyb Žáru o dvě pole s důvodem (zbraň na očích); náklad zůstává 6"
+        - "zapsat postih, pohyb Žáru o dvě pole s důvodem; náklad zůstává 6"
       nesmi:
         - "vytvořit z podezřelého A víc osob (např. „jeden z podezřelých… druhý…“) (KRITICKÉ pro sólo)"
         - "popsat čtyři rekvizity držené současně v jedné scéně"
@@ -349,30 +451,40 @@ testy:
       vytáhl přesně to, co proti Maloneovi nemá cenu. To je hotová pointa uzlu,
       kterou prompt do v0.3 nedostával vůbec. Test: zmíní model záchranu (jednou
       vsuvkou, ne odstavcem)? A nezmění selhání úplatku na „měl málo peněz"?
-      Zároveň složení: třetí postih, podezřelý A leží v autě.
-    zdroj: "technika/woz-test-2026-07-30.md uzel 9 (2026-07-30)"
-    vstup: |
-      SITUACE: Mýtnice za Batavií (npc) — U mýtné boudy natáhl zástupce šerifa ruku po silničním poplatku.
-      PRAVIDLO RUNU: hodnota se počítá jako 0 (agent Malone nebere úplatky)
-      ZÁCHRANA: líznuto „Balík bankovek" místo „Gumový váček"
-      ROZDĚLENÍ:
-        Silniční poplatek [viditelná]: podezřelý A — „Balík bankovek"
-        Zamluvit to [viditelná]: podezřelý B — „Dědkův kabát"
-        Klidná tvář [viditelná]: podezřelý C — „Pytel brambor"
-        Kdyby přituhlo [skrytá]: podezřelý D — „Stříbrná placatka"
-      VÝSLEDEK MECHANIKY: pásmo PRŮŠVIH 1/4
-        MAX DOSAŽITELNÉ: 1/4
-        Silniční poplatek: selhání (práh 3; „Balík bankovek" mělo hodnota 5; důvod: hodnota zrušena PRAVIDLEM RUNU)
-        Zamluvit to: selhání (práh 5; „Dědkův kabát" mělo improvizace 2)
-        Klidná tvář: zásah (práh 0; „Pytel brambor" mělo obrana 4)
-        Kdyby přituhlo: selhání (práh 2; „Stříbrná placatka" mělo útok 0)
-      NÁSLEDKY:
-        postihy: žádné
-        složení: podezřelý A leží v autě (3. postih; lehké zápisy smazány, těžký otřes mozku drží)
-        kredity: 0; konto 7
-        Žár: +2 — PRŮŠVIH; šerif postoupil o dvě pole
-        bedny: ztraceno 1 (PRŮŠVIH); náklad 4
-        loot: —
+      Zároveň složení: třetí postih, podezřelý A leží v autě (produkční tvar
+      „leží v autě (3. postih)" — bez doplňkové fikce, `buildPromptInput()` na
+      víc místo nemá, D55).
+    zdroj: "technika/woz-test-2026-07-30.md uzel 9 (2026-07-30); složení zkráceno na produkční tvar D55"
+    udalosti:
+      - type: situation_revealed
+        nodeIndex: 0
+        situace_id: mytnice-za-batavii
+        typ: npc
+        sloty:
+          - {slot_index: 0, role: "Silniční poplatek"}
+          - {slot_index: 1, role: "Zamluvit to"}
+          - {slot_index: 2, role: "Klidná tvář"}
+          - {slot_index: 3, role: "Kdyby přituhlo"}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 0, karta_id: balik-bankovek, hrac_id: p1, stat: hodnota, stat_hodnota: 5, prah: 3, typ_prahu: jednostat, viditelnost: viditelna, zasah: false, duvod: stat_zrusen, pronasledovatel_efekt: {typ: stat, cil: hodnota}}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 1, karta_id: dedkuv-kabat, hrac_id: p2, stat: improvizace, stat_hodnota: 2, prah: 5, typ_prahu: jednostat, viditelnost: viditelna, zasah: false, duvod: nizky_stat}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 2, karta_id: pytel-brambor, hrac_id: p3, stat: obrana, stat_hodnota: 4, prah: 0, typ_prahu: jednostat, viditelnost: viditelna, zasah: true, duvod: proslo}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 3, karta_id: stribrna-placatka, hrac_id: p4, stat: utok, stat_hodnota: 0, prah: 2, typ_prahu: jednostat, viditelnost: skryta, zasah: false, duvod: nizky_stat}
+      - {type: band_resolved, nodeIndex: 0, pasmo: "≤1/4_PRUSVIH", zasahy: 1, max_achievable_zasahy: 1, naklad_ztrata: 1, zbyva_beden: 4}
+      - {type: character_folded, nodeIndex: 0, hrac_id: p1}
+      - {type: zar_move, nodeIndex: 0, delta: 2, duvod: prusvih, prah_prekrocen: null}
+      - {type: gamble, nodeIndex: 0, tazena: balik-bankovek, nahrazena: gumovy-vacek}
+    ctx:
+      jmena: {p1: "Vincenc Bartoš", p2: "Frank Kowalski", p3: "Eddie Klein", p4: "Sam Rossi"}
+      veci:
+        balik-bankovek: "Balík bankovek"
+        dedkuv-kabat: "Dědkův kabát"
+        pytel-brambor: "Pytel brambor"
+        stribrna-placatka: "Stříbrná placatka"
+        gumovy-vacek: "Gumový váček"
+      situace:
+        mytnice-za-batavii: {nazev: "Mýtnice za Batavií", text: "U mýtné boudy natáhl zástupce šerifa ruku po silničním poplatku."}
+      postihy: {}
+      kredityPo: 7
     ocekavani:
       musi:
         - "zmínit záchranu (líznutý balík bankovek) nejvýš jednou vsuvkou — pointa, ne odstavec"
@@ -392,28 +504,36 @@ testy:
       a nezaměňuje ho s tragédií? Zároveň dvě selhání s nesedícími věcmi (banán na
       blokádu, sekáček na led na zmizení v ulicích) → mandát invence.
     zdroj: "technika/woz-test-2026-07-30.md uzel 6 (2026-07-30)"
-    vstup: |
-      SITUACE: Zátah na pětce (zatah) — Silnici přehradily hlídkové vozy a reflektory bily do očí.
-      PRAVIDLO RUNU: —
-      ZÁCHRANA: —
-      ROZDĚLENÍ:
-        Prorazit blokádu [viditelná]: podezřelý A — „Banánový kanón"
-        Strhnout do postranní [viditelná]: podezřelý B — „Svářečka"
-        Zmizet v ulicích [viditelná]: podezřelý C — „Sekáček na led"
-        Držet nervy u okna [skrytá]: podezřelý D — „Pytel cementu"
-      VÝSLEDEK MECHANIKY: pásmo S NÁSLEDKY 2/4
-        MAX DOSAŽITELNÉ: 3/4
-        Prorazit blokádu: selhání (práh 3; „Banánový kanón" mělo útok 2)
-        Strhnout do postranní: zásah (práh 5; „Svářečka" mělo nástroj 5)
-        Zmizet v ulicích: selhání (práh 5; „Sekáček na led" mělo improvizace 2)
-        Držet nervy u okna: zásah (práh 1; „Pytel cementu" mělo obrana 3)
-      NÁSLEDKY:
-        postihy: podezřelý D — „Zvonění v uších" (lehký, příští varování neslyší)
-        složení: —
-        kredity: 0; konto 7
-        Žár: +2 — hlučné hraní a pásmo; šerif postoupil o dvě pole
-        bedny: 0; náklad 6
-        loot: —
+    udalosti:
+      - type: situation_revealed
+        nodeIndex: 0
+        situace_id: zatah-na-petce
+        typ: zatah
+        sloty:
+          - {slot_index: 0, role: "Prorazit blokádu"}
+          - {slot_index: 1, role: "Strhnout do postranní"}
+          - {slot_index: 2, role: "Zmizet v ulicích"}
+          - {slot_index: 3, role: "Držet nervy u okna"}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 0, karta_id: bananovy-kanon, hrac_id: p1, stat: utok, stat_hodnota: 2, prah: 3, typ_prahu: jednostat, viditelnost: viditelna, zasah: false, duvod: nizky_stat}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 1, karta_id: svarecka, hrac_id: p2, stat: nastroj, stat_hodnota: 5, prah: 5, typ_prahu: jednostat, viditelnost: viditelna, zasah: true, duvod: proslo}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 2, karta_id: sekacek-na-led, hrac_id: p3, stat: improvizace, stat_hodnota: 2, prah: 5, typ_prahu: jednostat, viditelnost: viditelna, zasah: false, duvod: nizky_stat}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 3, karta_id: pytel-cementu, hrac_id: p4, stat: obrana, stat_hodnota: 3, prah: 1, typ_prahu: jednostat, viditelnost: skryta, zasah: true, duvod: proslo}
+      - {type: band_resolved, nodeIndex: 0, pasmo: "2/4_S_NASLEDKY", zasahy: 2, max_achievable_zasahy: 3, naklad_ztrata: 0, zbyva_beden: 6}
+      - {type: penalty_added, nodeIndex: 0, hrac_id: p4, postih_id: zvoneni-v-usich, tier: lehky}
+      - {type: zar_move, nodeIndex: 0, delta: 1, duvod: hlucne_utok, prah_prekrocen: null}
+      - {type: zar_move, nodeIndex: 0, delta: 1, duvod: s_nasledky, prah_prekrocen: null}
+    ctx:
+      jmena: {p1: "Vincenc Bartoš", p2: "Frank Kowalski", p3: "Eddie Klein", p4: "Sam Rossi"}
+      veci:
+        bananovy-kanon: "Banánový kanón"
+        svarecka: "Svářečka"
+        sekacek-na-led: "Sekáček na led"
+        pytel-cementu: "Pytel cementu"
+      situace:
+        zatah-na-petce: {nazev: "Zátah na pětce", text: "Silnici přehradily hlídkové vozy a reflektory bily do očí."}
+      postihy:
+        zvoneni-v-usich: {nazev: "Zvonění v uších", text: "Příští varování neslyší."}
+      kredityPo: 7
     ocekavani:
       musi:
         - "zapsat obě selhání a oba zásahy dle mechaniky"
@@ -433,28 +553,38 @@ testy:
       to nést jako smůlu nebo neuvést vůbec. Dvojice casů testuje, že model rozdíl
       skutečně čte, a nedělá z „nešlo to lépe" a „prohráls to rozdělením" jednu věc.
     zdroj: "technika/woz-test-2026-07-30.md §5e + obsah/situace.yaml (2026-07-30)"
-    vstup: |
-      SITUACE: Starý most přes Mohawk (lokace) — Příjezd držela zrezivělá závora a prkna uprostřed byla prohnilá.
-      PRAVIDLO RUNU: —
-      ZÁCHRANA: líznuto „Schovaná pistole" místo „Otrlený výraz"
-      ROZDĚLENÍ:
-        Zvednout závoru [viditelná]: podezřelý A — „Kožená zástěra"
-        Zpevnit prkna [viditelná]: podezřelý B — „Medvědí kožich"
-        Projet dírou [viditelná]: podezřelý C — „Schovaná pistole"
-        Nedat to na sobě [skrytá]: podezřelý D — „Tlustá bible"
-      VÝSLEDEK MECHANIKY: pásmo PRŮŠVIH 1/4
-        MAX DOSAŽITELNÉ: 1/4
-        Zvednout závoru: selhání (práh 5; „Kožená zástěra" mělo nástroj 2)
-        Zpevnit prkna: selhání (kombi práh 4; „Medvědí kožich" mělo nástroj 1 i improvizace 1)
-        Projet dírou: zásah (práh 1; „Schovaná pistole" mělo improvizace 3)
-        Nedat to na sobě: selhání (práh 5; „Tlustá bible" mělo obrana 4)
-      NÁSLEDKY:
-        postihy: podezřelý B — „Prach do očí" (lehký, věci pozná po názvu, na čísla nedohlédne)
-        složení: —
-        kredity: 0; konto 5
-        Žár: +2 — PRŮŠVIH a tasená zbraň; šerif postoupil o dvě pole
-        bedny: ztraceno 1 (PRŮŠVIH); náklad 5
-        loot: —
+    udalosti:
+      - type: situation_revealed
+        nodeIndex: 0
+        situace_id: stary-most-mohawk
+        typ: lokace
+        sloty:
+          - {slot_index: 0, role: "Zvednout závoru"}
+          - {slot_index: 1, role: "Zpevnit prkna"}
+          - {slot_index: 2, role: "Projet dírou"}
+          - {slot_index: 3, role: "Nedat to na sobě"}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 0, karta_id: kozena-zastera, hrac_id: p1, stat: nastroj, stat_hodnota: 2, prah: 5, typ_prahu: jednostat, viditelnost: viditelna, zasah: false, duvod: nizky_stat}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 1, karta_id: medvedi-kozich, hrac_id: p2, stat: [nastroj, improvizace], stat_hodnota: [1, 1], prah: 4, typ_prahu: kombi_oba, viditelnost: viditelna, zasah: false, duvod: nizky_stat}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 2, karta_id: schovana-pistole, hrac_id: p3, stat: improvizace, stat_hodnota: 3, prah: 1, typ_prahu: jednostat, viditelnost: viditelna, zasah: true, duvod: proslo}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 3, karta_id: tlusta-bible, hrac_id: p4, stat: obrana, stat_hodnota: 4, prah: 5, typ_prahu: jednostat, viditelnost: skryta, zasah: false, duvod: nizky_stat}
+      - {type: band_resolved, nodeIndex: 0, pasmo: "≤1/4_PRUSVIH", zasahy: 1, max_achievable_zasahy: 1, naklad_ztrata: 1, zbyva_beden: 5}
+      - {type: penalty_added, nodeIndex: 0, hrac_id: p2, postih_id: prach-do-oci, tier: lehky}
+      - {type: zar_move, nodeIndex: 0, delta: 1, duvod: prusvih, prah_prekrocen: null}
+      - {type: zar_move, nodeIndex: 0, delta: 1, duvod: hlucne_GANGSTER, prah_prekrocen: null}
+      - {type: gamble, nodeIndex: 0, tazena: schovana-pistole, nahrazena: otrleny-vyraz}
+    ctx:
+      jmena: {p1: "Vincenc Bartoš", p2: "Frank Kowalski", p3: "Eddie Klein", p4: "Sam Rossi"}
+      veci:
+        kozena-zastera: "Kožená zástěra"
+        medvedi-kozich: "Medvědí kožich"
+        schovana-pistole: "Schovaná pistole"
+        tlusta-bible: "Tlustá bible"
+        otrleny-vyraz: "Otrlený výraz"
+      situace:
+        stary-most-mohawk: {nazev: "Starý most přes Mohawk", text: "Příjezd držela zrezivělá závora a prkna uprostřed byla prohnilá."}
+      postihy:
+        prach-do-oci: {nazev: "Prach do očí", text: "Věci pozná po názvu, na čísla nedohlédne."}
+      kredityPo: 5
     ocekavani:
       musi:
         - "zapsat tři selhání a jediný zásah („Projet dírou“) dle mechaniky"
@@ -475,34 +605,44 @@ testy:
       v konfrontaci a Žár přitom KLESÁ o sedm — model chce popsat výstřel a hluk,
       jenže hluk se smí zmínit jen jako uvedený důvod pohybu Žáru, a ten tu jde
       opačným směrem. Obojí je doložené riziko z WoZ §3 (body 1 a 3).
-    zdroj: "technika/woz-test-2026-07-30.md §3 body 1 a 3, uzly 4 a 8 (2026-07-30)"
-    vstup: |
-      SITUACE: Kolona na poštovní silnici (konfrontace) — Federální vozy svíraly silnici z obou stran a agent Malone si beze spěchu nasazoval brýle.
-      PRAVIDLO RUNU: hodnota se počítá jako 0 (agent Malone nebere úplatky)
-      ZÁCHRANA: —
-      ROZDĚLENÍ:
-        Probít se ven [viditelná]: podezřelý A — „Uříznutá hlaveň"
-        Postavit se jim [viditelná]: podezřelý B — „Bedna kanadské"
-        Strhnout do pole [viditelná]: podezřelý C — „Slzy na povel"
-        Krýt záda [skrytá]: podezřelý D — „Dámský revolver"
-      VÝSLEDEK MECHANIKY: pásmo S NÁSLEDKY 2/4
-        MAX DOSAŽITELNÉ: 2/4
-        Probít se ven: zásah (práh 4; „Uříznutá hlaveň" mělo útok 4; důvod: v konfrontaci zbraň projde)
-        Postavit se jim: selhání (práh 3; „Bedna kanadské" mělo útok 1)
-        Strhnout do pole: zásah (práh 2; „Slzy na povel" mělo improvizace 4)
-        Krýt záda: selhání (práh 5; „Dámský revolver" mělo útok 3)
-      NÁSLEDKY:
-        postihy: podezřelý B — „Naražené rameno" (lehký, do kapes sahá pomaleji)
-        složení: —
-        kredity: 0; konto 7
-        Žár: −7 — konfrontace přežita; šerif se vrátil na třetí značku
-        bedny: 0; náklad 5
-        loot: —
+      PRAVIDLO RUNU (D55): žádný ze čtyř slotů tu stat „hodnota" nepoužívá, takže
+      vstup nese „PRAVIDLO RUNU: —" (stejně jako produkce) — „agent Malone" zůstal
+      jen jako scénická reálie v textu SITUACE.
+    zdroj: "technika/woz-test-2026-07-30.md §3 body 1 a 3, uzly 4 a 8 (2026-07-30); PRAVIDLO RUNU upraveno D55"
+    udalosti:
+      - type: situation_revealed
+        nodeIndex: 0
+        situace_id: kolona-postovni-silnice
+        typ: konfrontace
+        sloty:
+          - {slot_index: 0, role: "Probít se ven"}
+          - {slot_index: 1, role: "Postavit se jim"}
+          - {slot_index: 2, role: "Strhnout do pole"}
+          - {slot_index: 3, role: "Krýt záda"}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 0, karta_id: uriznuta-hlaven, hrac_id: p1, stat: utok, stat_hodnota: 4, prah: 4, typ_prahu: jednostat, viditelnost: viditelna, zasah: true, duvod: proslo}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 1, karta_id: bedna-kanadske, hrac_id: p2, stat: utok, stat_hodnota: 1, prah: 3, typ_prahu: jednostat, viditelnost: viditelna, zasah: false, duvod: nizky_stat}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 2, karta_id: slzy-na-povel, hrac_id: p3, stat: improvizace, stat_hodnota: 4, prah: 2, typ_prahu: jednostat, viditelnost: viditelna, zasah: true, duvod: proslo}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 3, karta_id: damsky-revolver, hrac_id: p4, stat: utok, stat_hodnota: 3, prah: 5, typ_prahu: jednostat, viditelnost: skryta, zasah: false, duvod: nizky_stat}
+      - {type: band_resolved, nodeIndex: 0, pasmo: "2/4_S_NASLEDKY", zasahy: 2, max_achievable_zasahy: 2, naklad_ztrata: 0, zbyva_beden: 5}
+      - {type: penalty_added, nodeIndex: 0, hrac_id: p2, postih_id: narazene-rameno, tier: lehky}
+      - {type: zar_move, nodeIndex: 0, delta: -7, duvod: konfrontace_prezita, prah_prekrocen: null}
+    ctx:
+      jmena: {p1: "Vincenc Bartoš", p2: "Frank Kowalski", p3: "Eddie Klein", p4: "Sam Rossi"}
+      veci:
+        uriznuta-hlaven: "Uříznutá hlaveň"
+        bedna-kanadske: "Bedna kanadské"
+        slzy-na-povel: "Slzy na povel"
+        damsky-revolver: "Dámský revolver"
+      situace:
+        kolona-postovni-silnice: {nazev: "Kolona na poštovní silnici", text: "Federální vozy svíraly silnici z obou stran a agent Malone si beze spěchu nasazoval brýle."}
+      postihy:
+        narazene-rameno: {nazev: "Naražené rameno", text: "Do kapes sahá pomaleji."}
+      kredityPo: 7
     ocekavani:
       musi:
         - "zapsat oba zásahy a obě selhání dle mechaniky"
         - "u selhaných slotů (bedna, dámský revolver) dopsat obhajobu pokusu"
-        - "zapsat POKLES Žáru o sedm polí a návrat šerifa na třetí značku"
+        - "zapsat POKLES Žáru o sedm polí a návrat šerifa zpět"
         - "zapsat postih podezřelého B; náklad zůstává 5"
       nesmi:
         - "naznačit, že bedna byla ztracena, rozbita, odebrána nebo předána (KRITICKÉ — náklad je beze změny 5)"
@@ -523,33 +663,38 @@ testy:
       o parafrázi textu karty, a nesmí sežrat místo závěrečné poznámce.
       Vedle toho past rule 4: hlídač spí, Žár je 0 → žádný hluk, žádné probuzení.
     zdroj: "technika/woz-test-2026-07-30.md uzel 2 + §2 (2026-07-30); staty dle obsah/veci.yaml"
-    vstup: |
-      SITUACE: Odstavený vagon v Peekskillu (lokace) — Na odstavné koleji stál vagon a hlídač u kamínek podřimoval s lucernou.
-      PRAVIDLO RUNU: —
-      ZÁCHRANA: —
-      ROZDĚLENÍ:
-        Proklouznout kolem [viditelná]: podezřelý A — „Provaz a kladka"
-        Vypáčit vagon [viditelná]: podezřelý B — „Lopata"
-        Ztuhnout ve stínu [skrytá]: podezřelý C — „Kastrol na hlavě"
-        Kdyby se probudil [skrytá]: podezřelý D — „Páčidlo"
-      VÝSLEDEK MECHANIKY: pásmo HLADCE+LOOT 4/4
-        MAX DOSAŽITELNÉ: 4/4
-        Proklouznout kolem: zásah (práh 2; „Provaz a kladka" mělo improvizace 2)
-        Vypáčit vagon: zásah (práh 2; „Lopata" mělo nástroj 4)
-        Ztuhnout ve stínu: zásah (práh 2; „Kastrol na hlavě" mělo obrana 4)
-        Kdyby se probudil: zásah (práh 2; „Páčidlo" mělo útok 3)
-      NÁSLEDKY:
-        postihy: žádné
-        složení: —
-        kredity: +3 (HLADCE+LOOT); konto 4
-        Žár: 0 — beze změny; šerif beze změny
-        bedny: 0; náklad 6
-        loot: „kus navíc, který dosud nikdo nenahlásil jako pohřešovaný"
+    udalosti:
+      - type: situation_revealed
+        nodeIndex: 0
+        situace_id: odstaveny-vagon-peekskill
+        typ: lokace
+        sloty:
+          - {slot_index: 0, role: "Proklouznout kolem"}
+          - {slot_index: 1, role: "Vypáčit vagon"}
+          - {slot_index: 2, role: "Ztuhnout ve stínu"}
+          - {slot_index: 3, role: "Kdyby se probudil"}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 0, karta_id: provaz-a-kladka, hrac_id: p1, stat: improvizace, stat_hodnota: 2, prah: 2, typ_prahu: jednostat, viditelnost: viditelna, zasah: true, duvod: proslo}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 1, karta_id: lopata, hrac_id: p2, stat: nastroj, stat_hodnota: 4, prah: 2, typ_prahu: jednostat, viditelnost: viditelna, zasah: true, duvod: proslo}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 2, karta_id: kastrol-na-hlave, hrac_id: p3, stat: obrana, stat_hodnota: 4, prah: 2, typ_prahu: jednostat, viditelnost: skryta, zasah: true, duvod: proslo}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 3, karta_id: pacidlo, hrac_id: p4, stat: utok, stat_hodnota: 3, prah: 2, typ_prahu: jednostat, viditelnost: skryta, zasah: true, duvod: proslo}
+      - {type: band_resolved, nodeIndex: 0, pasmo: "4/4_HLADCE_LOOT", zasahy: 4, max_achievable_zasahy: 4, naklad_ztrata: 0, zbyva_beden: 6}
+      - {type: credit_flow, nodeIndex: 0, delta: 3, duvod: hladce_loot, zustatek: 4}
+    ctx:
+      jmena: {p1: "Vincenc Bartoš", p2: "Frank Kowalski", p3: "Eddie Klein", p4: "Sam Rossi"}
+      veci:
+        provaz-a-kladka: "Provaz a kladka"
+        lopata: "Lopata"
+        kastrol-na-hlave: "Kastrol na hlavě"
+        pacidlo: "Páčidlo"
+      situace:
+        odstaveny-vagon-peekskill: {nazev: "Odstavený vagon v Peekskillu", text: "Na odstavné koleji stál vagon a hlídač u kamínek podřimoval s lucernou."}
+      postihy: {}
     ocekavani:
       musi:
-        - "zapsat všechny čtyři zásahy, +3 kredity a loot"
+        - "zapsat všechny čtyři zásahy a +3 kredity"
         - "u kastrolu na hlavě (jediná zjevně nesedící věc) rozehrát kontrast — tam je celý humor uzlu"
         - "vejít se do ≤900 znaků a 3–5 vět; nechat místo na závěrečnou poznámku vyšetřovatele"
+        - "DIAGNOSTIKA (neblokující, D55): vstup nese `loot: —` (buildPromptInput() nikdy nejmenuje líznutou věc, viz case `hladky-pruchod-loot-…`); protokol NEMUSÍ loot zmiňovat, jen si nesmí žádný vymyslet (viz nesmí níže)"
       nesmi:
         - "opsat u provazu, lopaty ani páčidla text karty místo záměru (parafráze = vata, KRITICKÉ pro plné B)"
         - "vymyslet další VĚC Z VÝBAVY (další nástroj, zbraň, úplatek), která ve vstupu není — kulisa scény (sud, pant, lucerna, kamínka) je naopak povinná, viz rule 4/5"
@@ -583,28 +728,38 @@ testy:
       padne-li druhá, je těsný strop. Bez tohoto rozlišení se z casu nedá odvodit,
       jestli se má příště hýbat promptem, nebo číslem.
     zdroj: "obsah/situace.yaml privoz-celnik + veci.yaml + postihy.yaml ochrnuta-ruka (2026-08-02)"
-    vstup: |
-      SITUACE: Přívoz přes Hudson (npc) — Prám se odrazil od břehu a celník obcházel náklad s nosem u plachty.
-      PRAVIDLO RUNU: hodnota se počítá jako 0 (agent Malone nebere úplatky)
-      ZÁCHRANA: líznuto „Uříznutá hlaveň" místo „Otrlený výraz"
-      ROZDĚLENÍ:
-        Zamotat hlavu [viditelná]: podezřelý A — „Provaz a kladka"
-        Přesunout z očí [viditelná]: podezřelý A — „Kněžský kolárek"
-        Přilepšit do dlaně [viditelná]: podezřelý A — „Zlaté hodinky"
-        Kdyby čenichal dál [skrytá]: podezřelý A — „Uříznutá hlaveň"
-      VÝSLEDEK MECHANIKY: pásmo PRŮŠVIH 1/4
-        MAX DOSAŽITELNÉ: 2/4
-        Zamotat hlavu: selhání (práh 5; „Provaz a kladka" mělo improvizace 2)
-        Přesunout z očí: selhání (práh 3; „Kněžský kolárek" mělo nástroj 0)
-        Přilepšit do dlaně: selhání (práh 2; „Zlaté hodinky" mělo hodnota 5; důvod: hodnota zrušena PRAVIDLEM RUNU)
-        Kdyby čenichal dál: zásah (práh 4; „Uříznutá hlaveň" mělo útok 4; důvod: zbraň ve skryté roli projde)
-      NÁSLEDKY:
-        postihy: podezřelý A — „Ochrnutá ruka" (těžký, ruka visí jak cizí a zbraň v ní neudrží; drží do vyléčení)
-        složení: —
-        kredity: 0; konto 6
-        Žár: +3 — PRŮŠVIH a tasená zbraň (GANGSTER, hlučné); šerif postoupil o tři pole
-        bedny: ztraceno 1 (PRŮŠVIH); náklad 5
-        loot: —
+    udalosti:
+      - type: situation_revealed
+        nodeIndex: 0
+        situace_id: privoz-pres-hudson
+        typ: npc
+        sloty:
+          - {slot_index: 0, role: "Zamotat hlavu"}
+          - {slot_index: 1, role: "Přesunout z očí"}
+          - {slot_index: 2, role: "Přilepšit do dlaně"}
+          - {slot_index: 3, role: "Kdyby čenichal dál"}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 0, karta_id: provaz-a-kladka, hrac_id: p1, stat: improvizace, stat_hodnota: 2, prah: 5, typ_prahu: jednostat, viditelnost: viditelna, zasah: false, duvod: nizky_stat}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 1, karta_id: knezsky-kolarek, hrac_id: p1, stat: nastroj, stat_hodnota: 0, prah: 3, typ_prahu: jednostat, viditelnost: viditelna, zasah: false, duvod: nizky_stat}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 2, karta_id: zlate-hodinky, hrac_id: p1, stat: hodnota, stat_hodnota: 5, prah: 2, typ_prahu: jednostat, viditelnost: viditelna, zasah: false, duvod: stat_zrusen, pronasledovatel_efekt: {typ: stat, cil: hodnota}}
+      - {type: slot_resolved, nodeIndex: 0, slot_index: 3, karta_id: uriznuta-hlaven, hrac_id: p1, stat: utok, stat_hodnota: 4, prah: 4, typ_prahu: jednostat, viditelnost: skryta, zasah: true, duvod: proslo}
+      - {type: band_resolved, nodeIndex: 0, pasmo: "≤1/4_PRUSVIH", zasahy: 1, max_achievable_zasahy: 2, naklad_ztrata: 1, zbyva_beden: 5}
+      - {type: penalty_added, nodeIndex: 0, hrac_id: p1, postih_id: ochrnuta-ruka, tier: tezky}
+      - {type: zar_move, nodeIndex: 0, delta: 1, duvod: prusvih, prah_prekrocen: null}
+      - {type: zar_move, nodeIndex: 0, delta: 2, duvod: hlucne_GANGSTER, prah_prekrocen: null}
+      - {type: gamble, nodeIndex: 0, tazena: uriznuta-hlaven, nahrazena: otrleny-vyraz}
+    ctx:
+      jmena: {p1: "Vincenc Bartoš"}
+      veci:
+        provaz-a-kladka: "Provaz a kladka"
+        knezsky-kolarek: "Kněžský kolárek"
+        zlate-hodinky: "Zlaté hodinky"
+        uriznuta-hlaven: "Uříznutá hlaveň"
+        otrleny-vyraz: "Otrlený výraz"
+      situace:
+        privoz-pres-hudson: {nazev: "Přívoz přes Hudson", text: "Prám se odrazil od břehu a celník obcházel náklad s nosem u plachty."}
+      postihy:
+        ochrnuta-ruka: {nazev: "Ochrnutá ruka", text: "Ruka visí jak cizí a zbraň v ní neudrží; drží do vyléčení."}
+      kredityPo: 6
     ocekavani:
       musi:
         - "vejít se do ≤900 znaků a 3–5 vět PŘI PLNÉM NÁKLADU: čtyři obhajoby pokusu, sólo klauzule, vsuvka o záchraně, gap, těžký postih, ztráta bedny i pohyb Žáru"
