@@ -1,6 +1,6 @@
 ---
 name: prompt-variant-rozhodovani
-description: Jak rozhodovat mezi variantami promptu (cílené vs. plošné pravidlo) a jak psát zákazy, které slabý model unese — metoda „frekvence sepnutí triggeru", past podmíněného pravidla, pasti přeširokého zákazu, umístění pravidla v odstavci (pohřbená klauzule na Haiku nedrží) a pozitivní požadavek místo lexikálního zákazu; z kol v0.4–v0.4.2 (2026-08-01/02)
+description: Jak rozhodovat mezi variantami promptu (cílené vs. plošné pravidlo) a jak psát zákazy, které slabý model unese — metoda „frekvence sepnutí triggeru", past podmíněného pravidla, pasti přeširokého zákazu, umístění pravidla v odstavci (hypotéza NEPOTVRZENÁ 3. během, konfundovaná), zákaz vždy s náhradním tvarem, jeden zásah na kolo u sousedních pravidel, a pozitivní požadavek místo lexikálního zákazu; z kol v0.4–v0.4.2 (2026-08-01/02)
 metadata:
   type: project
 ---
@@ -99,7 +99,22 @@ závěrečnou větu rule 5.
   ale jeho formulace obstojí při čtení. To není otázka slov, ale pozice.
 - **Vytažení, ne zdvojení.** Zapuštěnou klauzuli při vytažení SMAŽ — duplikát
   prodlužuje cachovaný vstup a nic nekupuje.
-- Táž páka čeká na rule 4 (zadržení), která padá ze stejného důvodu (nález A6).
+
+**⚠ HYPOTÉZA SE NEPOTVRDILA (3. běh brány, 2026-08-02).** Zákaz byl vytažen na
+samostatnou závěrečnou větu rule 5 — a metrika se **zhoršila z 8/13 na 13/13**.
+Nález je ale **konfundovaný**: v témž kole přibyla do rule 3 věta žádající
+jednoznačnost výsledku, a ta tlačí přesně k tvaru „selhal, NEBOŤ X"
+([[testing-failure-taxonomy]] §J2). Hypotézu o pozici tedy nelze ani potvrdit,
+ani vyvrátit.
+- **Procesní poučení, které z toho platí bez ohledu na výsledek:** dva zásahy
+  do sousedních pravidel v jednom kole **znemožní přiřadit efekt**. Kolo v0.4.2
+  mělo pět zásahů a jen jeden (jmenování věcí) šel čistě vyhodnotit, protože
+  se s ničím nekřížil. **Zásahy do pravidel, která spolu mluví, pouštěj po jednom.**
+- **Nepřenášej páku dál, dokud není potvrzená.** v0.4.2 chystala tutéž pozici
+  pro rule 4 (zadržení). Doporučení je teď **nedělat to** — nevíme, co pozice dělá.
+- **Když pravidlo stěhuješ, stěhuj s ním protipříklad.** Vytažení zahodilo
+  konkrétní vzor („nestačilo to, protože…"), takže nejde odlišit „špatná pozice"
+  od „chybějící exemplář" — a to je druhý důvod, proč je kolo nevyhodnotitelné.
 
 ## 3c. PROTI ZMĚKČENÍ VÝSLEDKU PIŠ POZITIVNÍ POŽADAVEK, NE LEXIKÁLNÍ ZÁKAZ
 

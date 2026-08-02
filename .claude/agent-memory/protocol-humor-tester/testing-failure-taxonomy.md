@@ -436,6 +436,79 @@ Rule 4 „zadržení" držela v casu, kde v 1. běhu padla — a padla v jiném 
 zadržen podezřelý A"). Slovo „zadržen" je přitom ve výčtu pravidla **obsaženo**.
 **Rozšiřovat výčet dál nemá smysl; rozhoduje pozice pravidla, ne jeho úplnost.**
 
+## J. 3. BĚH BRÁNY (v0.4.2, t=0,5, 13 generací, 2026-08-02) — 0/13, stop podmínka padla
+Vyhodnocení: `technika/brana-cestiny-beh3-vyhodnoceni-2026-08-02.md`.
+Trend přes tři běhy (pozor: n=1 na buňku, rozdíly do ~2 casů jsou los):
+
+| osa | 1. běh | A/B rameno A | 3. běh |
+|---|---|---|---|
+| tvrdá jazyková vada | 13/13 | 2/13 | **7/13** |
+| vymyšlená příčina | 8/13 | 8/13 | **13/13** |
+| formátový šum (jakýkoli nadpis) | 13/13 | 13/13 | 13/13 (markdown 5/13) |
+| obrácení výsledku | 0/52 | 0/52 | **0/52** |
+| medián délky | (useknuto) | 866 zn. | **1079 zn.** |
+
+### J1 — ODSTRANĚNÍ BRZDY BEZ NÁHRADY JE VLASTNÍ REGRESE, NE STROP MODELU
+„3–5 vět" bylo doloženě mrtvé (0/39), tak se vypustilo — a znakový strop ho
+nenahradil: **11/13 přes 900, medián +25 %**. Navíc se s délkou zhoršil **jazyk
+(2/13 → 7/13 při nezměněné teplotě)**, tedy metrika, která s délkou nesouvisela.
+- **Zákon:** mrtvé pravidlo se smí škrtnout, jen když je doložené, že jeho práci
+  dělá jiná páka. „Strop zůstává jedinou brzdou" je hypotéza, ne fakt — a tady
+  byla vyvrácena hned prvním měřením.
+- **Druhá polovina:** mrtvé ≠ neúčinné. Pravidlo, které model nikdy nedodržel,
+  ho přesto mohlo tlačit ke kratšímu textu. **Měř, co škrt udělá, ne co má udělat.**
+- **Náhrada musí být počitatelná v jednotce, kterou model už zpracovává** —
+  proto navrhuju „nejvýš jedna věta na slot" (per-slot) místo globálního počtu vět.
+
+### J2 — DVĚ PRAVIDLA MOHOU TÁHNOUT PROTI SOBĚ A METRIKA SKOČÍ VZHŮRU
+Nová rule 3 („u každého slotu musí být jednoznačně poznat, zda prošel") žádá
+explicitnost; rule 5 zakazuje příčinu; **prompt nikde neukazuje povolený
+bezpříčinný tvar**. Nejlevnější cesta k jednoznačnosti je „pokus selhal, NEBOŤ X"
+→ 8/13 → **13/13**. Design-critic to předpověděl PŘED během.
+- **Zákon:** zakážeš-li modelu nějaký tvar a zároveň po něm chceš vlastnost, kterou
+  ten tvar nesl, **musíš dodat náhradní tvar**. Zákaz bez alternativy vyrobí opak.
+- **Doprovodný nález:** vytažení pravidla na novou pozici zahodilo i jeho
+  protipříklad → nejde odlišit „špatná pozice" od „chybějící vzor". **Když
+  pravidlo stěhuješ, protipříklad stěhuj s ním.**
+
+### J3 — HERNÍ SLOVNÍK V PRÓZE (nová třída, 6/13, prompt ji nezakazuje)
+„postup o 2 pole", „o sedm polí", „pohybem Žáru", „tři ze čtyř prvků schématu".
+**Jednotka „pole" je deskovkový pojem bez dobového významu** — vyšetřovatel 1930
+ho napsat nemůže. Poddruh A3 (struktura vstupu na výstupu), ale zákeřnější:
+neporušuje žádné číslo, takže projde všemi kontrolami na mechaniku, a přitom ji
+**hráč vidí bez znalosti vstupu** — na rozdíl od vymyšlené příčiny.
+- **Hlídej u každého nového vstupního pole, jestli jeho JEDNOTKA existuje ve fikci.**
+
+### J4 — ZÁSAH SE MŮŽE POVÉST A SELHÁNÍ SE PŘESTĚHUJE O OSU VEDLE
+Zásah „věc pojmenuj názvem ze vstupu" zabral (věc mizí už jen ~3/13 místo 5–6/13),
+ale zbytek se přesunul z „chybí" do **„zkomolené"** (kaňon, koláerkem, kolárem,
+dědkův). Třída se nepřestěhovala jen na jinou figuru (E1b/I5), ale **na jinou
+MĚŘENOU OSU** — z pravidel na jazyk. Při hlášení zlepšení proto vždy zkontroluj
+sousední osu, jinak vykážeš zlepšení, které je jen přesun.
+
+### J5 — MODEL PLNÍ ŽÁNR, NE ŽE BY PRAVIDLO NECHÁPAL
+Markdown syntax nadpisu klesla 13/13 → 5/13, ale **titulkový řádek přežil 13/13**
+(„PROTOKOL VYŠETŘOVÁNÍ č. 1847"). Policejní protokol z roku 1930 hlavičku mít má —
+model neselhává na porozumění, ale plní žánrovou konvenci.
+- **Diagnostický znak:** zákaz sníží FORMU jevu a nechá jeho FUNKCI. Lék není
+  přísnější zákaz, ale **pozitivní pokyn, kde má text začít.**
+
+### J6 — VERDIKT A DOJEM UŽIVATELE SI NEMUSÍ ODPOROVAT, MĚŘÍ JINÉ VĚCI
+Uživatel: „texty OK, dávají relativně smysl." Testér: 0/13. Obojí platí.
+**Vždy rozděl nálezy na „hráč to vidí" × „porušuje princip, ale je to neviditelné".**
+Vidí: herní slovník, hlavičku, tvrdé jazykové vady, délku (tempo psacího stroje).
+Nevidí: vymyšlenou příčinu, zadržení, změkčený výsledek — ty se poznají jen proti
+vstupu. Bez tohohle dělení vypadá 0/13 jako popření uživatelova dojmu, a PM z toho
+nemá jak rozhodnout, co blokuje KTEROU bránu.
+
+### J7 — STOP PODMÍNKA MŮŽE PADNOUT, A PŘESTO NEBÝT DŮVOD K JEJÍMU DŮSLEDKU
+Podmínka říkala: padne-li metrika, je to strop modelu → eskalace na dražší model.
+Data ale ukázala tři jiné příčiny (J1, J2, J5), všechny s levným prompt fixem.
+- **Předregistrovaná podmínka určuje, KDY se rozhoduje, ne CO se rozhodne.**
+  Nahlas, že padla (ať to nikdo nepřepíše na „prošla"), a k důsledku se vyjádři
+  zvlášť, s daty. Eskalovat na model kvůli brzdě, kterou jsme sami odstranili,
+  je nejdražší možná oprava.
+
 ## Stav promptu — ZDE SE NEUDRŽUJE (ověř v `prompty/protokol.md`, changelog)
 Snapshoty verzí odsud odstraněny 2026-08-02: zestárnou tiše a jeden z nich už lhal
 („v0.4 stále NEOTESTOVÁN na produkčním modelu" — mezitím proběhly dva běhy brány,

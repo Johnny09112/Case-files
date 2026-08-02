@@ -157,6 +157,36 @@ zakázané tvrzení. **Průchod v jednom rameni při n=1 není vlastnost pojistk
 los.** Když máš dvě ramena, čti je jako jeden vzorek o dvou generacích: položka,
 která padne v kterémkoli z nich, je nespolehlivá, ne „většinou v pořádku".
 
+## 4f. DÉLKU MĚŘ BEZ TITULKOVÉHO ŘÁDKU (3. běh, 2026-08-02)
+Model přidává hlavičku („PROTOKOL VYŠETŘOVÁNÍ č. 1847") ve 13/13 generací.
+Když se strop měří na celém výstupu, **měří se zčásti formátový šum** — a až
+se hlavička podaří odstranit, strop se tiše posune a bude vypadat, že se text
+zkrátil. Rozdíl je 20–35 zn., tj. u hraničních casů rozhoduje.
+- **Vždy uveď obě čísla** (`delka_cela`, `delka_bez_titulku`) a kritérium
+  vyhodnocuj proti druhému.
+- Totéž platí pro počet vět: titulek není věta.
+
+## 4g. MRTVÁ VSTUPNÍ POLE — TŘETÍ MĚŘENÍ, VERDIKT UZAVŘEN
+`ZÁCHRANA` 0/2 · gap proti `MAX DOSAŽITELNÉ` 0/3 · napříč třemi běhy nula zápisů.
+§3 žádala „proměř na 5 generacích, než se za pole platí další kolo" — proměřeno,
+**doporučení je vyřadit je ze vstupního formátu**. `kredity` 2/13, ale **obě
+zmínky uvnitř formátového šumu** (strojový blok) — pole není mrtvé, jen jeho
+jediný projev je kanál, který se snažíme zavřít.
+- **Nový poddruh:** pole, které se projeví JEN v porušení jiného pravidla, je
+  horší než mrtvé — vypadá živě a přitom táhne k vadě. Rozlišuj „0 zmínek"
+  od „zmínky jen ve vadném tvaru".
+
+## 4h. n=1 ROZHODUJE JEN O VELKÝCH EFEKTECH; U MALÝCH JE TO LOS
+3. běh dodal 13 generací místo předregistrovaných 39 (1 na case místo 3).
+- **Metriky s velkým efektem** (13/13, 5/13 proti prahu ≤2) **verdikt unesou** —
+  vzorkovací šum je nevysvětlí. Řekni to explicitně, ať se protokolární vada
+  nezneužije k zpochybnění verdiktu.
+- **Srovnání malých rozdílů neunese nic** (KRITICKÉ casy 6/13 vs. 7/13 = los,
+  §4e). U takového čísla piš „beze změny", ne „zhoršilo se o jeden".
+- **Nekupuj opakování jen kvůli protokolu.** Přeměřit v0.4.2 na n=3 jen proto,
+  že podmínka žádala 39 generací, je platba za potvrzení výsledku, který je už
+  jednoznačný. n=3 zabal do PŘÍŠTÍHO kola promptu.
+
 ## 5. PROCESNÍ: OPRAVA V YAML BATERII JE NÁCHYLNÁ NA SMAZANÝ KLÍČ
 Při vkládání položky mezi `musi:` a `nesmi:` jsem si jedním Edit voláním smazal
 řádek `nesmi:` i s první položkou (obojí bylo v `old_string`). YAML zůstal validní,
