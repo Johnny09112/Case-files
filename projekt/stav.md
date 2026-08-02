@@ -437,11 +437,23 @@ variance doměřena (2sd = 3,22 < 6). Eskalace V1–V4 rozhodnuta uživatelem ja
   než produkční vstup. Vyhodnocení:
   [[../technika/brana-cestiny-vyhodnoceni-2026-08-02|technika/brana-cestiny-vyhodnoceni-2026-08-02.md]]
   (`0e31a19`). Testérova predikce (refrén invencí) se nepotvrdila — přiznáno.
-  **Běží technické opravy** (max_tokens + stop_reason + temperature);
-  pak uživatel přeměří A/B a teprve poté případné úpravy promptu (rule 4
-  zadržení u `slozeni-lezi-v-aute`) a přeměření testérem. Vedle toho oprava
-  z 1. běhu: `npm run test:cestina` načítá `.env.local` + hermetizace 2 testů
-  (`5309712`).
+  Technické opravy hotové (`e77f16e`: max_tokens 800, stop_reason → fallback,
+  temperature 0,5 default + CLI; 464 testů). Vedle toho oprava z 1. běhu:
+  `npm run test:cestina` načítá `.env.local` + hermetizace 2 testů (`5309712`).
+  **A/B PŘEMĚŘENO UŽIVATELEM (2026-08-02, oba běhy na jeho klíči), verdikt
+  testéra (`8a2063d`,
+  [[../technika/brana-cestiny-ab-2026-08-02|technika/brana-cestiny-ab-2026-08-02.md]]):
+  rameno A (0,5) NEPROŠLO 0/13, ale vrstvy se čistě oddělily** — teplotní
+  hypotéza POTVRZENA pro jazyk (tvrdé vady 13/13 → 2/13, cizí písmo 0,
+  useknutí 0/13 po opravě max_tokens), **mechanika drží podruhé (0/52 flipů)**;
+  zbylé blokátory jsou tvarem promptu (věty přes strop 13/13, formátový šum
+  13/13, vymyšlená příčina 8/13, mizející věci 5/13, nová třída
+  zamlčení/změkčení). Eskalace na jiný model NEdoporučena — Haiku češtinu umí.
+  **Běží opravné kolo:** teplota 0,5 zapečena; baterie na vstupy
+  z `buildPromptInput()` (potřetí doloženo, že ruční vstup je vlídnější než
+  produkce) + oprava strojového souhrnu beden; pak prompt v0.4.2 (5 cílených
+  zásahů) s review; stop podmínka 3. běhu: formátový šum a vymyšlená příčina
+  ≤ ~2/13.
 - **Jazyková strategie CZ→EN** — kdy zařadit překlad a test anglických protokolů.
   Obsah vzniká a testuje se česky (rizikovější jazyk pro AI humor), primární
   Steam trh je anglický.
