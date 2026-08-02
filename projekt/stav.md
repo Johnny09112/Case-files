@@ -426,6 +426,22 @@ variance doměřena (2sd = 3,22 < 6). Eskalace V1–V4 rozhodnuta uživatelem ja
   `npm run test:cestina`** (brána měří ručně psané vstupy baterie = test
   kvality promptu; integrace vstupů z enginu = backlog po bráně). Backlog:
   engine neloguje líznutou loot kartu (`drawCard()` bez události).
+  **BRÁNA ČEŠTINY 1. BĚH (2026-08-02): NEPROŠLA 0/13 — ale jádro drží.**
+  Klíč vložen, 13 reálných výstupů Haiku 4.5; **0/52 slotů obráceno**
+  („mechanika rozhoduje" na Haiku platí, vč. auto-failů). Tři příčiny pádu,
+  dvě technické: (1) `MAX_TOKENS=400` uřízlo 8/13 výstupů uprostřed slova
+  a adaptér nekontroluje `stop_reason` → fragment prošel jako validní (proti
+  ADR-004); (2) čeština 13/13 tvrdých vad (cyrilice, anglicismy, nonwords) —
+  hlavní podezřelý nenastavená `temperature` (default 1.0), první krok A/B
+  0,5 vs 1,0, ne přepis promptu; (3) baterie potřetí doložena jako vlídnější
+  než produkční vstup. Vyhodnocení:
+  [[../technika/brana-cestiny-vyhodnoceni-2026-08-02|technika/brana-cestiny-vyhodnoceni-2026-08-02.md]]
+  (`0e31a19`). Testérova predikce (refrén invencí) se nepotvrdila — přiznáno.
+  **Běží technické opravy** (max_tokens + stop_reason + temperature);
+  pak uživatel přeměří A/B a teprve poté případné úpravy promptu (rule 4
+  zadržení u `slozeni-lezi-v-aute`) a přeměření testérem. Vedle toho oprava
+  z 1. běhu: `npm run test:cestina` načítá `.env.local` + hermetizace 2 testů
+  (`5309712`).
 - **Jazyková strategie CZ→EN** — kdy zařadit překlad a test anglických protokolů.
   Obsah vzniká a testuje se česky (rizikovější jazyk pro AI humor), primární
   Steam trh je anglický.
