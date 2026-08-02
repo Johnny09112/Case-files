@@ -1,6 +1,6 @@
 ---
 name: testing-failure-taxonomy
-description: Znovupoužitelné vzorce, kde protokol, fallback šablony i telegrafy selhávají tónově, a jak je probíhat při testu humoru (kalibrace role, trvalá); vč. tvaru „vysvětlující ocásek", testu mřížky verdiktu zbraně, dobových reálií trasy a snapshotu promptu v0.3
+description: Znovupoužitelné vzorce, kde protokol, fallback šablony i telegrafy selhávají tónově, a jak je probíhat při testu humoru (kalibrace role, trvalá); vč. „vysvětlujícího ocásku", mřížky verdiktu zbraně, dobových reálií trasy a §H = prvního produkčního měření na Haiku 4.5 (0/13, čeština padá dřív než refrén)
 metadata:
   type: project
 ---
@@ -97,6 +97,31 @@ disambiguace se v praxi použije jako frázovník.
   napříč celou sadou dřív, než začneš číst jednotlivé kusy.
 - **Počítej, kolik z nich hráč uvidí v jednom runu** (u telegrafů 6–7 z 19), ne
   kolikrát se fráze vyskytne v repu. To je metrika, která bolí.
+
+## B5″ — EXPOZIČNÍ MATEMATIKA: pool se musí škálovat s počtem TAHŮ, ne s počtem uzlů
+Třetí výskyt B5, tentokrát na **fragmentové vrstvě fallbacku** (D54(1), 2026-07-30).
+Sada 32 fragmentů vypadá bohatě, ale v jednom runu se z ní losuje **36×** (4 sloty
+× 9 uzlů), zatímco pásmová vrstva losuje 9×. Stejný rozpočet při 4× expozici =
+refrén zaručeně.
+- **Vždy spočítej `losování za run ÷ velikost použitelného poolu`.** Ne velikost
+  souboru — velikost poolu, který pro daný stav REÁLNĚ kandiduje.
+- **Ředění stat-klíčovaných variant:** pool = `stat-klíčované ∪ obecné`. Když je
+  1 stat varianta proti 3 obecným, obecné vyhrají 3:1 a stat varianty se
+  nevylosují skoro nikdy. Změřeno: 14 z 32 fragmentů se v celém runu použilo,
+  **18 nikdy**, a 3 nejčastější nesly 44 % vět (jeden 6×/run).
+- **Anti-repeat okno na jeden uzel nestačí.** `pouzite` bylo per-node, takže tři
+  po sobě jdoucí uzly skončily identickou závěrečnou větou — přesně „registrová
+  kotva na konci odstavce" z B5, jen o formát vedle. Okno musí být ≥ 2 uzly.
+
+### B5‴ — MANÝRA VYNUCENÁ KONTRAKTEM PLACEHOLDERU (nový poddruh)
+Když kontrakt káže placeholder obalovat úřední vazbou (protože engine neskloňuje),
+**tik není autorova volba, ale důsledek schématu**. U fragmentů vyšlo
+„vedený / zapsaný jako" **6× na 4 věty** jednoho odstavce, ~45× za run.
+- **Lék:** holá citace v uvozovkách („kus „{vec}“", „položka „{role}“") je stejně
+  bezpečná jako obal — uvozovaný řetězec se neskloňuje tak jako tak. Škrt obalu
+  u poloviny variant tik půlí a nic nerozbije.
+- **Poučení:** u každého nového placeholderového kontraktu se ptej, kolikrát
+  vyjde jeho povinná vazba v jednom odstavci, ne jestli je gramaticky bezpečná.
 
 ## C. Jak testovat placeholdery proti kódu
 Vždy tabulka placeholder → událost enginu, která ho plní. Konkrétní pasti:
@@ -223,11 +248,223 @@ auto-fail karty.
    a kdo zapeče obojí, dostane v příštím kole „opravu" sady zpátky na vadu.
    **Vždy diffuj normativní řetězce spec × sada a nahlas, KTERÝ ze dvou se opravuje.**
 
-## Stav promptu (snapshot: v0.3, 2026-07-23)
-v0.3 = remap na v3 (SITUACE/ROZDĚLENÍ/VÝSLEDEK MECHANIKY/NÁSLEDKY, placeholdery
-„podezřelý A–D“ místo jmen, rule 4 o komedii špatné volby). **Stále NEOTESTOVÁN na
-produkčním modelu** — největší produktové riziko je tím pádem neměřené. Drž prompt
-krátký (Haiku, cache); při ladění cíli na jedno pravidlo, nepřepisuj celek.
+## F. Fragmentová vrstva fallbacku (per-slot věty, D54(1) — 2026-07-30)
+Nový formát: jedna věta na slot, klíčovaná `slot_resolved.duvod` × volitelně stat,
+čtyři za sebou pod pásmovým odstavcem. B5′ na něm platí beze zbytku a přidává
+tři vlastní vzorce.
+
+### F1 — POOL EATS THE SPECIFICS: stat-klíčované fragmenty se losují nejmíň
+Pool slotu = fragmenty na jeho stat ∪ VŠECHNY obecné. Při 1 stat-variantě a 3
+obecných má stat-varianta ~25 % šanci → v reálném runu vyšlo 5 stat vět z 32.
+**Obecné jsou generické z definice** (musí sednout na všech pět statů), takže se
+nejvíc losují právě věty, které o roli řeknou nejmíň — tedy přesně proti
+kritériu podlahy §2.7 („hráč umí říct, co ta věc v té roli dělala“).
+- **Test:** spočítej rozložení skutečně vylosovaných id v golden runu, ne poměr
+  v souboru. 32 vět z 32 fragmentů čerpalo jen **14 různých**, top jeden 6×.
+- Lék je poměr v přihrádce (víc stat-variant), ne víc obecných.
+
+### F2 — DVOJITÝ ZÁVĚS „X vedený/zapsaný jako Y“ = formulářový rytmus
+Kontrakt placeholderů (nesklonitelné {vec}/{role} → povinný úřední obal) tlačí
+každou větu do tvaru *dva citované štítky spojené závěsem*. Ve 4/4 uzlu vyšlo
+**7 závěsů na čtyři věty**. Jednotlivě to projde, po čtyřech je to vyplněný spis.
+- **Lék uvnitř kontraktu:** nejvýš JEDEN závěs na větu — druhý štítek nést holou
+  vazbou („k položce „{role}““, „u položky „{role}““), která je taky legální.
+- Hlídej i to, aby se nesrovnaly na jedno sloveso: samé „zapsaný jako“ je jen
+  jiná monotonie než samé „vedený jako“. Drž poměr ~1:1.
+
+### F3 — FIGURA „vyšetřovatelovo pokrčení rameny“ (obchází pravidlo o závorce)
+„což zaznamenávám bez dalšího“ / „spis to konstatuje bez údivu“ / „spis raději
+nerozvádí“ / „prázdné místo se hodnotí samo“ — meta-komentář úředníka k vlastnímu
+zápisu. Sada dodržela literu pravidla „max 1 závorka“ a přitom **14 z 32 vět
+runu končilo touto figurou bez závorek**. Závorka je jen jeden její nosič; počítej
+figuru, ne interpunkci.
+
+### F4 — ŠUM FALZIFIKUJE KAUZÁLNÍ TVRZENÍ O SELHÁNÍ
+Práh je `kotva + offset + bump + šum`, takže slot propadne i kartou, která na
+kotvu stačila. Věta „selhal, **a nikoli nešťastnou náhodou**“ je proto v části
+případů nepravdivá — a hráč si to ověří, protože vysvětlující vrstva mu odhalený
+práh ukáže. Poddruh B3 (tvrzení, které mechanika negarantuje), specifický pro
+per-slot vrstvu: **fragment smí popsat ZPŮSOB, nikdy PŘÍČINU selhání.**
+
+### F5 — ŠEV: pásmová šablona se „nevědomostí“ chlubí větu před tím, než ji fragment vyvrátí
+Pásmové šablony psané PŘED fragmenty hedžují („ať už tím, že je zastal nevhodný
+kus, nebo tím, že je nezastal nikdo“; „zda ztroskotaly pro nezpůsobilost, nebo
+pro nepřítomnost, **spis neuvádí**“ — `fb-v3-nasledky-1`, `fb-v3-prusvih-5`,
+`fb-v3-prusvih-2`). Fragmentový odstavec o centimetr níž odpoví přesně to.
+U „spis neuvádí“ je to **přímý rozpor dvou sousedních odstavců**, ne jen šev.
+- **Vždy projdi pásmové šablony na formulace typu „spis neuvádí / nezaznamenává /
+  se nedozvím“**, jakmile pod ně přibude podrobnější vrstva. Oprava patří do sady
+  šablon, ne do fragmentů (viz E5/2 — nahlas říct, KTERÝ ze dvou se opravuje).
+- Totéž pro počítací otvírák („N ze čtyř“): počet je teď derivovatelný ze čtyř vět.
+
+### F6 — Procesní: golden run pokryje jen přihrádky, které v NĚM padly
+Sada měla 3 varianty `neobsazeno` popsané jako nejrizikovější (padají 2–3× v jednom
+odstavci), a golden run je **nepokryl ani jednou** — složená postava přišla až
+v posledním uzlu se situací. **Před verdiktem si vypiš, které přihrádky snapshot
+netestoval**, a žádej druhou fixturu (složení uprostřed runu), jinak se posuzuje
+text, který nikdo neviděl poskládaný.
+
+## G. VLASTNÍ DOKUMENTACE PROMPTU JE TAKY TESTOVANÝ OBSAH (2026-08-02, kolo v0.4.1)
+Dosud jsem probíhal karty, šablony, telegrafy a výstupy modelu. Kolo v0.4.1 ukázalo
+třetí zdroj chyb: **prompt sám a jeho vzorové příklady**. Dvě z pěti oprav byly
+chyby, které tam ležely od v0.3/v0.4 a nikdo je nečetl jako obsah.
+
+### G1 — VZOROVÝ PŘÍKLAD MŮŽE UČIT PŘESNĚ TU CHYBU, KTEROU BATERIE TRESTÁ
+Příklad „dobrého výstupu" tvrdil `MAX DOSAŽITELNÉ 3/4` při dosažených 2/4 — ale ze
+statů čtyř věcí v ruce vycházejí 2/4 (nástrojový i útočný slot byly s tou rukou
+nedosažitelné). Vzor tedy demonstroval **vymyšlený gap**, tj. vymyšlenou příčinu,
+kterou rule 5 i rule 7 zakazují a kterou baterie jinde označuje za KRITICKÉ.
+- **Test, který dělej vždy:** každé ČÍSLO ve vzorovém příkladu přepočítej proti
+  `obsah/*.yaml` a enginu. Tón vzoru se čte snadno, čísla ve vzoru nikdo nekontroluje.
+- **Konkrétně u MAX DOSAŽITELNÉ:** oracle je brute-force přes 4! permutací
+  **POSTgamblové** ruky (`resolve.js` `maxAchievableZasahy`, volaný po `gamble()`
+  přepsání `situ.committed`). Nejrychlejší kontrola: pro každý slot najdi maximum
+  příslušného statu napříč rukou; slot s max < práh je nedosažitelný **žádnou**
+  permutací, a MAX ≤ počtu zbylých slotů.
+- **Vedlejší pointa, kterou to odkrylo:** gamble smí MAX SNÍŽIT (odhozený „Provaz
+  a kladka" měl nástroj 4 → před gamblem bylo 3/4). Záchrana není jednosměrně dobrá.
+
+### G2 — ZAPEČENÝ ENGINE > PRÓZA V DESIGN DOKUMENTU (a próza zestárne tiše)
+Prompt i `prototyp-mvp.md` uváděly kredity +2/+1; `rules.js` má +3/+2 od kalibrace-1.
+Rozchod přežil dvě verze promptu a celé kolo obsahu.
+- **Než v promptu ocituješ číslo, ověř ho v `prototyp/src/engine/rules.js`.**
+  Dokumenty popisují záměr, `rules.js` popisuje, co se stane.
+- **Když číslo opravíš, hledej JEHO ODVOZENINY** — u kreditů to byly orientační
+  součty runu („skvělý ~13, medián ~7–9"), které kritik navíc našel jako gate
+  kritérium K8. Oprava vstupu bez přeměření výstupu vyrobí druhý rozpor.
+- **Můj vlastní záznam měl pravdu dřív než prompt** (sekce D, „bedny se neztrácejí
+  jen v PRŮŠVIHU", doloženo 2026-07-27; do promptu se to dostalo až 2026-08-02).
+  Poučení: **nález doložený v mé paměti, který se neprojevil ve sdíleném souboru,
+  není hotový.** Po každém doložení se ptej, který soubor ho má nést.
+
+## H. PRVNÍ PRODUKČNÍ MĚŘENÍ (brána češtiny, Haiku 4.5, 2026-08-02) — 0/13
+Do 2026-08-02 byl celý prompt testován jen mnou (silnějším modelem). První reálné
+výstupy Haiku 4.5 na v0.4.1 změnily pořadí rizik. Vyhodnocení:
+`technika/brana-cestiny-vyhodnoceni-2026-08-02.md`.
+
+### H1 — MOJE PREDIKCE BYLA VYVRÁCENA: čeština padá dřív než refrén
+Predikoval jsem, že „refrén invencí spadne dřív než čeština". **Refrén 1/13, tvrdá
+jazyková vada 13/13.** Nefunkční morfologie (nonwords: `hlídkouní`, `chybřeba`,
+`mozitý`, `neprávil`), **cyrilice uvnitř českého slova** (`импровизацe`), anglické
+slovo (`Subsequently`), slovakismy (`bedňa`, `ĺ`), rozpad shody a pádu.
+- **Poučení o vlastní zaujatosti:** neuměl jsem si představit *tento* druh selhání,
+  protože ho nikdy nevyrobím. Zaujatost není jen „píšu líp" — je to **slepota vůči
+  třídám chyb, které silný model nedělá vůbec.** U každé predikce se ptej, jestli
+  ji nestavím jen na chybách, které umím napodobit.
+- **Podezřelý č. 1 není prompt, ale `temperature`.** `anthropic.js` neposílá teplotu
+  → SDK default 1.0. Vynalézavá morfologie + průnik příbuzného písma je podpis vysoké
+  teploty na flektivním jazyce. **Než sáhneš na prompt, žádej A/B na 0.4–0.6.**
+
+### H2 — NEJDŘÍV OVĚŘ INFRASTRUKTURU, JINAK MĚŘÍŠ ŠUM
+8 z 13 výstupů bylo **useknuto uprostřed slova**: `MAX_TOKENS = 400`
+(`providers/anthropic.js`) ≈ 850–1000 zn. češtiny, z toho 50–120 sežere markdown
+hlavička. Tím padlo měření stropu 900, závorky, pořadí škrtání i úplnosti NÁSLEDKŮ —
+nešlo odlišit „model přetáhl" od „API uřízlo". Navíc `adapter.js` `jeValidni()`
+nekontroluje `stop_reason` → useknutý fragment je „validní" a fallback nesepne.
+- **Před každou bránou si projdi celou cestu volání** (max_tokens, temperature,
+  validace odpovědi), ne jen prompt. Jeden konfigurační řádek umí zneplatnit celé kolo.
+- **Rozsah ve VĚTÁCH je proti useknutí odolný, ve znacích ne.** Když je výstup
+  useknutý, počítej věty — 13/13 přes 5 vět byl jediný použitelný délkový signál.
+
+### H3 — CO DRŽELO: jádro rule 3 obstálo na produkčním modelu
+**Ani jeden z 52 slotů nebyl obrácen na opačný výsledek.** Auto-fail brokovnice držel
+i s důvodem, kolárek držel proti fikci věci, bedna v `past-vymysleny-dusledek` se
+neztratila. Sólo klauzule 2/2. **„Mechanika rozhoduje, AI vypráví" na Haiku funguje** —
+selhává vrstva nad tím (jazyk, rozsah, kulisa). Tohle si pamatuj jako baseline:
+příští regresi měř proti „52/52 slotů drží", ne proti dojmu.
+
+### H4 — POŘADÍ FREKVENCE PORUŠENÍ (baseline pro příští kolo)
+1. jazyková vada 13/13 · 2. přes 5 vět 13/13 · 3. formátový šum (nadpisy) 13/13 ·
+4. **vymyšlená PŘÍČINA selhání 8/13** (A4 — nejčastější porušení pravidla) ·
+5. věc ze slotu zmizí/zamění se 6/13 · 6. strojový slovník v próze 4/13 ·
+7. vymyšlené jméno 3/13 · 8. vymyšlený mechanický důsledek (A3) 3/13 · 9. refrén 1/13.
+- **A4 je jednořádková věta uvnitř nejdelšího odstavce promptu a Haiku ji nedrží.**
+  Obecně: **zákaz schovaný uprostřed dlouhého pravidla se na slabém modelu ztrácí** —
+  rozhoduje pozice, ne jen znění. Totéž potkalo rule 4 (zadržení, `slozeni-lezi-v-aute`:
+  složený „převezen v motorizovaném voze na dalšem šetření") — pojmové znění z v0.4.1
+  bylo správné a přesto nestačilo.
+- **Nová podtřída A3:** model vrátí strukturu vstupu na výstup (blok „NÁSLEDKY: Žár
+  posádky: −7"). Hlídej ji — je to nejnápadnější porušení iluze protokolu.
+
+### H5 — MRTVÁ VSTUPNÍ POLE POTVRZENA V PRAXI (n=1, ale jednosměrně)
+`ZÁCHRANA` zmíněna **0 ze 4** casů, kde padla. Gap proti `MAX DOSAŽITELNÉ`
+zaznamenán **0 ze 4**. Přesně to, kvůli čemu byla diagnostická položka psaná
+([[baterie-falzifikovatelnost]] §3). **Než se za pole platí další kolo, proměř je
+na 5 generacích.**
+
+## Stav promptu (snapshot: v0.4.1, 2026-08-02)
+v0.4.1 = opravné kolo nad v0.4 (pět bodů z review fáze 3): kredity +3/+2/0/0 dle
+`rules.js`; příklad MAX přepočten na 2/4; „ztráta nákladu jen v PRŮŠVIHU" vyvráceno
+(D40); **rule 4 nově kryje zranění osoby, zadržení i ztotožnění** (jméno, doklad,
+značka vozu), přičemž strkanice/tahanice zůstávají povolené; **strop délky 800 → 900
+zn.** a **rule 8 nově určuje pořadí škrtání** (u stropu se škrtá kulisa, nikdy
+poznámka a nikdy následek). Baterie má case `solo-bohate-nasledky-strop-delky`.
+OTEVŘENÉ, čeká na designéra: platí zákaz újmy z rule 4 i na PROTISTRANU (NPC)?
+Dnešní „nikdo" je univerzální a u prošlého útočného slotu v konfrontaci nechává
+rule 5 skoro bez materiálu.
+
+## Předchozí stav promptu (snapshot: v0.4, 2026-08-01)
+v0.4 = **kreativní mandát „plné B" dle D53** — rule 5 káže u KAŽDÉHO ze čtyř slotů
+dopsat ZPŮSOB a ZÁMĚR použití věci (nikdy výsledek, nikdy příčinu), s nerovným
+rozpočtem (sedící věc pár slov, nesedící celý záměr). Nová rule 4 = pojistka proti
+vymyšlenému mechanickému důsledku, stojí PŘED mandátem. Rule 1 má znakový strop
+800 zn. místo samotného počtu vět, rule 2 sólo klauzuli. Vstupní formát má navíc
+`PRAVIDLO RUNU`, `ZÁCHRANA`, `MAX DOSAŽITELNÉ n/4`.
+**Stále NEOTESTOVÁN na produkčním modelu** (Haiku 4.5, D55) — největší produktové
+riziko je tím pádem pořád neměřené; brána češtiny uvnitř fáze 3 je první měření.
+Rozhodovací metodika pro varianty pravidel je v [[prompt-variant-rozhodovani]].
+
+### A3 — VYMYŠLENÝ MECHANICKÝ DŮSLEDEK (nová KRITICKÁ třída, otevřená mandátem v0.4)
+Od chvíle, kdy prompt modelu **káže vymýšlet**, přibyla třída chyby, kterou v0.3
+neměla jak vyrobit: invence, jejíž důsledek si čtenář **dopočítá proti číslu, které
+ve vstupu nebylo**. Není to změna výsledku (ta je A1), je to nový fakt, který
+výsledku odporuje.
+- Doložené tvary: „chlapi si bednu vzali" (náklad beze změny), „vypálil ránu do
+  vzduchu" (Žár 0, nebo dokonce klesající), „bedna se roztříštila", „rána se
+  rozlehla údolím".
+- **Jak testovat:** postav uzel, kde je invence maximálně svůdná ke kroku, který
+  hýbe číslem — bedna v útočné roli s nezměněným nákladem; zbraň, která prošla,
+  při KLESAJÍCÍM Žáru (konfrontace). Case `past-vymysleny-dusledek`.
+- **Hlídej směr, ne jen existenci:** nejzrádnější je konfrontace, kde Žár klesá —
+  model má naučeno, že zbraň = pozornost, a napíše růst.
+
+### A4 — VYMYŠLENÁ PŘÍČINA SELHÁNÍ (poddruh F4, od v0.4 povinně hlídaný)
+„nestačilo to, protože ráže byla malá", „nemělo to sílu", „byl na to moc slabý".
+Model **udrží výsledek a vymyslí si k němu důvod** — proto se to nechytí kontrolou
+na změnu výsledku a musí se hlídat zvlášť. Práh je `kotva + offset + bump + šum`,
+takže kauzální tvrzení je v části případů nepravdivé a hráč si to ověří odhaleným
+prahem. Rule 5 v0.4 to zakazuje explicitně („nikdy PŘÍČINU").
+- **Nejčastější konkrétní tvar:** `PRAVIDLO RUNU` (hodnota = 0) → model napíše
+  „neměl dost peněz" místo „na téhle trase peníze neplatí". Je to příčina
+  i posun významu zároveň a je to důvod, proč pole existuje.
+
+### A5 — NÁHRADNÍ OZNAČENÍ V SÓLU se stane refrénem, opačné selhání je horší
+Rule 2 nabízí dvě náhrady („jmenovaný", „týž") na ~4 potřebné reference. Model
+dostal rotaci a bude ji opakovat **v každém protokolu runu** — B5′ vynucený přímo
+zněním pravidla. Doloženo vlastní generací 2026-08-01, ne odhad.
+- **Opačné a horší selhání:** „jeden z podezřelých… druhý…" — ze čtyř slotů jedné
+  osoby udělá dva lidi. KRITICKÉ, a sólo je dle D40(b) default cesta prvního
+  sezení lidské brány, ne edge case.
+- **Rozpor v projektu, hlídej ho:** D40(b) zvolil pro fallbacky **neutrální psaní**
+  („úlohy, vůz, náklad") místo zájmenné rotace. AI větev a fallback větev tak řeší
+  týž problém jinou technikou — ve složeném spisu skončí vedle sebe v jiném registru.
+
+### C1 — PROCESNÍ: „baterie zelená, produkce spadne"
+Baterie je **ručně psaný snapshot**, ne výstup `buildPromptInput()`. Doloženo
+2026-08-01: produkce posílá jiný vstup než baterie — záporný Žár jako `+-7`
+se „šerif beze změny", postihovou fikci useknutou na první větě a ve 2. osobě,
+`PRAVIDLO RUNU` až za NÁSLEDKY, `loot` vždy prázdný i v pásmu HLADCE+LOOT.
+- **Před každou akceptační bránou ověř, že vstupy baterie vznikly z kódu, který
+  se reálně volá.** Jinak měřím kvalitu promptu, který se nikdy nepošle — a to je
+  přesně to, na čem má stát brána češtiny dle D55.
+- **Nález se 2026-08-02 zopakoval mou vlastní rukou** (a to jsem ho měl zapsaný):
+  do nového casu jsem napsal dva ruční řádky `důvod:`, jenže `prompt.js` dopisuje
+  `důvod:` **jen u `gangster_auto_fail`** — zrušený stat jde do modelu jako
+  „mělo hodnota 0" bez vysvětlení. KRITICKÁ položka casu („nesmí napsat, že
+  nestačily peníze") se tak testuje na vlídnějším vstupu, než jaký hra generuje.
+  **Pravidlo: každý řádek vstupu, který píšu ručně, si najdi v `buildPromptInput()`.
+  Co tam nevzniká, do baterie nepatří — nebo tam patří s poznámkou, že je to
+  optimistický vstup.**
 
 ## Vlastní zaujatost
 Jsem silnější než produkční Haiku. U promptu generuj vždy i **nejhorší** variantu.
