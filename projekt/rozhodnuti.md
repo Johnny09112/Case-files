@@ -11,6 +11,33 @@ ukazatel na archiv.*
 architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.md]]
 (přesunuto 2026-07-24).
 
+## 2026-08-02
+
+- **D57 (ROZHODNUTÍ UŽIVATELE po 2p sezení + auditu) — „kdo to schytá"
+  schváleno, měřicí kolo Žár+Malone puštěno, K3 = čtvrtá známá odchylka.**
+  Podklad: [[../technika/design-audit-2p-2026-08-02|design-audit-2p]] +
+  [[../technika/obsahove-kolo-2p-2026-08-02|obsahové kolo]] +
+  [[../playtesty/2026-08-02|playtest]] (metrika 1 NE — separabilita potvrzena
+  u stolu). (1) **V1-A krok 1 SCHVÁLEN:** oběť postihu = vlastník slotu
+  s největší statovou mezerou, oznámená PŘED rozdělením (ΔK1 ≤0,85 b., jinak
+  nula — horní mez, přeměří se finální definice); veto vlastníka = samostatné
+  pozdější rozhodnutí. (2) **Měřicí kolo:** Žár V3-A′+C (jeden klimax za run
+  + dopředná anotace) a Malone V2-A′ (rušení se zapíná prahem Zátahu — D25e
+  se otvírá VÝHRADNĚ pro tuto variantu), + V4-D po doměření D6; K1 povinně
+  per pronásledovatel (nález kritika: hodnota-slot pod Malonem = auto-fail
+  p=1,0 → 7/14 situací strop 3/4, LOOT nedosažitelný). (3) **K3 zapsat jako
+  čtvrtou známou odchylku** (D39 precedens; reálně 3/2/2/2 proti gate {3,4}).
+  (4) **PM bez ptaní (opravy proti pravdě):** V4-C lživý výpis rozkladu prahů;
+  consistency N1–N6 (ruce 8/5/4/3 do MVP, gamble pravděpodobnosti, příjemce
+  postihu, rozsah rušení, Žár za commit, asymetrie šumu); komunikace Malone
+  (pravidlo text + přeškrtnutá hodnota) a zbraně (anotace + razítko na kartu)
+  dle znění z obsahového kola. Zamítnuté se nevrací: rozpočet→Žár, výměna
+  karet, obsahová podlaha stat 5, zúžení Malonea na vlastní uzly; D44 se
+  neotvírá, dokud sezení nevyplní metriku 4.
+- **D56 (PM) — po 2p sezení spuštěna dvě kola (audit + obsah), metriky
+  zapsány:** hádka NE ([]), smích ANO, chuť na 2. run ano/nebyl čas; nálezy
+  a triáž v playtestu. Fragmenty (čeština, 42) zapečeny obsahovým kolem.
+
 ## 2026-07-30
 
 - **D55 (ROZHODNUTÍ UŽIVATELE) — LLM poskytovatel: Anthropic Claude Haiku 4.5;
