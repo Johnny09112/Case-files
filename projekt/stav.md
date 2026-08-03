@@ -464,6 +464,21 @@ variance doměřena (2sd = 3,22 < 6). Eskalace V1–V4 rozhodnuta uživatelem ja
   `ocekavani`) opraven, 4 vážné otevřené zapsány do changelogu pro čtení
   3. běhu. **Stop podmínka 3. běhu (binární, per generace): formátový šum
   ≤2/39 ∧ vymyšlená příčina ≤2/39. Uživatel: `npm run test:cestina`.**
+  **3. BĚH PROBĚHL (2026-08-02, uživatel; verdikt testéra `2bbc303`+`96328c0`):
+  NEPROŠLA 0/13, stop podmínka padla na obou metrikách — ale s úplným
+  mechanismem:** škrt „3–5 vět" ve v0.4.2 byl vlastní regrese (odstranil
+  jedinou funkční brzdu → délka +25 % a s ní jazyk 2/13→7/13), rule 3×5
+  táhnou proti sobě („selhal, neboť X" 13/13 — kritik predikoval před
+  během). **Mechanika drží POTŘETÍ (0/52 flipů).** Absurdní run
+  ([[../technika/test-absurdni-karty-2026-08-02|test-absurdni-karty]],
+  `52f53c9`) uznán jako plnohodnotná replikace (hlavička 21/21, délka 19/21);
+  **humor absurdit FUNGUJE** — ochutnávka skladače D54. Eskalace na dražší
+  model z dat NEplyne. Report:
+  [[../technika/brana-cestiny-beh3-vyhodnoceni-2026-08-02|technika/brana-cestiny-beh3-vyhodnoceni-2026-08-02.md]].
+  **Další krok: úzké kolo v0.4.3** (náhradní brzda počitatelná po slotech,
+  povolený bezpříčinný tvar + protipříklad, pozitivní anti-hlavička, zákaz
+  herního slovníku; + case s nesedícími věcmi; harness `--n=3`) — **POSLEDNÍ
+  prompt-iterace pod fází 3, pak eskalace na uživatele**; 4. běh na n=3.
 - **Jazyková strategie CZ→EN** — kdy zařadit překlad a test anglických protokolů.
   Obsah vzniká a testuje se česky (rizikovější jazyk pro AI humor), primární
   Steam trh je anglický.
