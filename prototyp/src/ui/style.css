@@ -463,7 +463,15 @@ button.mezera:disabled {
   letter-spacing: 0.05em;
 }
 
-/* Číslo mezery = číslo role v rozpisu pod textem (jediný můstek mezi prózou
+/* Aktivní mezera (fáze 2.3) — jasně odlišená od zbytku prózy, ať hráč vždycky
+   vidí, kam příští klik na věc dopadne. */
+.mezera-aktivni {
+  background: var(--papir-tmavy);
+  border-bottom: 3px solid var(--cervena);
+  font-weight: 700;
+}
+
+/* Číslo mezery = číslo role v tipu pod textem (jediný můstek mezi prózou
    a mechanikou — bez něj hráč neví, který práh se právě plní). */
 .mezera-cislo {
   font-size: 0.62rem;
@@ -471,15 +479,18 @@ button.mezera:disabled {
   margin-left: 0.1rem;
 }
 
-/* Rozpis rolí na přiřazení je od 2.2 podřízený próze (menší, tlumený rám). */
-.rozpis-tlumeny {
-  margin-top: 0.9rem;
-  opacity: 0.9;
+/* Tip aktivní mezery (fáze 2.3) — nahrazuje bývalý celý rozpis rolí: jeden
+   ohraničený box, jen k roli, která se teď plní. */
+.tip-mezera {
+  margin: 0.6rem 0 1rem;
+  border: 1px solid var(--hrana);
+  border-left: 4px solid var(--cervena);
+  background: var(--papir-tmavy);
+  padding: 0.5rem 0.8rem;
 }
 
-.rozpis-tlumeny .hod-radek {
-  padding: 0.35rem 0.7rem;
-  font-size: 0.9rem;
+.tip-mezera .formular-popisek {
+  margin: 0;
 }
 
 .afinity {

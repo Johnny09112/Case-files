@@ -35,6 +35,7 @@ import { createLog } from '../llm/log.js';
 import { llmCtxZObsahu } from '../llm/prompt.js';
 import { obrazovkaSetup } from './screens/setup.js';
 import { obrazovkaRun } from './screens/run/index.js';
+import { aktivniSlotIndex } from './screens/run/assign.js';
 import { obrazovkaKonec } from './screens/end.js';
 import { h } from './dom.js';
 
@@ -122,8 +123,11 @@ export function initApp(root) {
       /** @type {string|null} */ odkrytyCil: null,
       /** Commit: hrac_id → vybraná id karet. */
       commitVyber: /** @type {Record<string, string[]>} */ ({}),
-      /** Assign: co je vybráno a co kam přiřazeno. */
-      assignVyber: { karta: /** @type {string|null} */ (null), sloty: /** @type {Record<number, string>} */ ({}) },
+      /**
+       * Assign: aktivní mezera (fáze 2.3 — `null` = auto, viz
+       * `aktivniSlotIndex` v `assign.js`) a co kam přiřazeno.
+       */
+      assignVyber: { aktivni: /** @type {number|null} */ (null), sloty: /** @type {Record<number, string>} */ ({}) },
       /** @type {any|null} */ konec: null,
       finaleVyklepano: false,
     };
@@ -326,7 +330,7 @@ export function initApp(root) {
       prikaz(() => {
         S.run.commitCards(list);
         S.commitVyber = {};
-        S.assignVyber = { karta: null, sloty: {} };
+        S.assignVyber = { aktivni: null, sloty: {} };
         // Rozklik je rozhodnutí per uzel, ne trvalý spínač — jinak by ulehčení
         // splynulo se starým „řádek svítí pořád". A onboardingová ukázka končí
         // s prvním commitem: hráč viděl, co ta slova znamenají, dál čte prózu.
@@ -338,26 +342,30 @@ export function initApp(root) {
       });
     },
 
-    /* --- assign a gamble --- */
-    vyberKartu(/** @type {string} */ kartaId) {
-      S.assignVyber.karta = S.assignVyber.karta === kartaId ? null : kartaId;
+    /* --- assign a gamble (fáze 2.3: aktivní mezera, žádný „vyber pak přiřaď") --- */
+    aktivujMezeru(/** @type {number} */ slotIndex) {
+      S.assignVyber.aktivni = slotIndex;
       render();
     },
-    prirad(/** @type {number} */ slotIndex) {
-      if (!S.assignVyber.karta) return;
-      S.assignVyber.sloty[slotIndex] = S.assignVyber.karta;
-      S.assignVyber.karta = null;
-      render();
-    },
-    zrusPrirazeni(/** @type {number} */ slotIndex) {
-      delete S.assignVyber.sloty[slotIndex];
+    /**
+     * Přiřadí committnutou věc do PRÁVĚ aktivní mezery (nahradí, co tam
+     * případně bylo — původní věc se prostě přestane objevovat v `sloty`,
+     * takže se sama vrátí mezi volné) a posune ukazatel na další prázdnou
+     * (`aktivni: null` = auto, spočítá `aktivniSlotIndex` při renderu).
+     */
+    priradVec(/** @type {string} */ kartaId) {
+      const sloty = S.run.getState().situace.odhaleno?.sloty ?? [];
+      const idx = aktivniSlotIndex(sloty, S.assignVyber);
+      if (idx == null) return;
+      S.assignVyber.sloty[idx] = kartaId;
+      S.assignVyber.aktivni = null;
       render();
     },
     gambluj(/** @type {string} */ hracId, /** @type {string} */ kartaId) {
       prikaz(() => {
         S.run.gamble({ handOwnerId: hracId, replacedCardId: kartaId });
         // Vyměněná věc už ve slotech být nesmí — přiřazení se resetuje.
-        S.assignVyber = { karta: null, sloty: {} };
+        S.assignVyber = { aktivni: null, sloty: {} };
       });
     },
     vyhodnot() {
@@ -365,7 +373,7 @@ export function initApp(root) {
       prikaz(() => {
         S.run.assignToSlots(list);
         S.run.confirmNode();
-        S.assignVyber = { karta: null, sloty: {} };
+        S.assignVyber = { aktivni: null, sloty: {} };
       });
     },
 

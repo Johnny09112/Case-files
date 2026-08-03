@@ -12,9 +12,13 @@
  * Přesný práh i jeho rozklad patří na obrazovku výsledku (`vysledek.js`).
  *
  * **Hlavní prvek obrazovky je PRÓZA situace** (fáze 2.2, nález 1. sezení lidské
- * brány): autorský text se 4 mezerami je kanon (§4.3) a slotové řádky bez něj
- * čtou jako čtyři nesouvisející testy. Mezery jsou klikatelné — přiřazení jde
- * jak z textu, tak z technického rozpisu pod ním; rozpis je vizuálně podřízený.
+ * brány): autorský text se 4 mezerami je kanon (§4.3). Od rychlé UX úpravy
+ * (fáze 2.3) je interakce „aktivní mezera": jedna mezera je vždy aktivní
+ * (výchozí = první prázdná), klik na libovolnou mezeru ji aktivuje (i
+ * vyplněnou — pro opravu) a klik na committnutou věc ji rovnou přiřadí do
+ * aktivní mezery a ukazatel skočí na další prázdnou. Žádný mezikrok
+ * „vyber věc, pak klikni na roli" a žádný samostatný technický rozpis rolí —
+ * jediný technický údaj k aktivní mezeře nese `tipAktivni()` pod textem.
  *
  * Žádná herní logika — jen render snapshotu enginu (architektura §2.4).
  * `content` je tu ze stejného důvodu jako v `commit.js`: aby se nikdy
@@ -33,6 +37,24 @@ function anotaceSlotu(anotace, nodeIndex, events) {
   const seq = events.find((e) => e.type === 'situation_revealed' && e.nodeIndex === nodeIndex)?.seq;
   const seznam = seq ? (anotace.get(seq) ?? []) : [];
   return new Map(seznam.filter((a) => a.misto === MISTO.SLOT).map((a) => [a.slot_index, a]));
+}
+
+/**
+ * Index aktivní mezery — sdílené mezi renderem (tady) a `app.js`
+ * (`akce.priradVec`), ať se pravidlo „výchozí = první prázdná" nikde
+ * nerozejde. Explicitní klik (`akce.aktivujMezeru`) vyhraje, dokud ukazuje na
+ * existující slot; jinak první prázdný slot; jinak první slot vůbec (aby tip
+ * pod textem měl vždycky co ukázat, i když je hotovo).
+ * @param {{slot_index: number}[]} sloty
+ * @param {{aktivni: number|null, sloty: Record<number, string>}} assignVyber
+ * @returns {number|null}
+ */
+export function aktivniSlotIndex(sloty, assignVyber) {
+  if (assignVyber.aktivni != null && sloty.some((s) => s.slot_index === assignVyber.aktivni)) {
+    return assignVyber.aktivni;
+  }
+  const prazdna = sloty.find((s) => !(s.slot_index in assignVyber.sloty));
+  return (prazdna ?? sloty[0])?.slot_index ?? null;
 }
 
 /**
@@ -70,16 +92,16 @@ function nazevStitku(content, stitekId) {
 }
 
 /**
- * @param {{S: object, st: object, content?: object, akce: Record<string, any>,
- *   anotace: Map<number, object[]>}} ctx
+ * @param {{S: object, st: object, content?: object, rules?: object,
+ *   akce: Record<string, any>, anotace: Map<number, object[]>}} ctx
  */
 export function pohledPrirazeni(ctx) {
-  const { S, st, content, akce, anotace } = ctx;
+  const { S, st, content, rules, akce, anotace } = ctx;
   const situace = st.situace;
   const sloty = situace.odhaleno?.sloty ?? [];
   const vysvetlivky = anotaceSlotu(anotace, st.nodeIndex, S.udalosti ?? []);
   const prirazeno = S.assignVyber.sloty;
-  const vybranaKarta = S.assignVyber.karta;
+  const aktivni = aktivniSlotIndex(sloty, S.assignVyber);
   const hotovo = Object.keys(prirazeno).length === situace.committed.length;
   const nevidiViditelnost = kdoNevidi(st, 'hide_viditelnost');
   // Ruce, ze kterých lze táhnout naslepo — jen ty neprázdné (D19b: „čí ruka
@@ -99,7 +121,7 @@ export function pohledPrirazeni(ctx) {
       { class: 'spis-hlavicka' },
       h('p', { class: 'formular-popisek' }, 'odhaleno — teď se dělí'),
       h('h1', {}, nazevSituace(content, situace)),
-      h('p', { class: 'napoveda' }, 'Klikni na věc, pak na mezeru v textu (nebo na roli v rozpisu). Vidíš kotvu, ne práh — kotva se opakuje, šum se dorolí a ukáže se až po vyhodnocení.')
+      h('p', { class: 'napoveda' }, 'Podtržená mezera je aktivní — klikni na věc dole, přiřadí se tam a ukazatel skočí na další prázdnou. Klikni na jinou mezeru, chceš-li opravit ji místo další. Vidíš kotvu, ne práh — kotva se opakuje, šum se dorolí a ukáže se až po vyhodnocení.')
     ),
     nevidiViditelnost.length > 0
       ? h(
@@ -109,12 +131,7 @@ export function pohledPrirazeni(ctx) {
         )
       : null,
     prozaSituace(),
-    h(
-      'section',
-      { class: 'rozpis-hodu rozpis-tlumeny' },
-      h('h2', { class: 'formular-popisek' }, 'Rozpis rolí — co která mezera měří'),
-      sloty.map((/** @type {any} */ s) => radekSlotu(s))
-    ),
+    tipAktivni(),
     h(
       'section',
       { class: 'formular-blok' },
@@ -124,13 +141,12 @@ export function pohledPrirazeni(ctx) {
         { class: 'ruka' },
         situace.committed.map((/** @type {any} */ c) => {
           const uzPouzita = Object.values(prirazeno).includes(c.karta.id);
-          const vybrana = vybranaKarta === c.karta.id;
           return h(
             'button',
             {
-              class: `karta${vybrana ? ' zoufala' : ''}${uzPouzita ? ' neaktivni' : ''}`,
+              class: `karta${uzPouzita ? ' neaktivni' : ''}`,
               disabled: uzPouzita,
-              onclick: () => akce.vyberKartu(c.karta.id),
+              onclick: () => akce.priradVec(c.karta.id),
             },
             h('strong', {}, c.karta.nazev),
             h('span', { class: 'karta-meta' }, Object.entries(c.karta.staty).map(([k, v]) => `${STAT_LABEL[k] ?? k} ${v}`).join(' · ')),
@@ -174,11 +190,12 @@ export function pohledPrirazeni(ctx) {
   }
 
   /**
-   * Autorská próza situace s živě plněnými mezerami — hlavní prvek obrazovky.
-   * Mezera je tlačítko se stejným chováním jako řádek rozpisu (přiřadit /
-   * zrušit), takže hráč nemusí překládat „slot 3" na „…pomocí ___".
-   * Když obsah text nemá (starý/nekompletní obsah), sekce prostě zmizí —
-   * rozpis rolí zůstává funkční.
+   * Autorská próza situace s živě plněnými mezerami — hlavní prvek obrazovky
+   * i jediné místo, odkud jde mezeru aktivovat (od fáze 2.3 už žádný
+   * samostatný technický rozpis rolí neexistuje). Když obsah text nemá
+   * (starý/nekompletní obsah), sekce prostě zmizí — přiřazení pak jede jen
+   * přes výchozí/aktivní slot bez vizuální zpětné vazby v próze; obsah je
+   * od D23 v3-kompletní, takže by k tomu nemělo dojít.
    */
   function prozaSituace() {
     const text = textSituace(content, situace.id);
@@ -207,50 +224,44 @@ export function pohledPrirazeni(ctx) {
       : h('span', { class: 'jednajici mezera-prazdna' }, MEZERA);
   }
 
-  /** Klikatelná mezera {VEC} — plní se názvem přiřazené věci. */
+  /** Klikatelná mezera {VEC} — plní se názvem přiřazené věci, aktivní se aktivuje kliknutím. */
   function mezera(slotIndex) {
-    const s = sloty.find((/** @type {any} */ x) => x.slot_index === slotIndex);
     const karta = veSlotu(slotIndex)?.karta ?? null;
+    const trida = ['mezera', karta ? 'mezera-plna' : 'mezera-prazdna', slotIndex === aktivni ? 'mezera-aktivni' : null]
+      .filter(Boolean)
+      .join(' ');
     return h(
       'button',
       {
-        class: `mezera${karta ? ' mezera-plna' : ' mezera-prazdna'}`,
-        disabled: !karta && !vybranaKarta,
-        // Tooltip nesmí obcházet D51: kotva ano, finální práh ne.
-        title: s ? `role ${slotIndex + 1}: ${s.role} — ${popisStatSlotu(s)}, kotva ${s.kotva} (práh až po vyhodnocení)` : '',
-        onclick: () => (karta ? akce.zrusPrirazeni(slotIndex) : akce.prirad(slotIndex)),
+        class: trida,
+        title: `role ${slotIndex + 1} — klikni pro aktivaci`,
+        onclick: () => akce.aktivujMezeru(slotIndex),
       },
       karta ? `„${karta.nazev}"` : MEZERA,
       h('sup', { class: 'mezera-cislo' }, String(slotIndex + 1))
     );
   }
 
-  /** @param {any} s odhalený slot */
-  function radekSlotu(s) {
-    const karta = veSlotu(s.slot_index)?.karta ?? null;
+  /**
+   * Jediný technický údaj obrazovky — nahrazuje bývalý celý „Rozpis rolí":
+   * ukazuje info JEN k právě aktivní mezeře (role, stat, viditelnost, kotva +
+   * rozpětí šumu). Práh sem nepatří — D51.
+   */
+  function tipAktivni() {
+    const s = sloty.find((/** @type {any} */ x) => x.slot_index === aktivni);
+    if (!s) return null;
     const a = vysvetlivky.get(s.slot_index);
-    // Prázdný slot bez vybrané věci nemá co přiřadit — tlačítko na to nesmí
-    // vést k nelegálnímu příkazu (`prirad` bez karty). Zrušit přiřazení jde
-    // vždy, tam se nic neblokuje.
-    const nejdeKliknout = !karta && !vybranaKarta;
+    const sumRozsah = rules?.sumRozsah ?? 2;
     return h(
-      'button',
-      {
-        class: 'hod-radek',
-        disabled: nejdeKliknout,
-        onclick: () => (karta ? akce.zrusPrirazeni(s.slot_index) : akce.prirad(s.slot_index)),
-      },
+      'section',
+      { class: 'tip-mezera' },
+      h('p', { class: 'formular-popisek' }, `aktivní mezera ${s.slot_index + 1}. — ${s.role}`),
       h(
-        'div',
-        { class: 'okraj-postava-radka' },
-        h('strong', {}, `${s.slot_index + 1}. ${s.role}`),
-        // Mechanický řádek roli popisuje statem a viditelností; kotvu a rozpětí
-        // šumu nese anotace pod ním (jediné znění, sdílené s obrazovkou
-        // výsledku). Práh sem nepatří — D51.
-        h('span', { class: 'napoveda' }, `${popisStatSlotu(s)} · ${s.viditelnost === 'skryta' ? 'skrytá role' : 'viditelná role'}`)
+        'p',
+        { class: 'napoveda' },
+        `${popisStatSlotu(s)} · ${s.viditelnost === 'skryta' ? 'skrytá role' : 'viditelná role'} · kotva ${s.kotva}, šum ±${sumRozsah} — přesný práh až po vyhodnocení`
       ),
-      a ? h('p', { class: 'napoveda', title: a.detail ?? '' }, a.veta) : null,
-      h('p', { class: 'hod-vypocet' }, karta ? `→ „${karta.nazev}"` : '→ (prázdné, klikni pro přiřazení vybrané věci)')
+      a ? h('p', { class: 'napoveda', title: a.detail ?? '' }, a.veta) : null
     );
   }
 
