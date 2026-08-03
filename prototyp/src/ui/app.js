@@ -196,14 +196,21 @@ export function initApp(root) {
   /**
    * Souběžný, NEBLOKUJÍCÍ pokus o lepšího vypravěče (fáze 3, ADR-004).
    * `sekce.odstavce` už v tuhle chvíli nese hotový fallback text (viz výše) —
-   * hráč ho může vidět okamžitě, psací stroj na nic nečeká. Když LLM odpověď
-   * dorazí DŘÍV, než hráč sekci uvidí vyklepanou (`polozka.vyklepano ===
-   * false`), text i indikátor v hlavičce se tiše vymění a překreslí; když
-   * dorazí později (nebo vůbec — bez klíče, timeout, chyba), fallback zůstává
-   * beze změny a nic se nestane. Žádné modály, žádná chybová hlášení.
+   * hráč ho může vidět okamžitě, psací stroj na nic nečeká. LLM odpověď
+   * (~5–15 s) typicky dorazí AŽ PO tom, co hráč sekci uvidí vyklepanou
+   * (`polozka.vyklepano === true`) — proto se text i indikátor v hlavičce
+   * vymění bez ohledu na `vyklepano`: pokud sekce ještě čeká ve frontě na
+   * psací stroj, výměna proběhne jako dřív před klepáním; pokud je už
+   * vyklepaná, text se vymění naráz (bez re-klepání, žádná nová animační
+   * logika) a štítek přepne na AI. Když odpověď nedorazí vůbec (bez klíče,
+   * timeout, chyba), fallback zůstává beze změny a nic se nestane. Žádné
+   * modály, žádná chybová hlášení.
    *
    * `sekce`/`polozka` sdílí referenci s `S.protokol`/`S.fronta` (mutace tady
-   * se propíše i tam, i když `polozka` mezitím z fronty vypadla).
+   * se propíše i tam, i když `polozka` mezitím z fronty vypadla). `render()`
+   * vždy staví z aktuálního `S` (viz níže), ne z téhle uzavřené reference —
+   * takže i když `sekce` mezitím vypadla z `S.protokol` (hráč pokročil na
+   * další uzel), mutace `sekce` samotné je neškodná a `render()` nespadne.
    */
   function pokusOAdaptaci(sekce, polozka, udalosti) {
     const ctx = llmCtxZObsahu(content, S.jmena, S.run?.getState()?.kredity);
@@ -211,7 +218,6 @@ export function initApp(root) {
       .generate(udalosti, ctx)
       .then((vysledek) => {
         if (vysledek.zdroj !== 'llm' && vysledek.zdroj !== 'cache') return;
-        if (polozka.vyklepano) return; // hráč sekci už viděl vyklepanou — fallback zůstává
         sekce.odstavce = [vysledek.text];
         sekce.zdroj = 'ai';
         render();
