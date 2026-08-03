@@ -37,16 +37,28 @@
 # PLACEHOLDERY (dosazuje kód; nic jiného v textu být nesmí)
 #   {vec}   název věci z obsah/veci.yaml, 1. PÁD, BEZ uvozovek. Engine NESKLOŇUJE →
 #           fragment ho VŽDY obaluje českými uvozovkami a nadřazeným podstatným
-#           jménem, které se skloní za něj: „kus „{vec}““, „předmět „{vec}““,
-#           volitelně s úředním závěsem „kus vedený jako „{vec}““. Nikdy do šikmého
-#           pádu — skloňuje se obal (kus/kusu/předmět), ne placeholder.
+#           jménem, které se skloní za něj. Nikdy do šikmého pádu — skloňuje se
+#           obal (věc/věci/položka), ne placeholder.
+#           POVOLENÉ OBALY VĚCI (revize 2026-08-02, viz REVIZE níže):
+#             „věc „{vec}““ · „položka „{vec}““   — univerzální, POUŽÍVEJ TYTO DVA
+#             „předmět vedený jako „{vec}““       — jen s úředním závěsem, max ~4× v sadě
+#           „kus“ a HOLÝ „předmět“ jsou ZAKÁZANÉ: balík obsahuje NEPŘEDMĚTNÉ věci
+#           („Slzy na povel“, „Zpěv opilce“, „Otrlený výraz“) a věc se do slotu
+#           dostane i „špatně“ (to je pointa hry), takže stat slotu NEZARUČUJE
+#           třídu karty. „kus „Zpěv opilce““ je vada v každém takovém renderu;
+#           „předmět VEDENÝ JAKO „Zpěv opilce““ je pravda o evidenci — a nejlepší
+#           dobový vtip sady (úřad zapsal pláč na povel jako inventární položku).
 #   {role}  název role slotu z obsah/situace.yaml. Tvary jsou RŮZNÉ a fragment musí
 #           sedět na všechny: infinitivní fráze („Zaplatit za vytažení“), JMENNÉ
 #           výrazy („Silniční poplatek“, „Klidná tvář“, „Něco navíc“) i podmínkové
 #           věty („Kdyby začal vyvádět“, „Nedýchat, když jde kolem“). Společné mají
 #           jen velké počáteční písmeno a nesklonnost → role se NIKDY nestává
-#           podmětem ani přísudkem věty, jen CITOVANÝM NÁZVEM položky: „položka
-#           „{role}““, „úloha vedená jako „{role}““, „k položce „{role}““.
+#           podmětem ani přísudkem věty, jen CITOVANÝM NÁZVEM položky.
+#           OBALY ROLE: „úkol“ · „úkon“ · „bod“ · „kolonka“. „bod“ a „kolonka“
+#           unesou i jmenné a podmínkové role nejlíp („bod „Kdyby přituhlo““),
+#           proto patří do přihrádek, které padají na SKRYTÉ sloty (útok, zámky).
+#           „položka“ je REZERVOVANÁ pro věci — pro roli se nepoužívá, jinak stojí
+#           v jedné větě dvakrát a čtenář neví, co je co.
 #           Test věty: dosaď „Zaplatit za vytažení“ i „Klidná tvář“ — musí projít obě.
 #   {jmeno} PŘÍJMENÍ postavy (poslední slovo `jmeno` z obsah/postavy.yaml, kontrakt
 #           prototyp/CLAUDE.md). Mužský rod, engine NESKLOŇUJE → výhradně nominativní
@@ -60,20 +72,20 @@
 # 1) NIC, CO MECHANIKA NEDALA. Fragment smí říct jen „tahle věc byla v téhle roli
 #    a dopadlo to takhle“. Žádný následek, ztráta, postih, kredity ani Žár —
 #    ty patří pásmové šabloně o odstavec výš. Rovněž ŽÁDNÁ PŘÍČINA selhání: práh je
-#    kotva ± šum, takže slot propadne i kusu, který na kotvu stačil. Fragment smí
+#    kotva ± šum, takže slot propadne i věci, která na kotvu stačila. Fragment smí
 #    popsat ZPŮSOB („povolil hned zkraje“), nikdy důvod („a nikoli náhodou“).
 # 2) ŽÁDNÉ VÝHLEDOVÉ VAZBY („do dalšího úseku“, „potáhne se to“). Run může skončit
 #    právě tímhle uzlem. (N5 sady šablon.)
 # 3) NEUTRALITA K POČTU HRÁČŮ. Nepočítat osoby, žádné množné „podezřelí“ — mluví se
-#    o ÚLOZE, KUSU, VOZE. V sólu vede hráč jednu postavu a committne všechny čtyři
+#    o ÚKOLU, VĚCI, VOZE. V sólu vede hráč jednu postavu a committne všechny čtyři
 #    karty sám. (N3.)
-# 4) TÓN: suchá úřední čeština 1930, evidenční registr („vedeno jako“, „k položce“,
+# 4) TÓN: suchá úřední čeština 1930, evidenční registr („vedeno jako“, „k úkolu“,
 #    „shledáno“). Humor VÝHRADNĚ z kontrastu úředního jazyka a absurdity toho, co se
 #    stalo. Žádné vtipkování, zvolání, anachronismus, reálná značka ani osoba.
 # 5) NEJVÝŠ JEDNA závorková poznámka vyšetřovatele na fragment, a jen výjimečně —
 #    fragmenty se čtou po čtyřech za sebou, závorka v každé větě je tik.
 #    V téhle sadě je záměrně JEDINÁ (frag-gangster-auto-fail-obecny-2).
-# 6) `neobsazeno` NEPŘIPISUJE VINU „KUSU“ ani osobě — slot zůstal prázdný, žádná věc
+# 6) `neobsazeno` NEPŘIPISUJE VINU VĚCI ani osobě — slot zůstal prázdný, žádná věc
 #    tam nebyla, a nemohl ho obsadit ani hráč se složenou postavou. Jinak protokol
 #    řekne opak toho, co o centimetr výš tvrdí razítko vysvětlující vrstvy („Slot
 #    nikdo neobsadil — složená postava necommituje“). Čistá evidence, žádné hodnocení
@@ -85,12 +97,14 @@
 #    (b) NESMÍ opakovat, co říká pásmový odstavec (verdikt, počet zásahů, náklad,
 #    název postihu), (c) varianty se musí lišit i STAVBOU věty, ne jen slovy.
 #    Vazba „je veden s následkem“ je rezervovaná pásmu — zde se nepoužívá.
-# 9) NEJVÝŠ JEDEN ÚŘEDNÍ ZÁVĚS „vedený / zapsaný jako“ NA VĚTU. Nález humor-testéra
-#    2026-07-30: v odstavci ze čtyř vět jich bylo šest, k tomu pásmo nese „v úseku
-#    vedeném jako {uzel}“ — z registrové kotvy se stal tik (~45× za run). Obal přitom
-#    není potřeba: citovaný řetězec se neskloňuje tak jako tak, takže druhý štítek
-#    ve větě nese HOLÁ vazba („kus „{vec}““, „položka „{role}““). Nula závěsů na větu
-#    je v pořádku.
+# 9) ÚŘEDNÍ ZÁVĚS „vedený / zapsaný jako“: NEJVÝŠ JEDEN NA VĚTU a CÍLOVĚ ~4 V CELÉ
+#    SADĚ. Nález humor-testéra 2026-07-30: v odstavci ze čtyř vět jich bylo šest,
+#    k tomu pásmo nese „v úseku vedeném jako {uzel}“ — z registrové kotvy se stal tik
+#    (~45× za run). Druhý štítek ve větě proto nese HOLÁ vazba („věc „{vec}““).
+#    ALE škrt na NULU je taky chyba (nález 2026-08-02): závěs nesl DRUHOU funkci —
+#    je to HEDGE u nepředmětných karet. „předmět „Slzy na povel““ je nepravda,
+#    „předmět vedený jako „Slzy na povel““ je pravda o evidenci. Proto se závěs
+#    drží přesně tam, kde má obal riskovat („předmět“), a nikde jinde.
 # 10) PŘIHRÁDKA `proslo` NESE, JAK TO DOPADLO, NE ŽE TO DOPADLO. Pásmový odstavec
 #    o řádek výš už řekl „čtyři úlohy, čtyři zdařilé konce“; čtyři věty, z nichž
 #    každá znovu hlásí úspěch („obstál“, „zdařilo se“, „vyhověl“), jsou refrén.
@@ -100,12 +114,25 @@
 #    licence AI vrstvy, ne statického fragmentu.
 #
 # STAVBA VĚT (proč vypadají, jak vypadají): otvírák každé věty je vědomě rotovaný —
-# k položce / proti úloze / na položku / úkon / kus / předmět / fronted předmět
-# („Důraz, který…“) / verdikt první („Nevyplněno: …“). Kolize se testovaly na
-# situacích, kde spolu dva staty v jednom uzlu SKUTEČNĚ stojí (farma-vytazeni má
-# všechny čtyři jednostatové role; konfrontace má dva utok-sloty; mesto-uteky dva
-# improvizační). `neobsazeno` se ve složené partii vyskytne i 2–3× v jednom odstavci,
-# proto jsou jeho tři varianty stavebně nejvzdálenější.
+# k bodu / tlak na úkol / za úkol / u kolonky / věc první / fronted předmět
+# („Důraz, který…“) / verdikt první („Nevyplněno — …“). Kolize se testovaly na
+# situacích, kde spolu dva staty v jednom uzlu SKUTEČNĚ stojí (farmar-brod má
+# všechny čtyři jednostatové role; rival-prepad má dva utok-sloty; mesto-houkacky
+# dva improvizační). `neobsazeno` se ve složené partii vyskytne i 2–3× v jednom
+# odstavci, proto jsou jeho tři varianty stavebně nejvzdálenější.
+#
+# ROTACE OBALŮ (druhá polovina téhož léku, revize 2026-08-02): odstavec dělá
+# formulářem OPAKOVANÝ OBAL, ne slovní zásoba. Proto:
+#   · varianty -1 a -2 TÉHOŽ statu mají RŮZNÝ obal věci (věc × položka) — uzel se
+#     dvěma sloty téhož statu (rival-prepad, mesto-houkacky) tím rotuje sám;
+#   · žádný obal nesmí přesáhnout ~50 % sady. Dnes: věc 17 · položka 18 ·
+#     předmět (se závěsem) 4 · bez věci 3. Před revizí nesl jeden obal 69 %.
+#
+# TEST KOLIZE OBSAHOVÝCH SUBSTANTIV (levný, čtením po jedné větě se NENAJDE):
+# vypiš z fragmentů obsahová substantiva a prožeň je proti poli `role` a `nazev`
+# v obsah/*.yaml. Doložený nález 2026-08-02: „Nápor na úkon „Ustát nápor““
+# (rival-prepad, obrana) — proto je ve fragmentu #3 „Tlak“. Táž třída chyby:
+# obal „věc“ vedle adjektiva „věcná“ ve fragmentu lock_viditelnost.
 #
 # CÍLOVÝ POČET: 42 a to je STROP — opravy se dělají přepisem, ne přírůstkem (stejné
 # pravidlo jako u sady šablon). Proč je strop VYŠŠÍ než u pásmových šablon (28):
@@ -115,6 +142,29 @@
 # sada čerpá ROVNOMĚRNĚ a mělkost je vidět hned. Hloubka jde tam, kde je horko:
 # `proslo` a `nizky_stat` mají po DVOU stat-klíčovaných variantách (13 + 13 = 26 ze
 # 42), řídké přihrádky zůstávají na dvou až třech obecných.
+#
+# ------------------------------------------------------------------------------
+# REVIZE 2026-08-02 — všech 42 textů přepsáno (id, přihrádky ani `stat` beze změny)
+# ------------------------------------------------------------------------------
+# DŮVOD: nález 3 z playtesty/2026-08-02.md — hráči hlásili, že fragmentový fallback
+# má HORŠÍ ČEŠTINU než živý AI protokol („texty pro doplnění… kostrbaté“). Šlo
+# o tři třídy vady, ne o jednotlivé věty:
+#   1) OBAL „kus“ (27 ze 39 vět). Nefunguje na nepředmětné karty a v evidenční
+#      češtině zní jako dobytek nebo slang. → věc / položka / předmět se závěsem.
+#   2) NEPŘIROZENÝ SLOVOSLED. „Nabídnut byl k položce X kus…“, „ač předložen byl…“,
+#      „Bez okolků vyřízena položka…“ — OVS inverze v každé druhé větě. Narovnáno
+#      na S-V-O nebo frontovanou předložkovou frázi. ZÁMĚRNĚ ponechány TŘI dobové
+#      kotvy („Nedostatečnost nutno přiznat“, „nabídku shledávám nízkou“, „nikoli
+#      věcná“) + 4 úřední závěsy: bez nich sada přestane znít jako rok 1930.
+#      Vrácení dalších inverzí NAVRHL humor-testér a bylo ODMÍTNUTO — nález u stolu
+#      zněl doslova „kostrbaté“ a právě tyhle věty jsou nejpravděpodobnější příčina.
+#      Rozhodne až druhé sezení; do té doby platí verze bez nich.
+#   3) SÉMANTICKÉ VADY, které dvěma koly recenze prošly: „Obstarat položku měl
+#      předmět“ (položku nelze obstarat), „Nápor na úkon „Ustát nápor““ (kolize se
+#      jménem role), „Ke kolonce… zůstala prázdná“ (visící sloveso bez podmětu),
+#      „Věc… nikoli věcná“ (kolize obalu s adjektivem).
+# CO SE NEZMĚNILO: přihrádky, `stat`, počet 42, pravidla 1–10, jediná závorka
+# v sadě (frag-gangster-auto-fail-obecny-2).
 
 fragmenty:
   # ============================================================
@@ -124,64 +174,64 @@ fragmenty:
   - id: frag-proslo-utok-1
     vysledek: proslo
     stat: utok
-    text: "Položku „{role}“ vyřídil kus vedený jako „{vec}“; nikdo se o odpor nepokusil podruhé."
+    text: "K bodu „{role}“ nastoupila věc „{vec}“; podruhé se o odpor nikdo nepokusil."
 
   - id: frag-proslo-utok-2
     vysledek: proslo
     stat: utok
-    text: "Úlohu vedenou jako „{role}“ uzavřel kus „{vec}“ dřív, než se stačila rozvinout."
+    text: "Bod „{role}“ skončil dřív, než se stačil rozvinout; postarala se o to položka „{vec}“."
 
   - id: frag-proslo-obrana-1
     vysledek: proslo
     stat: obrana
-    text: "Tlak na položku „{role}“ zachytil předmět zapsaný jako „{vec}“ a nepovolil ani o píď."
+    text: "Tlak na úkol „{role}“ zachytila položka „{vec}“ a nepovolila ani o píď."
 
   - id: frag-proslo-obrana-2
     vysledek: proslo
     stat: obrana
-    text: "Na položku „{role}“ stačilo, že předmět „{vec}“ zůstal, kde byl."
+    text: "U kolonky „{role}“ stačilo, že věc „{vec}“ zůstala, kde byla."
 
   - id: frag-proslo-hodnota-1
     vysledek: proslo
     stat: hodnota
-    text: "Za položku „{role}“ byl vydán kus zapsaný jako „{vec}“ a přijímající strana nepočítala podruhé."
+    text: "Za úkol „{role}“ byla vydána věc „{vec}“; přejímající si ji ani nepřepočítal."
 
   - id: frag-proslo-hodnota-2
     vysledek: proslo
     stat: hodnota
-    text: "K úkonu zapsanému jako „{role}“ byl přiložen kus „{vec}“ a víc už nebylo třeba."
+    text: "K úkonu „{role}“ byla přiložena položka „{vec}“ a víc už nikdo nežádal."
 
   - id: frag-proslo-improvizace-1
     vysledek: proslo
     stat: improvizace
-    text: "K položce „{role}“ byl předložen předmět vedený jako „{vec}“ s výkladem, který nikdo nepřezkoumával."
+    text: "K bodu „{role}“ byl předložen předmět vedený jako „{vec}“ s výkladem, který nikdo nezkoumal."
 
   - id: frag-proslo-improvizace-2
     vysledek: proslo
     stat: improvizace
-    text: "Položku „{role}“ vyřešil kus „{vec}“ způsobem, který se do formuláře nevejde."
+    text: "Úkol „{role}“ vyřešila položka „{vec}“ způsobem, který se do formuláře nevejde."
 
   - id: frag-proslo-nastroj-1
     vysledek: proslo
     stat: nastroj
-    text: "Kus zapsaný jako „{vec}“ byl u položky „{role}“ přijat jako dostatečné vybavení a dál se o tom nejednalo."
+    text: "Věc „{vec}“ byla u bodu „{role}“ uznána za dostatečné vybavení a dál se o tom nejednalo."
 
   - id: frag-proslo-nastroj-2
     vysledek: proslo
     stat: nastroj
-    text: "Předmět „{vec}“ odvedl u položky „{role}“ práci, ke které byl určen, a nic nad ni."
+    text: "U úkolu „{role}“ odvedla položka „{vec}“ práci, ke které je určena, a nic nad ni."
 
   - id: frag-proslo-obecny-1
     vysledek: proslo
-    text: "Předmětu zapsanému jako „{vec}“ byla přidělena položka „{role}“ a při kontrole to nikomu nepřišlo divné."
+    text: "Věci „{vec}“ připadl úkol „{role}“ a při kontrole to nikomu nepřišlo divné."
 
   - id: frag-proslo-obecny-2
     vysledek: proslo
-    text: "Námitky k položce „{role}“ vzneseny nebyly, ač předložen byl kus vedený jako „{vec}“."
+    text: "Námitky k úkolu „{role}“ nikdo nevznesl, přestože se k němu předložila položka „{vec}“."
 
   - id: frag-proslo-obecny-3
     vysledek: proslo
-    text: "Bez okolků vyřízena položka „{role}“; postaral se o to kus zapsaný jako „{vec}“."
+    text: "Bod „{role}“ byl vyřízen bez okolků; postarala se o to věc „{vec}“."
 
   # ============================================================
   # NIZKY_STAT — nejčastější selhání: věc byla přiřazena, stat nestačil.
@@ -191,64 +241,64 @@ fragmenty:
   - id: frag-nizky-stat-utok-1
     vysledek: nizky_stat
     stat: utok
-    text: "Důraz, který se u úlohy vedené jako „{role}“ očekával, kus „{vec}“ nepřinesl."
+    text: "Důraz, který se u bodu „{role}“ očekával, věc „{vec}“ nepřinesla."
 
   - id: frag-nizky-stat-utok-2
     vysledek: nizky_stat
     stat: utok
-    text: "Na položku „{role}“ šel kus „{vec}“ zhurta, a přesto málo."
+    text: "Do úkonu „{role}“ se položka „{vec}“ opřela zhurta, a přesto slabě."
 
   - id: frag-nizky-stat-obrana-1
     vysledek: nizky_stat
     stat: obrana
-    text: "Předmět vedený jako „{vec}“ měl u položky „{role}“ vydržet; povolil hned zkraje."
+    text: "U úkolu „{role}“ měla vydržet položka „{vec}“; povolila hned zkraje."
 
   - id: frag-nizky-stat-obrana-2
     vysledek: nizky_stat
     stat: obrana
-    text: "U položky „{role}“ se kus „{vec}“ udržel jen do chvíle, kdy na tom začalo záležet."
+    text: "Věc „{vec}“ se u úkonu „{role}“ udržela jen do chvíle, kdy na tom začalo záležet."
 
   - id: frag-nizky-stat-hodnota-1
     vysledek: nizky_stat
     stat: hodnota
-    text: "Nabídnut byl k položce „{role}“ kus vedený jako „{vec}“; nabídku shledávám nízkou."
+    text: "K úkolu „{role}“ byla nabídnuta věc „{vec}“; nabídku shledávám nízkou."
 
   - id: frag-nizky-stat-hodnota-2
     vysledek: nizky_stat
     stat: hodnota
-    text: "Protistrana ohodnotila kus „{vec}“ u položky „{role}“ níž, než jak je veden ve spisu."
+    text: "Protistrana ocenila položku „{vec}“ u úkonu „{role}“ níž, než jak je vedena ve spisu."
 
   - id: frag-nizky-stat-improvizace-1
     vysledek: nizky_stat
     stat: improvizace
-    text: "Výmluva postavená na kusu vedeném jako „{vec}“ u položky „{role}“ neobstála ani na první pohled."
+    text: "Výmluva postavená na položce „{vec}“ neobstála u úkolu „{role}“ ani na první pohled."
 
   - id: frag-nizky-stat-improvizace-2
     vysledek: nizky_stat
     stat: improvizace
-    text: "U položky „{role}“ se z kusu „{vec}“ nedalo vytlouct nic použitelného."
+    text: "U úkonu „{role}“ se z předmětu vedeného jako „{vec}“ nedalo vytlouct nic použitelného."
 
   - id: frag-nizky-stat-nastroj-1
     vysledek: nizky_stat
     stat: nastroj
-    text: "Obstarat položku „{role}“ měl předmět vedený jako „{vec}“; na tu práci byl krátký."
+    text: "Práci u úkolu „{role}“ měla zastat věc „{vec}“; na to byla krátká."
 
   - id: frag-nizky-stat-nastroj-2
     vysledek: nizky_stat
     stat: nastroj
-    text: "Předmět „{vec}“ byl k úkonu zapsanému jako „{role}“ přinesen a tím jeho účast skončila."
+    text: "Položka „{vec}“ byla k úkonu „{role}“ přinesena a tím její účast skončila."
 
   - id: frag-nizky-stat-obecny-1
     vysledek: nizky_stat
-    text: "Ve věci vedené jako „{role}“ zůstal kus „{vec}“ za očekáváním; v příčinách se spis nepitvá."
+    text: "Spis k úkolu „{role}“ bez údivu konstatuje, že věc „{vec}“ zůstala za očekáváním."
 
   - id: frag-nizky-stat-obecny-2
     vysledek: nizky_stat
-    text: "Kus vedený jako „{vec}“ byl na položku „{role}“ zjevně slabý; spis to konstatuje bez údivu."
+    text: "Předmět vedený jako „{vec}“ byl na úkol „{role}“ zjevně slabý a nikdo se tím netajil."
 
   - id: frag-nizky-stat-obecny-3
     vysledek: nizky_stat
-    text: "Nedostatečnost nutno přiznat — k úloze vedené jako „{role}“ byl přiřazen předmět „{vec}“ a nepostačil."
+    text: "Nedostatečnost nutno přiznat: k úkolu „{role}“ šla položka „{vec}“ a nepostačila."
 
   # ============================================================
   # KOMBI_NEUPLNY — slot žádal dva staty JEDNÉ věci a ta jim nedostála.
@@ -258,31 +308,31 @@ fragmenty:
   # ============================================================
   - id: frag-kombi-neuplny-obecny-1
     vysledek: kombi_neuplny
-    text: "Úloha vedená jako „{role}“ žádala od jednoho kusu dvojí způsobilost; kus „{vec}“ oběma nárokům nedostál."
+    text: "Úkol „{role}“ žádal dvojí způsobilost naráz; věc „{vec}“ ji v celém rozsahu nenabídla."
 
   - id: frag-kombi-neuplny-obecny-2
     vysledek: kombi_neuplny
-    text: "Předmět vedený jako „{vec}“ měl u položky „{role}“ vyhovět ve dvou ohledech naráz; v celém rozsahu nevyhověl."
+    text: "Položka „{vec}“ měla u úkolu „{role}“ vyhovět ve dvou ohledech naráz; nezvládla to."
 
   - id: frag-kombi-neuplny-obecny-3
     vysledek: kombi_neuplny
-    text: "K úkonu zapsanému jako „{role}“ byly třeba dvě vlastnosti téhož kusu; kus „{vec}“ je pohromadě nenabídl."
+    text: "Úkon „{role}“ stál na dvou vlastnostech naráz; položka „{vec}“ je pohromadě neměla."
 
   # ============================================================
   # STAT_ZRUSEN — pronásledovatel run-wide ruší stat slotu; věc byla k ničemu.
-  # Ruší se VLASTNOST, ne kus — proto text nikoho neobviňuje.
+  # Ruší se VLASTNOST, ne věc — proto text nikoho neobviňuje.
   # ============================================================
   - id: frag-stat-zrusen-obecny-1
     vysledek: stat_zrusen
-    text: "K položce „{role}“ byl veden kus zapsaný jako „{vec}“; k té jeho stránce se za daných poměrů nepřihlíželo."
+    text: "K úkonu „{role}“ byla vedena věc „{vec}“; právě k té stránce se nepřihlíželo."
 
   - id: frag-stat-zrusen-obecny-2
     vysledek: stat_zrusen
-    text: "Předmět vedený jako „{vec}“ přišel k úloze „{role}“ se schopností, která na tomto místě neplatila."
+    text: "Předmět vedený jako „{vec}“ přišel k úkolu „{role}“ se schopností, která tu neplatila."
 
   - id: frag-stat-zrusen-obecny-3
     vysledek: stat_zrusen
-    text: "U úkonu zapsaného jako „{role}“ byla rozhodná vlastnost vyřazena a kus „{vec}“ tím pozbyl smyslu."
+    text: "U úkonu „{role}“ byla rozhodná vlastnost vyřazena a položka „{vec}“ tím pozbyla smyslu."
 
   # ============================================================
   # GANGSTER_AUTO_FAIL — věc se štítkem GANGSTER ve viditelné roli.
@@ -290,15 +340,15 @@ fragmenty:
   # ============================================================
   - id: frag-gangster-auto-fail-obecny-1
     vysledek: gangster_auto_fail
-    text: "Do viditelné úlohy vedené jako „{role}“ byl postaven kus „{vec}“ — věc, která se nenese nenápadně."
+    text: "Do úkolu „{role}“, který se dělá na očích, šla věc „{vec}“; nenápadně se nenese."
 
   - id: frag-gangster-auto-fail-obecny-2
     vysledek: gangster_auto_fail
-    text: "Předmět vedený jako „{vec}“ byl u položky „{role}“ spatřen dřív, než stačil posloužit (což se dalo čekat)."
+    text: "Položka „{vec}“ byla u úkolu „{role}“ spatřena dřív, než posloužila (což se dalo čekat)."
 
   - id: frag-gangster-auto-fail-obecny-3
     vysledek: gangster_auto_fail
-    text: "K úkonu zapsanému jako „{role}“ byl vytažen kus „{vec}“, čímž byl úkon ukončen dřív, než začal."
+    text: "K úkonu „{role}“ byla vytažena věc „{vec}“ a bylo po úkonu dřív, než začal."
 
   # ============================================================
   # NEOBSAZENO — slot nikdo neobsadil. {vec} ANI {jmeno} SE ZDE NESMÍ OBJEVIT
@@ -308,15 +358,15 @@ fragmenty:
   # ============================================================
   - id: frag-neobsazeno-obecny-1
     vysledek: neobsazeno
-    text: "Úloha vedená jako „{role}“ zůstala neobsazena; ve spisu k ní není zapsáno nic."
+    text: "Úkol „{role}“ zůstal bez obsazení; ve spisu k němu není zapsáno nic."
 
   - id: frag-neobsazeno-obecny-2
     vysledek: neobsazeno
-    text: "K položce „{role}“ neuvádí spis ani kus, ani osobu; kolonka zůstala prázdná."
+    text: "Ke kolonce „{role}“ neuvádí spis ani věc, ani osobu; místo zůstalo prázdné."
 
   - id: frag-neobsazeno-obecny-3
     vysledek: neobsazeno
-    text: "Nevyplněno: tak zní úřední hodnocení stavu, v jakém zůstala položka „{role}“."
+    text: "Nevyplněno — u bodu „{role}“ nestál nikdo ani nic."
 
   # ============================================================
   # POSTIH_LOCK_STITEK — zámkový postih vlastníka, štítek věci se neuplatnil.
@@ -325,11 +375,11 @@ fragmenty:
   # ============================================================
   - id: frag-postih-lock-stitek-obecny-1
     vysledek: postih_lock_stitek
-    text: "Podezřelý {jmeno} podléhá dřívějšímu omezení, a kus zapsaný jako „{vec}“ tak u položky „{role}“ nic nezmohl."
+    text: "Podezřelý {jmeno} podléhá omezení, a věc „{vec}“ tak u úkolu „{role}“ nic nezmohla."
 
   - id: frag-postih-lock-stitek-obecny-2
     vysledek: postih_lock_stitek
-    text: "Vlastnost, kterou se kus vedený jako „{vec}“ vyznačuje, nesměla být u položky „{role}“ uplatněna."
+    text: "Vlastnost, kterou se položka „{vec}“ vyznačuje, se u úkolu „{role}“ nesměla uplatnit."
 
   # ============================================================
   # POSTIH_LOCK_VIDITELNOST — zámkový postih na viditelný/skrytý slot.
@@ -338,8 +388,8 @@ fragmenty:
   # ============================================================
   - id: frag-postih-lock-viditelnost-obecny-1
     vysledek: postih_lock_viditelnost
-    text: "Podezřelý {jmeno} do rolí tohoto druhu nesmí; kus vedený jako „{vec}“ proto u položky „{role}“ nezasáhl."
+    text: "Podezřelý {jmeno} má úlohy toho druhu zapovězené; věc „{vec}“ u bodu „{role}“ nezasáhla."
 
   - id: frag-postih-lock-viditelnost-obecny-2
     vysledek: postih_lock_viditelnost
-    text: "Kus „{vec}“ nebyl k položce „{role}“ připuštěn; překážka byla předpisová, nikoli věcná."
+    text: "Položka „{vec}“ nebyla k bodu „{role}“ připuštěna; překážka byla předpisová, nikoli věcná."

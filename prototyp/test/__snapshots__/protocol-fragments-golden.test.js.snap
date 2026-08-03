@@ -68,28 +68,28 @@ exports[`golden fallback protokol nad runem WoZ testu > s fragmentovou vrstvou 1
   {
     "odstavce": [
       "Na uvedeném místě obstály dvě úlohy ze čtyř. Zbylé dvě hodnotím jako promarněné, každou po svém. Podezřelý Bartoš je od té chvíle ve spisu veden s následkem „Naražené rameno“. Náklad zůstal na voze.",
-      "Bez okolků vyřízena položka „Zatlačit hrubě“; postaral se o to kus zapsaný jako „Dědečkova brokovnice“. Předmět „Kanystr benzínu“ byl k úkonu zapsanému jako „Odsunout závoru“ přinesen a tím jeho účast skončila. K položce „Podmáznout dlaň“ byl veden kus zapsaný jako „Hovězí vývar“; k té jeho stránce se za daných poměrů nepřihlíželo. Námitky k položce „Zmást papírem“ vzneseny nebyly, ač předložen byl kus vedený jako „Kněžský kolárek“.",
+      "Bod „Zatlačit hrubě“ byl vyřízen bez okolků; postarala se o to věc „Dědečkova brokovnice“. Položka „Kanystr benzínu“ byla k úkonu „Odsunout závoru“ přinesena a tím její účast skončila. K úkonu „Podmáznout dlaň“ byla vedena věc „Hovězí vývar“; právě k té stránce se nepřihlíželo. Námitky k úkolu „Zmást papírem“ nikdo nevznesl, přestože se k němu předložila položka „Kněžský kolárek“.",
     ],
     "titulek": "Překladiště v Syracuse",
   },
   {
     "odstavce": [
       "Zjištěno, že v tomto bodě trasy nedošlo k ničemu, co by zakládalo úřední úkon. Všechny čtyři úlohy obstály; následek žádný, ztráta žádná. Při odjezdu se z místa ztratil ještě jeden kus, jehož původ zůstává neobjasněn a objasněn nebude.",
-      "K položce „Proklouznout kolem“ byl předložen předmět vedený jako „Provaz a kladka“ s výkladem, který nikdo nepřezkoumával. Předmětu zapsanému jako „Lopata“ byla přidělena položka „Vypáčit vagon“ a při kontrole to nikomu nepřišlo divné. Tlak na položku „Ztuhnout ve stínu“ zachytil předmět zapsaný jako „Kastrol na hlavě“ a nepovolil ani o píď. Položku „Kdyby se probudil“ vyřídil kus vedený jako „Páčidlo“; nikdo se o odpor nepokusil podruhé.",
+      "K bodu „Proklouznout kolem“ byl předložen předmět vedený jako „Provaz a kladka“ s výkladem, který nikdo nezkoumal. Věci „Lopata“ připadl úkol „Vypáčit vagon“ a při kontrole to nikomu nepřišlo divné. Tlak na úkol „Ztuhnout ve stínu“ zachytila položka „Kastrol na hlavě“ a nepovolila ani o píď. K bodu „Kdyby se probudil“ nastoupila věc „Páčidlo“; podruhé se o odpor nikdo nepokusil.",
     ],
     "titulek": "Odstavený vagon v Peekskillu",
   },
   {
     "odstavce": [
       "Průchod tímto bodem trasy hodnotím jako uspokojivý, byť ne úplný. Jedna ze čtyř úloh nedopadla; následky z toho neplynou žádné, na nákladu ani na osobách. Stav nákladu: šest beden. Hlášení k místu jsem přijal ústně a dále je nešířil.",
-      "Kus vedený jako „Bedna kanadské“ byl na položku „Postavit se jim“ zjevně slabý; spis to konstatuje bez údivu. Na položku „Ustát nápor“ stačilo, že předmět „Plechová vesta“ zůstal, kde byl. Položku „Vyklouznout stranou“ vyřešil kus „Konev na mléko“ způsobem, který se do formuláře nevejde. Úlohu vedenou jako „Tasit včas a první“ uzavřel kus „Ukradený samopal“ dřív, než se stačila rozvinout.",
+      "Předmět vedený jako „Bedna kanadské“ byl na úkol „Postavit se jim“ zjevně slabý a nikdo se tím netajil. U kolonky „Ustát nápor“ stačilo, že věc „Plechová vesta“ zůstala, kde byla. Úkol „Vyklouznout stranou“ vyřešila položka „Konev na mléko“ způsobem, který se do formuláře nevejde. Bod „Tasit včas a první“ skončil dřív, než se stačil rozvinout; postarala se o to položka „Ukradený samopal“.",
     ],
     "titulek": "Zátaras u Verony",
   },
   {
     "odstavce": [
       "Spis k tomuto bodu trasy nevyznívá ani dobře, ani zle, což je na téhle silnici nadprůměr. Dvě úlohy ze čtyř zůstaly nezvládnuté. Co z toho komu zůstalo, se dozvím z hlášení okrsku, až nějaké dorazí.",
-      "Obstarat položku „Zvednout závoru“ měl předmět vedený jako „Kožená zástěra“; na tu práci byl krátký. K úkonu zapsanému jako „Zpevnit prkna“ byly třeba dvě vlastnosti téhož kusu; kus „Medvědí kožich“ je pohromadě nenabídl. Předmětu zapsanému jako „Schovaná pistole“ byla přidělena položka „Projet dírou“ a při kontrole to nikomu nepřišlo divné. Bez okolků vyřízena položka „Nedat to na sobě“; postaral se o to kus zapsaný jako „Tlustá bible“.",
+      "Práci u úkolu „Zvednout závoru“ měla zastat věc „Kožená zástěra“; na to byla krátká. Úkon „Zpevnit prkna“ stál na dvou vlastnostech naráz; položka „Medvědí kožich“ je pohromadě neměla. Věci „Schovaná pistole“ připadl úkol „Projet dírou“ a při kontrole to nikomu nepřišlo divné. Bod „Nedat to na sobě“ byl vyřízen bez okolků; postarala se o to věc „Tlustá bible“.",
     ],
     "titulek": "Starý most přes Mohawk",
   },
@@ -97,7 +97,7 @@ exports[`golden fallback protokol nad runem WoZ testu > s fragmentovou vrstvou 1
     "odstavce": [
       "Pozornost zákona v tomto úseku vzrostla natolik, že byla přes noc zřízena silniční kontrola, v hlášení vedená jako Zátah na páté silnici. Obě průjezdné cesty byly svedeny na ni; jinudy se projet nedalo. Průběh zaznamenávám níže.",
       "Na uvedeném místě obstály dvě úlohy ze čtyř. Zbylé dvě hodnotím jako promarněné, každou po svém. Podezřelý Bartoš je od té chvíle ve spisu veden s následkem „Zvonění v uších“. Náklad zůstal na voze.",
-      "Na položku „Prorazit blokádu“ šel kus „Banánový kanón“ zhurta, a přesto málo. Předmět „Svářečka“ odvedl u položky „Strhnout do postranní“ práci, ke které byl určen, a nic nad ni. Nedostatečnost nutno přiznat — k úloze vedené jako „Zmizet v ulicích“ byl přiřazen předmět „Sekáček na led“ a nepostačil. Na položku „Držet nervy u okna“ stačilo, že předmět „Pytel cementu“ zůstal, kde byl.",
+      "Do úkonu „Prorazit blokádu“ se položka „Banánový kanón“ opřela zhurta, a přesto slabě. U úkolu „Strhnout do postranní“ odvedla položka „Svářečka“ práci, ke které je určena, a nic nad ni. Nedostatečnost nutno přiznat: k úkolu „Zmizet v ulicích“ šla položka „Sekáček na led“ a nepostačila. U kolonky „Držet nervy u okna“ stačilo, že věc „Pytel cementu“ zůstala, kde byla.",
     ],
     "titulek": "Zátah na páté silnici",
   },
@@ -105,7 +105,7 @@ exports[`golden fallback protokol nad runem WoZ testu > s fragmentovou vrstvou 1
     "odstavce": [
       "V bodě hlášeném jako Most u Poughkeepsie byla nastražena léčka; pronásledovatel znal cestu předem, což mě přivádí k otázce, od koho. Vystoupit z vozu nikdo nestihl. Výsledek zaznamenávám níže.",
       "Tento bod trasy je nutno označit za průšvih v plném úředním významu slova. K dispozici byly „Petrolejová lampa“, „Mosazný boxer“, „Rezervní pneumatika“ a „Řeznický hák“; sestavu hodnotím jako nedomyšlenou, a to je nejmírnější slovo, které mě napadá. Podezřelý Bartoš je veden s těžkým následkem „Otřes mozku“, který se sám nespraví. Náklad se ztenčil o jedna bedna, zbývá pět beden. Pozornost zákona v okolí tím citelně vzrostla.",
-      "U položky „Zapřít totožnost“ se z kusu „Petrolejová lampa“ nedalo vytlouct nic použitelného. Ve věci vedené jako „Nedat na sobě znát“ zůstal kus „Mosazný boxer“ za očekáváním; v příčinách se spis nepitvá. Nedostatečnost nutno přiznat — k úloze vedené jako „Objet ho stranou“ byl přiřazen předmět „Rezervní pneumatika“ a nepostačil. Námitky k položce „Kdyby sáhl po zbrani“ vzneseny nebyly, ač předložen byl kus vedený jako „Řeznický hák“.",
+      "U úkonu „Zapřít totožnost“ se z předmětu vedeného jako „Petrolejová lampa“ nedalo vytlouct nic použitelného. Spis k úkolu „Nedat na sobě znát“ bez údivu konstatuje, že věc „Mosazný boxer“ zůstala za očekáváním. Nedostatečnost nutno přiznat: k úkolu „Objet ho stranou“ šla položka „Rezervní pneumatika“ a nepostačila. Námitky k úkolu „Kdyby sáhl po zbrani“ nikdo nevznesl, přestože se k němu předložila položka „Řeznický hák“.",
     ],
     "titulek": "Most u Poughkeepsie",
   },
@@ -113,14 +113,14 @@ exports[`golden fallback protokol nad runem WoZ testu > s fragmentovou vrstvou 1
     "odstavce": [
       "Pozornost zákona dostoupila vrcholu a došlo k přímé konfrontaci s pronásledovatelem. O nákladu i o osobách rozhodl jediný střet, bez možnosti odvolání. Výsledek uvádím níže, bez příkras.",
       "K úkonům jsou ve spisu vedeny „Uříznutá hlaveň“, „Starý kompas“, „Slzy na povel“ a „Dámský revolver“; volba nástrojů k jednotlivým rolím vzbuzuje otázky, na které tu nikdo neodpoví. Polovina úloh vyšla, polovina nikoli, což zdejší poměry vystihuje přesně. Podezřelý Bartoš je veden s následkem „Naražené rameno“; jak dlouho mu vydrží, se neuvádí. (Zapisuji bez soucitu, byť s pochopením.)",
-      "Položku „Probít se ven“ vyřídil kus vedený jako „Uříznutá hlaveň“; nikdo se o odpor nepokusil podruhé. U položky „Ustát salvu“ se kus „Starý kompas“ udržel jen do chvíle, kdy na tom začalo záležet. K položce „Strhnout do pole“ byl předložen předmět vedený jako „Slzy na povel“ s výkladem, který nikdo nepřezkoumával. Důraz, který se u úlohy vedené jako „Krýt záda“ očekával, kus „Dámský revolver“ nepřinesl.",
+      "K bodu „Probít se ven“ nastoupila věc „Uříznutá hlaveň“; podruhé se o odpor nikdo nepokusil. Věc „Starý kompas“ se u úkonu „Ustát salvu“ udržela jen do chvíle, kdy na tom začalo záležet. K bodu „Strhnout do pole“ byl předložen předmět vedený jako „Slzy na povel“ s výkladem, který nikdo nezkoumal. Důraz, který se u bodu „Krýt záda“ očekával, věc „Dámský revolver“ nepřinesla.",
     ],
     "titulek": "Kolona na albanské poštovní silnici",
   },
   {
     "odstavce": [
       "Průběh v tomto bodě trasy hodnotím jako selhání, byť se k němu nikdo výslovně nepřihlásil. Ze čtyř úloh obstála nanejvýš jediná; k ostatním nemám co dodat nad rámec zápisu. Z vozu se poroučelo, co drželo hůř než ostatní; stav nákladu: čtyři bedny. Pozornost zákona tím v okolí vzrostla, což poznamenávám bez zadostiučinění.",
-      "Předmět vedený jako „Balík bankovek“ přišel k úloze „Silniční poplatek“ se schopností, která na tomto místě neplatila. Výmluva postavená na kusu vedeném jako „Dědkův kabát“ u položky „Zamluvit to“ neobstála ani na první pohled. Tlak na položku „Klidná tvář“ zachytil předmět zapsaný jako „Pytel brambor“ a nepovolil ani o píď. Kus vedený jako „Stříbrná placatka“ byl na položku „Kdyby přituhlo“ zjevně slabý; spis to konstatuje bez údivu.",
+      "Předmět vedený jako „Balík bankovek“ přišel k úkolu „Silniční poplatek“ se schopností, která tu neplatila. Výmluva postavená na položce „Dědkův kabát“ neobstála u úkolu „Zamluvit to“ ani na první pohled. Tlak na úkol „Klidná tvář“ zachytila položka „Pytel brambor“ a nepovolila ani o píď. Předmět vedený jako „Stříbrná placatka“ byl na úkol „Kdyby přituhlo“ zjevně slabý a nikdo se tím netajil.",
       "Podezřelý Bartoš dosáhl počtu následků, po kterém už není k ničemu, a byl odklizen do vozu. Co bylo lehčího, ztrácí se ležením; co těžšího, nikoli. Kdy se posadí, nechává spis otevřené. Do té doby je veden jako nezpůsobilý.",
     ],
     "titulek": "Mýtnice za Batavií",
@@ -139,28 +139,28 @@ exports[`golden nad runem se složením postavy (pokrytí N2) > spis se složen�
   {
     "odstavce": [
       "Na uvedeném místě obstály dvě úlohy ze čtyř. Zbylé dvě hodnotím jako promarněné, každou po svém. Podezřelý Bartoš je od té chvíle ve spisu veden s následkem „Mlha v hlavě“. Náklad zůstal na voze.",
-      "U položky „Utišit psy“ se z kusu „Tlustá bible“ nedalo vytlouct nic použitelného. Předmět vedený jako „Pytel brambor“ měl u položky „Zaklínit vrata“ vyhovět ve dvou ohledech naráz; v celém rozsahu nevyhověl. Předmětu zapsanému jako „Páčidlo“ byla přidělena položka „Schovat bednu do sena“ a při kontrole to nikomu nepřišlo divné. Námitky k položce „Nedýchat, když jde kolem“ vzneseny nebyly, ač předložen byl kus vedený jako „Medvědí kožich“.",
+      "U úkonu „Utišit psy“ se z předmětu vedeného jako „Tlustá bible“ nedalo vytlouct nic použitelného. Položka „Pytel brambor“ měla u úkolu „Zaklínit vrata“ vyhovět ve dvou ohledech naráz; nezvládla to. Věci „Páčidlo“ připadl úkol „Schovat bednu do sena“ a při kontrole to nikomu nepřišlo divné. Námitky k úkolu „Nedýchat, když jde kolem“ nikdo nevznesl, přestože se k němu předložila položka „Medvědí kožich“.",
     ],
     "titulek": "Statkářova stodola",
   },
   {
     "odstavce": [
       "Zjištěno, že v tomto bodě trasy nedošlo k ničemu, co by zakládalo úřední úkon. Všechny čtyři úlohy obstály; následek žádný, ztráta žádná. Při odjezdu se z místa ztratil ještě jeden kus, jehož původ zůstává neobjasněn a objasněn nebude.",
-      "K položce „Proklouznout kolem“ byl předložen předmět vedený jako „Kněžský kolárek“ s výkladem, který nikdo nepřezkoumával. Kus zapsaný jako „Svářečka“ byl u položky „Vypáčit vagon“ přijat jako dostatečné vybavení a dál se o tom nejednalo. Na položku „Ztuhnout ve stínu“ stačilo, že předmět „Balík bankovek“ zůstal, kde byl. Úlohu vedenou jako „Kdyby se probudil“ uzavřel kus „Mosazný boxer“ dřív, než se stačila rozvinout.",
+      "K bodu „Proklouznout kolem“ byl předložen předmět vedený jako „Kněžský kolárek“ s výkladem, který nikdo nezkoumal. Věc „Svářečka“ byla u bodu „Vypáčit vagon“ uznána za dostatečné vybavení a dál se o tom nejednalo. U kolonky „Ztuhnout ve stínu“ stačilo, že věc „Balík bankovek“ zůstala, kde byla. Bod „Kdyby se probudil“ skončil dřív, než se stačil rozvinout; postarala se o to položka „Mosazný boxer“.",
     ],
     "titulek": "Odstavený vagon v Peekskillu",
   },
   {
     "odstavce": [
       "Průchod tímto bodem trasy hodnotím jako uspokojivý, byť ne úplný. Jedna ze čtyř úloh nedopadla; následky z toho neplynou žádné, na nákladu ani na osobách. Stav nákladu: šest beden. Hlášení k místu jsem přijal ústně a dále je nešířil.",
-      "Bez okolků vyřízena položka „Podstrčit papíry“; postaral se o to kus zapsaný jako „Hovězí vývar“. Nedostatečnost nutno přiznat — k úloze vedené jako „Doložit razítko“ byl přiřazen předmět „Dědkův kabát“ a nepostačil. Položku „Zvýšit hlas“ vyřídil kus vedený jako „Řeznický hák“; nikdo se o odpor nepokusil podruhé. Tlak na položku „Nedat se rozhodit“ zachytil předmět zapsaný jako „Kožená zástěra“ a nepovolil ani o píď.",
+      "Bod „Podstrčit papíry“ byl vyřízen bez okolků; postarala se o to věc „Hovězí vývar“. Nedostatečnost nutno přiznat: k úkolu „Doložit razítko“ šla položka „Dědkův kabát“ a nepostačila. K bodu „Zvýšit hlas“ nastoupila věc „Řeznický hák“; podruhé se o odpor nikdo nepokusil. Tlak na úkol „Nedat se rozhodit“ zachytila položka „Kožená zástěra“ a nepovolila ani o píď.",
     ],
     "titulek": "Silniční váha u Amsterdamu",
   },
   {
     "odstavce": [
       "Spis k tomuto bodu trasy nevyznívá ani dobře, ani zle, což je na téhle silnici nadprůměr. Dvě úlohy ze čtyř zůstaly nezvládnuté. Co z toho komu zůstalo, se dozvím z hlášení okrsku, až nějaké dorazí.",
-      "Bez okolků vyřízena položka „Držet nervy“; postaral se o to kus zapsaný jako „Rodinné stříbro“. Ve věci vedené jako „Zamluvit to“ zůstal kus „Stříbrná placatka“ za očekáváním; v příčinách se spis nepitvá. Důraz, který se u úlohy vedené jako „Zastrašit gestem“ očekával, kus „Konšelův prsten“ nepřinesl. Předmět „Rezervní pneumatika“ odvedl u položky „Najít skulinu“ práci, ke které byl určen, a nic nad ni.",
+      "Bod „Držet nervy“ byl vyřízen bez okolků; postarala se o to věc „Rodinné stříbro“. Spis k úkolu „Zamluvit to“ bez údivu konstatuje, že věc „Stříbrná placatka“ zůstala za očekáváním. Důraz, který se u bodu „Zastrašit gestem“ očekával, věc „Konšelův prsten“ nepřinesla. U úkolu „Najít skulinu“ odvedla položka „Rezervní pneumatika“ práci, ke které je určena, a nic nad ni.",
     ],
     "titulek": "Slepá ulička v Bronxu",
   },
@@ -168,14 +168,14 @@ exports[`golden nad runem se složením postavy (pokrytí N2) > spis se složen�
     "odstavce": [
       "Pozornost zákona v tomto úseku vzrostla natolik, že byla přes noc zřízena silniční kontrola, v hlášení vedená jako Zátah na páté silnici. Obě průjezdné cesty byly svedeny na ni; jinudy se projet nedalo. Průběh zaznamenávám níže.",
       "Na uvedeném místě obstály dvě úlohy ze čtyř. Zbylé dvě hodnotím jako promarněné, každou po svém. Podezřelý Bartoš je od té chvíle ve spisu veden s následkem „Zvonění v uších“. Náklad zůstal na voze.",
-      "Kus vedený jako „Sekáček na led“ byl na položku „Prorazit blokádu“ zjevně slabý; spis to konstatuje bez údivu. Předmět „Bedna kanadské“ byl k úkonu zapsanému jako „Strhnout do postranní“ přinesen a tím jeho účast skončila. Položku „Zmizet v ulicích“ vyřešil kus „Banánový kanón“ způsobem, který se do formuláře nevejde. Na položku „Držet nervy u okna“ stačilo, že předmět „Otrlený výraz“ zůstal, kde byl.",
+      "Předmět vedený jako „Sekáček na led“ byl na úkol „Prorazit blokádu“ zjevně slabý a nikdo se tím netajil. Položka „Bedna kanadské“ byla k úkonu „Strhnout do postranní“ přinesena a tím její účast skončila. Úkol „Zmizet v ulicích“ vyřešila položka „Banánový kanón“ způsobem, který se do formuláře nevejde. U kolonky „Držet nervy u okna“ stačilo, že věc „Otrlený výraz“ zůstala, kde byla.",
     ],
     "titulek": "Zátah na páté silnici",
   },
   {
     "odstavce": [
       "Průběh v tomto bodě trasy hodnotím jako selhání, byť se k němu nikdo výslovně nepřihlásil. Ze čtyř úloh obstála nanejvýš jediná; k ostatním nemám co dodat nad rámec zápisu. Z vozu se poroučelo, co drželo hůř než ostatní; stav nákladu: pět beden. Pozornost zákona tím v okolí vzrostla, což poznamenávám bez zadostiučinění.",
-      "Vlastnost, kterou se kus vedený jako „Dědečkova brokovnice“ vyznačuje, nesměla být u položky „Zvednout závoru“ uplatněna. Podezřelý Bartoš podléhá dřívějšímu omezení, a kus zapsaný jako „Dámský revolver“ tak u položky „Zpevnit prkna“ nic nezmohl. Výmluva postavená na kusu vedeném jako „Zlaté hodinky“ u položky „Projet dírou“ neobstála ani na první pohled. Podezřelý Bartoš podléhá dřívějšímu omezení, a kus zapsaný jako „Ukradený samopal“ tak u položky „Nedat to na sobě“ nic nezmohl.",
+      "Vlastnost, kterou se položka „Dědečkova brokovnice“ vyznačuje, se u úkolu „Zvednout závoru“ nesměla uplatnit. Podezřelý Bartoš podléhá omezení, a věc „Dámský revolver“ tak u úkolu „Zpevnit prkna“ nic nezmohla. Výmluva postavená na položce „Zlaté hodinky“ neobstála u úkolu „Projet dírou“ ani na první pohled. Podezřelý Bartoš podléhá omezení, a věc „Ukradený samopal“ tak u úkolu „Nedat to na sobě“ nic nezmohla.",
       "Podezřelý Bartoš nasbíral třetí následek v pořadí a tím přestal být k užitku. Byl uložen do vozu; výslech na místě nepřicházel v úvahu. Co se z toho dá vyležet, vyleží; co ne, veze si dál. Zastoupit ho nemá kdo, a spis k tomu nemá co dodat.",
     ],
     "titulek": "Starý most přes Mohawk",
@@ -184,7 +184,7 @@ exports[`golden nad runem se složením postavy (pokrytí N2) > spis se složen�
     "odstavce": [
       "Pozornost zákona dostoupila vrcholu a došlo k přímé konfrontaci s pronásledovatelem. O nákladu i o osobách rozhodl jediný střet, bez možnosti odvolání. Výsledek uvádím níže, bez příkras.",
       "Průběh v tomto bodě trasy hodnotím jako selhání, byť se k němu nikdo výslovně nepřihlásil. Ze čtyř úloh obstála nanejvýš jediná; k ostatním nemám co dodat nad rámec zápisu. Z vozu se poroučelo, co drželo hůř než ostatní; stav nákladu: čtyři bedny. Pozornost zákona tím v okolí vzrostla, což poznamenávám bez zadostiučinění.",
-      "Úloha vedená jako „Probít se ven“ zůstala neobsazena; ve spisu k ní není zapsáno nic. Nevyplněno: tak zní úřední hodnocení stavu, v jakém zůstala položka „Ustát salvu“. K položce „Strhnout do pole“ neuvádí spis ani kus, ani osobu; kolonka zůstala prázdná. Nevyplněno: tak zní úřední hodnocení stavu, v jakém zůstala položka „Krýt záda“.",
+      "Úkol „Probít se ven“ zůstal bez obsazení; ve spisu k němu není zapsáno nic. Nevyplněno — u bodu „Ustát salvu“ nestál nikdo ani nic. Ke kolonce „Strhnout do pole“ neuvádí spis ani věc, ani osobu; místo zůstalo prázdné. Nevyplněno — u bodu „Krýt záda“ nestál nikdo ani nic.",
       "Podezřelý Bartoš se posadil a je od tohoto bodu opět veden jako činný účastník. Jak dlouho ve voze ležel, spis nezaznamenává; nikdo to neměřil. Zda si z toho odnesl poučení, rovněž neuvádím. (Škoda; ve voze byl přehlednější.)",
     ],
     "titulek": "Kolona na albanské poštovní silnici",
