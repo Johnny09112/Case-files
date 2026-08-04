@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<title>Sweep ruka (D58/4) — K1 per počet hráčů, baseline vs. guardrail-floor</title>
+<style>
+  .viz-root {
+    color-scheme: light;
+    --surface-1:      #fcfcfb;
+    --page:           #f9f9f7;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #898781;
+    --grid:           #e1e0d9;
+    --baseline-axis:  #c3c2b7;
+    --border:         rgba(11,11,11,0.10);
+    --series-1:       #2a78d6; /* baseline */
+    --series-2:       #eb6834; /* floor kandidát */
+    --status-critical:#d03b3b;
+    --status-good:    #0ca30c;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root {
+      color-scheme: dark;
+      --surface-1:      #1a1a19;
+      --page:           #0d0d0d;
+      --text-primary:   #ffffff;
+      --text-secondary: #c3c2b7;
+      --text-muted:     #898781;
+      --grid:           #2c2c2a;
+      --baseline-axis:  #383835;
+      --border:         rgba(255,255,255,0.10);
+      --series-1:       #3987e5;
+      --series-2:       #d95926;
+      --status-critical:#e66767;
+      --status-good:    #0ca30c;
+    }
+  }
+  :root[data-theme="dark"] .viz-root {
+    color-scheme: dark;
+    --surface-1:      #1a1a19;
+    --page:           #0d0d0d;
+    --text-primary:   #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted:     #898781;
+    --grid:           #2c2c2a;
+    --baseline-axis:  #383835;
+    --border:         rgba(255,255,255,0.10);
+    --series-1:       #3987e5;
+    --series-2:       #d95926;
+    --status-critical:#e66767;
+    --status-good:    #0ca30c;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--page); font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .viz-root { max-width: 880px; margin: 24px auto; background:var(--surface-1); border:1px solid var(--border); border-radius:8px; padding:24px 28px; color:var(--text-primary); }
+  h1 { font-size: 16px; font-weight:600; margin: 0 0 2px; }
+  .sub { color: var(--text-secondary); font-size: 13px; margin: 0 0 20px; }
+  .toolbar { display:flex; gap:8px; margin-bottom:16px; }
+  .toolbar button { font: inherit; font-size:12px; padding:5px 10px; border-radius:6px; border:1px solid var(--border); background:transparent; color:var(--text-secondary); cursor:pointer; }
+  .toolbar button[aria-pressed="true"] { background:var(--series-1); color:#fff; border-color:transparent; }
+  svg { display:block; width:100%; height:auto; overflow: visible; }
+  .grid line { stroke: var(--grid); stroke-width:1; }
+  .axis line { stroke: var(--baseline-axis); stroke-width:1; }
+  .axis text, .tick text { fill: var(--text-muted); font-size: 11px; }
+  .cat-label { fill: var(--text-secondary); font-size: 12px; }
+  .bar { rx:4; }
+  .bar.series-1 { fill: var(--series-1); }
+  .bar.series-2 { fill: var(--series-2); }
+  .value-label { fill: var(--text-primary); font-size: 11px; font-variant-numeric: tabular-nums; }
+  .gate-band { fill: var(--status-good); opacity: 0.08; }
+  .gate-line { stroke: var(--status-critical); stroke-width:1; stroke-dasharray:0; }
+  .gate-label { fill: var(--status-critical); font-size: 10px; }
+  .legend { display:flex; gap:18px; align-items:center; margin-top:14px; font-size:12px; color:var(--text-secondary); }
+  .legend .swatch { display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:6px; vertical-align:-1px; }
+  .s1 { background: var(--series-1); }
+  .s2 { background: var(--series-2); }
+  .tooltip { position:absolute; pointer-events:none; background:var(--text-primary); color:var(--surface-1); font-size:12px; padding:6px 9px; border-radius:6px; opacity:0; transition:opacity .1s; white-space:nowrap; z-index:5; }
+  .wrap { position:relative; }
+  table.data-table { width:100%; border-collapse:collapse; font-size:12px; margin-top:8px; }
+  table.data-table th, table.data-table td { text-align:right; padding:5px 8px; border-bottom:1px solid var(--grid); font-variant-numeric: tabular-nums; }
+  table.data-table th:first-child, table.data-table td:first-child { text-align:left; }
+  .hidden { display:none; }
+  .foot { color:var(--text-muted); font-size:11px; margin-top:14px; }
+  rect.hit { fill:transparent; }
+</style>
+</head>
+<body>
+<div class="viz-root">
+  <h1>K1 (% DORUČENO) per počet hráčů — baseline vs. guardrail-floor ruky</h1>
+  <p class="sub">Sweep D58 bod 4, 2026-08-04 · bot kompetentní, 2 bloky × 8000 runů (průměr) · gate pásmo [45,70] vyznačeno zeleně</p>
+
+  <div class="toolbar">
+    <button id="btn-chart" aria-pressed="true">Graf</button>
+    <button id="btn-table" aria-pressed="false">Tabulka</button>
+  </div>
+
+  <div class="wrap">
+    <div id="tooltip" class="tooltip"></div>
+    <svg id="chart" viewBox="0 0 820 380" role="img" aria-label="Sloupcový graf K1 procenta doručeno pro 1 až 4 hráče, baseline versus guardrail-floor ruky, s vyznačeným gate pásmem 45 až 70 procent"></svg>
+  </div>
+
+  <div class="legend" id="legend">
+    <span><span class="swatch s1"></span>baseline (ruka 8/5/4/3)</span>
+    <span><span class="swatch s2"></span>guardrail-floor (ruka 8/4/3/2)</span>
+  </div>
+
+  <table class="data-table hidden" id="table">
+    <thead><tr><th>počet hráčů</th><th>baseline K1 %</th><th>floor K1 %</th><th>Δ b.</th><th>v pásmu [45,70]?</th></tr></thead>
+    <tbody></tbody>
+  </table>
+
+  <p class="foot">Zdroj: technika/sweep-ruka-2026-08-04.md. Δ = floor − baseline. 1p se páka nedotýká (ruka 8 beze změny). K6a spread (max−min napříč počty): baseline 19,0 b. → floor 14,6 b. (gate ≤6 b., v obou případech nesplněno).</p>
+</div>
+
+<script>
+const data = [
+  { cat: '1p', baseline: 68.35, floor: 68.35 },
+  { cat: '2p', baseline: 80.65, floor: 78.55 },
+  { cat: '3p', baseline: 86.60, floor: 81.90 },
+  { cat: '4p', baseline: 87.20, floor: 82.75 },
+];
+
+const svg = document.getElementById('chart');
+const NS = 'http://www.w3.org/2000/svg';
+const W = 820, H = 380;
+const marginL = 40, marginR = 16, marginT = 16, marginB = 40;
+const plotW = W - marginL - marginR, plotH = H - marginT - marginB;
+const yMax = 100, yMin = 0;
+const yScale = (v) => marginT + plotH - (v - yMin) / (yMax - yMin) * plotH;
+
+function el(tag, attrs) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  return e;
+}
+
+// gate band 45-70
+svg.appendChild(el('rect', { class: 'gate-band', x: marginL, y: yScale(70), width: plotW, height: yScale(45) - yScale(70) }));
+[45, 70].forEach((g) => {
+  svg.appendChild(el('line', { class: 'gate-line', x1: marginL, x2: marginL + plotW, y1: yScale(g), y2: yScale(g) }));
+  const t = el('text', { class: 'gate-label', x: marginL + plotW - 2, y: yScale(g) - 3, 'text-anchor': 'end' });
+  t.textContent = `gate ${g}`;
+  svg.appendChild(t);
+});
+
+// gridlines + y ticks
+[0, 20, 40, 60, 80, 100].forEach((v) => {
+  svg.appendChild(el('line', { class: 'grid', x1: marginL, x2: marginL + plotW, y1: yScale(v), y2: yScale(v) }));
+  const t = el('text', { class: 'tick', x: marginL - 8, y: yScale(v) + 4, 'text-anchor': 'end' });
+  t.textContent = v;
+  svg.appendChild(t);
+});
+
+// axis baseline
+svg.appendChild(el('line', { class: 'axis', x1: marginL, x2: marginL + plotW, y1: marginT + plotH, y2: marginT + plotH }));
+
+const groupW = plotW / data.length;
+const barW = 24, gap = 2;
+
+data.forEach((d, i) => {
+  const cx = marginL + groupW * i + groupW / 2;
+  const x1 = cx - gap / 2 - barW;
+  const x2 = cx + gap / 2;
+
+  const yb = yScale(d.baseline), yf = yScale(d.floor);
+  const bBase = marginT + plotH;
+
+  const rectB = el('rect', { class: 'bar series-1', x: x1, y: yb, width: barW, height: bBase - yb, rx: 4 });
+  const rectF = el('rect', { class: 'bar series-2', x: x2, y: yf, width: barW, height: bBase - yf, rx: 4 });
+  svg.appendChild(rectB);
+  svg.appendChild(rectF);
+
+  const lb = el('text', { class: 'value-label', x: x1 + barW / 2, y: yb - 6, 'text-anchor': 'middle' });
+  lb.textContent = d.baseline.toFixed(1);
+  svg.appendChild(lb);
+  const lf = el('text', { class: 'value-label', x: x2 + barW / 2, y: yf - 6, 'text-anchor': 'middle' });
+  lf.textContent = d.floor.toFixed(1);
+  svg.appendChild(lf);
+
+  const cl = el('text', { class: 'cat-label', x: cx, y: marginT + plotH + 20, 'text-anchor': 'middle' });
+  cl.textContent = d.cat;
+  svg.appendChild(cl);
+
+  // hover hit targets (bigger than the mark)
+  const tooltip = document.getElementById('tooltip');
+  [{ rect: rectB, label: 'baseline', val: d.baseline, x: x1 }, { rect: rectF, label: 'guardrail-floor', val: d.floor, x: x2 }].forEach((s) => {
+    const hit = el('rect', { class: 'hit', x: s.x - 4, y: marginT, width: barW + 8, height: plotH });
+    hit.addEventListener('mousemove', (e) => {
+      const wrap = svg.parentElement.getBoundingClientRect();
+      tooltip.style.left = (e.clientX - wrap.left + 12) + 'px';
+      tooltip.style.top = (e.clientY - wrap.top - 28) + 'px';
+      tooltip.textContent = `${d.cat} · ${s.label}: ${s.val.toFixed(2)} %`;
+      tooltip.style.opacity = 1;
+    });
+    hit.addEventListener('mouseleave', () => { tooltip.style.opacity = 0; });
+    svg.appendChild(hit);
+  });
+});
+
+// table view
+const tbody = document.querySelector('#table tbody');
+data.forEach((d) => {
+  const tr = document.createElement('tr');
+  const delta = (d.floor - d.baseline).toFixed(2);
+  const inBand = d.floor >= 45 && d.floor <= 70 ? 'ano' : 'ne';
+  tr.innerHTML = `<td>${d.cat}</td><td>${d.baseline.toFixed(2)}</td><td>${d.floor.toFixed(2)}</td><td>${delta}</td><td>${inBand}</td>`;
+  tbody.appendChild(tr);
+});
+
+document.getElementById('btn-chart').addEventListener('click', (e) => {
+  document.getElementById('chart').closest('.wrap').classList.remove('hidden');
+  document.getElementById('legend').classList.remove('hidden');
+  document.getElementById('table').classList.add('hidden');
+  e.target.setAttribute('aria-pressed', 'true');
+  document.getElementById('btn-table').setAttribute('aria-pressed', 'false');
+});
+document.getElementById('btn-table').addEventListener('click', (e) => {
+  document.getElementById('chart').closest('.wrap').classList.add('hidden');
+  document.getElementById('legend').classList.add('hidden');
+  document.getElementById('table').classList.remove('hidden');
+  e.target.setAttribute('aria-pressed', 'true');
+  document.getElementById('btn-chart').setAttribute('aria-pressed', 'false');
+});
+</script>
+</body>
+</html>

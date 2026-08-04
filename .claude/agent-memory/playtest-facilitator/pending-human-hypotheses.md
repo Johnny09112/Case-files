@@ -109,5 +109,16 @@ designéra a remote/async sezení. Každou spáruj se signálem z šablony playt
   stížnosti „uteče problém z lopaty". Sim ale neví, jestli hráči v pozdějších
   sezeních DRUHÉ finále přesto chtěli jako gradaci rizika, ne jako vadu.
 
+## Nové ze sweepu D58(4) `hraci[n].ruka` (2026-08-04, viz [[d58-4-sweep-ruka]])
+
+- **Cítí se menší ruka (8/4/3/2) u stolu jako citelné utažení výběru, nebo si
+  hráč rozdílu 1 karty ani nevšimne?** Sim doložila směr (K1 dolů) i strop
+  efektu (guardrail-floor uzavírá jen ~20–28 % mezery ke stropu) — ale
+  „utažení agency" a „pocit menší ruky" (K4d/K6c) sim tímhle kolem vůbec
+  neměřila (chybí `learnability.js` běh + K6c v `report.js` neexistuje).
+  Než se floor kombinace zapeče, stojí za otázku živým hráčům: bolí menší
+  ruka jako rozhodnutí, nebo jen jako logistika (méně karet v ruce = rychlejší
+  commit, bez pocitu ztráty)?
+
 Otevřené číselné páky, které se po lidské zpětné vazbě můžou hnout, jsou v
 [[sim-gate-findings]].
