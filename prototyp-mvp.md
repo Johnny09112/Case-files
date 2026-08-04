@@ -173,7 +173,12 @@ se testuje agentem `protocol-humor-tester` nad promptem `prompty/protokol.md`.
   kalibrací-2 2026-07-24 kvůli K4c). Práh **skrytý před**, **odhalený po**
   vyhodnocení. **Slotové výjimky** (střídmě): kombinovaný práh přes 2 staty, nebo
   slot citlivý na štítek. Každý slot má při odhalení **ikonu viditelnosti**
-  (viditelná / skrytá role).
+  (viditelná / skrytá role). **Clamp je supply-aware (V4-D, D58):** na
+  viditelném slotu situace, kde GANGSTER auto-failuje (a slot nemá výjimku
+  `stitek_citlivy: GANGSTER`), se horní mez prahu nebere jako `statMax` (5),
+  ale jako nejvyšší stat dosažitelný NON-GANGSTER kartou — jinak práh mohl
+  padnout na hodnotu, kterou žádná legální karta netrefí (nález D57,
+  design-audit-2p-2026-08-02.md §5.1).
 - **Pásma** (počet slotů, které prošly práh):
   - **4/4** … HLADCE + LOOT (úspěch + bonus)
   - **3/4** … HLADCE (čistý úspěch)
@@ -222,15 +227,26 @@ se testuje agentem `protocol-humor-tester` nad promptem `prompty/protokol.md`.
   (odvozené ze štítků/statů **committnuté sady** — `GANGSTER`, vysoký útok —
   vyhodnotí se hned po commitu, NE podle toho, do kterého slotu karta nakonec
   padla; N5, `state.js` `resolveSituation` prochází `situ.committed`) a vybrané
-  výsledky. **Každý pohyb nese anotaci proč.** Prahy: **Zátah** (nahradí
-  příští uzel, obě větve přes něj), **léčka** (vložený uzel s pronásledovatelem),
-  **konfrontace** (okamžitá finální situace; přežití Žár srazí). Přesné přírůstky
-  a prahy ladit simulací.
-- **Pronásledovatel:** losuje se 1 na začátku runu, viditelný od začátku, **ruší
-  jeden stat/štítek PO CELÝ RUN** (run-wide, od první minuty — N4, ne jen ve
-  své léčce/konfrontaci; `obsah/pronasledovatele.yaml` `rusi`). Kromě tohoto
-  pasivního rušení **nemá vlastní tahy** — do hry jinak zasahuje jen přes
-  prahy Žáru (Zátah, léčka, konfrontace).
+  výsledky. **Každý pohyb nese anotaci proč** — a u pohybu vpřed navíc
+  **dopřednou** anotaci, kolik polí zbývá k nejbližšímu dosud neodpálenému
+  prahu (V3-C, D58; vysvětlující vrstva dřív uměla mluvit jen zpětně). Prahy:
+  **Zátah** (nahradí příští uzel, obě větve přes něj), **léčka** (vložený uzel
+  s pronásledovatelem), **konfrontace** (okamžitá finální situace; přežití
+  srazí Žár o pevnou hodnotu **−3**, ne na absolutní cíl). **Konfrontace se
+  v jednom runu odehraje nejvýš jednou (V3-A′, D58):** práh konfrontace se po
+  prvním odpálení už nikdy znovu nenabije, i kdyby Žár později znovu vystoupal
+  na strop — Zátah a léčka se dál nabíjejí normálně, tlak nezmizí. (Dřív se
+  trať po poklesu Žáru chovala jako resetovací smyčka, ne eskalace — nález
+  D57 §4.1: „4–5× za run uteče problém z lopaty".) Přesné přírůstky a prahy
+  ladit simulací.
+- **Pronásledovatel:** losuje se 1 na začátku runu, viditelný od začátku,
+  **ruší jeden stat/štítek** (`obsah/pronasledovatele.yaml` `rusi`). **Statové
+  rušení (dnes Malone/hodnota) se aktivuje teprve prvním překročením prahu
+  Zátahu (V2-A′, D58)** — do té doby hodnota-sloty fungují normálně (úplatky
+  berou), od aktivace dál platí run-wide až do konce runu. **Štítkové rušení
+  (dnes šerif/GANGSTER) je run-wide od startu beze změny** (N4). Kromě tohoto
+  pasivního rušení pronásledovatel **nemá vlastní tahy** — do hry jinak
+  zasahuje jen přes prahy Žáru (Zátah, léčka, konfrontace).
 - **Vysvětlující vrstva „proč se to stalo" — POVINNÁ položka.** Každá netriviální
   událost nese při odhalení krátkou anotaci: skrytý práh vs. realita, vynucení a
   štítky, pohyb šerifa, postihové řetězce (vznik/vyprší/léčí), plnění tajných cílů

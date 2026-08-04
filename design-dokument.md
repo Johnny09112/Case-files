@@ -173,6 +173,13 @@ rozsahu statu (0–5) — u vysoké kotvy je tedy reálné kolísání **asymetr
 citlivý na štítek). Skrytost je *learnabilita*, ne gotcha — po vyhodnocení se
 prah vždy ukáže (§4.11).
 
+Zastropování je navíc **supply-aware** (V4-D, D58): na viditelném slotu, kde
+vzácný štítek (GANGSTER) selže bez ohledu na staty, se strop nepočítá k
+teoretickému maximu statu, ale k nejvyšší hodnotě, kterou nese LEGÁLNÍ karta
+pro ten slot (bez GANGSTER věcí) — jinak mohl práh padnout na hodnotu, kterou
+nesplní žádná karta ve hře (nález D57, design-audit-2p-2026-08-02.md §5.1).
+Nemění to ani jednu kartu, jen brání neprůchozím slotům.
+
 ### 4.6 Pásma výsledku
 Výsledek uzlu je **pásmo** podle počtu slotů, které prošly práh (ne procento):
 čistý úspěch, úspěch s následky (postih), a průšvih (těžký postih + ztráta + Žár).
@@ -219,15 +226,25 @@ vyhodnotí se hned po commitu, nad **committnutou sadou**, ne podle toho, do
 kterého slotu karta nakonec padla; N5) a vybrané výsledky; **každý pohyb nese
 anotaci proč** (§4.11). Prahy trati (viditelné předem): **Zátah** (příští uzel
 nahradí zátah, obě větve přes něj), **léčka** (mimořádný uzel s pronásledovatelem
-osobně), **konfrontace** (okamžitá finální situace; přežití Žár srazí).
-Pronásledovatel se losuje na začátku runu, je viditelný od první minuty a **ruší
-jeden stat/štítek PO CELÝ RUN** (run-wide, N4 — federál bere úplatky = hodnotu
-z hry, a to v jakémkoli hodnota-slotu odteď dál, ne jen ve své léčce/konfrontaci;
-šerif reaguje na hlučnost dvojnásob run-wide stejně) — čtvrtina páky je proti
-finále oslabená, každý run se hraje jinak. Kromě tohoto pasivního run-wide
-rušení pronásledovatel **nemá vlastní tahy** — do hry jinak zasahuje jen přes
-prahy Žáru výše. Vypravěčský háček: pronásledovatel je kolega poldy od
-stroje, protokol cituje jeho hlášení a oba byrokrati se v spisu tiše nesnášejí.
+osobně), **konfrontace** (okamžitá finální situace; přežití Žár srazí o pevnou
+hodnotu — a práh konfrontace se v tom runu už NIKDY znovu nenabije: **nejvýš
+jeden klimax za run** (V3-A′, D58), i kdyby Žár později znovu vystoupal na
+strop. Zátah a léčka se dál nabíjejí normálně, tlak nezmizí — jen hrozba
+druhého finále je strukturálně vyloučená (dřív se trať chovala jako
+resetovací smyčka, ne eskalace, a hráč mohl ve stejném runu narazit na
+konfrontaci vícekrát; nález D57 §4.1).
+Pronásledovatel se losuje na začátku runu, je viditelný od první minuty. **Ruší
+jeden stat/štítek run-wide** (N4), ale u statového rušení (dnes Malone/hodnota)
+se efekt **aktivuje teprve prvním překročením prahu Zátahu** (V2-A′, D58) —
+do té chvíle federál bere úplatky jako všichni ostatní; jakmile Žár jednou
+překročí práh Zátahu, hodnota se od té chvíle počítá jako 0 ve všech
+hodnota-slotech až do konce runu. Štítkové rušení (dnes šerif, GANGSTER
+dvojnásob) touhle branou neprochází a platí run-wide od startu beze změny.
+Čtvrtina páky je proti finále oslabená, každý run se hraje jinak. Kromě
+tohoto pasivního rušení pronásledovatel **nemá vlastní tahy** — do hry jinak
+zasahuje jen přes prahy Žáru výše. Vypravěčský háček: pronásledovatel je
+kolega poldy od stroje, protokol cituje jeho hlášení a oba byrokrati se v
+spisu tiše nesnášejí.
 Konkrétní hodnoty viz [prototyp-mvp.md](prototyp-mvp.md). **Záměrně NE:** perzistence
 napříč runy (scope + patent WB na nemesis), soubojový systém s HP, tahy nepřítele.
 
