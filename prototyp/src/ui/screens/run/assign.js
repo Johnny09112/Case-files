@@ -28,7 +28,7 @@
 import { h } from '../../dom.js';
 import { MISTO } from '../../vysvetleni.js';
 import { STAT_LABEL } from '../../labels.js';
-import { kdoNevidi } from './commit.js';
+import { kdoNevidi, statyUzly } from './commit.js';
 import { rozlozText, textSituace, MEZERA } from '../../situace-text.js';
 import { prijmeni } from '../../protocol-fill.js';
 
@@ -104,6 +104,10 @@ export function pohledPrirazeni(ctx) {
   const aktivni = aktivniSlotIndex(sloty, S.assignVyber);
   const hotovo = Object.keys(prirazeno).length === situace.committed.length;
   const nevidiViditelnost = kdoNevidi(st, 'hide_viditelnost');
+  // D57 komunikace (technika/obsahove-kolo-2p-2026-08-02.md §2 Návrh B bod 1):
+  // stejná přeškrtnutá hodnota jako v commit.js — pronásledovatel ruší jeden stat
+  // run-wide, karta se tu bez toho tvářila plnohodnotně i po odhalení slotů.
+  const rusiStat = st.pronasledovatel?.rusi?.typ === 'stat' ? st.pronasledovatel.rusi.cil : null;
   // Ruce, ze kterých lze táhnout naslepo — jen ty neprázdné (D19b: „čí ruka
   // poskytne kartu" a „kterou committnutou nahradí" jsou DVĚ nezávislé volby
   // týmu, viz prototyp-mvp.md §Resoluční systém v3; hráč nemusí gamblovat
@@ -121,7 +125,8 @@ export function pohledPrirazeni(ctx) {
       { class: 'spis-hlavicka' },
       h('p', { class: 'formular-popisek' }, 'odhaleno — teď se dělí'),
       h('h1', {}, nazevSituace(content, situace)),
-      h('p', { class: 'napoveda' }, 'Podtržená mezera je aktivní — klikni na věc dole, přiřadí se tam a ukazatel skočí na další prázdnou. Klikni na jinou mezeru, chceš-li opravit ji místo další. Vidíš kotvu, ne práh — kotva se opakuje, šum se dorolí a ukáže se až po vyhodnocení.')
+      h('p', { class: 'napoveda' }, 'Podtržená mezera je aktivní — klikni na věc dole, přiřadí se tam a ukazatel skočí na další prázdnou. Klikni na jinou mezeru, chceš-li opravit ji místo další. Vidíš kotvu, ne práh — kotva se opakuje, šum se dorolí a ukáže se až po vyhodnocení.'),
+      h('p', { class: 'cestnost' }, 'Propadne-li slot, postih dostane majitel nejhůř propadlé věci — čí karta zůstane statu nejdál, ten ho nese.')
     ),
     nevidiViditelnost.length > 0
       ? h(
@@ -149,7 +154,7 @@ export function pohledPrirazeni(ctx) {
               onclick: () => akce.priradVec(c.karta.id),
             },
             h('strong', {}, c.karta.nazev),
-            h('span', { class: 'karta-meta' }, Object.entries(c.karta.staty).map(([k, v]) => `${STAT_LABEL[k] ?? k} ${v}`).join(' · ')),
+            h('span', { class: 'karta-meta' }, statyUzly(c.karta.staty, rusiStat)),
             h('span', { class: 'karta-popis' }, c.karta.text),
             c.karta.stitek ? h('span', { class: 'karta-hlucna' }, `${nazevStitku(content, c.karta.stitek)} — hlučná`) : null
           );

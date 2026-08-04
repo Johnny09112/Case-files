@@ -39,19 +39,19 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
         "detail": "Chce obranu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 0,
-        "veta": "Držet nervy: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
+        "veta": "Držet nervy: kotva 4, šum ±2 — výš než 5 práh nejde.",
       },
       {
         "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 1,
-        "veta": "Zamluvit to: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
+        "veta": "Zamluvit to: kotva 4, šum ±2 — výš než 5 práh nejde.",
       },
       {
         "detail": "Chce útok · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 2,
-        "veta": "Zastrašit gestem: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
+        "veta": "Zastrašit gestem: kotva 4, šum ±2 — výš než 5 práh nejde.",
       },
       {
         "detail": "Chce nástroj · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
@@ -103,7 +103,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
   {
     "anotace": [
       {
-        "detail": "„Lopata" — Vincenc Bartoš · Práh 5 = kotva 4 +2.",
+        "detail": "„Lopata" — Vincenc Bartoš · Práh 5 = kotva 4 +2, zastropováno na 5.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 2,
@@ -205,19 +205,19 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
         "detail": "Chce útok · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 0,
-        "veta": "Prorazit blokádu: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
+        "veta": "Prorazit blokádu: kotva 4, šum ±2 — výš než 5 práh nejde.",
       },
       {
         "detail": "Chce nástroj · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 1,
-        "veta": "Strhnout do postranní: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
+        "veta": "Strhnout do postranní: kotva 4, šum ±2 — výš než 5 práh nejde.",
       },
       {
         "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 2,
-        "veta": "Zmizet v ulicích: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
+        "veta": "Zmizet v ulicích: kotva 4, šum ±2 — výš než 5 práh nejde.",
       },
       {
         "detail": "Chce obranu · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
@@ -232,7 +232,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
   {
     "anotace": [
       {
-        "detail": "„Mosazný boxer" — Frank Kowalski · Práh 5 = kotva 4 +2.",
+        "detail": "„Mosazný boxer" — Frank Kowalski · Práh 5 = kotva 4 +2, zastropováno na 5.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 0,
@@ -340,13 +340,13 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
         "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 0,
-        "veta": "Uklidnit dav: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
+        "veta": "Uklidnit dav: kotva 4, šum ±2 — výš než 5 práh nejde.",
       },
       {
         "detail": "Chce hodnotu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 1,
-        "veta": "Přimazat dlaň: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
+        "veta": "Přimazat dlaň: kotva 4, šum ±2 — výš než 5 práh nejde.",
       },
       {
         "detail": "Chce obranu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
@@ -367,7 +367,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
   {
     "anotace": [
       {
-        "detail": "„Kněžský kolárek" — Frank Kowalski · Práh 5 = kotva 4 +2.",
+        "detail": "„Kněžský kolárek" — Frank Kowalski · Práh 5 = kotva 4 +2, zastropováno na 5.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 0,
@@ -380,7 +380,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
   {
     "anotace": [
       {
-        "detail": "„Zlaté hodinky" — Rudolf Mazur · Práh 5 = kotva 4 +2.",
+        "detail": "„Zlaté hodinky" — Rudolf Mazur · Práh 5 = kotva 4 +2, zastropováno na 5.",
         "misto": "slot",
         "razitko": "PROŠLO",
         "slot_index": 1,
@@ -442,7 +442,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
       {
         "detail": "týmu ubyla 1 bedna nákladu; jednorázově. Aktivních postihů: 0.",
         "misto": "spis",
-        "veta": "Za 2/4 — s následky: Frank Kowalski — Vysypaná bedna (lehký, ztrátový).",
+        "veta": "Za 2/4 — s následky: Cesare Fontana — Vysypaná bedna (lehký, ztrátový).",
       },
     ],
     "seq": 44,
@@ -556,7 +556,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
         "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 0,
-        "veta": "Utišit psy: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
+        "veta": "Utišit psy: kotva 4, šum ±2 — výš než 5 práh nejde.",
       },
       {
         "detail": "Chce nástroj a improvizaci (OBA staty) · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
@@ -568,7 +568,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
         "detail": "Chce nástroj · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 2,
-        "veta": "Schovat bednu do sena: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
+        "veta": "Schovat bednu do sena: kotva 4, šum ±2 — výš než 5 práh nejde.",
       },
       {
         "detail": "Chce obranu · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
@@ -692,19 +692,19 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
         "detail": "Chce útok · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 0,
-        "veta": "Probít se vpřed: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
+        "veta": "Probít se vpřed: kotva 4, šum ±2 — výš než 5 práh nejde.",
       },
       {
         "detail": "Chce nástroj · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 1,
-        "veta": "Najít, kudy ujet: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
+        "veta": "Najít, kudy ujet: kotva 4, šum ±2 — výš než 5 práh nejde.",
       },
       {
         "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 2,
-        "veta": "Kličkovat mezi vozy: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
+        "veta": "Kličkovat mezi vozy: kotva 4, šum ±2 — výš než 5 práh nejde.",
       },
       {
         "detail": "Chce obranu · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
@@ -824,7 +824,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
   {
     "anotace": [
       {
-        "detail": "Sloty 1 splnil / 4 propadl · postihy 4 · gamble 0× · složen 0× · ztracené bedny 3 · doručeno: ne.",
+        "detail": "Sloty 1 splnil / 4 propadl · postihy 3 · gamble 0× · složen 0× · ztracené bedny 2 · doručeno: ne.",
         "misto": "spis",
         "veta": "Tajný cíl Frank Kowalski: Kupecké slovo platí: ani jedna bedna nesmí padnout tvou vinou — a stejně dojedeš. — nesplněn.",
       },
@@ -846,7 +846,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
   {
     "anotace": [
       {
-        "detail": "Sloty 2 splnil / 1 propadl · postihy 0 · gamble 0× · složen 0× · ztracené bedny 0 · doručeno: ne.",
+        "detail": "Sloty 2 splnil / 1 propadl · postihy 1 · gamble 0× · složen 0× · ztracené bedny 1 · doručeno: ne.",
         "misto": "spis",
         "veta": "Tajný cíl Cesare Fontana: Do New Yorku dorazíš aspoň se dvěma šrámy na těle — a bednu přesto složíš. — nesplněn.",
       },
@@ -907,19 +907,19 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
         "detail": "Chce útok · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 0,
-        "veta": "Postavit se jim: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
+        "veta": "Postavit se jim: kotva 4, šum ±2 — výš než 5 práh nejde.",
       },
       {
         "detail": "Chce obranu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 1,
-        "veta": "Ustát nápor: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
+        "veta": "Ustát nápor: kotva 4, šum ±2 — výš než 5 práh nejde.",
       },
       {
         "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 2,
-        "veta": "Vyklouznout stranou: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
+        "veta": "Vyklouznout stranou: kotva 4, šum ±2 — výš než 5 práh nejde.",
       },
       {
         "detail": "Chce útok · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
@@ -1051,7 +1051,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
         "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 0,
-        "veta": "Zamotat hlavu: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
+        "veta": "Zamotat hlavu: kotva 4, šum ±2 — výš než 5 práh nejde.",
       },
       {
         "detail": "Chce nástroj · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
@@ -1078,7 +1078,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Konev na mléko" — Vincenc Bartoš · Práh 5 = kotva 4 +2.",
+        "detail": "„Konev na mléko" — Vincenc Bartoš · Práh 5 = kotva 4 +2, zastropováno na 5.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 0,
@@ -1401,19 +1401,19 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
         "detail": "Chce útok · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 0,
-        "veta": "Prorazit blokádu: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
+        "veta": "Prorazit blokádu: kotva 4, šum ±2 — výš než 5 práh nejde.",
       },
       {
         "detail": "Chce nástroj · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 1,
-        "veta": "Strhnout do postranní: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
+        "veta": "Strhnout do postranní: kotva 4, šum ±2 — výš než 5 práh nejde.",
       },
       {
         "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 2,
-        "veta": "Zmizet v ulicích: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
+        "veta": "Zmizet v ulicích: kotva 4, šum ±2 — výš než 5 práh nejde.",
       },
       {
         "detail": "Chce obranu · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
@@ -1452,7 +1452,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Rezervní pneumatika" — Vincenc Bartoš · Práh 5 = kotva 4 +2.",
+        "detail": "„Rezervní pneumatika" — Vincenc Bartoš · Práh 5 = kotva 4 +2, zastropováno na 5.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 1,
@@ -1557,19 +1557,19 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
         "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 0,
-        "veta": "Zapřít totožnost: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
+        "veta": "Zapřít totožnost: kotva 4, šum ±2 — výš než 5 práh nejde.",
       },
       {
         "detail": "Chce obranu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 1,
-        "veta": "Nedat na sobě znát: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
+        "veta": "Nedat na sobě znát: kotva 4, šum ±2 — výš než 5 práh nejde.",
       },
       {
         "detail": "Chce nástroj · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 2,
-        "veta": "Objet ho stranou: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
+        "veta": "Objet ho stranou: kotva 4, šum ±2 — výš než 5 práh nejde.",
       },
       {
         "detail": "Chce útok · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
@@ -1692,7 +1692,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
         "detail": "Chce útok · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
         "misto": "slot",
         "slot_index": 0,
-        "veta": "Probít se ven: kotva 4, šum ±2 — přesný práh až po vyhodnocení.",
+        "veta": "Probít se ven: kotva 4, šum ±2 — výš než 5 práh nejde.",
       },
       {
         "detail": "Chce obranu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",

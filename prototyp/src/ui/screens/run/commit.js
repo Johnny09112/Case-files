@@ -93,6 +93,16 @@ export function pohledCommitu(ctx) {
   const nevidiTelegraf = kdoNevidi(st, 'hide_telegraf');
   const nevidiStaty = kdoNevidi(st, 'hide_staty');
   const rozbor = stavRozboru({ ulehceni: S.ulehceni, onboarding: S.onboardingRozbor, otevreno: S.rozborOtevren });
+  // D57 komunikace (technika/obsahove-kolo-2p-2026-08-02.md §2 Návrh B): pronásledovatel
+  // ruší jeden stat RUN-WIDE (§4.9) — dřív se to na kartě nikde nepoznalo, hráč si
+  // sáhl na „hodnota 5" a slot i tak spadl. `st.pronasledovatel.rusi` je stejný
+  // datový kanál, který engine používá k rušení (`resolve.js` `statValue`); UI ho
+  // jen čte, žádná herní logika (architektura §2.4).
+  const rusiStat = st.pronasledovatel?.rusi?.typ === 'stat' ? st.pronasledovatel.rusi.cil : null;
+  // Brody zdvojuje Žár za GANGSTER (obsah/pronasledovatele.yaml) — stejná
+  // odvozovací logika jako `brodyGangster` ve state.js, jen nad veřejným snapshotem.
+  const brodyGangster = st.pronasledovatel?.rusi?.typ === 'stitek' && st.pronasledovatel.rusi.cil === 'GANGSTER';
+  const maZbranVRuce = st.postavy.some((/** @type {any} */ p) => p.ruka.some((/** @type {any} */ k) => k.stitek === 'GANGSTER'));
 
   return h(
     'div',
@@ -139,7 +149,8 @@ export function pohledCommitu(ctx) {
             'Rozbor ukazujeme jen na tomhle prvním úseku, ať víte, co ta slova znamenají. Dál si telegraf čtete sami — a role vám po commitu pojmenuje odhalení. Natrvalo se rozbor zapíná v obtížnosti jako ulehčení.'
           )
         : null,
-      poznamkaCestnosti(nevidiTelegraf, 'informační postih na telegraf')
+      poznamkaCestnosti(nevidiTelegraf, 'informační postih na telegraf'),
+      maZbranVRuce ? anotaceZbrane() : null
     ),
     h(
       'section',
@@ -197,18 +208,73 @@ export function pohledCommitu(ctx) {
               onclick: () => akce.prepniKartu(p.id, k.id),
             },
             h('strong', {}, k.nazev),
-            h('span', { class: `karta-meta${maSkryteStaty ? ' skryto-postihem' : ''}` }, popisStatu(k.staty)),
+            h('span', { class: `karta-meta${maSkryteStaty ? ' skryto-postihem' : ''}` }, statyUzly(k.staty, rusiStat)),
             h('span', { class: 'karta-popis' }, k.text),
-            k.stitek ? h('span', { class: 'karta-hlucna' }, `${nazevStitku(content, k.stitek)} — hlučná`) : null
+            k.stitek ? h('span', { class: 'karta-hlucna' }, zbranKontext(k)) : null
           );
         })
       )
     );
   }
+
+  /**
+   * Kontextové razítko na kartě se štítkem (technika/obsahove-kolo-2p-2026-08-02.md
+   * §3, „Kontextové razítko" — hlavní nosič pravidla): rozdělené na viditelnostní
+   * pravidlo (odvozené ze `situace.signal.zbran_projde`, stejný strojový kanál jako
+   * telegraf — žádné nové domýšlení) a hlučnost (Žár), dřív slité do jedné
+   * zavádějící nálepky „hlučná" (nález kritika, obsahové kolo §3). Commit je
+   * naslepo (D51), takže tohle je situační pravidlo (typ místa), ne konkrétní
+   * slot — ten pojmenuje až odhalení (`assign.js`).
+   * @param {any} k
+   */
+  function zbranKontext(k) {
+    const signal = situace.signal;
+    const nazev = nazevStitku(content, k.stitek);
+    const pravidlo = !signal
+      ? 'na očích propadne bez ohledu na staty'
+      : signal.zbran_projde === 'ano'
+        ? 'tady projde i na očích'
+        : signal.zbran_slot_vyjimka
+          ? 'na očích propadne — mimo jednu roli, co ji přímo vítá'
+          : 'na očích propadne; potají rozhoduje stat role';
+    const hlucnost = brodyGangster ? '+2 Žár' : '+1 Žár';
+    return `${nazev} — ${pravidlo} · ${hlucnost}`;
+  }
+
+  /**
+   * Statická anotace pravidla zbraně (obsahové kolo §3, varianta D — nahrazuje
+   * mé A i B po recenzi kritika): 2 věty, žádný seznam typů míst, protože
+   * verdikt zbraně je od D52 zapečený jako 4 doslovné řetězce (kanál 5
+   * invariantu) — hráč nepotřebuje taxonomii, potřebuje jeden návyk. Ukazuje se
+   * jen když má NĚKDO v ruce věc se štítkem (jinak by byla mrtvá informace).
+   */
+  function anotaceZbrane() {
+    return h(
+      'p',
+      { class: 'napoveda' },
+      'Zbraň se řídí poslední větou telegrafu — ta pro každé místo zvlášť říká, jestli projde na očích. Ve skryté roli se štítek neřeší nikdy; rozhoduje stat té role, a ten nemusí být útok.'
+    );
+  }
 }
 
-/** „útok 3 · obrana 1 · hodnota 4 · improvizace 0 · nástroj 2" */
-function popisStatu(staty) {
-  return Object.entries(staty).map(([klic, hodnota]) => `${STAT_LABEL[klic] ?? klic} ${hodnota}`).join(' · ');
+/**
+ * „útok 3 · obrana 1 · hodnota 4 · improvizace 0 · nástroj 2" jako pole uzlů —
+ * ne spojený řetězec — aby šel jeden token přeškrtnout (D57 komunikace,
+ * obsahové kolo §2 Návrh B bod 1): pronásledovatel ruší `rusiStat` run-wide
+ * (§4.9), takže „hodnota 5" na kartě je od teď vidět jako nulovaná, ne mlčky
+ * jako plnohodnotná.
+ * @param {Record<string, number>} staty
+ * @param {string|null} rusiStat
+ */
+export function statyUzly(staty, rusiStat = null) {
+  const uzly = [];
+  Object.entries(staty).forEach(([klic, hodnota], i) => {
+    if (i > 0) uzly.push(' · ');
+    const text = `${STAT_LABEL[klic] ?? klic} ${hodnota}`;
+    uzly.push(
+      klic === rusiStat ? h('span', { class: 'stat-zrusen-pronasledovatelem', title: 'pronásledovatel ruší tenhle stat po celý run' }, text) : text
+    );
+  });
+  return uzly;
 }
 

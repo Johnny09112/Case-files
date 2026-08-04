@@ -144,6 +144,151 @@ describe('postihy — cap 2 + složení', () => {
   });
 });
 
+/** Situace se 4 sloty na stejný stat (utok) s řízenými kotvami — pro ovládání statové mezery. */
+function situaceMezera(id, kotvy) {
+  return {
+    id,
+    typ: 'npc',
+    svet: '1930',
+    telegraf: 'test',
+    text: 'x',
+    sloty: kotvy.map((kotva, i) => ({ role: `role-${i}`, stat: 'utok', kotva, viditelnost: 'viditelna' })),
+    pasmove_vysledky: {
+      hladce_loot: { loot: 'karta' },
+      s_nasledky: { postih_lehky: ['lehky-info'] },
+      prusvih: { postih_tezky: ['tezky-lock'] },
+    },
+  };
+}
+
+/** Dojede na commit fázi prvního (jediného) uzlu a vrátí commitnutá utok=0 esa obou hráčů. */
+function doCommitDvouHracu(run) {
+  while (['map', 'motel_offer'].includes(run.getState().faze)) {
+    const s = run.getState();
+    if (s.faze === 'map') run.chooseRoute(s.nabidka.nabidnuto[0].ref);
+    else run.motelChoice('dal');
+  }
+  const utok0P1 = run.getHand('p1').filter((c) => c.staty.utok === 0);
+  const utok0P2 = run.getHand('p2').filter((c) => c.staty.utok === 0);
+  run.commitCards([
+    { characterId: 'p1', cardId: utok0P1[0].id },
+    { characterId: 'p1', cardId: utok0P1[1].id },
+    { characterId: 'p2', cardId: utok0P2[0].id },
+    { characterId: 'p2', cardId: utok0P2[1].id },
+  ]);
+  return { p1: [utok0P1[0].id, utok0P1[1].id], p2: [utok0P2[0].id, utok0P2[1].id] };
+}
+
+describe('postih — oběť = vlastník slotu s největší statovou mezerou (D57/V1-A krok 1)', () => {
+  it('propadnou-li všechny 4 sloty, postih dostane vlastník slotu s NEJVĚTŠÍ mezerou (prah − stat), ne první propadlý index', () => {
+    // kotvy 2,3,4,5 (sumRozsah 0 → prah = kotva); všechny committnuté karty utok=0
+    // → mezery 2,3,4,5 → nejhorší je slot 3, přiřazený p2. Bez opravy (propadli[0])
+    // by oběť byla p1 (vlastník slotu 0 — první propadlý v pořadí indexů).
+    const rules = { ...RULES, sumRozsah: 0 };
+    const content = syntetickyObsah({ situace: [situaceMezera('s-mezera', [2, 3, 4, 5])] });
+    const run = createRun({ seed: 21, content, rules, players: hraci(2), pronasledovatelId: 'agent-malone' });
+    const { p1, p2 } = doCommitDvouHracu(run);
+    run.assignToSlots([
+      { slotIndex: 0, cardId: p1[0] },
+      { slotIndex: 1, cardId: p1[1] },
+      { slotIndex: 2, cardId: p2[0] },
+      { slotIndex: 3, cardId: p2[1] },
+    ]);
+    run.confirmNode();
+    const events = run.getEvents();
+    const zasahy = events.filter((e) => e.type === EVENT.SLOT_RESOLVED && e.zasah);
+    expect(zasahy).toHaveLength(0); // 0/4 → PRŮŠVIH
+    const band = events.find((e) => e.type === EVENT.BAND_RESOLVED);
+    expect(band.pasmo).toBe(BAND.PRUSVIH);
+    const postih = events.find((e) => e.type === EVENT.PENALTY_ADDED);
+    expect(postih).toBeTruthy();
+    expect(postih.hrac_id).toBe('p2'); // vlastník slotu 3 (mezera 5), NE p1 (slot 0, mezera 2)
+  });
+
+  it('remíza ve statové mezeře se řeší nejnižším slot_index (tie-break)', () => {
+    // kotvy 2,3,4,4 → sloty 2 a 3 mají stejnou mezeru (4). Tie-break: slot 2 (nižší index) → p2 (vlastník obou slotů 2,3 zde je p2, test proto zrcadlí přes odlišné hráče na slotech 2 a 3 by šel taky, ale stačí ověřit determinismus na nejnižším indexu mezi remízujícími).
+    const rules = { ...RULES, sumRozsah: 0 };
+    const content = syntetickyObsah({ situace: [situaceMezera('s-remiza', [2, 3, 4, 4])] });
+    const run = createRun({ seed: 22, content, rules, players: hraci(2), pronasledovatelId: 'agent-malone' });
+    const { p1, p2 } = doCommitDvouHracu(run);
+    // p1 na sloty 0,1 (mezery 2,3); p2 na sloty 2,3 (obě mezera 4 — remíza uvnitř p2).
+    // Prohoď, aby remízující sloty patřily různým hráčům: slot 2 → p1[1], slot 3 → p2[1].
+    run.assignToSlots([
+      { slotIndex: 0, cardId: p2[0] },
+      { slotIndex: 1, cardId: p1[0] },
+      { slotIndex: 2, cardId: p1[1] }, // mezera 4, nižší index mezi remízou
+      { slotIndex: 3, cardId: p2[1] }, // mezera 4
+    ]);
+    run.confirmNode();
+    const events = run.getEvents();
+    const postih = events.find((e) => e.type === EVENT.PENALTY_ADDED);
+    expect(postih).toBeTruthy();
+    expect(postih.hrac_id).toBe('p1'); // slot 2 (nižší index) vyhrává remízu nad slotem 3
+  });
+
+  it('bez statového propadu (jen tvrdé pravidlo) padá zpět na první propadlý slot v pořadí', () => {
+    // 2 sloty (viditelné, npc) propadnou tvrdým pravidlem GANGSTER auto-fail
+    // (duvod 'gangster_auto_fail' — NENÍ statový propad), zbylé 2 projdou
+    // univerzální kartou → 2/4 S_NÁSLEDKY. Oběť musí být vlastník PRVNÍHO
+    // tvrdého propadu v pořadí slotů (slot 0), stejně jako před D57.
+    const veci = [
+      ...Array.from({ length: 4 }, (_, i) => ({ id: `g${i}`, nazev: `g${i}`, staty: { utok: 5, obrana: 5, hodnota: 5, improvizace: 5, nastroj: 5 }, stitek: 'GANGSTER', svet: 'sdilena', premiova: false, text: 'x' })),
+      ...Array.from({ length: 6 }, (_, i) => ({ id: `u${i}`, nazev: `u${i}`, staty: { utok: 5, obrana: 5, hodnota: 5, improvizace: 5, nastroj: 5 }, svet: 'sdilena', premiova: false, text: 'x' })),
+    ];
+    const content = syntetickyObsah({ veci, situace: [situaceMezera('s-tvrdy', [1, 1, 1, 1])] });
+    const rules = { ...RULES, sumRozsah: 0 };
+    const run = createRun({ seed: 23, content, rules, players: hraci(2), pronasledovatelId: 'agent-malone' });
+    while (['map', 'motel_offer'].includes(run.getState().faze)) {
+      const s = run.getState();
+      if (s.faze === 'map') run.chooseRoute(s.nabidka.nabidnuto[0].ref);
+      else run.motelChoice('dal');
+    }
+    const handP1 = run.getHand('p1');
+    const handP2 = run.getHand('p2');
+    const je = (h, gangster) => h.filter((c) => Boolean(c.stitek === 'GANGSTER') === gangster);
+    const [g1, u1, g2, u2] = [je(handP1, true), je(handP1, false), je(handP2, true), je(handP2, false)];
+    // Najdi rozdělení (x1 gangster od p1, 2-x1 univerzálních; symetricky p2), které
+    // dá dohromady přesně 2 gangster + 2 univerzální karty — bez ohledu na to, jak
+    // dopadlo rozdání ruky (viz komentář u testu v historii commitu).
+    let x1 = null;
+    for (let cand = 0; cand <= 2; cand++) {
+      const x2 = 2 - cand;
+      if (cand <= g1.length && 2 - cand <= u1.length && x2 <= g2.length && 2 - x2 <= u2.length) {
+        x1 = cand;
+        break;
+      }
+    }
+    expect(x1).not.toBeNull();
+    const x2 = 2 - x1;
+    const p1Commit = [...g1.slice(0, x1), ...u1.slice(0, 2 - x1)];
+    const p2Commit = [...g2.slice(0, x2), ...u2.slice(0, 2 - x2)];
+    const vlastnik = new Map([...p1Commit.map((c) => [c.id, 'p1']), ...p2Commit.map((c) => [c.id, 'p2'])]);
+    run.commitCards([
+      ...p1Commit.map((c) => ({ characterId: 'p1', cardId: c.id })),
+      ...p2Commit.map((c) => ({ characterId: 'p2', cardId: c.id })),
+    ]);
+    const gangsterCommit = [...p1Commit, ...p2Commit].filter((c) => c.stitek === 'GANGSTER');
+    const univerzalniCommit = [...p1Commit, ...p2Commit].filter((c) => c.stitek !== 'GANGSTER');
+    expect(gangsterCommit).toHaveLength(2);
+    expect(univerzalniCommit).toHaveLength(2);
+    run.assignToSlots([
+      { slotIndex: 0, cardId: gangsterCommit[0].id },
+      { slotIndex: 1, cardId: gangsterCommit[1].id },
+      { slotIndex: 2, cardId: univerzalniCommit[0].id },
+      { slotIndex: 3, cardId: univerzalniCommit[1].id },
+    ]);
+    run.confirmNode();
+    const events = run.getEvents();
+    const resolved = events.filter((e) => e.type === EVENT.SLOT_RESOLVED).sort((a, b) => a.slot_index - b.slot_index);
+    expect(resolved.map((e) => e.duvod)).toEqual(['gangster_auto_fail', 'gangster_auto_fail', 'proslo', 'proslo']);
+    const band = events.find((e) => e.type === EVENT.BAND_RESOLVED);
+    expect(band.pasmo).toBe(BAND.NASLEDKY);
+    const postih = events.find((e) => e.type === EVENT.PENALTY_ADDED);
+    expect(postih).toBeTruthy();
+    expect(postih.hrac_id).toBe(vlastnik.get(gangsterCommit[0].id)); // první tvrdý propad (slot 0)
+  });
+});
+
 describe('pronásledovatel run-wide', () => {
   it('Malone: hodnota-slot nelze splnit ani ideální hodnota-věcí', () => {
     const content = syntetickyObsah();

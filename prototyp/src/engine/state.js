@@ -22,9 +22,12 @@
  * - Ruce se po každé situaci doplňují na velikost dle počtu hráčů minus
  *   aktivní `ruka_minus`. Sdílený balík, odhaz, reshuffle. Loot (4/4) = 1 karta
  *   navíc prvnímu aktivnímu hráči.
- * - Postih se přiřadí hráči s PRVNÍM propadlým slotem situace. Cap 2: přidání
- *   3. aktivního postihu → „složení" (kolo–dvě), které maže LEHKÉ postihy;
- *   těžké přetrvávají a léčí se jen v motelu.
+ * - Postih se přiřadí vlastníkovi propadlého slotu s NEJVĚTŠÍ statovou mezerou
+ *   (`prah − stat_hodnota`, D57/V1-A krok 1); tvrdé propady (GANGSTER auto-fail,
+ *   zámkový postih) jdou na řadu jen bez statového propadu, tie-break nejnižší
+ *   slot_index (`vyberObet`). Cap 2: přidání 3. aktivního postihu → „složení"
+ *   (kolo–dvě), které maže LEHKÉ postihy; těžké přetrvávají a léčí se jen
+ *   v motelu.
  * - Konfrontace v pásmu PRŮŠVIH = prohra (konfrontace_prohra); jinak přežití
  *   srazí Žár na `poPrezitiKonfrontace`.
  */
@@ -47,6 +50,24 @@ import {
   createLog,
   scoreGoals,
 } from './events.js';
+
+/**
+ * `slot_resolved.duvod` hodnoty, kde propad je STATOVÝ (porovnání se skrytým
+ * prahem selhalo) — na rozdíl od tvrdého pravidla nad staty (GANGSTER
+ * auto-fail, zámkový postih), kde stat nehrál roli vůbec (D57/V1-A krok 1).
+ */
+const JE_STATOVY_PROPAD = new Set(['nizky_stat', 'stat_zrusen', 'kombi_neuplny']);
+
+/**
+ * Statová mezera propadlého slotu (`prah − stat_hodnota`) — u kombi slotu
+ * (`stat_hodnota` je pole dvou hodnot) se bere HORŠÍ (nižší) z dvojice, protože
+ * ta slot shodila (kombi vyžaduje OBA staty ≥ práh).
+ * @param {{prah?: number, stat_hodnota?: number|number[]|null}} v
+ */
+function statovaMezera(v) {
+  const hodnota = Array.isArray(v.stat_hodnota) ? Math.min(...v.stat_hodnota) : (v.stat_hodnota ?? 0);
+  return (v.prah ?? 0) - hodnota;
+}
 
 /**
  * @param {object} opts
@@ -506,7 +527,7 @@ export function createRun({ seed, content, rules, players, pronasledovatelId }) 
     const sloty = situ.odhaleno;
     const assignByCard = new Map(situ.assignment.map((a) => [a.karta_id, a]));
     const kartaById = new Map(situ.committed.map((c) => [c.karta.id, c.karta]));
-    /** @type {{hrac_id:string, zasah:boolean}[]} */ const vysledky = [];
+    /** @type {{hrac_id:string, zasah:boolean, slot_index:number, duvod?:string, prah?:number, stat_hodnota?:(number|number[]|null)}[]} */ const vysledky = [];
     let zasahy = 0;
 
     for (const slot of sloty) {
@@ -535,7 +556,14 @@ export function createRun({ seed, content, rules, players, pronasledovatelId }) 
       const zamky = zamkyHrace(findCharacter(a.hrac_id));
       const r = resolveSlot({ karta, slot, rusi, stitekParams: gangsterParams, typSituace: situ.typ, zamky });
       if (r.zasah) zasahy += 1;
-      vysledky.push({ hrac_id: a.hrac_id, zasah: r.zasah, slot_index: slot.slot_index });
+      vysledky.push({
+        hrac_id: a.hrac_id,
+        zasah: r.zasah,
+        slot_index: slot.slot_index,
+        duvod: r.duvod,
+        prah: slot.prah,
+        stat_hodnota: r.stat_hodnota,
+      });
       log.append(EVENT.SLOT_RESOLVED, nodeSeq, {
         slot_index: slot.slot_index,
         karta_id: karta.id,
@@ -606,9 +634,36 @@ export function createRun({ seed, content, rules, players, pronasledovatelId }) 
     finishSituation();
   }
 
-  function applyBandConsequences(pasmo, vysledky) {
+  /**
+   * Oběť postihu (D57/V1-A krok 1, technika/design-audit-2p-2026-08-02.md §2.2):
+   * vlastník propadlého slotu s NEJVĚTŠÍ statovou mezerou (`prah − stat_hodnota`)
+   * mezi statovými propady (duvod `nizky_stat` / `stat_zrusen` / `kombi_neuplny`).
+   * Tvrdé propady (GANGSTER auto-fail, zámkový postih) jdou na řadu, jen když
+   * statový propad v uzlu není — jinak by oběť byla deterministicky ten, komu
+   * D17 vnutil zbraň do viditelné role (nález kritika, audit §2.2 bod 1).
+   * Tie-break: nejnižší `slot_index` (pole `vysledky` je v pořadí slotů).
+   */
+  function vyberObet(vysledky) {
+    const statoveFaily = vysledky.filter((v) => !v.zasah && v.hrac_id != null && JE_STATOVY_PROPAD.has(v.duvod));
+    if (statoveFaily.length > 0) {
+      let nejhorsi = statoveFaily[0];
+      let nejvetsiMezera = statovaMezera(nejhorsi);
+      for (const v of statoveFaily.slice(1)) {
+        const mezera = statovaMezera(v);
+        if (mezera > nejvetsiMezera) {
+          nejhorsi = v;
+          nejvetsiMezera = mezera;
+        }
+      }
+      return findCharacter(nejhorsi.hrac_id);
+    }
+    // Bez statového propadu (jen tvrdá pravidla) → první propadlý slot v pořadí.
     const propadli = vysledky.filter((v) => !v.zasah && v.hrac_id != null).map((v) => v.hrac_id);
-    const obet = propadli.length > 0 ? findCharacter(propadli[0]) : null;
+    return propadli.length > 0 ? findCharacter(propadli[0]) : null;
+  }
+
+  function applyBandConsequences(pasmo, vysledky) {
+    const obet = vyberObet(vysledky);
     if (pasmo === BAND.LOOT) {
       changeCredits(rules.kredity.zaHladceLoot, CREDIT_DUVOD.HLADCE_LOOT);
       const kdo = characters.find((c) => !c.slozena) ?? characters[0];

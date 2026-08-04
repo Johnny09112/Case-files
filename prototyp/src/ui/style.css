@@ -636,6 +636,14 @@ button.karta:hover:not(:disabled) {
   opacity: 0.6;
 }
 
+/* D57/komunikace: pronásledovatel (Malone) ruší jeden stat run-wide — hodnota
+   na kartě/slotu se ukáže přeškrtnutá, ne mlčky zmizí (audit obsahové kolo §2,
+   Návrh B bod 1). Jen JEDEN token uvnitř .karta-meta, ne celý řádek. */
+.stat-zrusen-pronasledovatelem {
+  text-decoration: line-through;
+  opacity: 0.65;
+}
+
 .cestnost {
   border-left: 3px solid var(--cervena);
   padding-left: 0.6rem;

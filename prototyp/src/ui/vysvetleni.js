@@ -45,6 +45,8 @@ export const MISTO = /** @type {const} */ ({ SLOT: 'slot', OKRAJ: 'okraj', SPIS:
  * @property {number} [sumRozsah] rozsah šumu prahu z pravidel (rules.sumRozsah,
  *   ADR-003 — hodnota se sem předává, nikdy se tady nehardcoduje). Bez něj
  *   anotace odhalení řekne jen kotvu, rozpětí šumu vynechá.
+ * @property {number} [statMax] horní mez statu z pravidel (rules.statMax) —
+ *   spolu se `sumRozsah` určuje, kdy clamp (V4-C) strope/podlahuje kotvu.
  */
 
 /**
@@ -251,15 +253,43 @@ const TYP_MISTA_PRAVIDLO = {
 };
 
 /**
+ * V4-C (audit §5.2 bod 1): řekne, když clamp `[0, statMax]` strope/podlahuje
+ * kotvu už PŘED odhalením instance — vlastnost kotvy + rozpětí šumu, veřejná
+ * a naučitelná, ne konkrétní zašuměný práh (D51 to nezakazuje). Vrací `null`,
+ * když clamp na kotvě nekouše (ať se zbytečně neopakuje na každém slotu).
+ * @param {number} kotva
+ * @param {number} [sumRozsah]
+ * @param {number} [statMax]
+ * @returns {string|null}
+ */
+function stropVeta(kotva, sumRozsah, statMax = 5) {
+  if (sumRozsah == null) return null;
+  if (kotva + sumRozsah > statMax) return `výš než ${statMax} práh nejde`;
+  if (kotva - sumRozsah < 0) return 'níž než 0 práh neklesne';
+  return null;
+}
+
+/**
  * Rozklad prahu na kotvu a šum — jediná věta, která smí padnout teprve
  * u vyhodnocení (D51). Kotvu a šum bere z knihy (zapsala je `situation_revealed`
  * téhož uzlu); když v knize nejsou (vrstva volaná nad výřezem logu bez
  * odhalení), vrátí prázdno a `detail` zůstane jako dřív — nikdy nedomýšlí.
+ *
+ * V4-C (design-audit-2p-2026-08-02.md §5.2 bod 2): `kotva + šum` se v enginu
+ * clampuje do [0, statMax] (`resolve.js` `revealSlots`) — u kotvy 4 a šumu +2
+ * by „kotva 4 +2" naznačovalo práh 6, ačkoli skutečný práh je 5. Věta bez
+ * poznámky o zastropování/podlahování byla aritmeticky nepravdivá u ~9 % slotů
+ * (naměřeno D57 §6.1 D2). Když se surový součet od `e.prah` liší, věta to
+ * pojmenuje MÍSTO mlčení — nikdy netvrdí rovnost, která neplatí.
  */
 function rozkladPrahu(e, k) {
   const s = k.slotyUzlu.get(`${e.nodeIndex}:${e.slot_index}`);
   if (!s) return '';
-  return `Práh ${e.prah} = kotva ${s.kotva} ${s.sum === 0 ? 'bez šumu' : znamenko(s.sum)}.`;
+  const zaklad = `Práh ${e.prah} = kotva ${s.kotva} ${s.sum === 0 ? 'bez šumu' : znamenko(s.sum)}`;
+  const surovy = s.kotva + s.sum;
+  if (surovy === e.prah) return `${zaklad}.`;
+  const smer = surovy > e.prah ? 'zastropováno' : 'podlahováno';
+  return `${zaklad}, ${smer} na ${e.prah}.`;
 }
 
 /**
@@ -361,10 +391,19 @@ const HANDLERS = {
     k.situaceUzlu.set(e.nodeIndex, e.situace_id);
     return e.sloty.map((s) => {
       k.slotyUzlu.set(`${e.nodeIndex}:${s.slot_index}`, { kotva: s.kotva, sum: s.sum });
+      // V4-C (audit §5.2 bod 1): kotva + rozpětí šumu se PŘED odhalením nesmí
+      // dopočítat na finální práh (D51), ale strop/podlaha z clampu
+      // (`resolve.js` [0, statMax]) je vlastnost KOTVY (naučitelná, veřejná),
+      // ne konkrétní instance — řekne se proto rovnou, ať hráč neplánuje
+      // rozdělení proti nedosažitelnému číslu (nález D57 §5.1: „práh 5, kterým
+      // neprojde žádná karta ve hře").
+      const strop = stropVeta(s.kotva, k.ctx.sumRozsah, k.ctx.statMax);
       return {
         misto: MISTO.SLOT,
         slot_index: s.slot_index,
-        veta: `${s.role}: kotva ${s.kotva}${k.ctx.sumRozsah ? `, šum ±${k.ctx.sumRozsah}` : ''} — přesný práh až po vyhodnocení.`,
+        veta: strop
+          ? `${s.role}: kotva ${s.kotva}, šum ±${k.ctx.sumRozsah} — ${strop}.`
+          : `${s.role}: kotva ${s.kotva}${k.ctx.sumRozsah ? `, šum ±${k.ctx.sumRozsah}` : ''} — přesný práh až po vyhodnocení.`,
         detail: [
           `Chce ${popisStatu4(s.stat)}${s.typ_prahu === 'kombi_oba' ? ' (OBA staty)' : ''}`,
           s.viditelnost === 'skryta' ? 'skrytá role — telegraf ji hlásil jen počtem' : 'viditelná role',
@@ -600,13 +639,14 @@ function situaceVlozenychSetkani(pronasledovatele) {
  * bez nich by nadpisy obrazovek i titulky listů protokolu pro ně padaly na
  * syrové id (viz `situaceVlozenychSetkani`).
  *
- * `rules` je nepovinné a jediné, co si z něj vrstva bere, je `sumRozsah` —
- * rozpětí šumu prahu, které anotace odhalení hlásí místo zakázaného finálního
- * prahu (D51). Předává se, aby konstanta zůstala jen v `rules.js` (ADR-003).
+ * `rules` je nepovinné; vrstva si z něj bere `sumRozsah` (rozpětí šumu prahu,
+ * které anotace odhalení hlásí místo zakázaného finálního prahu, D51) a
+ * `statMax` (strop clampu, V4-C). Předává se, aby konstanty zůstaly jen
+ * v `rules.js` (ADR-003).
  *
  * @param {object} content výstup parseContent()
  * @param {Record<string,string>} [jmena] hrac_id → celé jméno postavy
- * @param {{sumRozsah?: number}} [rules] pravidla (jen kvůli `sumRozsah`)
+ * @param {{sumRozsah?: number, statMax?: number}} [rules] pravidla (`sumRozsah`, `statMax`)
  * @returns {VysvetliCtx}
  */
 export function ctxZObsahu(content, jmena = {}, rules = {}) {
@@ -614,6 +654,7 @@ export function ctxZObsahu(content, jmena = {}, rules = {}) {
   return {
     jmena,
     sumRozsah: rules.sumRozsah,
+    statMax: rules.statMax,
     veci: mapa(content.veci, 'nazev'),
     postihy: mapa(content.postihy, 'nazev'),
     pronasledovatele: mapa(content.pronasledovatele, 'nazev'),
