@@ -13,6 +13,13 @@ architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.m
 
 ## 2026-08-04
 
+- **D60 (ROZHODNUTÍ UŽIVATELE) — balík 80 zapéct S LÉKEM na sólo (+1 druhotný
+  stat u 4–6 fillerů + přeměření 1p buňky); floor ruce NEZAPÉKAT** — dopad na
+  pocit menší ruky je neměřený, posoudí sezení se 3 hráči; K1 breach týmů
+  zůstává známou odchylkou. Podklad:
+  [[../technika/kontrafaktual-balik80-2026-08-04|kontrafaktuál]] (balík 80
+  nerozbíjí žádný splněný gate; regrese 1p/K6a čistě obsahová, lék
+  predikovaný návrhem).
 - **D59 (ROZHODNUTÍ UŽIVATELE) — 40 nových vtipných karet SCHVÁLENO** („schvaluji",
   bez výhrad) dle [[../technika/navrh-40-karet-2026-08-04|návrhu]] ve finálním
   znění generátora (= klec se slepicemi, finální znění bičíku dle reportu,
