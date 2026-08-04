@@ -9,8 +9,13 @@ Poslední aktualizace: 2026-08-04.*
 > + dopředná anotace, Malone „dotahuje" (ruší až od prvního Zátahu), clamp
 > prahů na dosažitelný stat, poctivý rozklad prahů, komunikace zbraně,
 > kanon N1–N6 + K3 = 4. známá odchylka. 484/484 testů, verifikace K1 80,7 %
-> (predikce 79,7). **Běží: sweep rezervní páky `hraci[n].ruka`** (kompenzace
-> zesnadnění; verdikt → uživatel). **Pak: sezení 3 hráčů s metrikou 4.**
+> (predikce 79,7). Sweep páky ruka: vyčerpaná, floor (4/3/2) zavře jen ~35 %
+> mezery — **floor NEZAPEČEN, rozhodne sezení (D60)**. **BALÍK 80 KARET
+> ZAPEČEN (D59/D60, `613d3ae`):** 40 nových vtipných karet schválených
+> uživatelem + lék na sólo (6 fillerů +1 druhotný stat; 1p 64,0→65,7, K6a
+> 22,1→21,0), 484/484 testů, goldeny vědomě rebaselinovány (zdvojený balík
+> mění losování). **DALŠÍ KROK: sezení 3 hráčů — metrika 4 (reveal cílů),
+> pocit floor rukou, nový balík, D58 mechaniky u stolu.**
 
 ## Aktuální fáze
 
