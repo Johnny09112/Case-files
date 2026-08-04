@@ -25,8 +25,8 @@
 # 1–2 dominantní staty (3–5), zbytek nízký (0–2). Součet cca 6–11 (specializace,
 # ne síla; §7 design). Filler věci klidně 5–6. Žádná věc není globálně silná.
 # Pokrytí: ~7–9 dominantních věcí na každý z 5 statů, aby žádný slot neměl mrtvý
-# fond. GANGSTER hustota: 5/40 — SWEEP PARAMETR brány (rozpětí 4–6), lze doladit.
-# Cílový počet pro MVP: ~40.
+# fond. GANGSTER hustota: 10/80 (12,5 %) — SWEEP PARAMETR brány (rozpětí 4–6), lze doladit.
+# Cílový počet pro MVP: ~80 (balík 40→80, D59/D60, 2026-08-04).
 
 veci:
   # ============================================================
@@ -340,3 +340,311 @@ veci:
     premiova: false
     text: "Mosazný kompas po námořníkovi. Když se ztratíš v polích, ukáže, kudy z bryndy."
     poznamka: "Dvoustatová improvizace/nástroj."
+
+  # ============================================================
+  # ÚTOK-dominantní — druhá vlna (9; z toho 5 GANGSTER; balík 40→80, D59/D60, 2026-08-04)
+  # ============================================================
+  - id: kachni-kanon
+    nazev: Kachní kanón
+    staty: { utok: 5, obrana: 1, hodnota: 1, improvizace: 0, nastroj: 1 }
+    stitek: GANGSTER
+    svet: sdilena
+    premiova: false
+    text: "Puška na kachny dlouhá jak veslo. Nabíjí se z hlavně a při výstřelu kope jako kůň."
+
+  - id: puska-na-krtky
+    nazev: Puška na krtky
+    staty: { utok: 4, obrana: 1, hodnota: 0, improvizace: 1, nastroj: 2 }
+    stitek: GANGSTER
+    svet: sdilena
+    premiova: false
+    text: "Flinta, kterou sedlák střílí krtky. Na chlapa je krátká, díru ale udělá stejnou."
+
+  - id: zdobena-bambitka
+    nazev: Zdobená bambitka
+    staty: { utok: 3, obrana: 1, hodnota: 3, improvizace: 1, nastroj: 0 }
+    stitek: GANGSTER
+    svet: sdilena
+    premiova: false
+    text: "Perleťová pistole ze stěny panského salonu. Cení se jako šperk a nosí se jako zbraň."
+
+  - id: signalni-pistole
+    nazev: Signální pistole
+    staty: { utok: 3, obrana: 1, hodnota: 1, improvizace: 3, nastroj: 1 }
+    stitek: GANGSTER
+    svet: sdilena
+    premiova: false
+    text: "Námořní světlice do vzduchu. Komu ji strčíš pod nos, ten uhne. Zbytek okresu se přijde podívat."
+
+  - id: poutova-vzduchovka
+    nazev: Pouťová vzduchovka
+    staty: { utok: 3, obrana: 1, hodnota: 1, improvizace: 2, nastroj: 0 }
+    stitek: GANGSTER
+    svet: sdilena
+    premiova: false
+    text: "Vzduchovka ze střelnice, muška křivá. Puška jako každá jiná — dokud se z ní nevystřelí."
+
+  - id: tuleni-ocas
+    nazev: Tulení ocas
+    staty: { utok: 4, obrana: 2, hodnota: 0, improvizace: 1, nastroj: 0 }
+    svet: sdilena
+    premiova: false
+    text: "Sušený tulení ocas z přístavu. Těžký jak mokrý provaz a v ruce drží líp než obušek."
+
+  - id: zmrzla-sunka
+    nazev: Zmrzlá šunka
+    staty: { utok: 4, obrana: 2, hodnota: 1, improvizace: 1, nastroj: 0 }
+    svet: sdilena
+    premiova: false
+    text: "Uzená kýta ztuhlá mrazem. Nejdřív argument, pak večeře — obráceně to nejde."
+
+  - id: masazni-palice
+    nazev: Masážní palice
+    staty: { utok: 4, obrana: 1, hodnota: 0, improvizace: 2, nastroj: 1 }
+    svet: sdilena
+    premiova: false
+    text: "Dubová palice z lázní na proklepání zad. Host po ní usne, v lepším případě až doma."
+
+  - id: vycpany-jezevec
+    nazev: Vycpaný jezevec
+    staty: { utok: 4, obrana: 3, hodnota: 1, improvizace: 1, nastroj: 1 }
+    svet: sdilena
+    premiova: false
+    text: "Vycpaný jezevec z hostinské vitríny. Drží se za ocas, drápy vpřed — a schytá to on."
+
+  # ============================================================
+  # OBRANA-dominantní — druhá vlna (8; balík 40→80, D59/D60, 2026-08-04)
+  # ============================================================
+  - id: perina-po-babicce
+    nazev: Peřina po babičce
+    staty: { utok: 0, obrana: 4, hodnota: 1, improvizace: 2, nastroj: 1 }
+    svet: sdilena
+    premiova: false
+    text: "Duchna nacpaná husím peřím. Váží jak tele a ztratí se pod ní, co je potřeba ztratit."
+
+  - id: ortopedicky-korzet
+    nazev: Ortopedický korzet
+    staty: { utok: 0, obrana: 5, hodnota: 0, improvizace: 1, nastroj: 2 }
+    svet: sdilena
+    premiova: false
+    text: "Kostice a řemení na záda. Držíš se zpříma i po ráně, sehnout se ale nedokážeš vůbec."
+
+  - id: lazensky-zupan
+    nazev: Lázeňský župan
+    staty: { utok: 0, obrana: 4, hodnota: 1, improvizace: 2, nastroj: 1 }
+    svet: sdilena
+    premiova: false
+    text: "Froté župan z léčebny, na kapse vyšité cizí jméno. Do práce se v něm nechodí, na útěk ano."
+
+  - id: sud-zeli
+    nazev: Sud zelí
+    staty: { utok: 1, obrana: 4, hodnota: 1, improvizace: 1, nastroj: 1 }
+    svet: sdilena
+    premiova: false
+    text: "Sud kvašeného zelí. Kdo do něj strčí nos, má na dnešek dost."
+
+  - id: naslouchatko
+    nazev: Naslouchátko
+    # LÉK D60: sum 6→7, druhý stat improvizace 2→3 (dominantní obrana beze změny).
+    staty: { utok: 0, obrana: 4, hodnota: 0, improvizace: 3, nastroj: 0 }
+    svet: sdilena
+    premiova: false
+    text: "Mosazná trumpetka k uchu. Otočená správným směrem slyší všechno, otočená jinam nic."
+
+  - id: krunyr-morske-zelvy
+    nazev: Krunýř mořské želvy
+    staty: { utok: 1, obrana: 4, hodnota: 1, improvizace: 1, nastroj: 1 }
+    svet: sdilena
+    premiova: false
+    text: "Želví krunýř z krámu s kuriozitami. Řemen přes ramena a záda máš z jednoho kusu."
+
+  - id: sadrovy-obvaz
+    nazev: Sádrový obvaz
+    staty: { utok: 1, obrana: 4, hodnota: 0, improvizace: 2, nastroj: 1 }
+    svet: sdilena
+    premiova: false
+    text: "Sádra na ruce, kterou ti nikdo nesundá. Kryje předloktí, budí soucit a švihne jak poleno."
+
+  - id: ruzenec-po-matce
+    nazev: Růženec po matce
+    staty: { utok: 0, obrana: 4, hodnota: 1, improvizace: 2, nastroj: 0 }
+    svet: sdilena
+    premiova: false
+    text: "Korálky protahované mezi prsty. Kdo se modlí, mlčí — a mlčení se špatně vyvrací."
+
+  # ============================================================
+  # HODNOTA-dominantní — druhá vlna (6; balík 40→80, D59/D60, 2026-08-04)
+  # ============================================================
+  - id: hroznova-cihla
+    nazev: Hroznová cihla
+    staty: { utok: 3, obrana: 1, hodnota: 4, improvizace: 1, nastroj: 1 }
+    svet: sdilena
+    premiova: false
+    text: "Lisované hrozny s výstrahou: nenechat tři neděle stát, vzniklo by víno. Váží jako cihla."
+
+  - id: mesni-vino
+    nazev: Mešní víno
+    staty: { utok: 0, obrana: 1, hodnota: 4, improvizace: 3, nastroj: 0 }
+    svet: sdilena
+    premiova: false
+    text: "Demižon mešního vína s farní pečetí. Zákon na něj nesmí a hlídka si to ověří douškem."
+
+  - id: vycpany-pav
+    nazev: Vycpaný páv
+    # LÉK D60: sum 6→7, druhý stat (tie obrana/improvizace 1/1, tie-break dřívější v pořadí) obrana 1→2.
+    staty: { utok: 0, obrana: 2, hodnota: 4, improvizace: 1, nastroj: 0 }
+    svet: sdilena
+    premiova: false
+    text: "Vycpaný páv z panského salonu. Na korbě překáží víc než bedna a v salonu stojí za víc."
+
+  - id: zlaty-zub
+    nazev: Zlatý zub
+    staty: { utok: 0, obrana: 0, hodnota: 5, improvizace: 2, nastroj: 1 }
+    svet: sdilena
+    premiova: false
+    text: "Zub s korunkou, vlastní. Vyndáš ho z pusy a položíš na stůl — dál už je to na tom druhém."
+
+  - id: krevetka
+    nazev: Krevetka
+    # LÉK D60: sum 6→7, druhý stat improvizace 2→3 (dominantní hodnota beze změny).
+    staty: { utok: 0, obrana: 0, hodnota: 4, improvizace: 3, nastroj: 0 }
+    svet: sdilena
+    premiova: false
+    text: "Jediná krevetka na ledu, dovezená z pobřeží. Vzácnost, kterou tady většina zná jen z povídání."
+
+  - id: sbirka-znamek
+    nazev: Sbírka známek
+    staty: { utok: 0, obrana: 1, hodnota: 4, improvizace: 2, nastroj: 0 }
+    svet: sdilena
+    premiova: false
+    text: "Album známek po strýci. Pro hlídku papír, pro sběratele jmění — jde o to, kdo zrovna slouží."
+
+  # ============================================================
+  # IMPROVIZACE-dominantní — druhá vlna (8; balík 40→80, D59/D60, 2026-08-04)
+  # ============================================================
+  - id: kureci-stehynko
+    nazev: Kuřecí stehýnko
+    # LÉK D60: sum 6→7, druhý stat (tie obrana/hodnota 1/1, tie-break dřívější v pořadí) obrana 1→2.
+    # POZOR: text vědomě beze změny (vlajková karta absurdního testu) — měněny jen staty.
+    staty: { utok: 0, obrana: 2, hodnota: 1, improvizace: 4, nastroj: 0 }
+    svet: sdilena
+    premiova: false
+    text: "Upečené stehýnko zabalené v novinách. Žvýkáš je s takovým klidem, že ti nikdo nevěří, že lžeš."
+
+  - id: lekarsky-predpis
+    nazev: Lékařský předpis
+    staty: { utok: 0, obrana: 1, hodnota: 2, improvizace: 4, nastroj: 0 }
+    svet: sdilena
+    premiova: false
+    text: "Recept na půl litru léčivé whisky, potvrzený doktorem. Podle papíru jsi nemocný."
+
+  - id: kravske-boty
+    nazev: Kravské boty
+    staty: { utok: 0, obrana: 1, hodnota: 0, improvizace: 4, nastroj: 2 }
+    svet: sdilena
+    premiova: false
+    text: "Dřevěná kopyta přivázaná pod boty. Stopy za tebou pak vedou ke stádu, ne k vozu."
+
+  - id: praseci-bicik
+    nazev: Prasečí bičík
+    staty: { utok: 1, obrana: 2, hodnota: 0, improvizace: 4, nastroj: 0 }
+    svet: sdilena
+    premiova: false
+    text: "Stažený ocásek z uzenářství, vysušený do tuha. Drží se za užší konec a švihá přes prsty."
+
+  - id: smutecni-zavoj
+    nazev: Smuteční závoj
+    staty: { utok: 0, obrana: 2, hodnota: 1, improvizace: 4, nastroj: 0 }
+    svet: sdilena
+    premiova: false
+    text: "Černý závoj a uslzené mlčení. Kdo ho nosí, toho se lidé neptají — ptají se, kdo zemřel."
+
+  - id: panenka-s-dutinou
+    nazev: Panenka s dutinou
+    staty: { utok: 0, obrana: 1, hodnota: 1, improvizace: 4, nastroj: 2 }
+    svet: sdilena
+    premiova: false
+    text: "Porcelánová panenka, uvnitř dutá. Váha sedí, jen se s ní nesmí zatřást."
+
+  - id: doktorska-hruska
+    nazev: Doktorská hruška
+    staty: { utok: 0, obrana: 1, hodnota: 0, improvizace: 4, nastroj: 3 }
+    svet: sdilena
+    premiova: false
+    text: "Gumová hruška z ordinace. Nasává i vytlačuje a nikdo se neptá, k čemu byla naposled."
+
+  - id: klec-se-slepicemi
+    nazev: Klec se slepicemi
+    # LÉK D60: sum 6→7, druhý stat (tie obrana/hodnota 1/1, tie-break dřívější v pořadí) obrana 1→2.
+    staty: { utok: 0, obrana: 2, hodnota: 1, improvizace: 4, nastroj: 0 }
+    svet: sdilena
+    premiova: false
+    text: "Klec plná slepic. Kdákají celou cestu a člověk, co veze slepice, nikam nespěchá."
+
+  # ============================================================
+  # NÁSTROJ-dominantní — druhá vlna (9; balík 40→80, D59/D60, 2026-08-04)
+  # ============================================================
+  - id: duchodcovska-hul
+    nazev: Důchodcovská hůl
+    staty: { utok: 1, obrana: 3, hodnota: 1, improvizace: 1, nastroj: 3 }
+    svet: sdilena
+    premiova: false
+    text: "Sukovitá hůl okovaná na špičce, uvnitř dutá na dvě deci. Nese váhu starého muže i zásobu."
+
+  - id: bramborova-placka
+    nazev: Bramborová placka
+    # LÉK D60: sum 6→7, druhý stat improvizace 2→3. Dominantní nastroj ZŮSTÁVÁ 3 (ne 4 —
+    # "je to placka, ne olejnička"), nedotčeno dle zadání.
+    staty: { utok: 0, obrana: 1, hodnota: 0, improvizace: 3, nastroj: 3 }
+    svet: sdilena
+    premiova: false
+    text: "Mastná placka rovnou z pánve. Promaže panty i zámek — a ruce má po ní kluzké i majitel."
+
+  - id: kostelni-klic
+    nazev: Kostelní klíč
+    staty: { utok: 2, obrana: 0, hodnota: 1, improvizace: 1, nastroj: 4 }
+    svet: sdilena
+    premiova: false
+    text: "Klíč od sakristie, dlouhý jak předloktí. Otevře skoro všechno a v ruce sedne jako palice."
+
+  - id: mlynek-na-maso
+    nazev: Mlýnek na maso
+    staty: { utok: 2, obrana: 2, hodnota: 1, improvizace: 1, nastroj: 4 }
+    svet: sdilena
+    premiova: false
+    text: "Litinový mlýnek, co se přišroubuje ke stolu. Semele maso i to, co po mase zbylo."
+
+  - id: pivovarska-hadice
+    nazev: Pivovarská hadice
+    staty: { utok: 0, obrana: 1, hodnota: 0, improvizace: 3, nastroj: 5 }
+    svet: sdilena
+    premiova: false
+    text: "Dlouhá gumová hadice z pivovaru na slabé pivo. Co se dá přelít, to přelije, a nikdo nic nenese."
+
+  - id: volska-kuze
+    nazev: Volská kůže
+    staty: { utok: 1, obrana: 3, hodnota: 0, improvizace: 1, nastroj: 4 }
+    svet: sdilena
+    premiova: false
+    text: "Vydělaná volská kůže. Pod ní náklad zmokne až po tobě."
+
+  - id: kotva-z-pramice
+    nazev: Kotva z pramice
+    staty: { utok: 3, obrana: 1, hodnota: 0, improvizace: 1, nastroj: 4 }
+    svet: sdilena
+    premiova: false
+    text: "Kotvička z pašerácké pramice. Zaklesne se do všeho, co má hranu, a pouští až doma."
+
+  - id: zubarske-kleste
+    nazev: Zubařské kleště
+    staty: { utok: 2, obrana: 1, hodnota: 1, improvizace: 1, nastroj: 4 }
+    svet: sdilena
+    premiova: false
+    text: "Kleště od venkovského zubaře. Vytrhnou hřebík, zámek i pravdu — pacient většinou mluví sám."
+
+  - id: ohrivaci-lahev
+    nazev: Ohřívací láhev
+    staty: { utok: 0, obrana: 2, hodnota: 1, improvizace: 3, nastroj: 3 }
+    svet: sdilena
+    premiova: false
+    text: "Gumová termoforka do postele. Pod kabátem se v ní veze půl litru a nikdo tam nesahá."

@@ -153,7 +153,7 @@ describe.skipIf(!MA_FRAGMENTY)('golden nad runem se složením postavy (pokrytí
     content,
     rules: RULES,
     spec: PRESETY.kompetentni,
-    seed: 2,
+    seed: 39, // D60: balík 40→80 mění losování; seed 2 už nedává 'neobsazeno' (viz D60 commit), 39 = nejnižší seed s oběma pokrytími
     players: content.postavy.slice(0, 1).map((/** @type {any} */ p) => ({ id: p.id, jmeno: p.jmeno })),
     pronasledovatelId: 'agent-malone',
   });

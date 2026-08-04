@@ -16,7 +16,7 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
     "anotace": [
       {
         "misto": "okraj",
-        "veta": "Cesta zvolena: Slepá ulička v Bronxu (člověk) — někdo se ti dívá do rukou — zbraň na očích neprojde.",
+        "veta": "Cesta zvolena: Statkářova stodola (lokace) — nikdo tě nešpehuje — zbraň projde i na očích.",
       },
     ],
     "seq": 3,
@@ -27,527 +27,10 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
       {
         "detail": "Commituje se naslepo: telegraf je jediné, co o situaci před commitem víš.",
         "misto": "spis",
-        "veta": "Telegraf slibuje tři viditelné role (obrana, improvizace, útok), jedna skrytá role čeká na nejhorší. Zbraň na očích neprojde.",
-      },
-    ],
-    "seq": 4,
-    "typ": "telegraf_derived",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Chce obranu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 0,
-        "veta": "Držet nervy: kotva 4, šum ±2 — výš než 5 práh nejde.",
-      },
-      {
-        "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 1,
-        "veta": "Zamluvit to: kotva 4, šum ±2 — výš než 5 práh nejde.",
-      },
-      {
-        "detail": "Chce útok · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 2,
-        "veta": "Zastrašit gestem: kotva 4, šum ±2 — výš než 5 práh nejde.",
-      },
-      {
-        "detail": "Chce nástroj · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 3,
-        "veta": "Najít skulinu: kotva 2, šum ±2 — přesný práh až po vyhodnocení.",
-      },
-    ],
-    "seq": 6,
-    "typ": "situation_revealed",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Tažení je naslepo, v ruce zbývalo kusů: 2. Sázka jde jednou za situaci. Tažená věc nevyšla — slot 2.",
-        "misto": "spis",
-        "veta": "Sázka: místo „Stříbrná placatka" přišel „Dámský revolver" (ruka Vincenc Bartoš).",
-      },
-    ],
-    "seq": 8,
-    "typ": "gamble",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Otrlený výraz" — Frank Kowalski · Práh 2 = kotva 4 −2.",
-        "misto": "slot",
-        "razitko": "PROŠLO",
-        "slot_index": 0,
-        "veta": "obrana 4 proti prahu 2.",
-      },
-    ],
-    "seq": 10,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Dámský revolver" — Vincenc Bartoš · Telegraf to hlásil předem: zbraň na očích tady neprojde. · Práh 5 = kotva 4 +1.",
-        "misto": "slot",
-        "razitko": "NEPROŠLO",
-        "slot_index": 1,
-        "veta": "„Dámský revolver" je zbraň ve viditelné roli — padá bez ohledu na staty.",
-      },
-    ],
-    "seq": 11,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Lopata" — Vincenc Bartoš · Práh 4 = kotva 4 +2, zastropováno na 4.",
-        "misto": "slot",
-        "razitko": "NEPROŠLO",
-        "slot_index": 2,
-        "veta": "Chtělo to útok 4, „Lopata" má 3.",
-      },
-    ],
-    "seq": 12,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Dědkův kabát" — Rudolf Mazur · Práh 2 = kotva 2 bez šumu.",
-        "misto": "slot",
-        "razitko": "PROŠLO",
-        "slot_index": 3,
-        "veta": "nástroj 3 proti prahu 2.",
-      },
-    ],
-    "seq": 13,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Z toho, co tým committnul, se líp rozdělit nedalo — tohle bylo nejlepší možné.",
-        "misto": "spis",
-        "veta": "Pásmo 2/4 — s následky: 2 ze 4 slotů prošly.",
-      },
-    ],
-    "seq": 14,
-    "typ": "band_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Šerif postoupil o 2 na 2 — zbraň v akci, dokud je aktivní Okresní šerif Brody, štítek Gangster se počítá dvojnásob. Ještě 3 pole k léčky.",
-      },
-    ],
-    "seq": 15,
-    "typ": "zar_move",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Šerif postoupil o 1 na 3 — uzel zvládnutý s následky. Ještě 2 pole k léčky.",
-      },
-    ],
-    "seq": 16,
-    "typ": "zar_move",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "co má štítek Gangster, vlastníkovi ve slotu propadne; vyprší za 3 kola. Aktivních postihů: 1.",
-        "misto": "spis",
-        "veta": "Za 2/4 — s následky: Vincenc Bartoš — Nervy v hajzlu (lehký, zámkový).",
-      },
-    ],
-    "seq": 17,
-    "typ": "penalty_added",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Zátah: Žár překročil práh, jiná cesta než přes kontrolu není.",
-      },
-    ],
-    "seq": 18,
-    "typ": "map_move",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Cesta zvolena: Zátah na páté silnici (zátah) — jiná cesta není — zbraň projde.",
-      },
-    ],
-    "seq": 19,
-    "typ": "map_move",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Commituje se naslepo: telegraf je jediné, co o situaci před commitem víš.",
-        "misto": "spis",
-        "veta": "Telegraf slibuje tři viditelné role (útok, nástroj, improvizace), jedna skrytá role čeká na nejhorší. Zbraň tady projde i na očích.",
-      },
-    ],
-    "seq": 20,
-    "typ": "telegraf_derived",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Chce útok · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 0,
-        "veta": "Prorazit blokádu: kotva 4, šum ±2 — výš než 5 práh nejde.",
-      },
-      {
-        "detail": "Chce nástroj · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 1,
-        "veta": "Strhnout do postranní: kotva 4, šum ±2 — výš než 5 práh nejde.",
-      },
-      {
-        "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 2,
-        "veta": "Zmizet v ulicích: kotva 4, šum ±2 — výš než 5 práh nejde.",
-      },
-      {
-        "detail": "Chce obranu · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 3,
-        "veta": "Držet nervy u okna: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
-      },
-    ],
-    "seq": 22,
-    "typ": "situation_revealed",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Mosazný boxer" — Frank Kowalski · Práh 5 = kotva 4 +2, zastropováno na 5.",
-        "misto": "slot",
-        "razitko": "NEPROŠLO",
-        "slot_index": 0,
-        "veta": "Chtělo to útok 5, „Mosazný boxer" má 4.",
-      },
-    ],
-    "seq": 25,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Svářečka" — Cesare Fontana · Práh 2 = kotva 4 −2.",
-        "misto": "slot",
-        "razitko": "PROŠLO",
-        "slot_index": 1,
-        "veta": "nástroj 5 proti prahu 2.",
-      },
-    ],
-    "seq": 26,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Kastrol na hlavě" — Vincenc Bartoš · Práh 4 = kotva 4 bez šumu.",
-        "misto": "slot",
-        "razitko": "NEPROŠLO",
-        "slot_index": 2,
-        "veta": "Chtělo to improvizaci 4, „Kastrol na hlavě" má 3.",
-      },
-    ],
-    "seq": 27,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Pytel cementu" — Rudolf Mazur · Práh 4 = kotva 3 +1.",
-        "misto": "slot",
-        "razitko": "NEPROŠLO",
-        "slot_index": 3,
-        "veta": "Chtělo to obranu 4, „Pytel cementu" má 3.",
-      },
-    ],
-    "seq": 28,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Optimální rozdělení TÉHOŽ commitu by dalo 2/4 (2/4 — s následky) — 1 zásah zůstal na stole.",
-        "misto": "spis",
-        "veta": "Pásmo ≤1/4 — průšvih: 1 ze 4 slotů prošel. Náklad ztrácí 1 bednu (zbývá 5).",
-      },
-    ],
-    "seq": 29,
-    "typ": "band_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Šerif postoupil o 1 na 4 — hlučné násilí (vysoký útok). Ještě 1 pole k léčky.",
-      },
-    ],
-    "seq": 30,
-    "typ": "zar_move",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Šerif postoupil o 2 na 6 — průšvih v uzlu. Ještě 2 pole k konfrontace.",
-      },
-    ],
-    "seq": 31,
-    "typ": "zar_move",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "vlastník vidí názvy věcí, ne jejich staty; drží do vyléčení v motelu. Aktivních postihů: 1.",
-        "misto": "spis",
-        "veta": "Za ≤1/4 — průšvih: Frank Kowalski — Otřes mozku (těžký, informační).",
-      },
-    ],
-    "seq": 32,
-    "typ": "penalty_added",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Commituje se naslepo: telegraf je jediné, co o situaci před commitem víš.",
-        "misto": "spis",
-        "veta": "Telegraf slibuje tři viditelné role (improvizace, hodnota, obrana), jedna skrytá role čeká na nejhorší. Zbraň na očích neprojde. Ve skryté roli se ale zbraň vyplatí.",
-      },
-    ],
-    "seq": 33,
-    "typ": "telegraf_derived",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 0,
-        "veta": "Uklidnit dav: kotva 4, šum ±2 — výš než 5 práh nejde.",
-      },
-      {
-        "detail": "Chce hodnotu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 1,
-        "veta": "Přimazat dlaň: kotva 4, šum ±2 — výš než 5 práh nejde.",
-      },
-      {
-        "detail": "Chce obranu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 2,
-        "veta": "Kamenná tvář: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
-      },
-      {
-        "detail": "Chce útok · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 3,
-        "veta": "Kdyby padl výstřel: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
-      },
-    ],
-    "seq": 35,
-    "typ": "situation_revealed",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Kněžský kolárek" — Frank Kowalski · Práh 5 = kotva 4 +2, zastropováno na 5.",
-        "misto": "slot",
-        "razitko": "NEPROŠLO",
-        "slot_index": 0,
-        "veta": "Chtělo to improvizaci 5, „Kněžský kolárek" má 4.",
-      },
-    ],
-    "seq": 38,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Zlaté hodinky" — Rudolf Mazur · Práh 5 = kotva 4 +2, zastropováno na 5.",
-        "misto": "slot",
-        "razitko": "PROŠLO",
-        "slot_index": 1,
-        "veta": "hodnota 5 proti prahu 5.",
-      },
-    ],
-    "seq": 39,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Pytel brambor" — Vincenc Bartoš · Práh 3 = kotva 3 bez šumu.",
-        "misto": "slot",
-        "razitko": "PROŠLO",
-        "slot_index": 2,
-        "veta": "obrana 4 proti prahu 3.",
-      },
-    ],
-    "seq": 40,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Slzy na povel" — Cesare Fontana · Práh 5 = kotva 3 +2.",
-        "misto": "slot",
-        "razitko": "NEPROŠLO",
-        "slot_index": 3,
-        "veta": "Chtělo to útok 5, „Slzy na povel" má 0.",
-      },
-    ],
-    "seq": 41,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Z toho, co tým committnul, se líp rozdělit nedalo — tohle bylo nejlepší možné.",
-        "misto": "spis",
-        "veta": "Pásmo 2/4 — s následky: 2 ze 4 slotů prošly.",
-      },
-    ],
-    "seq": 42,
-    "typ": "band_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Šerif postoupil o 1 na 7 — uzel zvládnutý s následky. Ještě 1 pole k konfrontace.",
-      },
-    ],
-    "seq": 43,
-    "typ": "zar_move",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "týmu ubyla 1 bedna nákladu; jednorázově. Aktivních postihů: 0.",
-        "misto": "spis",
-        "veta": "Za 2/4 — s následky: Cesare Fontana — Vysypaná bedna (lehký, ztrátový).",
-      },
-    ],
-    "seq": 44,
-    "typ": "penalty_added",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "spis",
-        "veta": "Postih „Nervy v hajzlu" (Vincenc Bartoš) vypršel.",
-      },
-    ],
-    "seq": 45,
-    "typ": "penalty_expired",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Na výběr: dvě cesty — typ místa je vidět předem a rozhoduje o tom, jestli projde zbraň.",
-      },
-    ],
-    "seq": 46,
-    "typ": "map_move",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Cesta zvolena: nález — situace se neřeší — něco se jen najde.",
-      },
-    ],
-    "seq": 47,
-    "typ": "map_move",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Kredity +6 (nález v truhle), zůstatek 6.",
-      },
-    ],
-    "seq": 48,
-    "typ": "credit_flow",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Tým zajel do motelu — léčení a směna stojí kredity, čas neběží.",
-      },
-    ],
-    "seq": 49,
-    "typ": "map_move",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Kredity −6 (léčení v motelu), zůstatek 0.",
-      },
-    ],
-    "seq": 50,
-    "typ": "credit_flow",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Těžké postihy se jinak než v motelu nezbavíš — složení maže jen lehké.",
-        "misto": "spis",
-        "veta": "Postih „Otřes mozku" (Frank Kowalski) vyléčen v motelu za 6 kreditů.",
-      },
-    ],
-    "seq": 51,
-    "typ": "penalty_healed",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Na výběr: dvě cesty — typ místa je vidět předem a rozhoduje o tom, jestli projde zbraň.",
-      },
-    ],
-    "seq": 52,
-    "typ": "map_move",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Cesta zvolena: Statkářova stodola (lokace) — nikdo tě nešpehuje — zbraň projde i na očích.",
-      },
-    ],
-    "seq": 53,
-    "typ": "map_move",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Commituje se naslepo: telegraf je jediné, co o situaci před commitem víš.",
-        "misto": "spis",
         "veta": "Telegraf slibuje tři viditelné role (improvizace, nástroj + improvizace, nástroj), jedna skrytá role čeká na nejhorší. Zbraň tady projde i na očích.",
       },
     ],
-    "seq": 54,
+    "seq": 4,
     "typ": "telegraf_derived",
   },
   {
@@ -577,368 +60,17 @@ exports[`golden anotace nad reálným obsahem > seed 7, 4 hráči, Brody 1`] = `
         "veta": "Nedýchat, když jde kolem: kotva 2, šum ±2 — přesný práh až po vyhodnocení.",
       },
     ],
-    "seq": 56,
-    "typ": "situation_revealed",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Tažení je naslepo, v ruce zbývalo kusů: 3. Sázka jde jednou za situaci. Tažená věc nevyšla — slot 2.",
-        "misto": "spis",
-        "veta": "Sázka: místo „Gumový váček" přišel „Balík bankovek" (ruka Vincenc Bartoš).",
-      },
-    ],
-    "seq": 58,
-    "typ": "gamble",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Konšelův prsten" — Frank Kowalski · Práh 3 = kotva 4 −1.",
-        "misto": "slot",
-        "razitko": "NEPROŠLO",
-        "slot_index": 0,
-        "veta": "Chtělo to improvizaci 3, „Konšelův prsten" má 1.",
-      },
-    ],
-    "seq": 60,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Balík bankovek" — Vincenc Bartoš · Práh 2 = kotva 3 −1.",
-        "misto": "slot",
-        "razitko": "NEPROŠLO",
-        "slot_index": 1,
-        "veta": "Kombi slot chce OBA staty nad práh 2: „Balík bankovek" má nástroj 0, improvizace 1.",
-      },
-    ],
-    "seq": 61,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Petrolejová lampa" — Rudolf Mazur · Práh 2 = kotva 4 −2.",
-        "misto": "slot",
-        "razitko": "PROŠLO",
-        "slot_index": 2,
-        "veta": "nástroj 3 proti prahu 2.",
-      },
-    ],
-    "seq": 62,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Kožená zástěra" — Vincenc Bartoš · Práh 0 = kotva 2 −2.",
-        "misto": "slot",
-        "razitko": "PROŠLO",
-        "slot_index": 3,
-        "veta": "obrana 4 proti prahu 0.",
-      },
-    ],
-    "seq": 63,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Optimální rozdělení TÉHOŽ commitu by dalo 3/4 (3/4 — hladce) — 1 zásah zůstal na stole.",
-        "misto": "spis",
-        "veta": "Pásmo 2/4 — s následky: 2 ze 4 slotů prošly.",
-      },
-    ],
-    "seq": 64,
-    "typ": "band_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Šerif postoupil o 1 na 8 — uzel zvládnutý s následky.",
-      },
-    ],
-    "seq": 65,
-    "typ": "zar_move",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "co má štítek Gangster, vlastníkovi ve slotu propadne; vyprší za 3 kola. Aktivních postihů: 1.",
-        "misto": "spis",
-        "veta": "Za 2/4 — s následky: Frank Kowalski — Nervy v hajzlu (lehký, zámkový).",
-      },
-    ],
-    "seq": 66,
-    "typ": "penalty_added",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Commituje se naslepo: telegraf je jediné, co o situaci před commitem víš.",
-        "misto": "spis",
-        "veta": "Telegraf slibuje tři viditelné role (útok, nástroj, improvizace), jedna skrytá role čeká na nejhorší. Zbraň tady projde i na očích.",
-      },
-    ],
-    "seq": 67,
-    "typ": "telegraf_derived",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Chce útok · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 0,
-        "veta": "Probít se vpřed: kotva 4, šum ±2 — výš než 5 práh nejde.",
-      },
-      {
-        "detail": "Chce nástroj · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 1,
-        "veta": "Najít, kudy ujet: kotva 4, šum ±2 — výš než 5 práh nejde.",
-      },
-      {
-        "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 2,
-        "veta": "Kličkovat mezi vozy: kotva 4, šum ±2 — výš než 5 práh nejde.",
-      },
-      {
-        "detail": "Chce obranu · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 3,
-        "veta": "Vydržet nápor: kotva 2, šum ±2 — přesný práh až po vyhodnocení.",
-      },
-    ],
-    "seq": 69,
-    "typ": "situation_revealed",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Sekáček na led" — Frank Kowalski · Práh 5 = kotva 4 +1.",
-        "misto": "slot",
-        "razitko": "NEPROŠLO",
-        "slot_index": 0,
-        "veta": "Chtělo to útok 5, „Sekáček na led" má 4.",
-      },
-    ],
-    "seq": 72,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Zednická lžíce" — Cesare Fontana · Práh 2 = kotva 4 −2.",
-        "misto": "slot",
-        "razitko": "PROŠLO",
-        "slot_index": 1,
-        "veta": "nástroj 4 proti prahu 2.",
-      },
-    ],
-    "seq": 73,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Hovězí vývar" — Vincenc Bartoš · Práh 5 = kotva 4 +1.",
-        "misto": "slot",
-        "razitko": "NEPROŠLO",
-        "slot_index": 2,
-        "veta": "Chtělo to improvizaci 5, „Hovězí vývar" má 4.",
-      },
-    ],
-    "seq": 74,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Bedna kanadské" — Rudolf Mazur · Práh 2 = kotva 2 bez šumu.",
-        "misto": "slot",
-        "razitko": "NEPROŠLO",
-        "slot_index": 3,
-        "veta": "Chtělo to obranu 2, „Bedna kanadské" má 1.",
-      },
-    ],
-    "seq": 75,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Optimální rozdělení TÉHOŽ commitu by dalo 2/4 (2/4 — s následky) — 1 zásah zůstal na stole.",
-        "misto": "spis",
-        "veta": "Pásmo ≤1/4 — průšvih: 1 ze 4 slotů prošel. Náklad ztrácí 1 bednu (zbývá 3).",
-      },
-    ],
-    "seq": 76,
-    "typ": "band_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Šerif postoupil o 1 na 9 — hlučné násilí (vysoký útok).",
-      },
-    ],
-    "seq": 77,
-    "typ": "zar_move",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Šerif postoupil o 1 na 10 — průšvih v uzlu.",
-      },
-    ],
-    "seq": 78,
-    "typ": "zar_move",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "vlastník vidí názvy věcí, ne jejich staty; drží do vyléčení v motelu. Aktivních postihů: 2.",
-        "misto": "spis",
-        "veta": "Za ≤1/4 — průšvih: Frank Kowalski — Otřes mozku (těžký, informační).",
-      },
-    ],
-    "seq": 79,
-    "typ": "penalty_added",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Sloty 2 splnil / 5 propadl · postihy 1 · gamble 2× · složen 0× · ztracené bedny 2 · doručeno: ne.",
-        "misto": "spis",
-        "veta": "Tajný cíl Vincenc Bartoš: Projeď celou cestu bez jediného vážného zranění — ať tě polda nemá kam zapsat. — nesplněn.",
-      },
-    ],
-    "seq": 80,
-    "typ": "goal_scored",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Sloty 1 splnil / 4 propadl · postihy 3 · gamble 0× · složen 0× · ztracené bedny 2 · doručeno: ne.",
-        "misto": "spis",
-        "veta": "Tajný cíl Frank Kowalski: Kupecké slovo platí: ani jedna bedna nesmí padnout tvou vinou — a stejně dojedeš. — nesplněn.",
-      },
-    ],
-    "seq": 81,
-    "typ": "goal_scored",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Sloty 3 splnil / 2 propadl · postihy 0 · gamble 0× · složen 0× · ztracené bedny 2 · doručeno: ne.",
-        "misto": "spis",
-        "veta": "Tajný cíl Rudolf Mazur: Ať je z protokolu znát, že to byla tvoje věc, co aspoň třikrát rozhodlo. — SPLNĚN.",
-      },
-    ],
-    "seq": 82,
-    "typ": "goal_scored",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Sloty 2 splnil / 1 propadl · postihy 1 · gamble 0× · složen 0× · ztracené bedny 1 · doručeno: ne.",
-        "misto": "spis",
-        "veta": "Tajný cíl Cesare Fontana: Do New Yorku dorazíš aspoň se dvěma šrámy na těle — a bednu přesto složíš. — nesplněn.",
-      },
-    ],
-    "seq": 83,
-    "typ": "goal_scored",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Uzlů 4 · zbývá beden 3 · konečný Žár 10 · kredity 0.",
-        "misto": "spis",
-        "veta": "Spis se uzavírá: NEVYŘEŠENO — prohraná konfrontace s pronásledovatelem.",
-      },
-    ],
-    "seq": 84,
-    "typ": "run_ended",
-  },
-]
-`;
-
-exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = `
-[
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Na výběr: dvě cesty — typ místa je vidět předem a rozhoduje o tom, jestli projde zbraň.",
-      },
-    ],
-    "seq": 2,
-    "typ": "map_move",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Cesta zvolena: Zátaras u Verony (člověk) — někdo se ti dívá do rukou — zbraň na očích neprojde.",
-      },
-    ],
-    "seq": 3,
-    "typ": "map_move",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Commituje se naslepo: telegraf je jediné, co o situaci před commitem víš.",
-        "misto": "spis",
-        "veta": "Telegraf slibuje tři viditelné role (útok, obrana, improvizace), jedna skrytá role čeká na nejhorší. Zbraň na očích neprojde. Ve skryté roli se ale zbraň vyplatí.",
-      },
-    ],
-    "seq": 4,
-    "typ": "telegraf_derived",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Chce útok · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 0,
-        "veta": "Postavit se jim: kotva 4, šum ±2 — výš než 5 práh nejde.",
-      },
-      {
-        "detail": "Chce obranu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 1,
-        "veta": "Ustát nápor: kotva 4, šum ±2 — výš než 5 práh nejde.",
-      },
-      {
-        "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 2,
-        "veta": "Vyklouznout stranou: kotva 4, šum ±2 — výš než 5 práh nejde.",
-      },
-      {
-        "detail": "Chce útok · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 3,
-        "veta": "Tasit včas a první: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
-      },
-    ],
     "seq": 6,
     "typ": "situation_revealed",
   },
   {
     "anotace": [
       {
-        "detail": "„Svářečka" — Vincenc Bartoš · Práh 2 = kotva 4 −2.",
+        "detail": "„Naslouchátko" — Frank Kowalski · Práh 4 = kotva 4 bez šumu.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 0,
-        "veta": "Chtělo to útok 2, „Svářečka" má 1.",
+        "veta": "Chtělo to improvizaci 4, „Naslouchátko" má 3.",
       },
     ],
     "seq": 9,
@@ -947,11 +79,11 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Plechová vesta" — Vincenc Bartoš · Práh 2 = kotva 4 −2.",
+        "detail": "„Pivovarská hadice" — Rudolf Mazur · Práh 4 = kotva 3 +1.",
         "misto": "slot",
-        "razitko": "PROŠLO",
+        "razitko": "NEPROŠLO",
         "slot_index": 1,
-        "veta": "obrana 5 proti prahu 2.",
+        "veta": "Kombi slot chce OBA staty nad práh 4: „Pivovarská hadice" má nástroj 5, improvizace 3.",
       },
     ],
     "seq": 10,
@@ -960,11 +92,11 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Banánový kanón" — Vincenc Bartoš · Práh 2 = kotva 4 −2.",
+        "detail": "„Volská kůže" — Vincenc Bartoš · Práh 5 = kotva 4 +2, zastropováno na 5.",
         "misto": "slot",
-        "razitko": "PROŠLO",
+        "razitko": "NEPROŠLO",
         "slot_index": 2,
-        "veta": "improvizace 4 proti prahu 2.",
+        "veta": "Chtělo to nástroj 5, „Volská kůže" má 4.",
       },
     ],
     "seq": 11,
@@ -973,11 +105,11 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Sekáček na led" — Vincenc Bartoš · Práh 2 = kotva 3 −1.",
+        "detail": "„Lázeňský župan" — Cesare Fontana · Práh 1 = kotva 2 −1.",
         "misto": "slot",
         "razitko": "PROŠLO",
         "slot_index": 3,
-        "veta": "útok 4 proti prahu 2.",
+        "veta": "obrana 4 proti prahu 1.",
       },
     ],
     "seq": 12,
@@ -986,9 +118,9 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "Z toho, co tým committnul, se líp rozdělit nedalo — tohle bylo nejlepší možné.",
+        "detail": "Optimální rozdělení TÉHOŽ commitu by dalo 2/4 (2/4 — s následky) — 1 zásah zůstal na stole.",
         "misto": "spis",
-        "veta": "Pásmo 3/4 — hladce: 3 ze 4 slotů prošly.",
+        "veta": "Pásmo ≤1/4 — průšvih: 1 ze 4 slotů prošel. Náklad ztrácí 1 bednu (zbývá 5).",
       },
     ],
     "seq": 13,
@@ -998,7 +130,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
     "anotace": [
       {
         "misto": "okraj",
-        "veta": "Šerif postoupil o 1 na 1 — hlučné násilí (vysoký útok). Ještě 3 pole k Zátahu.",
+        "veta": "Šerif postoupil o 2 na 2 — průšvih v uzlu. Ještě 3 pole k léčky.",
       },
     ],
     "seq": 14,
@@ -1007,18 +139,19 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "misto": "okraj",
-        "veta": "Kredity +2 (zvládnutý uzel 3 ze 4), zůstatek 2.",
+        "detail": "do skryté role vlastník nic neprosadí; drží do vyléčení v motelu. Aktivních postihů: 1.",
+        "misto": "spis",
+        "veta": "Za ≤1/4 — průšvih: Frank Kowalski — Rozdrcená noha (těžký, zámkový).",
       },
     ],
     "seq": 15,
-    "typ": "credit_flow",
+    "typ": "penalty_added",
   },
   {
     "anotace": [
       {
         "misto": "okraj",
-        "veta": "Na výběr: dvě cesty — typ místa je vidět předem a rozhoduje o tom, jestli projde zbraň.",
+        "veta": "Zátah: Žár překročil práh, jiná cesta než přes kontrolu není.",
       },
     ],
     "seq": 16,
@@ -1028,7 +161,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
     "anotace": [
       {
         "misto": "okraj",
-        "veta": "Cesta zvolena: Přívoz přes Hudson (člověk) — někdo se ti dívá do rukou — zbraň na očích neprojde.",
+        "veta": "Cesta zvolena: Zátah na páté silnici (zátah) — jiná cesta není — zbraň projde.",
       },
     ],
     "seq": 17,
@@ -1039,657 +172,10 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
       {
         "detail": "Commituje se naslepo: telegraf je jediné, co o situaci před commitem víš.",
         "misto": "spis",
-        "veta": "Telegraf slibuje tři viditelné role (improvizace, nástroj, hodnota), jedna skrytá role čeká na nejhorší. Zbraň na očích neprojde. Ve skryté roli se ale zbraň vyplatí.",
-      },
-    ],
-    "seq": 18,
-    "typ": "telegraf_derived",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 0,
-        "veta": "Zamotat hlavu: kotva 4, šum ±2 — výš než 5 práh nejde.",
-      },
-      {
-        "detail": "Chce nástroj · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 1,
-        "veta": "Přesunout z očí: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
-      },
-      {
-        "detail": "Chce hodnotu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 2,
-        "veta": "Přilepšit do dlaně: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
-      },
-      {
-        "detail": "Chce útok · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 3,
-        "veta": "Kdyby čenichal dál: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
-      },
-    ],
-    "seq": 20,
-    "typ": "situation_revealed",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Konev na mléko" — Vincenc Bartoš · Práh 5 = kotva 4 +2, zastropováno na 5.",
-        "misto": "slot",
-        "razitko": "NEPROŠLO",
-        "slot_index": 0,
-        "veta": "Chtělo to improvizaci 5, „Konev na mléko" má 4.",
-      },
-    ],
-    "seq": 23,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Starý kompas" — Vincenc Bartoš · Práh 3 = kotva 3 bez šumu.",
-        "misto": "slot",
-        "razitko": "PROŠLO",
-        "slot_index": 1,
-        "veta": "nástroj 3 proti prahu 3.",
-      },
-    ],
-    "seq": 24,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Zlaté hodinky" — Vincenc Bartoš · Práh 5 = kotva 3 +2.",
-        "misto": "slot",
-        "razitko": "PROŠLO",
-        "slot_index": 2,
-        "veta": "hodnota 5 proti prahu 5.",
-      },
-    ],
-    "seq": 25,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Pytel cementu" — Vincenc Bartoš · Práh 3 = kotva 3 bez šumu.",
-        "misto": "slot",
-        "razitko": "PROŠLO",
-        "slot_index": 3,
-        "veta": "útok 3 proti prahu 3.",
-      },
-    ],
-    "seq": 26,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Z toho, co tým committnul, se líp rozdělit nedalo — tohle bylo nejlepší možné.",
-        "misto": "spis",
-        "veta": "Pásmo 3/4 — hladce: 3 ze 4 slotů prošly.",
-      },
-    ],
-    "seq": 27,
-    "typ": "band_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Kredity +2 (zvládnutý uzel 3 ze 4), zůstatek 4.",
-      },
-    ],
-    "seq": 28,
-    "typ": "credit_flow",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Na výběr: dvě cesty — typ místa je vidět předem a rozhoduje o tom, jestli projde zbraň.",
-      },
-    ],
-    "seq": 29,
-    "typ": "map_move",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Cesta zvolena: nález — situace se neřeší — něco se jen najde.",
-      },
-    ],
-    "seq": 30,
-    "typ": "map_move",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Kredity +5 (nález v truhle), zůstatek 9.",
-      },
-    ],
-    "seq": 31,
-    "typ": "credit_flow",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Tým zajel do motelu — léčení a směna stojí kredity, čas neběží.",
-      },
-    ],
-    "seq": 32,
-    "typ": "map_move",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Kredity −3 (směna věci v motelu), zůstatek 6.",
-      },
-    ],
-    "seq": 33,
-    "typ": "credit_flow",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Na výběr: dvě cesty — typ místa je vidět předem a rozhoduje o tom, jestli projde zbraň.",
-      },
-    ],
-    "seq": 34,
-    "typ": "map_move",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Cesta zvolena: Farmářův brod (člověk) — někdo se ti dívá do rukou — zbraň na očích neprojde.",
-      },
-    ],
-    "seq": 35,
-    "typ": "map_move",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Commituje se naslepo: telegraf je jediné, co o situaci před commitem víš.",
-        "misto": "spis",
-        "veta": "Telegraf slibuje tři viditelné role (hodnota, obrana, nástroj), jedna skrytá role čeká na nejhorší. Zbraň na očích neprojde. Ve skryté roli se ale zbraň vyplatí.",
-      },
-    ],
-    "seq": 36,
-    "typ": "telegraf_derived",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Chce hodnotu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 0,
-        "veta": "Zaplatit za vytažení: kotva 4, šum ±2 — výš než 5 práh nejde.",
-      },
-      {
-        "detail": "Chce obranu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 1,
-        "veta": "Nezvednout hlas: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
-      },
-      {
-        "detail": "Chce nástroj · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 2,
-        "veta": "Zapřáhnout a táhnout: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
-      },
-      {
-        "detail": "Chce útok · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 3,
-        "veta": "Kdyby začal vyvádět: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
-      },
-    ],
-    "seq": 38,
-    "typ": "situation_revealed",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Konšelův prsten" — Vincenc Bartoš · Práh 2 = kotva 4 −2.",
-        "misto": "slot",
-        "razitko": "PROŠLO",
-        "slot_index": 0,
-        "veta": "hodnota 5 proti prahu 2.",
-      },
-    ],
-    "seq": 41,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Pytel brambor" — Vincenc Bartoš · Práh 4 = kotva 3 +1.",
-        "misto": "slot",
-        "razitko": "PROŠLO",
-        "slot_index": 1,
-        "veta": "obrana 4 proti prahu 4.",
-      },
-    ],
-    "seq": 42,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Lopata" — Vincenc Bartoš · Práh 2 = kotva 3 −1.",
-        "misto": "slot",
-        "razitko": "PROŠLO",
-        "slot_index": 2,
-        "veta": "nástroj 4 proti prahu 2.",
-      },
-    ],
-    "seq": 43,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Řeznický hák" — Vincenc Bartoš · Práh 4 = kotva 3 +1.",
-        "misto": "slot",
-        "razitko": "PROŠLO",
-        "slot_index": 3,
-        "veta": "útok 4 proti prahu 4.",
-      },
-    ],
-    "seq": 44,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Z toho, co tým committnul, se líp rozdělit nedalo — tohle bylo nejlepší možné.",
-        "misto": "spis",
-        "veta": "Pásmo 4/4 — hladce, ještě se něco našlo: 4 ze 4 slotů prošly.",
-      },
-    ],
-    "seq": 45,
-    "typ": "band_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Šerif postoupil o 1 na 2 — hlučné násilí (vysoký útok). Ještě 2 pole k Zátahu.",
-      },
-    ],
-    "seq": 46,
-    "typ": "zar_move",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Kredity +3 (čistá práce 4 ze 4), zůstatek 9.",
-      },
-    ],
-    "seq": 47,
-    "typ": "credit_flow",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Na výběr: dvě cesty — typ místa je vidět předem a rozhoduje o tom, jestli projde zbraň.",
-      },
-    ],
-    "seq": 48,
-    "typ": "map_move",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Cesta zvolena: Mýtnice za Batavií (člověk) — někdo se ti dívá do rukou — zbraň na očích neprojde.",
-      },
-    ],
-    "seq": 49,
-    "typ": "map_move",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Commituje se naslepo: telegraf je jediné, co o situaci před commitem víš.",
-        "misto": "spis",
-        "veta": "Telegraf slibuje tři viditelné role (hodnota, improvizace, obrana), jedna skrytá role čeká na nejhorší. Zbraň na očích neprojde. Ve skryté roli se ale zbraň vyplatí.",
-      },
-    ],
-    "seq": 50,
-    "typ": "telegraf_derived",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Chce hodnotu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 0,
-        "veta": "Silniční poplatek: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
-      },
-      {
-        "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 1,
-        "veta": "Zamluvit to: kotva 4, šum ±2 — výš než 5 práh nejde.",
-      },
-      {
-        "detail": "Chce obranu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 2,
-        "veta": "Klidná tvář: kotva 2, šum ±2 — přesný práh až po vyhodnocení.",
-      },
-      {
-        "detail": "Chce útok · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 3,
-        "veta": "Kdyby přituhlo: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
-      },
-    ],
-    "seq": 52,
-    "typ": "situation_revealed",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Bedna kanadské" — Vincenc Bartoš · Práh 3 = kotva 3 bez šumu.",
-        "misto": "slot",
-        "razitko": "PROŠLO",
-        "slot_index": 0,
-        "veta": "hodnota 4 proti prahu 3.",
-      },
-    ],
-    "seq": 55,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Kněžský kolárek" — Vincenc Bartoš · Práh 2 = kotva 4 −2.",
-        "misto": "slot",
-        "razitko": "PROŠLO",
-        "slot_index": 1,
-        "veta": "improvizace 4 proti prahu 2.",
-      },
-    ],
-    "seq": 56,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Kožená zástěra" — Vincenc Bartoš · Práh 3 = kotva 2 +1.",
-        "misto": "slot",
-        "razitko": "PROŠLO",
-        "slot_index": 2,
-        "veta": "obrana 4 proti prahu 3.",
-      },
-    ],
-    "seq": 57,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Dědečkova brokovnice" — Vincenc Bartoš · Práh 2 = kotva 3 −1.",
-        "misto": "slot",
-        "razitko": "PROŠLO",
-        "slot_index": 3,
-        "veta": "útok 5 proti prahu 2.",
-      },
-    ],
-    "seq": 58,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Z toho, co tým committnul, se líp rozdělit nedalo — tohle bylo nejlepší možné.",
-        "misto": "spis",
-        "veta": "Pásmo 4/4 — hladce, ještě se něco našlo: 4 ze 4 slotů prošly.",
-      },
-    ],
-    "seq": 59,
-    "typ": "band_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Šerif postoupil o 1 na 3 — zbraň v akci. Ještě 1 pole k Zátahu.",
-      },
-    ],
-    "seq": 60,
-    "typ": "zar_move",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Kredity +3 (čistá práce 4 ze 4), zůstatek 12.",
-      },
-    ],
-    "seq": 61,
-    "typ": "credit_flow",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Tým zajel do motelu — léčení a směna stojí kredity, čas neběží.",
-      },
-    ],
-    "seq": 62,
-    "typ": "map_move",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Kredity −3 (směna věci v motelu), zůstatek 9.",
-      },
-    ],
-    "seq": 63,
-    "typ": "credit_flow",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Na výběr: dvě cesty — typ místa je vidět předem a rozhoduje o tom, jestli projde zbraň.",
-      },
-    ],
-    "seq": 64,
-    "typ": "map_move",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Cesta zvolena: Odstavený vagon v Peekskillu (lokace) — nikdo tě nešpehuje — zbraň projde i na očích.",
-      },
-    ],
-    "seq": 65,
-    "typ": "map_move",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Commituje se naslepo: telegraf je jediné, co o situaci před commitem víš.",
-        "misto": "spis",
-        "veta": "Telegraf slibuje dvě viditelné role (improvizace, nástroj), dvě skryté role čekají na nejhorší. Zbraň tady projde i na očích. Ve skryté roli se ale zbraň vyplatí.",
-      },
-    ],
-    "seq": 66,
-    "typ": "telegraf_derived",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 0,
-        "veta": "Proklouznout kolem: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
-      },
-      {
-        "detail": "Chce nástroj · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 1,
-        "veta": "Vypáčit vagon: kotva 4, šum ±2 — výš než 5 práh nejde.",
-      },
-      {
-        "detail": "Chce obranu · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 2,
-        "veta": "Ztuhnout ve stínu: kotva 2, šum ±2 — přesný práh až po vyhodnocení.",
-      },
-      {
-        "detail": "Chce útok · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
-        "misto": "slot",
-        "slot_index": 3,
-        "veta": "Kdyby se probudil: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
-      },
-    ],
-    "seq": 68,
-    "typ": "situation_revealed",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Hovězí vývar" — Vincenc Bartoš · Práh 4 = kotva 3 +1.",
-        "misto": "slot",
-        "razitko": "PROŠLO",
-        "slot_index": 0,
-        "veta": "improvizace 4 proti prahu 4.",
-      },
-    ],
-    "seq": 71,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Rezervní pneumatika" — Vincenc Bartoš · Práh 5 = kotva 4 +1.",
-        "misto": "slot",
-        "razitko": "NEPROŠLO",
-        "slot_index": 1,
-        "veta": "Chtělo to nástroj 5, „Rezervní pneumatika" má 4.",
-      },
-    ],
-    "seq": 72,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Rodinné stříbro" — Vincenc Bartoš · Práh 4 = kotva 2 +2.",
-        "misto": "slot",
-        "razitko": "NEPROŠLO",
-        "slot_index": 2,
-        "veta": "Chtělo to obranu 4, „Rodinné stříbro" má 2.",
-      },
-    ],
-    "seq": 73,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Mosazný boxer" — Vincenc Bartoš · Práh 5 = kotva 3 +2.",
-        "misto": "slot",
-        "razitko": "NEPROŠLO",
-        "slot_index": 3,
-        "veta": "Chtělo to útok 5, „Mosazný boxer" má 4.",
-      },
-    ],
-    "seq": 74,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Z toho, co tým committnul, se líp rozdělit nedalo — tohle bylo nejlepší možné.",
-        "misto": "spis",
-        "veta": "Pásmo ≤1/4 — průšvih: 1 ze 4 slotů prošel. Náklad ztrácí 1 bednu (zbývá 5).",
-      },
-    ],
-    "seq": 75,
-    "typ": "band_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Šerif postoupil o 1 na 4 — hlučné násilí (vysoký útok). Ještě 3 pole k léčky.",
-      },
-    ],
-    "seq": 76,
-    "typ": "zar_move",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Šerif postoupil o 2 na 6 — průšvih v uzlu. Ještě 1 pole k léčky.",
-      },
-    ],
-    "seq": 77,
-    "typ": "zar_move",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "do skryté role vlastník nic neprosadí; drží do vyléčení v motelu. Aktivních postihů: 1.",
-        "misto": "spis",
-        "veta": "Za ≤1/4 — průšvih: Vincenc Bartoš — Rozdrcená noha (těžký, zámkový).",
-      },
-    ],
-    "seq": 78,
-    "typ": "penalty_added",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Zátah: Žár překročil práh, jiná cesta než přes kontrolu není.",
-      },
-    ],
-    "seq": 79,
-    "typ": "map_move",
-  },
-  {
-    "anotace": [
-      {
-        "misto": "okraj",
-        "veta": "Cesta zvolena: Zátah na páté silnici (zátah) — jiná cesta není — zbraň projde.",
-      },
-    ],
-    "seq": 80,
-    "typ": "map_move",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Commituje se naslepo: telegraf je jediné, co o situaci před commitem víš.",
-        "misto": "spis",
         "veta": "Telegraf slibuje tři viditelné role (útok, nástroj, improvizace), jedna skrytá role čeká na nejhorší. Zbraň tady projde i na očích.",
       },
     ],
-    "seq": 81,
+    "seq": 18,
     "typ": "telegraf_derived",
   },
   {
@@ -1719,74 +205,59 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
         "veta": "Držet nervy u okna: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
       },
     ],
-    "seq": 83,
+    "seq": 20,
     "typ": "situation_revealed",
   },
   {
     "anotace": [
       {
-        "detail": "Tažení je naslepo, v ruce zbývalo kusů: 4. Sázka jde jednou za situaci. Tažená věc nevyšla — slot 2.",
-        "misto": "spis",
-        "veta": "Sázka: místo „Medvědí kožich" přišel „Petrolejová lampa" (ruka Vincenc Bartoš).",
-      },
-    ],
-    "seq": 85,
-    "typ": "gamble",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "„Uříznutá hlaveň" — Vincenc Bartoš · Práh 5 = kotva 4 +1.",
+        "detail": "„Dědečkova brokovnice" — Vincenc Bartoš · Práh 5 = kotva 4 +1.",
         "misto": "slot",
-        "razitko": "NEPROŠLO",
+        "razitko": "PROŠLO",
         "slot_index": 0,
-        "veta": "Chtělo to útok 5, „Uříznutá hlaveň" má 4.",
+        "veta": "útok 5 proti prahu 5.",
       },
     ],
-    "seq": 87,
+    "seq": 23,
     "typ": "slot_resolved",
   },
   {
     "anotace": [
       {
-        "detail": "„Petrolejová lampa" — Vincenc Bartoš · Práh 4 = kotva 4 bez šumu.",
+        "detail": "„Kostelní klíč" — Frank Kowalski · Práh 5 = kotva 4 +2, zastropováno na 5.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 1,
-        "veta": "Chtělo to nástroj 4, „Petrolejová lampa" má 3.",
+        "veta": "Chtělo to nástroj 5, „Kostelní klíč" má 4.",
       },
     ],
-    "seq": 88,
+    "seq": 24,
     "typ": "slot_resolved",
   },
   {
     "anotace": [
       {
-        "detail": "„Stříbrná placatka" — Vincenc Bartoš · Práh 2 = kotva 4 −2.",
+        "detail": "„Hovězí vývar" — Cesare Fontana · Práh 5 = kotva 4 +1.",
         "misto": "slot",
-        "razitko": "PROŠLO",
+        "razitko": "NEPROŠLO",
         "slot_index": 2,
-        "veta": "improvizace 3 proti prahu 2.",
+        "veta": "Chtělo to improvizaci 5, „Hovězí vývar" má 4.",
       },
     ],
-    "seq": 89,
+    "seq": 25,
     "typ": "slot_resolved",
   },
   {
     "anotace": [
       {
-        "detail": "„Balík bankovek" — Vincenc Bartoš · Zámkový postih je tvrdé pravidlo nad staty, stejná třída jako štítek. · Práh 1 = kotva 3 −2.",
+        "detail": "„Zlaté hodinky" — Rudolf Mazur · Práh 5 = kotva 3 +2.",
         "misto": "slot",
-        "odkaz": {
-          "popis": "uzel 6 — Odstavený vagon v Peekskillu",
-          "seq": 78,
-        },
         "razitko": "NEPROŠLO",
         "slot_index": 3,
-        "veta": "Rozdrcená noha — do skryté role nic neprosadíš, „Balík bankovek" propadá.",
+        "veta": "Chtělo to obranu 5, „Zlaté hodinky" má 1.",
       },
     ],
-    "seq": 90,
+    "seq": 26,
     "typ": "slot_resolved",
   },
   {
@@ -1797,38 +268,1841 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
         "veta": "Pásmo ≤1/4 — průšvih: 1 ze 4 slotů prošel. Náklad ztrácí 1 bednu (zbývá 4).",
       },
     ],
-    "seq": 91,
+    "seq": 27,
     "typ": "band_resolved",
   },
   {
     "anotace": [
       {
         "misto": "okraj",
-        "veta": "Šerif postoupil o 1 na 7 — zbraň v akci. Ještě 3 pole k konfrontace.",
+        "veta": "Šerif postoupil o 2 na 4 — zbraň v akci, dokud je aktivní Okresní šerif Brody, štítek Gangster se počítá dvojnásob. Ještě 1 pole k léčky.",
       },
     ],
-    "seq": 92,
+    "seq": 28,
     "typ": "zar_move",
   },
   {
     "anotace": [
       {
         "misto": "okraj",
-        "veta": "Šerif postoupil o 2 na 9 — průšvih v uzlu. Ještě 1 pole k konfrontace.",
+        "veta": "Šerif postoupil o 2 na 6 — průšvih v uzlu. Ještě 2 pole k konfrontace.",
       },
     ],
-    "seq": 93,
+    "seq": 29,
     "typ": "zar_move",
   },
   {
     "anotace": [
       {
-        "detail": "vlastník vidí názvy věcí, ne jejich staty; drží do vyléčení v motelu. Aktivních postihů: 2.",
+        "detail": "co má štítek Gangster, vlastníkovi ve slotu propadne; drží do vyléčení v motelu. Aktivních postihů: 1.",
         "misto": "spis",
-        "veta": "Za ≤1/4 — průšvih: Vincenc Bartoš — Otřes mozku (těžký, informační).",
+        "veta": "Za ≤1/4 — průšvih: Rudolf Mazur — Ochrnutá ruka (těžký, zámkový).",
       },
     ],
-    "seq": 94,
+    "seq": 30,
+    "typ": "penalty_added",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Commituje se naslepo: telegraf je jediné, co o situaci před commitem víš.",
+        "misto": "spis",
+        "veta": "Telegraf slibuje tři viditelné role (improvizace, hodnota, obrana), jedna skrytá role čeká na nejhorší. Zbraň na očích neprojde. Ve skryté roli se ale zbraň vyplatí.",
+      },
+    ],
+    "seq": 31,
+    "typ": "telegraf_derived",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 0,
+        "veta": "Uklidnit dav: kotva 4, šum ±2 — výš než 5 práh nejde.",
+      },
+      {
+        "detail": "Chce hodnotu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 1,
+        "veta": "Přimazat dlaň: kotva 4, šum ±2 — výš než 5 práh nejde.",
+      },
+      {
+        "detail": "Chce obranu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 2,
+        "veta": "Kamenná tvář: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
+      },
+      {
+        "detail": "Chce útok · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 3,
+        "veta": "Kdyby padl výstřel: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
+      },
+    ],
+    "seq": 33,
+    "typ": "situation_revealed",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Klec se slepicemi" — Vincenc Bartoš · Práh 5 = kotva 4 +2, zastropováno na 5.",
+        "misto": "slot",
+        "razitko": "NEPROŠLO",
+        "slot_index": 0,
+        "veta": "Chtělo to improvizaci 5, „Klec se slepicemi" má 4.",
+      },
+    ],
+    "seq": 36,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Konšelův prsten" — Cesare Fontana · Práh 4 = kotva 4 bez šumu.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 1,
+        "veta": "hodnota 5 proti prahu 4.",
+      },
+    ],
+    "seq": 37,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Rezervní pneumatika" — Frank Kowalski · Práh 3 = kotva 3 bez šumu.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 2,
+        "veta": "obrana 3 proti prahu 3.",
+      },
+    ],
+    "seq": 38,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Kastrol na hlavě" — Rudolf Mazur · Práh 1 = kotva 3 −2.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 3,
+        "veta": "útok 1 proti prahu 1.",
+      },
+    ],
+    "seq": 39,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Z toho, co tým committnul, se líp rozdělit nedalo — tohle bylo nejlepší možné.",
+        "misto": "spis",
+        "veta": "Pásmo 3/4 — hladce: 3 ze 4 slotů prošly.",
+      },
+    ],
+    "seq": 40,
+    "typ": "band_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Kredity +2 (zvládnutý uzel 3 ze 4), zůstatek 2.",
+      },
+    ],
+    "seq": 41,
+    "typ": "credit_flow",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Na výběr: dvě cesty — typ místa je vidět předem a rozhoduje o tom, jestli projde zbraň.",
+      },
+    ],
+    "seq": 42,
+    "typ": "map_move",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Cesta zvolena: nález — situace se neřeší — něco se jen najde.",
+      },
+    ],
+    "seq": 43,
+    "typ": "map_move",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Kredity +4 (nález v truhle), zůstatek 6.",
+      },
+    ],
+    "seq": 44,
+    "typ": "credit_flow",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Tým zajel do motelu — léčení a směna stojí kredity, čas neběží.",
+      },
+    ],
+    "seq": 45,
+    "typ": "map_move",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Kredity −6 (léčení v motelu), zůstatek 0.",
+      },
+    ],
+    "seq": 46,
+    "typ": "credit_flow",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Těžké postihy se jinak než v motelu nezbavíš — složení maže jen lehké.",
+        "misto": "spis",
+        "veta": "Postih „Rozdrcená noha" (Frank Kowalski) vyléčen v motelu za 6 kreditů.",
+      },
+    ],
+    "seq": 47,
+    "typ": "penalty_healed",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Na výběr: dvě cesty — typ místa je vidět předem a rozhoduje o tom, jestli projde zbraň.",
+      },
+    ],
+    "seq": 48,
+    "typ": "map_move",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Cesta zvolena: Přívoz přes Hudson (člověk) — někdo se ti dívá do rukou — zbraň na očích neprojde.",
+      },
+    ],
+    "seq": 49,
+    "typ": "map_move",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Commituje se naslepo: telegraf je jediné, co o situaci před commitem víš.",
+        "misto": "spis",
+        "veta": "Telegraf slibuje tři viditelné role (improvizace, nástroj, hodnota), jedna skrytá role čeká na nejhorší. Zbraň na očích neprojde. Ve skryté roli se ale zbraň vyplatí.",
+      },
+    ],
+    "seq": 50,
+    "typ": "telegraf_derived",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 0,
+        "veta": "Zamotat hlavu: kotva 4, šum ±2 — výš než 5 práh nejde.",
+      },
+      {
+        "detail": "Chce nástroj · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 1,
+        "veta": "Přesunout z očí: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
+      },
+      {
+        "detail": "Chce hodnotu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 2,
+        "veta": "Přilepšit do dlaně: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
+      },
+      {
+        "detail": "Chce útok · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 3,
+        "veta": "Kdyby čenichal dál: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
+      },
+    ],
+    "seq": 52,
+    "typ": "situation_revealed",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Doktorská hruška" — Vincenc Bartoš · Práh 2 = kotva 4 −2.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 0,
+        "veta": "improvizace 4 proti prahu 2.",
+      },
+    ],
+    "seq": 55,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Provaz a kladka" — Rudolf Mazur · Práh 3 = kotva 3 bez šumu.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 1,
+        "veta": "nástroj 4 proti prahu 3.",
+      },
+    ],
+    "seq": 56,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Vycpaný páv" — Cesare Fontana · Práh 3 = kotva 3 bez šumu.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 2,
+        "veta": "hodnota 4 proti prahu 3.",
+      },
+    ],
+    "seq": 57,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Starý kompas" — Frank Kowalski · Práh 3 = kotva 3 bez šumu.",
+        "misto": "slot",
+        "razitko": "NEPROŠLO",
+        "slot_index": 3,
+        "veta": "Chtělo to útok 3, „Starý kompas" má 0.",
+      },
+    ],
+    "seq": 58,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Z toho, co tým committnul, se líp rozdělit nedalo — tohle bylo nejlepší možné.",
+        "misto": "spis",
+        "veta": "Pásmo 3/4 — hladce: 3 ze 4 slotů prošly.",
+      },
+    ],
+    "seq": 59,
+    "typ": "band_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Kredity +2 (zvládnutý uzel 3 ze 4), zůstatek 2.",
+      },
+    ],
+    "seq": 60,
+    "typ": "credit_flow",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Na výběr: dvě cesty — typ místa je vidět předem a rozhoduje o tom, jestli projde zbraň.",
+      },
+    ],
+    "seq": 61,
+    "typ": "map_move",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Cesta zvolena: Starý most přes Mohawk (lokace) — nikdo tě nešpehuje — zbraň projde i na očích.",
+      },
+    ],
+    "seq": 62,
+    "typ": "map_move",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Commituje se naslepo: telegraf je jediné, co o situaci před commitem víš.",
+        "misto": "spis",
+        "veta": "Telegraf slibuje tři viditelné role (nástroj, nástroj + improvizace, improvizace), jedna skrytá role čeká na nejhorší. Zbraň tady projde i na očích.",
+      },
+    ],
+    "seq": 63,
+    "typ": "telegraf_derived",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Chce nástroj · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 0,
+        "veta": "Zvednout závoru: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
+      },
+      {
+        "detail": "Chce nástroj a improvizaci (OBA staty) · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 1,
+        "veta": "Zpevnit prkna: kotva 2, šum ±2 — přesný práh až po vyhodnocení.",
+      },
+      {
+        "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 2,
+        "veta": "Projet dírou: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
+      },
+      {
+        "detail": "Chce obranu · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 3,
+        "veta": "Nedat to na sobě: kotva 2, šum ±2 — přesný práh až po vyhodnocení.",
+      },
+    ],
+    "seq": 65,
+    "typ": "situation_revealed",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Řeznický hák" — Cesare Fontana · Práh 1 = kotva 3 −2.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 0,
+        "veta": "nástroj 3 proti prahu 1.",
+      },
+    ],
+    "seq": 68,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Kožená zástěra" — Frank Kowalski · Práh 0 = kotva 2 −2.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 1,
+        "veta": "nástroj 2, improvizace 1 proti prahu 0.",
+      },
+    ],
+    "seq": 69,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Kuřecí stehýnko" — Rudolf Mazur · Práh 3 = kotva 3 bez šumu.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 2,
+        "veta": "improvizace 4 proti prahu 3.",
+      },
+    ],
+    "seq": 70,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Otrlený výraz" — Vincenc Bartoš · Práh 2 = kotva 2 bez šumu.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 3,
+        "veta": "obrana 4 proti prahu 2.",
+      },
+    ],
+    "seq": 71,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Z toho, co tým committnul, se líp rozdělit nedalo — tohle bylo nejlepší možné.",
+        "misto": "spis",
+        "veta": "Pásmo 4/4 — hladce, ještě se něco našlo: 4 ze 4 slotů prošly.",
+      },
+    ],
+    "seq": 72,
+    "typ": "band_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Šerif postoupil o 1 na 7 — hlučné násilí (vysoký útok). Ještě 1 pole k konfrontace.",
+      },
+    ],
+    "seq": 73,
+    "typ": "zar_move",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Kredity +3 (čistá práce 4 ze 4), zůstatek 5.",
+      },
+    ],
+    "seq": 74,
+    "typ": "credit_flow",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Tým zajel do motelu — léčení a směna stojí kredity, čas neběží.",
+      },
+    ],
+    "seq": 75,
+    "typ": "map_move",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Kredity −3 (směna věci v motelu), zůstatek 2.",
+      },
+    ],
+    "seq": 76,
+    "typ": "credit_flow",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Na výběr: dvě cesty — typ místa je vidět předem a rozhoduje o tom, jestli projde zbraň.",
+      },
+    ],
+    "seq": 77,
+    "typ": "map_move",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Cesta zvolena: Hlídka na senecké silnici (člověk) — někdo se ti dívá do rukou — zbraň na očích neprojde.",
+      },
+    ],
+    "seq": 78,
+    "typ": "map_move",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Commituje se naslepo: telegraf je jediné, co o situaci před commitem víš.",
+        "misto": "spis",
+        "veta": "Telegraf slibuje tři viditelné role (obrana, hodnota, nástroj), jedna skrytá role čeká na nejhorší. Zbraň na očích neprojde. Ve skryté roli se ale zbraň vyplatí.",
+      },
+    ],
+    "seq": 79,
+    "typ": "telegraf_derived",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Chce obranu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 0,
+        "veta": "Nedat na sobě znát: kotva 4, šum ±2 — výš než 5 práh nejde.",
+      },
+      {
+        "detail": "Chce hodnotu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 1,
+        "veta": "Na přilepšenou: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
+      },
+      {
+        "detail": "Chce nástroj · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 2,
+        "veta": "Spravit, co třeba: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
+      },
+      {
+        "detail": "Chce útok · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 3,
+        "veta": "Kdyby tasil první: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
+      },
+    ],
+    "seq": 81,
+    "typ": "situation_revealed",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Tažení je naslepo, v ruce zbývalo kusů: 2. Sázka jde jednou za situaci. Tažená věc vyšla — slot 3.",
+        "misto": "spis",
+        "veta": "Sázka: místo „Růženec po matce" přišel „Svářečka" (ruka Vincenc Bartoš).",
+      },
+    ],
+    "seq": 83,
+    "typ": "gamble",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Tlustá bible" — Rudolf Mazur · Práh 4 = kotva 4 bez šumu.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 0,
+        "veta": "obrana 4 proti prahu 4.",
+      },
+    ],
+    "seq": 85,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Smuteční závoj" — Frank Kowalski · Práh 4 = kotva 3 +1.",
+        "misto": "slot",
+        "razitko": "NEPROŠLO",
+        "slot_index": 1,
+        "veta": "Chtělo to hodnotu 4, „Smuteční závoj" má 1.",
+      },
+    ],
+    "seq": 86,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Svářečka" — Vincenc Bartoš · Práh 1 = kotva 3 −2.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 2,
+        "veta": "nástroj 5 proti prahu 1.",
+      },
+    ],
+    "seq": 87,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Mlýnek na maso" — Cesare Fontana · Práh 2 = kotva 3 −1.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 3,
+        "veta": "útok 2 proti prahu 2.",
+      },
+    ],
+    "seq": 88,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Z toho, co tým committnul, se líp rozdělit nedalo — tohle bylo nejlepší možné.",
+        "misto": "spis",
+        "veta": "Pásmo 3/4 — hladce: 3 ze 4 slotů prošly.",
+      },
+    ],
+    "seq": 89,
+    "typ": "band_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Kredity +2 (zvládnutý uzel 3 ze 4), zůstatek 4.",
+      },
+    ],
+    "seq": 90,
+    "typ": "credit_flow",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Na výběr: dvě cesty — typ místa je vidět předem a rozhoduje o tom, jestli projde zbraň.",
+      },
+    ],
+    "seq": 91,
+    "typ": "map_move",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Cesta zvolena: Odstavený vagon v Peekskillu (lokace) — nikdo tě nešpehuje — zbraň projde i na očích.",
+      },
+    ],
+    "seq": 92,
+    "typ": "map_move",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Commituje se naslepo: telegraf je jediné, co o situaci před commitem víš.",
+        "misto": "spis",
+        "veta": "Telegraf slibuje dvě viditelné role (improvizace, nástroj), dvě skryté role čekají na nejhorší. Zbraň tady projde i na očích. Ve skryté roli se ale zbraň vyplatí.",
+      },
+    ],
+    "seq": 93,
+    "typ": "telegraf_derived",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 0,
+        "veta": "Proklouznout kolem: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
+      },
+      {
+        "detail": "Chce nástroj · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 1,
+        "veta": "Vypáčit vagon: kotva 4, šum ±2 — výš než 5 práh nejde.",
+      },
+      {
+        "detail": "Chce obranu · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 2,
+        "veta": "Ztuhnout ve stínu: kotva 2, šum ±2 — přesný práh až po vyhodnocení.",
+      },
+      {
+        "detail": "Chce útok · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 3,
+        "veta": "Kdyby se probudil: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
+      },
+    ],
+    "seq": 95,
+    "typ": "situation_revealed",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Zmrzlá šunka" — Frank Kowalski · Práh 3 = kotva 3 bez šumu.",
+        "misto": "slot",
+        "razitko": "NEPROŠLO",
+        "slot_index": 0,
+        "veta": "Chtělo to improvizaci 3, „Zmrzlá šunka" má 1.",
+      },
+    ],
+    "seq": 98,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Kanystr benzínu" — Rudolf Mazur · Práh 5 = kotva 4 +2, zastropováno na 5.",
+        "misto": "slot",
+        "razitko": "NEPROŠLO",
+        "slot_index": 1,
+        "veta": "Chtělo to nástroj 5, „Kanystr benzínu" má 4.",
+      },
+    ],
+    "seq": 99,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Medvědí kožich" — Cesare Fontana · Práh 2 = kotva 2 bez šumu.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 2,
+        "veta": "obrana 4 proti prahu 2.",
+      },
+    ],
+    "seq": 100,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Tulení ocas" — Vincenc Bartoš · Práh 3 = kotva 3 bez šumu.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 3,
+        "veta": "útok 4 proti prahu 3.",
+      },
+    ],
+    "seq": 101,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Z toho, co tým committnul, se líp rozdělit nedalo — tohle bylo nejlepší možné.",
+        "misto": "spis",
+        "veta": "Pásmo 2/4 — s následky: 2 ze 4 slotů prošly.",
+      },
+    ],
+    "seq": 102,
+    "typ": "band_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Šerif postoupil o 1 na 8 — hlučné násilí (vysoký útok).",
+      },
+    ],
+    "seq": 103,
+    "typ": "zar_move",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Šerif postoupil o 1 na 9 — hlučné násilí (vysoký útok).",
+      },
+    ],
+    "seq": 104,
+    "typ": "zar_move",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Šerif postoupil o 1 na 10 — uzel zvládnutý s následky.",
+      },
+    ],
+    "seq": 105,
+    "typ": "zar_move",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "vlastník nevidí, které role jsou skryté; vyprší za 2 kola. Aktivních postihů: 1.",
+        "misto": "spis",
+        "veta": "Za 2/4 — s následky: Frank Kowalski — Mlha v hlavě (lehký, informační).",
+      },
+    ],
+    "seq": 106,
+    "typ": "penalty_added",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Commituje se naslepo: telegraf je jediné, co o situaci před commitem víš.",
+        "misto": "spis",
+        "veta": "Telegraf slibuje tři viditelné role (útok, nástroj, improvizace), jedna skrytá role čeká na nejhorší. Zbraň tady projde i na očích.",
+      },
+    ],
+    "seq": 107,
+    "typ": "telegraf_derived",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Chce útok · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 0,
+        "veta": "Probít se vpřed: kotva 4, šum ±2 — výš než 5 práh nejde.",
+      },
+      {
+        "detail": "Chce nástroj · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 1,
+        "veta": "Najít, kudy ujet: kotva 4, šum ±2 — výš než 5 práh nejde.",
+      },
+      {
+        "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 2,
+        "veta": "Kličkovat mezi vozy: kotva 4, šum ±2 — výš než 5 práh nejde.",
+      },
+      {
+        "detail": "Chce obranu · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 3,
+        "veta": "Vydržet nápor: kotva 2, šum ±2 — přesný práh až po vyhodnocení.",
+      },
+    ],
+    "seq": 109,
+    "typ": "situation_revealed",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Tažení je naslepo, v ruce zbývalo kusů: 2. Sázka jde jednou za situaci. Tažená věc nevyšla — slot 3.",
+        "misto": "spis",
+        "veta": "Sázka: místo „Bramborová placka" přišel „Slzy na povel" (ruka Vincenc Bartoš).",
+      },
+    ],
+    "seq": 111,
+    "typ": "gamble",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Kachní kanón" — Cesare Fontana · Práh 4 = kotva 4 bez šumu.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 0,
+        "veta": "útok 5 proti prahu 4.",
+      },
+    ],
+    "seq": 113,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Zlatý zub" — Frank Kowalski · Práh 3 = kotva 4 −1.",
+        "misto": "slot",
+        "razitko": "NEPROŠLO",
+        "slot_index": 1,
+        "veta": "Chtělo to nástroj 3, „Zlatý zub" má 1.",
+      },
+    ],
+    "seq": 114,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Slzy na povel" — Vincenc Bartoš · Práh 5 = kotva 4 +2, zastropováno na 5.",
+        "misto": "slot",
+        "razitko": "NEPROŠLO",
+        "slot_index": 2,
+        "veta": "Chtělo to improvizaci 5, „Slzy na povel" má 4.",
+      },
+    ],
+    "seq": 115,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Pytel cementu" — Vincenc Bartoš · Práh 2 = kotva 2 bez šumu.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 3,
+        "veta": "obrana 3 proti prahu 2.",
+      },
+    ],
+    "seq": 116,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Z toho, co tým committnul, se líp rozdělit nedalo — tohle bylo nejlepší možné.",
+        "misto": "spis",
+        "veta": "Pásmo 2/4 — s následky: 2 ze 4 slotů prošly.",
+      },
+    ],
+    "seq": 117,
+    "typ": "band_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "co má štítek Gangster, vlastníkovi ve slotu propadne; vyprší za 3 kola. Aktivních postihů: 2.",
+        "misto": "spis",
+        "veta": "Za 2/4 — s následky: Frank Kowalski — Nervy v hajzlu (lehký, zámkový).",
+      },
+    ],
+    "seq": 118,
+    "typ": "penalty_added",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Žár klesl, ale finále je za týmem napořád — konfrontace se v tomhle runu už nevrátí (Zátah a léčka se dál nabíjejí normálně).",
+        "misto": "okraj",
+        "veta": "Žár klesl o 3 na 7 — přežitá konfrontace — pozornost opadla.",
+      },
+    ],
+    "seq": 119,
+    "typ": "zar_move",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "spis",
+        "veta": "Postih „Mlha v hlavě" (Frank Kowalski) vypršel.",
+      },
+    ],
+    "seq": 120,
+    "typ": "penalty_expired",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Sloty 6 splnil / 3 propadl · postihy 0 · gamble 2× · složen 0× · ztracené bedny 1 · doručeno: ano.",
+        "misto": "spis",
+        "veta": "Tajný cíl Vincenc Bartoš: Ať v celém spisu nestojí, žes na někoho mířil zbraní na očích — a přesto dojedeš. — nesplněn.",
+      },
+    ],
+    "seq": 121,
+    "typ": "goal_scored",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Sloty 2 splnil / 6 propadl · postihy 3 · gamble 0× · složen 0× · ztracené bedny 2 · doručeno: ano.",
+        "misto": "spis",
+        "veta": "Tajný cíl Frank Kowalski: Aspoň jednou ať tvoje železo zapracuje tam, kam nikdo nevidí — a náklad přesto dojede. — nesplněn.",
+      },
+    ],
+    "seq": 122,
+    "typ": "goal_scored",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Sloty 4 splnil / 3 propadl · postihy 1 · gamble 0× · složen 0× · ztracené bedny 2 · doručeno: ano.",
+        "misto": "spis",
+        "veta": "Tajný cíl Rudolf Mazur: Ať je z protokolu znát, že to byla tvoje věc, co aspoň třikrát rozhodlo. — SPLNĚN.",
+      },
+    ],
+    "seq": 123,
+    "typ": "goal_scored",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Sloty 7 splnil / 1 propadl · postihy 0 · gamble 0× · složen 0× · ztracené bedny 1 · doručeno: ano.",
+        "misto": "spis",
+        "veta": "Tajný cíl Cesare Fontana: Kupecké slovo platí: ani jedna bedna nesmí padnout tvou vinou — a stejně dojedeš. — nesplněn.",
+      },
+    ],
+    "seq": 124,
+    "typ": "goal_scored",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Uzlů 7 · zbývá beden 4 · konečný Žár 7 · kredity 4.",
+        "misto": "spis",
+        "veta": "Spis se uzavírá: DORUČENO — náklad dojel do New Yorku.",
+      },
+    ],
+    "seq": 125,
+    "typ": "run_ended",
+  },
+]
+`;
+
+exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = `
+[
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Na výběr: dvě cesty — typ místa je vidět předem a rozhoduje o tom, jestli projde zbraň.",
+      },
+    ],
+    "seq": 2,
+    "typ": "map_move",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Cesta zvolena: Přívoz přes Hudson (člověk) — někdo se ti dívá do rukou — zbraň na očích neprojde.",
+      },
+    ],
+    "seq": 3,
+    "typ": "map_move",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Commituje se naslepo: telegraf je jediné, co o situaci před commitem víš.",
+        "misto": "spis",
+        "veta": "Telegraf slibuje tři viditelné role (improvizace, nástroj, hodnota), jedna skrytá role čeká na nejhorší. Zbraň na očích neprojde. Ve skryté roli se ale zbraň vyplatí.",
+      },
+    ],
+    "seq": 4,
+    "typ": "telegraf_derived",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 0,
+        "veta": "Zamotat hlavu: kotva 4, šum ±2 — výš než 5 práh nejde.",
+      },
+      {
+        "detail": "Chce nástroj · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 1,
+        "veta": "Přesunout z očí: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
+      },
+      {
+        "detail": "Chce hodnotu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 2,
+        "veta": "Přilepšit do dlaně: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
+      },
+      {
+        "detail": "Chce útok · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 3,
+        "veta": "Kdyby čenichal dál: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
+      },
+    ],
+    "seq": 6,
+    "typ": "situation_revealed",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Prasečí bičík" — Vincenc Bartoš · Práh 4 = kotva 4 bez šumu.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 0,
+        "veta": "improvizace 4 proti prahu 4.",
+      },
+    ],
+    "seq": 9,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Zednická lžíce" — Vincenc Bartoš · Práh 5 = kotva 3 +2.",
+        "misto": "slot",
+        "razitko": "NEPROŠLO",
+        "slot_index": 1,
+        "veta": "Chtělo to nástroj 5, „Zednická lžíce" má 4.",
+      },
+    ],
+    "seq": 10,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Starý kompas" — Vincenc Bartoš · Práh 1 = kotva 3 −2.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 2,
+        "veta": "hodnota 1 proti prahu 1.",
+      },
+    ],
+    "seq": 11,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Vycpaný jezevec" — Vincenc Bartoš · Práh 5 = kotva 3 +2.",
+        "misto": "slot",
+        "razitko": "NEPROŠLO",
+        "slot_index": 3,
+        "veta": "Chtělo to útok 5, „Vycpaný jezevec" má 4.",
+      },
+    ],
+    "seq": 12,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Z toho, co tým committnul, se líp rozdělit nedalo — tohle bylo nejlepší možné.",
+        "misto": "spis",
+        "veta": "Pásmo 2/4 — s následky: 2 ze 4 slotů prošly.",
+      },
+    ],
+    "seq": 13,
+    "typ": "band_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Šerif postoupil o 1 na 1 — hlučné násilí (vysoký útok). Ještě 3 pole k Zátahu.",
+      },
+    ],
+    "seq": 14,
+    "typ": "zar_move",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Šerif postoupil o 1 na 2 — uzel zvládnutý s následky. Ještě 2 pole k Zátahu.",
+      },
+    ],
+    "seq": 15,
+    "typ": "zar_move",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "vlastník vidí názvy věcí, ne jejich staty; vyprší za 2 kola. Aktivních postihů: 1.",
+        "misto": "spis",
+        "veta": "Za 2/4 — s následky: Vincenc Bartoš — Prach do očí (lehký, informační).",
+      },
+    ],
+    "seq": 16,
+    "typ": "penalty_added",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Na výběr: dvě cesty — typ místa je vidět předem a rozhoduje o tom, jestli projde zbraň.",
+      },
+    ],
+    "seq": 17,
+    "typ": "map_move",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Cesta zvolena: Silniční váha u Amsterdamu (člověk) — někdo se ti dívá do rukou — zbraň na očích neprojde.",
+      },
+    ],
+    "seq": 18,
+    "typ": "map_move",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Commituje se naslepo: telegraf je jediné, co o situaci před commitem víš.",
+        "misto": "spis",
+        "veta": "Telegraf slibuje tři viditelné role (improvizace, nástroj, útok), jedna skrytá role čeká na nejhorší. Zbraň na očích neprojde.",
+      },
+    ],
+    "seq": 19,
+    "typ": "telegraf_derived",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 0,
+        "veta": "Podstrčit papíry: kotva 4, šum ±2 — výš než 5 práh nejde.",
+      },
+      {
+        "detail": "Chce nástroj · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 1,
+        "veta": "Doložit razítko: kotva 4, šum ±2 — výš než 5 práh nejde.",
+      },
+      {
+        "detail": "Chce útok · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 2,
+        "veta": "Zvýšit hlas: kotva 4, šum ±2 — výš než 5 práh nejde.",
+      },
+      {
+        "detail": "Chce obranu · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 3,
+        "veta": "Nedat se rozhodit: kotva 2, šum ±2 — přesný práh až po vyhodnocení.",
+      },
+    ],
+    "seq": 21,
+    "typ": "situation_revealed",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Zlaté hodinky" — Vincenc Bartoš · Práh 3 = kotva 4 −1.",
+        "misto": "slot",
+        "razitko": "NEPROŠLO",
+        "slot_index": 0,
+        "veta": "Chtělo to improvizaci 3, „Zlaté hodinky" má 2.",
+      },
+    ],
+    "seq": 24,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Rezervní pneumatika" — Vincenc Bartoš · Práh 2 = kotva 4 −2.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 1,
+        "veta": "nástroj 4 proti prahu 2.",
+      },
+    ],
+    "seq": 25,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Tulení ocas" — Vincenc Bartoš · Práh 4 = kotva 4 +2, zastropováno na 4.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 2,
+        "veta": "útok 4 proti prahu 4.",
+      },
+    ],
+    "seq": 26,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Kastrol na hlavě" — Vincenc Bartoš · Práh 1 = kotva 2 −1.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 3,
+        "veta": "obrana 4 proti prahu 1.",
+      },
+    ],
+    "seq": 27,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Optimální rozdělení TÉHOŽ commitu by dalo 4/4 (4/4 — hladce, ještě se něco našlo) — 1 zásah zůstal na stole.",
+        "misto": "spis",
+        "veta": "Pásmo 3/4 — hladce: 3 ze 4 slotů prošly.",
+      },
+    ],
+    "seq": 28,
+    "typ": "band_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Šerif postoupil o 1 na 3 — hlučné násilí (vysoký útok). Ještě 1 pole k Zátahu.",
+      },
+    ],
+    "seq": 29,
+    "typ": "zar_move",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Kredity +2 (zvládnutý uzel 3 ze 4), zůstatek 2.",
+      },
+    ],
+    "seq": 30,
+    "typ": "credit_flow",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "spis",
+        "veta": "Postih „Prach do očí" (Vincenc Bartoš) vypršel.",
+      },
+    ],
+    "seq": 31,
+    "typ": "penalty_expired",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Na výběr: dvě cesty — typ místa je vidět předem a rozhoduje o tom, jestli projde zbraň.",
+      },
+    ],
+    "seq": 32,
+    "typ": "map_move",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Cesta zvolena: nález — situace se neřeší — něco se jen najde.",
+      },
+    ],
+    "seq": 33,
+    "typ": "map_move",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Kredity +6 (nález v truhle), zůstatek 8.",
+      },
+    ],
+    "seq": 34,
+    "typ": "credit_flow",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Tým zajel do motelu — léčení a směna stojí kredity, čas neběží.",
+      },
+    ],
+    "seq": 35,
+    "typ": "map_move",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Kredity −3 (směna věci v motelu), zůstatek 5.",
+      },
+    ],
+    "seq": 36,
+    "typ": "credit_flow",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Na výběr: dvě cesty — typ místa je vidět předem a rozhoduje o tom, jestli projde zbraň.",
+      },
+    ],
+    "seq": 37,
+    "typ": "map_move",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Cesta zvolena: Starý most přes Mohawk (lokace) — nikdo tě nešpehuje — zbraň projde i na očích.",
+      },
+    ],
+    "seq": 38,
+    "typ": "map_move",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Commituje se naslepo: telegraf je jediné, co o situaci před commitem víš.",
+        "misto": "spis",
+        "veta": "Telegraf slibuje tři viditelné role (nástroj, nástroj + improvizace, improvizace), jedna skrytá role čeká na nejhorší. Zbraň tady projde i na očích.",
+      },
+    ],
+    "seq": 39,
+    "typ": "telegraf_derived",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Chce nástroj · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 0,
+        "veta": "Zvednout závoru: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
+      },
+      {
+        "detail": "Chce nástroj a improvizaci (OBA staty) · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 1,
+        "veta": "Zpevnit prkna: kotva 2, šum ±2 — přesný práh až po vyhodnocení.",
+      },
+      {
+        "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 2,
+        "veta": "Projet dírou: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
+      },
+      {
+        "detail": "Chce obranu · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 3,
+        "veta": "Nedat to na sobě: kotva 2, šum ±2 — přesný práh až po vyhodnocení.",
+      },
+    ],
+    "seq": 41,
+    "typ": "situation_revealed",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Svářečka" — Vincenc Bartoš · Práh 2 = kotva 3 −1.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 0,
+        "veta": "nástroj 5 proti prahu 2.",
+      },
+    ],
+    "seq": 44,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Pivovarská hadice" — Vincenc Bartoš · Práh 0 = kotva 2 −2.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 1,
+        "veta": "nástroj 5, improvizace 3 proti prahu 0.",
+      },
+    ],
+    "seq": 45,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Lázeňský župan" — Vincenc Bartoš · Práh 2 = kotva 3 −1.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 2,
+        "veta": "improvizace 2 proti prahu 2.",
+      },
+    ],
+    "seq": 46,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Ortopedický korzet" — Vincenc Bartoš · Práh 4 = kotva 2 +2.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 3,
+        "veta": "obrana 5 proti prahu 4.",
+      },
+    ],
+    "seq": 47,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Z toho, co tým committnul, se líp rozdělit nedalo — tohle bylo nejlepší možné.",
+        "misto": "spis",
+        "veta": "Pásmo 4/4 — hladce, ještě se něco našlo: 4 ze 4 slotů prošly.",
+      },
+    ],
+    "seq": 48,
+    "typ": "band_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Kredity +3 (čistá práce 4 ze 4), zůstatek 8.",
+      },
+    ],
+    "seq": 49,
+    "typ": "credit_flow",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Na výběr: dvě cesty — typ místa je vidět předem a rozhoduje o tom, jestli projde zbraň.",
+      },
+    ],
+    "seq": 50,
+    "typ": "map_move",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Cesta zvolena: Mýtnice za Batavií (člověk) — někdo se ti dívá do rukou — zbraň na očích neprojde.",
+      },
+    ],
+    "seq": 51,
+    "typ": "map_move",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Commituje se naslepo: telegraf je jediné, co o situaci před commitem víš.",
+        "misto": "spis",
+        "veta": "Telegraf slibuje tři viditelné role (hodnota, improvizace, obrana), jedna skrytá role čeká na nejhorší. Zbraň na očích neprojde. Ve skryté roli se ale zbraň vyplatí.",
+      },
+    ],
+    "seq": 52,
+    "typ": "telegraf_derived",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Chce hodnotu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 0,
+        "veta": "Silniční poplatek: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
+      },
+      {
+        "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 1,
+        "veta": "Zamluvit to: kotva 4, šum ±2 — výš než 5 práh nejde.",
+      },
+      {
+        "detail": "Chce obranu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 2,
+        "veta": "Klidná tvář: kotva 2, šum ±2 — přesný práh až po vyhodnocení.",
+      },
+      {
+        "detail": "Chce útok · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 3,
+        "veta": "Kdyby přituhlo: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
+      },
+    ],
+    "seq": 54,
+    "typ": "situation_revealed",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Zlatý zub" — Vincenc Bartoš · Práh 2 = kotva 3 −1.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 0,
+        "veta": "hodnota 5 proti prahu 2.",
+      },
+    ],
+    "seq": 57,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Slzy na povel" — Vincenc Bartoš · Práh 3 = kotva 4 −1.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 1,
+        "veta": "improvizace 4 proti prahu 3.",
+      },
+    ],
+    "seq": 58,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Smuteční závoj" — Vincenc Bartoš · Práh 4 = kotva 2 +2.",
+        "misto": "slot",
+        "razitko": "NEPROŠLO",
+        "slot_index": 2,
+        "veta": "Chtělo to obranu 4, „Smuteční závoj" má 2.",
+      },
+    ],
+    "seq": 59,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Dědečkova brokovnice" — Vincenc Bartoš · Práh 2 = kotva 3 −1.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 3,
+        "veta": "útok 5 proti prahu 2.",
+      },
+    ],
+    "seq": 60,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Z toho, co tým committnul, se líp rozdělit nedalo — tohle bylo nejlepší možné.",
+        "misto": "spis",
+        "veta": "Pásmo 3/4 — hladce: 3 ze 4 slotů prošly.",
+      },
+    ],
+    "seq": 61,
+    "typ": "band_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Šerif postoupil o 1 na 4 — zbraň v akci. Ještě 3 pole k léčky.",
+      },
+    ],
+    "seq": 62,
+    "typ": "zar_move",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Kredity +2 (zvládnutý uzel 3 ze 4), zůstatek 10.",
+      },
+    ],
+    "seq": 63,
+    "typ": "credit_flow",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Zátah: Žár překročil práh, jiná cesta než přes kontrolu není.",
+      },
+    ],
+    "seq": 64,
+    "typ": "map_move",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Cesta zvolena: Zátah na páté silnici (zátah) — jiná cesta není — zbraň projde.",
+      },
+    ],
+    "seq": 65,
+    "typ": "map_move",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Commituje se naslepo: telegraf je jediné, co o situaci před commitem víš.",
+        "misto": "spis",
+        "veta": "Telegraf slibuje tři viditelné role (útok, nástroj, improvizace), jedna skrytá role čeká na nejhorší. Zbraň tady projde i na očích.",
+      },
+    ],
+    "seq": 66,
+    "typ": "telegraf_derived",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Chce útok · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 0,
+        "veta": "Prorazit blokádu: kotva 4, šum ±2 — výš než 5 práh nejde.",
+      },
+      {
+        "detail": "Chce nástroj · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 1,
+        "veta": "Strhnout do postranní: kotva 4, šum ±2 — výš než 5 práh nejde.",
+      },
+      {
+        "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 2,
+        "veta": "Zmizet v ulicích: kotva 4, šum ±2 — výš než 5 práh nejde.",
+      },
+      {
+        "detail": "Chce obranu · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 3,
+        "veta": "Držet nervy u okna: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
+      },
+    ],
+    "seq": 68,
+    "typ": "situation_revealed",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Tažení je naslepo, v ruce zbývalo kusů: 4. Sázka jde jednou za situaci. Tažená věc nevyšla — slot 4.",
+        "misto": "spis",
+        "veta": "Sázka: místo „Bedna kanadské" přišel „Petrolejová lampa" (ruka Vincenc Bartoš).",
+      },
+    ],
+    "seq": 70,
+    "typ": "gamble",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Ukradený samopal" — Vincenc Bartoš · Práh 4 = kotva 4 bez šumu.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 0,
+        "veta": "útok 5 proti prahu 4.",
+      },
+    ],
+    "seq": 72,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Kostelní klíč" — Vincenc Bartoš · Práh 5 = kotva 4 +1.",
+        "misto": "slot",
+        "razitko": "NEPROŠLO",
+        "slot_index": 1,
+        "veta": "Chtělo to nástroj 5, „Kostelní klíč" má 4.",
+      },
+    ],
+    "seq": 73,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Signální pistole" — Vincenc Bartoš · Práh 4 = kotva 4 bez šumu.",
+        "misto": "slot",
+        "razitko": "NEPROŠLO",
+        "slot_index": 2,
+        "veta": "Chtělo to improvizaci 4, „Signální pistole" má 3.",
+      },
+    ],
+    "seq": 74,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Petrolejová lampa" — Vincenc Bartoš · Práh 3 = kotva 3 bez šumu.",
+        "misto": "slot",
+        "razitko": "NEPROŠLO",
+        "slot_index": 3,
+        "veta": "Chtělo to obranu 3, „Petrolejová lampa" má 1.",
+      },
+    ],
+    "seq": 75,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Z toho, co tým committnul, se líp rozdělit nedalo — tohle bylo nejlepší možné.",
+        "misto": "spis",
+        "veta": "Pásmo ≤1/4 — průšvih: 1 ze 4 slotů prošel. Náklad ztrácí 1 bednu (zbývá 5).",
+      },
+    ],
+    "seq": 76,
+    "typ": "band_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Šerif postoupil o 1 na 5 — zbraň v akci. Ještě 2 pole k léčky.",
+      },
+    ],
+    "seq": 77,
+    "typ": "zar_move",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Šerif postoupil o 1 na 6 — zbraň v akci. Ještě 1 pole k léčky.",
+      },
+    ],
+    "seq": 78,
+    "typ": "zar_move",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Šerif postoupil o 2 na 8 — průšvih v uzlu. Ještě 2 pole k konfrontace.",
+      },
+    ],
+    "seq": 79,
+    "typ": "zar_move",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "co má štítek Gangster, vlastníkovi ve slotu propadne; drží do vyléčení v motelu. Aktivních postihů: 1.",
+        "misto": "spis",
+        "veta": "Za ≤1/4 — průšvih: Vincenc Bartoš — Ochrnutá ruka (těžký, zámkový).",
+      },
+    ],
+    "seq": 80,
     "typ": "penalty_added",
   },
   {
@@ -1839,7 +2113,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
         "veta": "Telegraf slibuje tři viditelné role (improvizace, obrana, nástroj), jedna skrytá role čeká na nejhorší. Zbraň na očích neprojde. Ve skryté roli se ale zbraň vyplatí.",
       },
     ],
-    "seq": 95,
+    "seq": 81,
     "typ": "telegraf_derived",
   },
   {
@@ -1869,28 +2143,175 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
         "veta": "Kdyby sáhl po zbrani: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
       },
     ],
+    "seq": 83,
+    "typ": "situation_revealed",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Konev na mléko" — Vincenc Bartoš · Práh 3 = kotva 4 −1.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 0,
+        "veta": "improvizace 4 proti prahu 3.",
+      },
+    ],
+    "seq": 86,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Otrlený výraz" — Vincenc Bartoš · Práh 3 = kotva 4 −1.",
+        "misto": "slot",
+        "razitko": "PROŠLO",
+        "slot_index": 1,
+        "veta": "obrana 4 proti prahu 3.",
+      },
+    ],
+    "seq": 87,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Provaz a kladka" — Vincenc Bartoš · Práh 5 = kotva 4 +1.",
+        "misto": "slot",
+        "razitko": "NEPROŠLO",
+        "slot_index": 2,
+        "veta": "Chtělo to nástroj 5, „Provaz a kladka" má 4.",
+      },
+    ],
+    "seq": 88,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "„Medvědí kožich" — Vincenc Bartoš · Práh 2 = kotva 3 −1.",
+        "misto": "slot",
+        "razitko": "NEPROŠLO",
+        "slot_index": 3,
+        "veta": "Chtělo to útok 2, „Medvědí kožich" má 1.",
+      },
+    ],
+    "seq": 89,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Z toho, co tým committnul, se líp rozdělit nedalo — tohle bylo nejlepší možné.",
+        "misto": "spis",
+        "veta": "Pásmo 2/4 — s následky: 2 ze 4 slotů prošly.",
+      },
+    ],
+    "seq": 90,
+    "typ": "band_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Šerif postoupil o 1 na 9 — uzel zvládnutý s následky. Ještě 1 pole k konfrontace.",
+      },
+    ],
+    "seq": 91,
+    "typ": "zar_move",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "vlastník nevidí, které role jsou skryté; vyprší za 2 kola. Aktivních postihů: 2.",
+        "misto": "spis",
+        "veta": "Za 2/4 — s následky: Vincenc Bartoš — Mlha v hlavě (lehký, informační).",
+      },
+    ],
+    "seq": 92,
+    "typ": "penalty_added",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Na výběr: dvě cesty — typ místa je vidět předem a rozhoduje o tom, jestli projde zbraň.",
+      },
+    ],
+    "seq": 93,
+    "typ": "map_move",
+  },
+  {
+    "anotace": [
+      {
+        "misto": "okraj",
+        "veta": "Cesta zvolena: Zadní místnost v Utice (člověk) — někdo se ti dívá do rukou — zbraň na očích neprojde.",
+      },
+    ],
+    "seq": 94,
+    "typ": "map_move",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Commituje se naslepo: telegraf je jediné, co o situaci před commitem víš.",
+        "misto": "spis",
+        "veta": "Telegraf slibuje tři viditelné role (hodnota, improvizace, obrana), jedna skrytá role čeká na nejhorší. Zbraň na očích neprojde. Ve skryté roli se ale zbraň vyplatí.",
+      },
+    ],
+    "seq": 95,
+    "typ": "telegraf_derived",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Chce hodnotu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 0,
+        "veta": "Peníze na stůl: kotva 4, šum ±2 — výš než 5 práh nejde.",
+      },
+      {
+        "detail": "Chce improvizaci · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 1,
+        "veta": "Uhlazená řeč: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
+      },
+      {
+        "detail": "Chce obranu · viditelná role · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 2,
+        "veta": "Nedat se zastrašit: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
+      },
+      {
+        "detail": "Chce útok · skrytá role — telegraf ji hlásil jen počtem · Kotva je stálá a naučitelná, šum se dorolí u každé instance zvlášť.",
+        "misto": "slot",
+        "slot_index": 3,
+        "veta": "Kdyby úsměv zmizel: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
+      },
+    ],
     "seq": 97,
     "typ": "situation_revealed",
   },
   {
     "anotace": [
       {
-        "detail": "Tažení je naslepo, v ruce zbývalo kusů: 4. Sázka jde jednou za situaci. Tažená věc nevyšla — slot 2.",
-        "misto": "spis",
-        "veta": "Sázka: místo „Provaz a kladka" přišel „Dámský revolver" (ruka Vincenc Bartoš).",
+        "detail": "„Důchodcovská hůl" — Vincenc Bartoš · Rušení platí v celém runu, ne jen v tomhle slotu. · Práh 5 = kotva 4 +1.",
+        "misto": "slot",
+        "razitko": "NEPROŠLO",
+        "slot_index": 0,
+        "veta": "Federální agent Malone ruší hodnotu — „Důchodcovská hůl" se počítá jako 0 proti prahu 5.",
       },
     ],
-    "seq": 99,
-    "typ": "gamble",
+    "seq": 100,
+    "typ": "slot_resolved",
   },
   {
     "anotace": [
       {
-        "detail": "„Zednická lžíce" — Vincenc Bartoš · Práh 3 = kotva 4 −1.",
+        "detail": "„Hovězí vývar" — Vincenc Bartoš · Práh 5 = kotva 3 +2.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
-        "slot_index": 0,
-        "veta": "Chtělo to improvizaci 3, „Zednická lžíce" má 1.",
+        "slot_index": 1,
+        "veta": "Chtělo to improvizaci 5, „Hovězí vývar" má 4.",
       },
     ],
     "seq": 101,
@@ -1899,11 +2320,11 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Dámský revolver" — Vincenc Bartoš · Telegraf to hlásil předem: zbraň na očích tady neprojde. · Práh 3 = kotva 4 −1.",
+        "detail": "„Růženec po matce" — Vincenc Bartoš · Práh 5 = kotva 3 +2.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
-        "slot_index": 1,
-        "veta": "„Dámský revolver" je zbraň ve viditelné roli — padá bez ohledu na staty.",
+        "slot_index": 2,
+        "veta": "Chtělo to obranu 5, „Růženec po matce" má 4.",
       },
     ],
     "seq": 102,
@@ -1912,11 +2333,11 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Slzy na povel" — Vincenc Bartoš · Práh 3 = kotva 4 −1.",
+        "detail": "„Řeznický hák" — Vincenc Bartoš · Práh 3 = kotva 3 bez šumu.",
         "misto": "slot",
-        "razitko": "NEPROŠLO",
-        "slot_index": 2,
-        "veta": "Chtělo to nástroj 3, „Slzy na povel" má 0.",
+        "razitko": "PROŠLO",
+        "slot_index": 3,
+        "veta": "útok 4 proti prahu 3.",
       },
     ],
     "seq": 103,
@@ -1925,50 +2346,33 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "„Páčidlo" — Vincenc Bartoš · Zámkový postih je tvrdé pravidlo nad staty, stejná třída jako štítek. · Práh 1 = kotva 3 −2.",
-        "misto": "slot",
-        "odkaz": {
-          "popis": "uzel 6 — Odstavený vagon v Peekskillu",
-          "seq": 78,
-        },
-        "razitko": "NEPROŠLO",
-        "slot_index": 3,
-        "veta": "Rozdrcená noha — do skryté role nic neprosadíš, „Páčidlo" propadá.",
+        "detail": "Z toho, co tým committnul, se líp rozdělit nedalo — tohle bylo nejlepší možné.",
+        "misto": "spis",
+        "veta": "Pásmo ≤1/4 — průšvih: 1 ze 4 slotů prošel. Náklad ztrácí 1 bednu (zbývá 4).",
       },
     ],
     "seq": 104,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Optimální rozdělení TÉHOŽ commitu by dalo 2/4 (2/4 — s následky) — 2 zásahy zůstaly na stole.",
-        "misto": "spis",
-        "veta": "Pásmo ≤1/4 — průšvih: žádný ze 4 slotů neprošel. Náklad ztrácí 1 bednu (zbývá 3).",
-      },
-    ],
-    "seq": 105,
     "typ": "band_resolved",
   },
   {
     "anotace": [
       {
         "misto": "okraj",
-        "veta": "Šerif postoupil o 1 na 10 — zbraň v akci.",
+        "veta": "Šerif postoupil o 1 na 10 — hlučné násilí (vysoký útok).",
       },
     ],
-    "seq": 106,
+    "seq": 105,
     "typ": "zar_move",
   },
   {
     "anotace": [
       {
-        "detail": "Smazáno (lehké): nic · Zůstává (těžké): Rozdrcená noha, Otřes mozku · Sloty jsou týmové, ne vlastníkovy — složení jen sníží počet committnutých karet, propadne stejný počet slotů jako neobsazené.",
+        "detail": "Smazáno (lehké): Mlha v hlavě · Zůstává (těžké): Ochrnutá ruka · Sloty jsou týmové, ne vlastníkovy — složení jen sníží počet committnutých karet, propadne stejný počet slotů jako neobsazené.",
         "misto": "spis",
         "veta": "Vincenc Bartoš se složil — třetí postih se nepřidává, postava kolo–dvě leží.",
       },
     ],
-    "seq": 107,
+    "seq": 106,
     "typ": "character_folded",
   },
   {
@@ -1979,7 +2383,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
         "veta": "Telegraf slibuje tři viditelné role (útok, obrana, improvizace), jedna skrytá role čeká na nejhorší. Zbraň tady projde i na očích. Ve skryté roli se ale zbraň vyplatí.",
       },
     ],
-    "seq": 108,
+    "seq": 107,
     "typ": "telegraf_derived",
   },
   {
@@ -2009,16 +2413,29 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
         "veta": "Krýt záda: kotva 3, šum ±2 — přesný práh až po vyhodnocení.",
       },
     ],
-    "seq": 109,
+    "seq": 108,
     "typ": "situation_revealed",
   },
   {
     "anotace": [
       {
-        "detail": "Do slotu se nedostala žádná věc: buď je postava složená, nebo měla postihem zmenšenou ruku a committnula míň karet. · Práh 5 = kotva 4 +2, zastropováno na 5.",
+        "detail": "Do slotu se nedostala žádná věc: buď je postava složená, nebo měla postihem zmenšenou ruku a committnula míň karet. · Práh 4 = kotva 4 bez šumu.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 0,
+        "veta": "Slot nikdo neobsadil — automatický propad.",
+      },
+    ],
+    "seq": 110,
+    "typ": "slot_resolved",
+  },
+  {
+    "anotace": [
+      {
+        "detail": "Do slotu se nedostala žádná věc: buď je postava složená, nebo měla postihem zmenšenou ruku a committnula míň karet. · Práh 5 = kotva 3 +2.",
+        "misto": "slot",
+        "razitko": "NEPROŠLO",
+        "slot_index": 1,
         "veta": "Slot nikdo neobsadil — automatický propad.",
       },
     ],
@@ -2028,27 +2445,14 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
   {
     "anotace": [
       {
-        "detail": "Do slotu se nedostala žádná věc: buď je postava složená, nebo měla postihem zmenšenou ruku a committnula míň karet. · Práh 1 = kotva 3 −2.",
-        "misto": "slot",
-        "razitko": "NEPROŠLO",
-        "slot_index": 1,
-        "veta": "Slot nikdo neobsadil — automatický propad.",
-      },
-    ],
-    "seq": 112,
-    "typ": "slot_resolved",
-  },
-  {
-    "anotace": [
-      {
-        "detail": "Do slotu se nedostala žádná věc: buď je postava složená, nebo měla postihem zmenšenou ruku a committnula míň karet. · Práh 1 = kotva 3 −2.",
+        "detail": "Do slotu se nedostala žádná věc: buď je postava složená, nebo měla postihem zmenšenou ruku a committnula míň karet. · Práh 5 = kotva 3 +2.",
         "misto": "slot",
         "razitko": "NEPROŠLO",
         "slot_index": 2,
         "veta": "Slot nikdo neobsadil — automatický propad.",
       },
     ],
-    "seq": 113,
+    "seq": 112,
     "typ": "slot_resolved",
   },
   {
@@ -2061,7 +2465,7 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
         "veta": "Slot nikdo neobsadil — automatický propad.",
       },
     ],
-    "seq": 114,
+    "seq": 113,
     "typ": "slot_resolved",
   },
   {
@@ -2069,10 +2473,10 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
       {
         "detail": "Z toho, co tým committnul, se líp rozdělit nedalo — tohle bylo nejlepší možné.",
         "misto": "spis",
-        "veta": "Pásmo ≤1/4 — průšvih: žádný ze 4 slotů neprošel. Náklad ztrácí 1 bednu (zbývá 2).",
+        "veta": "Pásmo ≤1/4 — průšvih: žádný ze 4 slotů neprošel. Náklad ztrácí 1 bednu (zbývá 3).",
       },
     ],
-    "seq": 115,
+    "seq": 114,
     "typ": "band_resolved",
   },
   {
@@ -2082,29 +2486,29 @@ exports[`golden anotace nad reálným obsahem > seed 42, 1 hráč, Malone 1`] = 
         "veta": "Vincenc Bartoš se vrací do hry a zase committuje.",
       },
     ],
-    "seq": 116,
+    "seq": 115,
     "typ": "character_returned",
   },
   {
     "anotace": [
       {
-        "detail": "Sloty 16 splnil / 12 propadl · postihy 2 · gamble 2× · složen 1× · ztracené bedny 3 · doručeno: ne.",
+        "detail": "Sloty 16 splnil / 12 propadl · postihy 3 · gamble 1× · složen 1× · ztracené bedny 2 · doručeno: ne.",
         "misto": "spis",
-        "veta": "Tajný cíl Vincenc Bartoš: Ať v celém spisu nestojí, žes na někoho mířil zbraní na očích — a přesto dojedeš. — nesplněn.",
+        "veta": "Tajný cíl Vincenc Bartoš: Aspoň jednou ať tvoje železo zapracuje tam, kam nikdo nevidí — a náklad přesto dojede. — nesplněn.",
       },
     ],
-    "seq": 117,
+    "seq": 116,
     "typ": "goal_scored",
   },
   {
     "anotace": [
       {
-        "detail": "Uzlů 7 · zbývá beden 2 · konečný Žár 10 · kredity 9.",
+        "detail": "Uzlů 7 · zbývá beden 3 · konečný Žár 10 · kredity 10.",
         "misto": "spis",
         "veta": "Spis se uzavírá: NEVYŘEŠENO — prohraná konfrontace s pronásledovatelem.",
       },
     ],
-    "seq": 118,
+    "seq": 117,
     "typ": "run_ended",
   },
 ]

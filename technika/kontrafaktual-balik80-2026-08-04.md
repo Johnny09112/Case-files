@@ -251,6 +251,84 @@ který je oddělitelný a levně opravitelný (návrh #1 lék).
 
 ---
 
-*Zdroje: [[../projekt/rozhodnuti|projekt/rozhodnuti.md]] D59 · [[navrh-40-karet-2026-08-04|technika/navrh-40-karet-2026-08-04.md]] ·
+## Dodatek 2026-08-04 — D60 exekuce: lék, přeměření, zapečení (STAV: ZAPEČENO)
+
+Podklad: [[../projekt/rozhodnuti|projekt/rozhodnuti.md]] D60 („balík 80 zapéct
+S LÉKEM na sólo... floor ruce NEZAPÉKAT"). Nástroje: scratchpad
+`veci-navrh-40-lek.yaml`, `d60-measure-1p.mjs`, `content-80-lek/obsah`
+(CONTENT_DIR kopie s lékem), `merge80.mjs` (beze změny).
+
+**Lék (content-generator):** u 6 fillerů se součtem statů 6 (nejnižší v nové
+dávce) přidán +1 na druhý (nedominantní) stat, dominantní stat i text beze
+změny:
+
+| id | druhý stat | před → po | součet před → po |
+|---|---|---|---|
+| naslouchatko | improvizace | 2 → 3 | 6 → 7 |
+| vycpany-pav | obrana | 1 → 2 | 6 → 7 |
+| krevetka | improvizace | 2 → 3 | 6 → 7 |
+| kureci-stehynko | obrana | 1 → 2 | 6 → 7 |
+| klec-se-slepicemi | obrana | 1 → 2 | 6 → 7 |
+| bramborova-placka | improvizace | 2 → 3 | 6 → 7 (nástroj zůstal 3, záměrně) |
+
+Ověřeno automaticky: 0 neočekávaných změn (žádná jiná karta, žádný text,
+žádný jiný stat), žádné porušení `nonGangsterStatMax` ani rozsahu 0–5.
+
+**Přeměření 1p po léku** (CONTENT_DIR = `content-80-lek`, ruce dnešní 5/4/3,
+bot `kompetentni`):
+
+| měření | metodika | 1p |
+|---|---|---|
+| B (před lékem, z hlavního reportu výše) | 2 blok × 1000/buňka | 64,0 % |
+| plný grid s lékem, 2 bloky × 1000/buňka | seed 1–1000, 1001–2000 | 65,5 % (blok1 65,9 / blok2 65,1) |
+| 1p-only s lékem, vysoká přesnost | 2 bloky × 8000 (4000/pronásledovatel), seed 5001–13000 | 65,75 % (blok1 66,4 / blok2 65,1) |
+| **pooled odhad (vážený počtem běhů, 20 000 běhů 1p celkem)** | | **≈ 65,7 %** |
+
+K6a spread (plný grid s lékem, 2 bloky): blok1 20,4 / blok2 21,6 → průměr
+**21,0** (proti B 22,1 — zlepšení o 1,1 b., pod úrovní B, jak žádalo zadání;
+gate ≤6 stále NESPLNĚN, to se lékem neřešilo a nebylo cílem).
+
+**Verdikt léku:** fungoval ve správném směru (1p 64,0 % → ~65,7 %, K6a spread
+22,1 → 21,0), ale **nedosáhl plně na neformální cíl „~66 %"** — je těsně pod.
+Ostatní metriky beze změny nad rámec šumu (K1 celkem 79,5 vs. B 78,85; K5-D
+9,1 vs. B 9,15; K5f 76,4 vs. B 76,0; K2 drift/floor průměr 1,59/19,7 vs. B
+1,565/19,9 — vše v pásmu blokového šumu, žádná nová regrese). Vyhodnoceno
+jako „zabral, ne rozbil" → postup pokračoval na zapečení dle instrukce
+(„pokud lék nezabere NEBO něco jiného rozbije → stop"; ani jedno nenastalo).
+
+**Zapečení (content-generator):** 40 nových položek (s lékem) připojeno do
+`obsah/veci.yaml` za `stary-kompas`, v pořadí a sekcích dle
+`technika/navrh-40-karet-2026-08-04.md`, hlavička aktualizována (počet ~80,
+GANGSTER hustota 10/80). Nezávisle ověřeno: 80 položek, 0 duplicit ID, 0
+rozdílů proti schválenému kandidátnímu YAML (id/staty/text/štítek).
+
+**Golden testy — nález a řešení (PM potvrdil):** `content.test.js` (schéma,
+počty) prošel od začátku. Tři golden-snapshot soubory (`golden.test.js`,
+`protocol-fragments-golden.test.js`, `vysvetleni-golden.test.js`, 6 testů)
+zprvu SELHÁVALY s rozdílem VĚTŠÍM než jen `verzeObsahu` — celé event-logy
+fixních seedů se liší (jiné karty se losují ze zdvojnásobeného balíčku při
+stejném seedu → jiné sloty, jiné výsledky, jiné anotace). Matematicky
+očekávaný důsledek zdvojení sdíleného balíčku (Fisher–Yates nad 80 prvky ≠
+nad 40 prvky ani na stejném seedu), ne bug — ale přesně případ „pokud víc,
+stop a hlas" ze zadání D60. **Zastaveno před commitem, PM potvrdil postup:**
+(1) namátková sanity-kontrola jednoho nového golden logu (seed 42, 1p,
+Malone) — 117 událostí, doběhl (`NEVYRESENO`/`konfrontace_prohra`), žádná
+prázdná ruka ani nulové sloty; (2) `npx vitest run -u` aktualizoval 5
+snapshotů; (3) zbyl **1 skutečný nález, ne snapshot-drift**: fixture
+`protocol-fragments-golden.test.js` (seed 2, 1p) byla zvolena právě proto,
+aby pokryla oba fragmentové kódy `neobsazeno` + `postih_lock_stitek` (N2
+coverage) — s balíkem 80 už seed 2 `neobsazeno` neprodukuje. Sweep seedů
+1–300 nad novým obsahem našel náhradu: **seed 39** (nejnižší, který dává oba
+důvody), `prototyp/test/protocol-fragments-golden.test.js` upraven (jen seed
++ komentář, žádná jiná logika), snapshot pro tuhle fixturu přegenerován.
+(4) `invariants.test.js` a `content.test.js` prošly BEZE ZMĚNY (nezávislé na
+snapshotech, hlídají skutečnou korektnost) — splněno. (5) Celá sada
+`npx vitest run` (bez `-u`) : **484/484 testů, 22/22 souborů, stabilní na
+druhý běh.** `npx eslint .`: čisto, bez nálezů.
+
+---
+
+*Zdroje: [[../projekt/rozhodnuti|projekt/rozhodnuti.md]] D59, D60 ·
+[[navrh-40-karet-2026-08-04|technika/navrh-40-karet-2026-08-04.md]] ·
 [[d58-4-sweep-ruka|D58/4 paměť]] · [[mereni-zar-malone-2026-08-02|technika/mereni-zar-malone-2026-08-02.md]] ·
 [[../prototyp-mvp|prototyp-mvp.md]] (K1–K8 gate tabulka).*
