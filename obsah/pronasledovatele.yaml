@@ -11,6 +11,13 @@
 #           pravidlo platí po CELÝ run, dokud je pronásledovatel aktivní — ne jen
 #           v jeho léčce/konfrontaci. Je viditelné hráčům OD STARTU (proto se
 #           telegrafy běžných situací kvůli němu nemění — hráč pravidlo zná).
+#           VÝJIMKA pro STATOVÉ rušení (typ: stat, dnes jen Malone) — V2-A′ (D58):
+#           run-wide platnost se AKTIVUJE teprve prvním překročením prahu Zátahu.
+#           Do té doby rušený stat funguje normálně; od aktivace platí run-wide
+#           až do konce runu, i když Žár později klesne pod práh (jednosměrná
+#           aktivace, ne trvající podmínka). Pravidlo je hráčům viditelné od
+#           startu i tak — vidí i tuhle bránu. Štítkové rušení (typ: stitek)
+#           platí run-wide od startu beze změny.
 #             typ:     stat | stitek
 #             cil:     stat (utok/obrana/hodnota/improvizace/nastroj) nebo štítek (GANGSTER)
 #             pravidlo: přesné znění efektu, viditelné hráčům
@@ -34,7 +41,7 @@ pronasledovatele:
     rusi:
       typ: stat
       cil: hodnota
-      pravidlo: "Malone nebere — a postaral se, aby po trase nebral nikdo. Jeho lidé rozeslali seznam: kdo si od téhle posádky vezme peníze nebo cokoli cenného, má na krku federály. Dokud je Malone v patách, počítá se stat HODNOTA u všech věcí jako 0 ve všech hodnota-slotech CELÉHO runu — nezabere úplatek, mýto, platba za službu ani peníze na stůl."
+      pravidlo: "Malone nebere — a jakmile posádku jednou skutečně dožene, postará se, aby nebral nikdo. Dokud Žár nepřekročí práh Zátahu, berou hlídky po trase jako každý jiný a hodnota-sloty fungují normálně. Prvním překročením prahu Zátahu rozešlou Maloneho lidé seznam: kdo si od téhle posádky vezme peníze nebo cokoli cenného, má na krku federály. Od té chvíle až do konce runu se stat HODNOTA u všech věcí počítá jako 0 ve všech hodnota-slotech — nezabere úplatek, mýto, platba za službu ani peníze na stůl — a nezruší to ani pozdější pokles Žáru."
     flavor: "Vyšetřovatel poznamenává, že agent Malone nepije, nekouří a nebere. Nikdo na okrsku nechápe, co tu tedy dělá."
     lecka:
       nazev: Most u Poughkeepsie
