@@ -1,7 +1,16 @@
 # Stav projektu
 
 *Živý dokument. Udržuje `project-manager` — aktualizuj po každém větším kroku.
-Poslední aktualizace: 2026-08-02.*
+Poslední aktualizace: 2026-08-04.*
+
+> **RYCHLÝ STAV (2026-08-04):** Po 2p sezení (playtesty/2026-08-02.md — smích
+> ANO, hádka NE) proběhl audit + měření + **zapečení D57/D58**: „kdo to schytá"
+> (postih = největší mezera, oznámeno předem), Žár jeden klimax za run
+> + dopředná anotace, Malone „dotahuje" (ruší až od prvního Zátahu), clamp
+> prahů na dosažitelný stat, poctivý rozklad prahů, komunikace zbraně,
+> kanon N1–N6 + K3 = 4. známá odchylka. 484/484 testů, verifikace K1 80,7 %
+> (predikce 79,7). **Běží: sweep rezervní páky `hraci[n].ruka`** (kompenzace
+> zesnadnění; verdikt → uživatel). **Pak: sezení 3 hráčů s metrikou 4.**
 
 ## Aktuální fáze
 
