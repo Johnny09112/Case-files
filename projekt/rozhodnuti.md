@@ -29,6 +29,26 @@ architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.m
   spouštěcí nález lidské brány („týmová hra příliš snadná") je naplněn
   dvojnásobně. Verdikt sweepu → uživatel.
 
+- **D58 dodatek — implementace bodů 1–3 hotová a verifikovaná v produkčním
+  kódu; bod 4 (sweep `hraci[n].ruka`) ZBÝVÁ, mimo tenhle zásah.** Engine
+  (`prototyp/src/engine/{rules,resolve,state}.js`), UI (`ui/screens/run/
+  {commit,assign,okraj}.js`, `ui/vysvetleni.js` — V3-C dopředná anotace +
+  `rusiAktivni` gating přeškrtnuté hodnoty) a botí vrstva (`sim/strategies.js`
+  — bez gatování `rusi` prahem Zátahu plánovaly „vševědoucí" strategie proti
+  rušení, které ještě neplatilo; chytil to invariant `max_achievable ===
+  reálné zásahy`). Kanon opraven souběžně: `prototyp-mvp.md` §Skryté prahy
+  (supply-aware clamp) + §Žár (jeden klimax, pevný odečet) + §Pronásledovatel
+  (aktivační brána) a `design-dokument.md` §4.5 + §4.9; `obsah/
+  pronasledovatele.yaml` Maloneho `rusi.pravidlo` a hlavičkový komentář
+  schématu přepsány na novou mechaniku (content-generator). Testy 475→
+  **484/484 zelených** (9 nových: V2-A′ aktivace, V3-A′ jeden klimax + přesná
+  delta, V4-D clamp). **Verifikační přeměření** (2 bloky × 8000 runů,
+  produkční kód, VŠECHNY TŘI SOUČASNĚ — dodatek §8
+  [[../technika/mereni-zar-malone-2026-08-02|technika/mereni-zar-malone-2026-08-02.md]]):
+  K1 celkem **80,7 %** proti predikci ~79,7 % (Δ +1,0 b., STOP práh >2 b. se
+  nenastal); K5-D a K6a se navíc oba zlepšily proti baseline. K3 (čtvrtá známá
+  odchylka) zůstává nedotčená a nevyřešená, jak D57 předpokládal.
+
 ## 2026-08-02
 
 - **D57 (ROZHODNUTÍ UŽIVATELE po 2p sezení + auditu) — „kdo to schytá"

@@ -315,6 +315,73 @@ jako zamítnuté V2-A (tam šlo o 100% erasure).
 
 ---
 
+## 8. Dodatek — verifikační přeměření v produkčním kódu po zapečení (D58, 2026-08-04)
+
+Po `projekt/rozhodnuti.md` D58 (zapéct všechny tři varianty + V4-C) přistály
+(a) Žár V3-A′ + V3-C, (b) Malone V2-A′ a (c) V4-D supply-aware clamp přímo
+v `main` (`prototyp/src/engine/rules.js`, `resolve.js`, `state.js`; UI
+`ui/screens/run/{commit,assign,okraj}.js` + `ui/vysvetleni.js` pro V3-C
+a `rusiAktivni`; `sim/strategies.js` pro botí povědomí o Maloneově aktivační
+bráně — bez něj `oracle`/`kompetentni` plánovaly proti rušení, které v tu
+chvíli ještě neplatilo, a spadl invariant `max_achievable === reálné zásahy`).
+Na rozdíl od §1–§7 výše **tohle NENÍ injektážní worktree** — jde o finální
+engine, se kterým hra běží. 475 → **484/484 testů zelených** (9 nových: V2-A′
+aktivace/gating, V3-A′ jeden-klimax + přesná delta odečtu, V4-D supply-aware
+clamp na `revealSlots`).
+
+**Metodika:** stejná jako §0 — bot `kompetentni`, 2 disjunktní bloky × 8000
+runů (seedy 1–1000 a 1001–2000, 4 počty hráčů × 2 pronásledovatelé ×
+1000 runů/buňka/blok), `npm run sim -- --runs 1000 --players 1,2,3,4 --pursuer
+agent-malone,serif-brody --strategy kompetentni --seed <1|1001>`. Na rozdíl od
+§1–§7 (kde se každá varianta měřila IZOLOVANĚ) je tohle přeměření
+**VŠECH TŘÍ SOUČASNĚ** — přesně stav, v jakém D58 hru zapekl.
+
+| Metrika | Baseline (§2, pre-D58) | Blok 1 (seed 1–1000) | Blok 2 (seed 1001–2000) | Průměr | Δ vs. baseline |
+|---|---|---|---|---|---|
+| K1 celkem | 71,25 % | 81,0 % | 80,4 % | **80,7 %** | +9,45 b. |
+| K1 1p | 58,25 % | 68,1 % | 68,6 % | **68,35 %** | +10,10 b. |
+| K1 2p | 68,65 % | 81,4 % | 79,9 % | **80,65 %** | +12,00 b. |
+| K1 3p | 77,75 % | 87,4 % | 85,8 % | **86,60 %** | +8,85 b. |
+| K1 4p | 80,35 % | 87,1 % | 87,3 % | **87,20 %** | +6,85 b. |
+| K6a spread | 22,1 | 19,3 | 18,7 | **19,0** | −3,1 b. (lepší) |
+| K5-D expDead (pooled) | 9,55 % | 7,7 % | 8,0 % | **7,85 %** | −1,70 b. (lepší) |
+| K5f celkem | 77,45 % | 77,6 % | 77,0 % | **77,3 %** | −0,15 b. (beze změny) |
+| K5f proher ve finále | — | 96,7 % | 97,0 % | **96,85 %** | ≥90 % ✅ |
+| medián Žáru | 6 | 9 | 9 | **9** | (čekáno — Žár teď doráží dál bez druhého resetu) |
+
+**Verdikt vůči STOP podmínce zadání D58 bodu 4** (odchylka od predikce
+`K1 celkem ~79,7 % se všemi třemi` **> 2 b. = STOP**): naměřeno **80,7 %**,
+Δ **+1,0 b.** — **uvnitř tolerance šumu, STOP se nenastal.** Číslo navíc sedí
+s vlastní logikou skládání: D58 samo cituje jako „přiznanou cenu" Žárova
+kola izolovaná čísla **2p 81,05 / 3p 86,2 / 4p 86,65** (§3 výše) — a tohle
+přeměření se VŠEMI TŘEMI SOUČASNĚ dává **2p 80,65 / 3p 86,60 / 4p 87,20**,
+tedy prakticky identické Žárovu izolovanému efektu. Malone V2-A′ a V4-D tedy
+K1 dál neprohlubují ani nekompenzují navzájem — jejich dopad na K1 je
+(očekávaně) o řád menší než Žárův (+0,70/+0,85 b. izolovaně, §4/§5) a v součtu
+s Žárem se ztrácí v blok-to-blok šumu (K1 se mezi vlastními dvěma bloky hýbe
+o 0,6–1,6 b., viz sloupce výš). **K5-D a K6a se navíc oba zlepšily** proti
+baseline (Malone V2-A′ a V4-D obě samostatně K5-D snižovaly, §4/§5) — žádný
+z nich se skládáním nezhoršil.
+
+**Co se NEPŘEMĚŘOVALO číselně, ale drží strukturálně:** V3-A′ „jeden klimax
+za run" (žádná druhá konfrontace) není v `renderSummaryMd` výstupu jako
+samostatná metrika (report počítá jen `dosahlKonfrontace`/`prezilKonfrontaci`
+jako run-level boolean, ne počet konfrontací na run) — invariant je ale
+dokázaný STROJOVĚ dvěma novými testy (`state.test.js`, popis „práh
+konfrontace se po prvním odpálení v runu už NIKDY znovu nevrátí"), které
+žene Žár na strop, nechají konfrontaci přežít, a pak ho ženou na strop
+ZNOVU — a ověřují, že `situation_revealed` typu `konfrontace` padne v logu
+přesně jednou. To je silnější záruka než vzorek 16 000 runů (platí pro
+KAŽDÝ run, ne jen pravděpodobnostně).
+
+**Závěr: číslo souhlasí s reportem měření (§3–§5), STOP se nenastal, D58
+zapečení je verifikované v produkčním kódu.** Dodatek do `prototyp-mvp.md`
+(§Žár, §Skryté prahy) a `design-dokument.md` (§4.5, §4.9) proveden souběžně
+s implementací; `obsah/pronasledovatele.yaml` Maloneho `rusi.pravidlo` a
+hlavičkový komentář schématu přepsány na novou mechaniku (content-generator).
+
+---
+
 *Worktree `d57-2-mereni-zar-malone` (branch stejného jména, merge `main` @
 `9edcd75`) se po schválení/zamítnutí variant výše ZAHODÍ — nemerguje se do
 `main`. Skript `sim/mereni-d57-2.js` žije jen tam. Kdyby bylo třeba přeměřit,
@@ -322,5 +389,5 @@ worktree lze znovu založit ze stejného commitu main + reapply patchů popsaný
 v §0 (nebo požádat playtest-facilitator o reprodukci).*
 
 *Související: [[design-audit-2p-2026-08-02|design-audit-2p]] ·
-[[../projekt/rozhodnuti|projekt/rozhodnuti.md]] (D57) ·
+[[../projekt/rozhodnuti|projekt/rozhodnuti.md]] (D57, D58) ·
 [[../prototyp-mvp|prototyp-mvp.md]] (K1–K8, Žár, Pronásledovatel).*
