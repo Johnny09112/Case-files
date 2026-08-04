@@ -11,6 +11,24 @@ ukazatel na archiv.*
 architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.md]]
 (přesunuto 2026-07-24).
 
+## 2026-08-04
+
+- **D58 (ROZHODNUTÍ UŽIVATELE) — výsledky měření D57(2): zapéct všechny tři
+  + aktivovat rezervní páku ruka.** Podklad:
+  [[../technika/mereni-zar-malone-2026-08-02|technika/mereni-zar-malone-2026-08-02.md]].
+  (1) **Žár V3-A′+C ZAPÉCT** — druhá konfrontace strukturálně nemožná (0,0 %),
+  léčky drží (pokles 0,75 b.), finále nezměklo; PŘIZNANÁ CENA (oprava PM proti
+  verdiktu facilitátora): K1 2p NOVĚ breachuje (81,05 %), 3p/4p prohloubení na
+  86,2/86,65 — kompenzace bodem 4. (2) **Malone V2-A′ ZAPÉCT i přes formálně
+  nesplněné B4** (~48 % nulovaných uzlů proti stropu ⅓): mechanika běží na
+  >50 % rozsahu, úplatky žijí do prvního překročení prahu Zátahu — záměr
+  „nemazat, dotáhnout" splněn kvalitativně; D25e tímto vyřešeno. (3) **V4-D
+  supply-aware clamp ZAPÉCT** (vše prochází, K5-D 8,8 % lepší než baseline).
+  (4) **Aktivace rezervní páky D39 `hraci[n].ruka`** — sweep menších týmových
+  rukou NAD novou baseline (po zapečení 1–3) jako kompenzace obtížnosti;
+  spouštěcí nález lidské brány („týmová hra příliš snadná") je naplněn
+  dvojnásobně. Verdikt sweepu → uživatel.
+
 ## 2026-08-02
 
 - **D57 (ROZHODNUTÍ UŽIVATELE po 2p sezení + auditu) — „kdo to schytá"
