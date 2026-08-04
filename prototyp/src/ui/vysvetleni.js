@@ -47,6 +47,9 @@ export const MISTO = /** @type {const} */ ({ SLOT: 'slot', OKRAJ: 'okraj', SPIS:
  *   anotace odhalení řekne jen kotvu, rozpětí šumu vynechá.
  * @property {number} [statMax] horní mez statu z pravidel (rules.statMax) —
  *   spolu se `sumRozsah` určuje, kdy clamp (V4-C) strope/podlahuje kotvu.
+ * @property {{prahy?: object, offsetDlePoctu?: object}} [zar] prahy trati Žáru
+ *   + per-count posun (rules.zar.prahy/prahOffsetDlePoctu) — V3-C dopředná
+ *   anotace („ještě N polí k …").
  */
 
 /**
@@ -76,6 +79,11 @@ function novaKniha(ctx, events, out) {
     /** Název pronásledovatele + co ruší (z run_started). */
     pronasledovatel: /** @type {string|null} */ (null),
     rusi: /** @type {{typ: string, cil: string}|null} */ (null),
+    /** Počet hráčů (z run_started) — V3-C potřebuje per-count posun prahů Žáru. */
+    pocetHracu: /** @type {number|null} */ (null),
+    /** V3-A′ (D58): jednou true, navždy true — konfrontace se v runu už nevrátí,
+     * dopředná anotace (V3-C) ji proto přestane nabízet jako „blíží se". */
+    konfrontaceOdpalena: false,
     /** nodeIndex → situace_id (pro popis odkazů). */
     situaceUzlu: /** @type {Map<number, string>} */ (new Map()),
     /**
@@ -225,6 +233,37 @@ function pocetKol(n) {
   return `${n} kol`;
 }
 
+/** Skloňování „ještě 1 pole / 2 pole / 5 polí" podle počtu (V3-C). */
+function pocetPoli(n) {
+  if (n === 1) return `${n} pole`;
+  if (n >= 2 && n <= 4) return `${n} pole`;
+  return `${n} polí`;
+}
+
+/**
+ * V3-C (design-audit-2p-2026-08-02.md §4.2, „povinné bez ohledu na A/B",
+ * D58): dopředná anotace u pohybu šerifa — kolik polí zbývá k NEJBLIŽŠÍMU
+ * dosud neodpálenému prahu. Bez ní vysvětlující vrstva uměla mluvit jen
+ * ZPĚTNĚ (jaký práh se právě překročil), hráč blížící se klimax neviděl
+ * dopředu. Konfrontace, která se v runu už jednou odpálila (V3-A′, „jeden
+ * klimax za run"), se z nabídky vynechává — nevrátí se, takže by anotace
+ * lhala. Prahy bere z `ctx.zar` (posunuté per počet hráčů — P1), ne
+ * hardcoduje (ADR-003); bez `ctx.zar` nebo `pocetHracu` vrací prázdno.
+ * @param {number} pozice nová pozice Žáru PO pohybu
+ * @param {ReturnType<typeof novaKniha>} k
+ * @returns {string}
+ */
+function dopřednaAnotaceZaru(pozice, k) {
+  const prahyDef = k.ctx.zar?.prahy;
+  if (!prahyDef || k.pocetHracu == null) return '';
+  const offset = k.ctx.zar?.offsetDlePoctu?.[k.pocetHracu] ?? 0;
+  const prahy = Object.entries(prahyDef).map(([nazev, base]) => [nazev, Math.max(1, base - offset)]);
+  const kandidati = prahy.filter(([nazev, p]) => p > pozice && !(nazev === 'konfrontace' && k.konfrontaceOdpalena));
+  if (kandidati.length === 0) return '';
+  const [nazev, p] = kandidati.reduce((a, b) => (b[1] < a[1] ? b : a));
+  return ` Ještě ${pocetPoli(p - pozice)} k ${PRAH_LABEL[nazev] ?? nazev}.`;
+}
+
 /**
  * Skloňování „X zásah zůstal / zásahy zůstaly / zásahů zůstalo" podle počtu
  * (brief psal jen `${e.gap} zásah zůstal` — pro gap 2–4 to gramaticky drhne).
@@ -366,6 +405,7 @@ const HANDLERS = {
   [EVENT.RUN_STARTED]: (e, k) => {
     k.pronasledovatel = k.ctx.pronasledovatele?.[e.pronasledovatel] ?? e.pronasledovatel;
     k.rusi = e.rusi ?? null;
+    k.pocetHracu = e.pocetHracu ?? null;
     return [];
   },
   // Akt hráče; učení nese telegraf_derived před ním.
@@ -510,14 +550,23 @@ const HANDLERS = {
   [EVENT.ZAR_MOVE]: (e, k) => {
     const duvodVeta = ZAR_DUVOD_LABEL[e.duvod] ?? e.duvod;
     const prahVeta = e.prah_prekrocen ? ` Tím překročil práh ${PRAH_LABEL[e.prah_prekrocen] ?? e.prah_prekrocen}.` : '';
+    // V3-A′ (D58): jeden klimax za run — jakmile konfrontace jednou padne
+    // (odpálí se práh, NEBO ji tenhle pohyb popisuje jako přežitou), dopředná
+    // anotace (V3-C) ji dál nesmí nabízet jako „blíží se" — nevrátí se.
+    if (e.prah_prekrocen === 'konfrontace' || e.duvod === ZAR_DUVOD.KONFRONTACE_PREZITA) {
+      k.konfrontaceOdpalena = true;
+    }
     // Delta je podepsaná (state.js changeHeat) — záporná typicky u přežité
-    // konfrontace (Žár klesne na poPrezitiKonfrontace). Věta musí odpovídat
-    // směru pohybu, ne vždy tvrdit „postoupil" (nález review C2).
+    // konfrontace (V3-A′: Žár klesne o pevnou hodnotu, práh se navíc už
+    // nevrátí). Věta musí odpovídat směru pohybu, ne vždy tvrdit „postoupil"
+    // (nález review C2).
     if (e.delta < 0) {
       return [{
         misto: MISTO.OKRAJ,
         veta: `Žár klesl o ${Math.abs(e.delta)} na ${e.nova_pozice} — ${duvodVeta}.${prahVeta}`,
-        detail: 'Žár klesl, šerifova pozornost opadla — prahy se znovu nabíjejí.',
+        detail: e.duvod === ZAR_DUVOD.KONFRONTACE_PREZITA
+          ? 'Žár klesl, ale finále je za týmem napořád — konfrontace se v tomhle runu už nevrátí (Zátah a léčka se dál nabíjejí normálně).'
+          : 'Žár klesl, šerifova pozornost opadla — prahy se znovu nabíjejí.',
       }];
     }
     // hlucne_GANGSTER: run_started (kniha.rusi) říká, jestli aktivní
@@ -529,9 +578,13 @@ const HANDLERS = {
     const doplnek = zdvojeno
       ? `, dokud je aktivní ${k.pronasledovatel ?? 'tenhle pronásledovatel'}, štítek ${nazevStitku(k, k.rusi.cil)} se počítá dvojnásob`
       : '';
+    // V3-C (design-audit-2p-2026-08-02.md §4.2, „povinné bez ohledu na A/B"):
+    // dopředná anotace — kolik polí zbývá k nejbližšímu dosud neodpálenému
+    // prahu. Vysvětlující vrstva dřív uměla mluvit jen zpětně.
+    const dopredna = dopřednaAnotaceZaru(e.nova_pozice, k);
     return [{
       misto: MISTO.OKRAJ,
-      veta: `Šerif postoupil o ${e.delta} na ${e.nova_pozice} — ${duvodVeta}${doplnek}.${prahVeta}`,
+      veta: `Šerif postoupil o ${e.delta} na ${e.nova_pozice} — ${duvodVeta}${doplnek}.${prahVeta}${dopredna}`,
     }];
   },
 
@@ -640,13 +693,14 @@ function situaceVlozenychSetkani(pronasledovatele) {
  * syrové id (viz `situaceVlozenychSetkani`).
  *
  * `rules` je nepovinné; vrstva si z něj bere `sumRozsah` (rozpětí šumu prahu,
- * které anotace odhalení hlásí místo zakázaného finálního prahu, D51) a
- * `statMax` (strop clampu, V4-C). Předává se, aby konstanty zůstaly jen
- * v `rules.js` (ADR-003).
+ * které anotace odhalení hlásí místo zakázaného finálního prahu, D51),
+ * `statMax` (strop clampu, V4-C) a `zar` (prahy trati + per-count posun,
+ * V3-C dopředná anotace). Předává se, aby konstanty zůstaly jen v `rules.js`
+ * (ADR-003).
  *
  * @param {object} content výstup parseContent()
  * @param {Record<string,string>} [jmena] hrac_id → celé jméno postavy
- * @param {{sumRozsah?: number, statMax?: number}} [rules] pravidla (`sumRozsah`, `statMax`)
+ * @param {{sumRozsah?: number, statMax?: number, zar?: {prahy?: object, prahOffsetDlePoctu?: object}}} [rules] pravidla
  * @returns {VysvetliCtx}
  */
 export function ctxZObsahu(content, jmena = {}, rules = {}) {
@@ -655,6 +709,8 @@ export function ctxZObsahu(content, jmena = {}, rules = {}) {
     jmena,
     sumRozsah: rules.sumRozsah,
     statMax: rules.statMax,
+    // V3-C: prahy trati + per-count posun (P1) — bez nich dopředná anotace mlčí.
+    zar: rules.zar ? { prahy: rules.zar.prahy, offsetDlePoctu: rules.zar.prahOffsetDlePoctu } : undefined,
     veci: mapa(content.veci, 'nazev'),
     postihy: mapa(content.postihy, 'nazev'),
     pronasledovatele: mapa(content.pronasledovatele, 'nazev'),

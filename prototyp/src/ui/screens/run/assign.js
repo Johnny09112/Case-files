@@ -107,7 +107,8 @@ export function pohledPrirazeni(ctx) {
   // D57 komunikace (technika/obsahove-kolo-2p-2026-08-02.md §2 Návrh B bod 1):
   // stejná přeškrtnutá hodnota jako v commit.js — pronásledovatel ruší jeden stat
   // run-wide, karta se tu bez toho tvářila plnohodnotně i po odhalení slotů.
-  const rusiStat = st.pronasledovatel?.rusi?.typ === 'stat' ? st.pronasledovatel.rusi.cil : null;
+  // D58/V2-A′: gatováno `rusiAktivni`, stejně jako v commit.js — viz komentář tam.
+  const rusiStat = st.pronasledovatel?.rusiAktivni && st.pronasledovatel?.rusi?.typ === 'stat' ? st.pronasledovatel.rusi.cil : null;
   // Ruce, ze kterých lze táhnout naslepo — jen ty neprázdné (D19b: „čí ruka
   // poskytne kartu" a „kterou committnutou nahradí" jsou DVĚ nezávislé volby
   // týmu, viz prototyp-mvp.md §Resoluční systém v3; hráč nemusí gamblovat

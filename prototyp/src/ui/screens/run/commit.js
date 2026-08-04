@@ -98,7 +98,10 @@ export function pohledCommitu(ctx) {
   // sáhl na „hodnota 5" a slot i tak spadl. `st.pronasledovatel.rusi` je stejný
   // datový kanál, který engine používá k rušení (`resolve.js` `statValue`); UI ho
   // jen čte, žádná herní logika (architektura §2.4).
-  const rusiStat = st.pronasledovatel?.rusi?.typ === 'stat' ? st.pronasledovatel.rusi.cil : null;
+  // D58/V2-A′: statové rušení (Malone) se aktivuje až prvním překročením prahu
+  // Zátahu — `rusiAktivni` je engine-vypočtená pravda PRÁVĚ TEĎ (`state.js`
+  // `jeRusiAktivni`), takže se karta tváří jako plnohodnotná, dokud fakticky je.
+  const rusiStat = st.pronasledovatel?.rusiAktivni && st.pronasledovatel?.rusi?.typ === 'stat' ? st.pronasledovatel.rusi.cil : null;
   // Brody zdvojuje Žár za GANGSTER (obsah/pronasledovatele.yaml) — stejná
   // odvozovací logika jako `brodyGangster` ve state.js, jen nad veřejným snapshotem.
   const brodyGangster = st.pronasledovatel?.rusi?.typ === 'stitek' && st.pronasledovatel.rusi.cil === 'GANGSTER';

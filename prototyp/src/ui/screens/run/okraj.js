@@ -43,11 +43,20 @@ function popisPostihu(postih, content) {
  * štítek věci (dnes v obsahu jediný: GANGSTER) — pro ten okraj nemá popisek,
  * takže ho nejmenuje a odkazuje na briefing, kde je celé pravidlo (`pravidlo`
  * z obsah/pronasledovatele.yaml), viz Task 8.
+ *
+ * D58/V2-A′: statové rušení je vidět od startu (pravidlo je veřejné, D20a),
+ * ale FAKTICKY se zapíná až prvním překročením prahu Zátahu — `rusiAktivni`
+ * (engine, `state.js` `jeRusiAktivni`) říká, jestli PRÁVĚ TEĎ platí. Bez
+ * tohohle rozlišení by okraj tvrdil rušení dřív, než skutečně kouše.
  * @param {{typ: string, cil: string}|null} rusi
+ * @param {boolean} [aktivni]
  */
-function popisRuseni(rusi) {
+function popisRuseni(rusi, aktivni = false) {
   if (!rusi) return 'neruší nic';
-  if (rusi.typ === 'stat') return `ruší stat ${STAT_LABEL[rusi.cil] ?? rusi.cil} — přesné pravidlo viz briefing`;
+  if (rusi.typ === 'stat') {
+    const stav = aktivni ? 'aktivní' : 'zatím neaktivní — čeká na Zátah';
+    return `ruší stat ${STAT_LABEL[rusi.cil] ?? rusi.cil} (${stav}) — přesné pravidlo viz briefing`;
+  }
   return 'ruší věci se speciálním štítkem — přesné pravidlo viz briefing';
 }
 
@@ -75,7 +84,7 @@ export function okrajSpisu(ctx) {
       { class: 'okraj-blok' },
       h('h3', { class: 'formular-popisek' }, 'Pronásledovatel'),
       h('strong', {}, st.pronasledovatel.nazev),
-      h('p', { class: 'napoveda' }, popisRuseni(st.pronasledovatel.rusi))
+      h('p', { class: 'napoveda' }, popisRuseni(st.pronasledovatel.rusi, st.pronasledovatel.rusiAktivni))
     ),
 
     h(
