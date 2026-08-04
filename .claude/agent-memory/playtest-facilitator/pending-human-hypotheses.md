@@ -101,5 +101,13 @@ designéra a remote/async sezení. Každou spáruj se signálem z šablony playt
   obtížnost: 1p 43,8 % vs. 4p 67,2 %. Sim neví, jestli to sólista pocítí jako
   nefér, nebo to vůbec nepozná (nemá s čím srovnávat).
 
+## Nové z kola D57(2) měření Žár/Malone/clamp (2026-08-04, viz [[d57-2-mereni-zar-malone]])
+
+- **Cítí se „jeden klimax za run" (Žár V3-A′) jako úleva, nebo ubere hře napětí
+  z opakovaného ohrožení?** Sim doložila strukturální nulu druhých konfrontací
+  (25,8 % → 0,0 %) a K1 nahoru o 8,45 b. — matematicky čistý zisk proti hráčově
+  stížnosti „uteče problém z lopaty". Sim ale neví, jestli hráči v pozdějších
+  sezeních DRUHÉ finále přesto chtěli jako gradaci rizika, ne jako vadu.
+
 Otevřené číselné páky, které se po lidské zpětné vazbě můžou hnout, jsou v
 [[sim-gate-findings]].
