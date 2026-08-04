@@ -352,6 +352,45 @@ Hráčovo „4–5× za run uteče problém z lopaty" je tím doložené.
    a ekonomice se z tohoto kola nesmí tvrdit nic. **V2-A′ a V3-A′ jsou
    nezměřené**, obě vznikly až po prověrce.
 
+### 6.1.1 Dodatek — přeměření finální definice v produkčním kódu (D57, 2026-08-03)
+
+V1-A krok 1 přistálo v enginu (`state.js` `vyberObet` + `statovaMezera`, viz
+commit) přesně dle §2.2: oběť = vlastník propadlého slotu s NEJVĚTŠÍ statovou
+mezerou (`prah − stat_hodnota`, u kombi slotu horší ze dvou statů) mezi
+**statovými** propady (`nizky_stat` / `stat_zrusen` / `kombi_neuplny`); bez
+statového propadu padá zpět na první tvrdý propad v pořadí slotů (`gangster_
+auto_fail` / zámkový postih) — přesně dřívější `propadli[0]` chování, teď jako
+fallback, ne default. Tie-break nejnižší `slot_index`. Pokryto TDD (3 nové
+testy v `state.test.js`: největší mezera vyhrává, remíza řeší nejnižší index,
+fallback na tvrdý propad beze statu).
+
+**Přeměření:** bot `kompetentni`, **2 disjunktní bloky × 8000 runů (2000/buňka
+= 1000 seedů/pronásledovatel × 2 pronásledovatelé, D39-ii metodika)**, seedy
+1–1000 a 1001–2000, přes finalizovaný produkční engine (ne worktree-preview
+jako u A2 výše).
+
+| # | Baseline (§6.1, bez V1-A) | Naměřeno teď (V1-A krok 1, mean přes 2 bloky) | Δ | Horní mez |
+|---|---|---|---|---|
+| K1 1p | 57,65 | 57,65 | **0,00** | ≤0,85 |
+| K1 2p | 66,90 | 66,65 | **−0,25** | ≤0,85 |
+| K1 3p | 77,60 | 76,85 | **−0,75** | ≤0,85 |
+| K1 4p | 79,30 | 79,90 | **+0,60** | ≤0,85 |
+| K6a spread | 21,65 | 22,25 | +0,60 | diagnostika (blok-šum 2sd ≈2,1, viz `variance.md`) |
+| K2 pozdní PRŮŠVIH-rate (floor) | 20,95 | 20,90 | −0,05 | beze změny |
+| K5 varianta D (expDead) | 9,65 | 9,65 | **0,00** | beze změny |
+| K5f přežití konfrontace (pooled) | 76,70 | 77,15 | +0,45 | beze změny |
+| medián Žáru | 6 | 6 | 0 | beze změny |
+
+**Verdikt: PROŠLO.** Žádná metrika nepřekročila deklarovanou horní mez
+(ΔK1 ≤0,85 b.); K2/K5/K5f se pohnuly jen v rozsahu, který blok-to-blok šum sám
+vyrábí (K6a mezi vlastními dvěma bloky kolísá o 2,1 b., viz tabulka výše —
++0,60 na K6a je uvnitř toho pásma, ne signál). Profil ΔK1 (0,00 / −0,25 / −0,75
+/ +0,60) sedí se směrem i řádem preview měření z A2 (0 / −0,05 / −0,85 / +0,20)
+— stejný závěr, dvě nezávislá měření: **změna je zdarma**. K5-D vyšlo dokonce
+bit-přesně stejné (9,65 = 9,65). STOP podmínka (ΔK1 >1 b. nebo pohyb K2/K5/K6a)
+se **nenastala** — engine i UI část (assign obrazovka: „postih dostane majitel
+nejhůř propadlé věci" před rozdělováním) se commitují.
+
 ---
 
 ## 7. Co navrhuji uživateli rozhodnout
