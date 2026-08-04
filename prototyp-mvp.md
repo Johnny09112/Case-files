@@ -26,7 +26,7 @@ odblokuje stavbu a vstup do lidské brány. Plné odůvodnění a botí detaily 
 |---|---|---|---|
 | **K1** | % DORUČENO (cíle-driven i kompetentní bot), **per počet hráčů** | **každý z 1p/2p/3p/4p ∈ [45, 70] % — FIXOVÁNO (D21, per-count explicitně D26)** | Ne průměr, ne reference 4p — **žádný počet nesmí být mimo pásmo**. Baseline 59,1 / 67,4 / 70,7 / 70,9 → **3p a 4p breachují nahoru**. **AKTUÁLNÍ STAV (D35, po opravách bota): 57,3 / 67,1 / 77,5 / 79,7 % — 3p a 4p breachují v 6/6 blocích; D39 to přijal jako ZNÁMOU ODCHYLKU do lidské brány** (páka `prahOffsetDlePoctu` vyčerpána — D38, sweep kalibrace-5; průchozí kandidát existoval, ale kupoval K1 za K2 drift a měnil strukturu runu). K1 je **sdílená metrika**, vlastnictví dle páky (engine: šum, ruce, parametry Žáru; obsah: kotvy, keying, pronásledovatelé, postihy, finále) — viz change-control pod tabulkou. Náklad zůstává fail-condition (bedny-0 <1 % proher, D21b). |
 | **K2** | snowball: míra PRŮŠVIHŮ v pozdních uzlech | **GATE: `PRŮŠVIH-rate(3–4)` ≥ 20 %** (naměřeno 23,3 ✅). **Drift ≥1,3 DEGRADOVÁN na diagnostiku (D33)** | **Drift je od D33 DIAGNOSTIKA, ne gate:** měří DRUHÝ, neviditelný snowball (info-postih → horší přiřazení), který hra hráči neslibuje a který vysvětluje 1,7 % rozptylu (korelace −0,131); viditelný snowball je **Žár** a ten funguje. Gatovat na něm šlo proti axiomu „viditelná pravidla". Naměřeno 1,25 (mean přes 6 bloků) → **po opravách bota 1,39 (D35, 6/6 bloků ≥1,3)** — potvrzuje, že se drift dřív měřil na mechanismu, který engine z ~29 % nevynucoval; degradace na diagnostiku se tím nemění. Poctivě: 1,3 NENÍ nedosažitelné, jen ne poctivě (ohnutím fikce ~1,52) — tuhle cestu tým i PM odmítli. Poměr POČTU postihů je jen **diagnostika** (cap 2 ho saturuje, snowball ukázat neumí). Ordinál se počítá **bez vložených léček/konfrontací**; varianta „se vším" je diagnostika. Mechanismus-diagnostika: korelace info-postih zátěž vs. pásmo. |
-| **K3** | medián uzlu 1. překročení prahu Zátah | **∈ {3,4}** | čísla Žáru resetují (per-pásmo PRŮŠVIH + hlučné karty). |
+| **K3** | medián uzlu 1. překročení prahu Zátah | **∈ {3,4}** | čísla Žáru resetují (per-pásmo PRŮŠVIH + hlučné karty). **NEPLNÍ — čtvrtá známá odchylka (D57, precedens D39): reálně 3 / 2 / 2 / 2** (2p/3p/4p breach), doloženo design-audit-2p-2026-08-02.md §6.1; nikdy dřív nezměřeno, viz STAV BRÁNY níže. |
 | **K4a** | max win-rate fixní přiřazovací heuristiky | **≤ 80 %** | |
 | **K4b** | dominance stat-monokultury commitu | žádná; rozpětí statů ≤ ~10 b. | kotvy 2–4 nesmí být předvídatelné. |
 | **K4c** | learnabilita **přiřazovací osy** | kompetentní − random **≥ 12 b.** A memorizační − kompetentní **≤ 3 b.** | **GATE svázaná s noise-modelem:** pád nejdřív spustí „oprav šum", pak teprve „zahoď design". Memorizační bot memorizuje **stabilní kotvy per situace-ID**; šum je **per-instance IID uniform ±2, clamp do [0, stat-max]** (±1→±2 rozšířeno kalibrací-2 2026-07-24, minimální celé číslo plnící gate). **Pozor (D27):** vázala vždy druhá půlka; první má na této ose ~5× vatu (naměřeno 64,7 b. proti prahu 12) — proto se **nesmí přenášet na jiné osy jako absolutní číslo**. |
@@ -76,6 +76,13 @@ se nechystá.
   clamp prahů mění strukturu runu. Záložní páka `hraci[n].ruka` (8/5/4/3) je
   **identifikovaná, ale neaktivovaná** — sáhne se po ní jen tehdy, potvrdí-li
   lidská brána „týmová hra je nudně snadná".
+- **ČTVRTÁ známá odchylka (D57, 2026-08-03; precedens D39):** **K3 (medián uzlu
+  1. Zátahu) reálně 3 / 2 / 2 / 2** proti gate {3,4} — 2p/3p/4p breachují.
+  Nikdy dřív nezměřeno (baseline diagnostika chyběla, žádná kalibrace se o něj
+  neopírala); vyneslo ho až design-audit-2p-2026-08-02.md §0/§6.1 při
+  vyšetřování mandátu „tempo Žáru". Příčina je stejná rodina jako K1 3p/4p/K6a
+  (co-op škálování), ale K3 se v tomhle kole neladil — jen se přiznává, ať
+  tabulka nemlčí o stavu, který existuje.
 - **Proč se to nese dál a neladí:** týmové K1 je proxy z bota, u kterého D34
   doložilo chyby na obě strany; lidská brána ho stejně přeměří. „Koop snazší,
   než jsme chtěli" je méně nebezpečná odchylka než opačná (precedent D33/K5).
@@ -149,10 +156,14 @@ se testuje agentem `protocol-humor-tester` nad promptem `prompty/protokol.md`.
 
   | Hráčů | Ruka | Commit (celkem 4) |
   |---|---|---|
-  | 1 | 6 | volí 4 |
-  | 2 | 4 každý | 2 + 2 |
+  | 1 | 8 | volí 4 |
+  | 2 | 5 každý | 2 + 2 |
   | 3 | 4 každý | 2 + 1 + 1 (2 committne „držitel mapy", role **rotuje po uzlu**) |
   | 4 | 3 každý | 1 + 1 + 1 + 1 |
+
+  *(N1, design-audit-2p-2026-08-02.md §8.1: tabulka dřív hlásila 6/4/4/3, engine
+  od kalibrace-1 jede 8/5/4/3 — `prototyp/src/engine/rules.js` `ruce` je zdroj
+  pravdy, dokument se tímhle opravuje na shodu.)*
 
 - **Rozdělení do slotů:** po odhalení textu tým rozdělí **všechny 4** commitnuté
   karty do 4 slotů (vlastník souhlasí). **Nic se nevrací, nic nebenchuje** — jádro
@@ -171,9 +182,10 @@ se testuje agentem `protocol-humor-tester` nad promptem `prompty/protokol.md`.
 - **Gamble (záchrana po odhalení):** 1× za situaci, opt-in u všech počtů. Tým
   vybere, **čí ruka** poskytne kartu; ta se líže **náhodně ze zbývajících karet
   vybrané ruky** a **povinně nahradí** jednu commitnutou (nahrazená se
-  **odhazuje**). Pravděpodobnost konkrétní karty závisí na počtu zbývajících:
-  1p a 4p mají po commitu 2 zbývající (šance 1/2), 2p 2 (1/2), 3p ne-držitel 3
-  (1/3) — **EV gamblu se proto měří per počet hráčů** (kritérium K7).
+  **odhazuje**). Pravděpodobnost konkrétní karty závisí na počtu zbývajících
+  po commitu (N2, dle ruky 8/5/4/3 výše): **1p 4 (1/4)**, **2p 3 (1/3)**,
+  **3p držitel mapy 2 (1/2) / ne-držitel 3 (1/3)**, **4p 2 (1/2)** —
+  **EV gamblu se proto měří per počet hráčů** (kritérium K7).
   EV ≈ neutrální až mírně záporná (bere se jen v zoufalé situaci).
 - **Postihy** (nahrazují zranění + prokleté/zoufalé karty):
   - taxonomie **informační / zámkové / ztrátové** (ztrátové střídmě);
@@ -182,7 +194,13 @@ se testuje agentem `protocol-humor-tester` nad promptem `prompty/protokol.md`.
   - **cap 2 aktivní na hráče + eskalace:** 3. postih → postava **kolo–dvě „složená"**
     (leží v autě, generuje poznámky), pak se vrací;
   - **složení maže jen LEHKÉ postihy** — těžké přetrvávají a léčí se jen v motelu
-    (aby složení nebylo levnější než léčení).
+    (aby složení nebylo levnější než léčení);
+  - **příjemce** (N3, D57/V1-A krok 1): vlastník propadlého slotu s **nejvyšší
+    statovou mezerou** (`práh − hodnota statu`) mezi statovými propady uzlu
+    (u kombi slotu horší ze dvou statů); tvrdé propady (GANGSTER na očích,
+    zámkový postih) jdou na řadu, jen když v uzlu statový propad není. Remízu
+    řeší nejnižší index slotu. Obrazovka rozdělování to oznamuje PŘED
+    rozdělením karet — viz design-dokument.md §4.7.
 - **Kredity:** společné, **per-run** (nepřecházejí). Ceny v motelu: **směna karty
   = 3**, **léčení těžkého postihu = 6**. Příjmy: **truhla +4–6**, HLADCE+LOOT
   **+3**, HLADCE **+2** (zvednuto kalibrací-1, když kotva-patch ztenčil ekonomiku;
@@ -201,13 +219,18 @@ se testuje agentem `protocol-humor-tester` nad promptem `prompty/protokol.md`.
   fail-condition — kandidát na konsolidaci, viz Co ladit.)*
 - **Žár (0–10):** týmová stopa pozornosti zákona, **pozice na značené trati**
   (křížkující šerif), ne odosobněné číslo. Roste za PRŮŠVIH uzly, hlučné hraní
-  (odvozené ze štítků/statů — `GANGSTER`, vysoký útok, výsledek „incident") a
-  vybrané výsledky. **Každý pohyb nese anotaci proč.** Prahy: **Zátah** (nahradí
+  (odvozené ze štítků/statů **committnuté sady** — `GANGSTER`, vysoký útok —
+  vyhodnotí se hned po commitu, NE podle toho, do kterého slotu karta nakonec
+  padla; N5, `state.js` `resolveSituation` prochází `situ.committed`) a vybrané
+  výsledky. **Každý pohyb nese anotaci proč.** Prahy: **Zátah** (nahradí
   příští uzel, obě větve přes něj), **léčka** (vložený uzel s pronásledovatelem),
   **konfrontace** (okamžitá finální situace; přežití Žár srazí). Přesné přírůstky
   a prahy ladit simulací.
 - **Pronásledovatel:** losuje se 1 na začátku runu, viditelný od začátku, **ruší
-  jeden stat/štítek**. Nemá vlastní tahy — jedná výhradně přes prahy Žáru.
+  jeden stat/štítek PO CELÝ RUN** (run-wide, od první minuty — N4, ne jen ve
+  své léčce/konfrontaci; `obsah/pronasledovatele.yaml` `rusi`). Kromě tohoto
+  pasivního rušení **nemá vlastní tahy** — do hry jinak zasahuje jen přes
+  prahy Žáru (Zátah, léčka, konfrontace).
 - **Vysvětlující vrstva „proč se to stalo" — POVINNÁ položka.** Každá netriviální
   událost nese při odhalení krátkou anotaci: skrytý práh vs. realita, vynucení a
   štítky, pohyb šerifa, postihové řetězce (vznik/vyprší/léčí), plnění tajných cílů

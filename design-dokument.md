@@ -164,10 +164,14 @@ vybral. Pravděpodobnosti a EV viz [prototyp-mvp.md](prototyp-mvp.md).
 Většina slotů klíčuje na **jeden stat** se **skrytým prahem**, odhaleným až po
 vyhodnocení. Prahy jsou **kotva ± šum**: typ situace má naučitelný trend (NPC
 „všimné" → hodnota; překážka „oprava" → nástroj), ale instance kolem kotvy mírně
-kolísá — **mistrovství roste, memorizace konkrétních čísel nefunguje**. Výjimky
-jsou dvojí: **karetní** (štítky, §4.2) a **slotové** (speciální slot s kombinovaným
-prahem přes dva staty, nebo slot citlivý na štítek). Skrytost je *learnabilita*,
-ne gotcha — po vyhodnocení se prah vždy ukáže (§4.11).
+kolísá — **mistrovství roste, memorizace konkrétních čísel nefunguje**. Šum je
+sám o sobě symetrický, ale výsledný práh se zastropuje/podlahuje do platného
+rozsahu statu (0–5) — u vysoké kotvy je tedy reálné kolísání **asymetrické**
+(kotva 4 → reálně 2 až 5, ne 2 až 6; N6, viz [prototyp-mvp.md](prototyp-mvp.md)
+§Resoluční systém v3). Výjimky jsou dvojí: **karetní** (štítky, §4.2) a
+**slotové** (speciální slot s kombinovaným prahem přes dva staty, nebo slot
+citlivý na štítek). Skrytost je *learnabilita*, ne gotcha — po vyhodnocení se
+prah vždy ukáže (§4.11).
 
 ### 4.6 Pásma výsledku
 Výsledek uzlu je **pásmo** podle počtu slotů, které prošly práh (ne procento):
@@ -182,6 +186,15 @@ netrestá sílu karet číslem, ale **degraduje agency a vyrábí komedii**. Tax
   staty", „tohle kolo nevidíš telegraf");
 - **zámkové** — omezují volbu („nesmíš do slotu dát GANGSTER");
 - **ztrátové** (střídmě) — berou zdroje (kredity, kartu z ruky).
+
+**Kdo postih dostane** (N3, D57/V1-A krok 1): vlastník propadlého slotu s
+**nejvyšší statovou mezerou** (rozdíl mezi prahem a hodnotou statu, u kombi
+slotu horší ze dvou statů) mezi statovými propady uzlu. Tvrdé propady (zbraň
+na očích, zámkový postih) jdou na řadu, jen když v uzlu statový propad není —
+jinak by oběť byla deterministicky ten, komu telegraf vnutil zbraň do
+viditelné role. Remízu řeší nejnižší index slotu. Obrazovka rozdělování to
+oznamuje **PŘED** rozdělením karet — dřív o adresátovi rozhodovalo jen pořadí
+slotů v obsahu, což §4.12 (vlastnictví postavy) neslibovalo.
 
 Postihy mají **dva tiery**: lehké dočasné (samy vyprší) a těžké trvalé (drží do
 vyléčení v motelu, §4.8). Aktivní postihy mají **malý cap na hráče + eskalaci**:
@@ -201,14 +214,19 @@ rozmístění motelů viz [prototyp-mvp.md](prototyp-mvp.md).
 ### 4.9 Žár a pronásledovatel (eskalace na mapě)
 Každý run má jednoho perzistentního pronásledovatele (**Žár**), který nikdy nestojí
 v uzlu — jede za týmem a je **pozicí na značené trati** (křížkující šerif, §1), ne
-odosobněným číslem. Roste za průšvihy, hlučné hraní (zbraně, silně útočné karty) a
-vybrané výsledky; **každý pohyb nese anotaci proč** (§4.11). Prahy trati (viditelné
-předem): **Zátah** (příští uzel nahradí zátah, obě větve přes něj), **léčka**
-(mimořádný uzel s pronásledovatelem osobně), **konfrontace** (okamžitá finální
-situace; přežití Žár srazí). Pronásledovatel se losuje na začátku runu, je viditelný
-od první minuty a **ruší jeden stat/štítek** (federál bere úplatky = hodnotu z hry;
-šerif reaguje na hlučnost dvojnásob) — čtvrtina páky je proti finále oslabená,
-každý run se hraje jinak. Vypravěčský háček: pronásledovatel je kolega poldy od
+odosobněným číslem. Roste za průšvihy, hlučné hraní (zbraně, silně útočné karty —
+vyhodnotí se hned po commitu, nad **committnutou sadou**, ne podle toho, do
+kterého slotu karta nakonec padla; N5) a vybrané výsledky; **každý pohyb nese
+anotaci proč** (§4.11). Prahy trati (viditelné předem): **Zátah** (příští uzel
+nahradí zátah, obě větve přes něj), **léčka** (mimořádný uzel s pronásledovatelem
+osobně), **konfrontace** (okamžitá finální situace; přežití Žár srazí).
+Pronásledovatel se losuje na začátku runu, je viditelný od první minuty a **ruší
+jeden stat/štítek PO CELÝ RUN** (run-wide, N4 — federál bere úplatky = hodnotu
+z hry, a to v jakémkoli hodnota-slotu odteď dál, ne jen ve své léčce/konfrontaci;
+šerif reaguje na hlučnost dvojnásob run-wide stejně) — čtvrtina páky je proti
+finále oslabená, každý run se hraje jinak. Kromě tohoto pasivního run-wide
+rušení pronásledovatel **nemá vlastní tahy** — do hry jinak zasahuje jen přes
+prahy Žáru výše. Vypravěčský háček: pronásledovatel je kolega poldy od
 stroje, protokol cituje jeho hlášení a oba byrokrati se v spisu tiše nesnášejí.
 Konkrétní hodnoty viz [prototyp-mvp.md](prototyp-mvp.md). **Záměrně NE:** perzistence
 napříč runy (scope + patent WB na nemesis), soubojový systém s HP, tahy nepřítele.
