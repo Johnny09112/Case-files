@@ -13,6 +13,15 @@ architektury) je v [[archiv/rozhodnuti-archiv|projekt/archiv/rozhodnuti-archiv.m
 
 ## 2026-08-04
 
+- **D59 (ROZHODNUTÍ UŽIVATELE) — 40 nových vtipných karet SCHVÁLENO** („schvaluji",
+  bez výhrad) dle [[../technika/navrh-40-karet-2026-08-04|návrhu]] ve finálním
+  znění generátora (= klec se slepicemi, finální znění bičíku dle reportu,
+  lázeňské téma nezařazeno, nepředmětné karty nezařazeny — nabídky bez
+  explicitního souhlasu se nerealizují). Postup dle metodiky: kontrafaktuál
+  sloučeného balíku 80 karet PŘED zapečením, měřeno s floor-rukama (4/3/2)
+  i bez nich — obě rozhodnutí (balík + páka ruka z D58/4) padnou naráz nad
+  týmiž čísly; verdikt → uživatel.
+
 - **D58 (ROZHODNUTÍ UŽIVATELE) — výsledky měření D57(2): zapéct všechny tři
   + aktivovat rezervní páku ruka.** Podklad:
   [[../technika/mereni-zar-malone-2026-08-02|technika/mereni-zar-malone-2026-08-02.md]].
