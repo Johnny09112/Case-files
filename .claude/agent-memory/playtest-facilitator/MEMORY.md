@@ -1,5 +1,6 @@
 # Paměť — playtest-facilitator
 
+- [D58(4) sweep hraci[n].ruka](d58-4-sweep-ruka.md) — guardrail-floor (2p=4,3p=3,4p=2) uzavírá jen ~20-28 % mezery K1 3p/4p; páka vyčerpaná, sama nestačí (2026-08-04)
 - [D57(2) měření: Žár V3-A', Malone V2-A', V4-D clamp](d57-2-mereni-zar-malone.md) — (a)/(c) prošly vše, (b) B4 formálně nesplněno (~48% pokles), eskalováno na PM (2026-08-04)
 - [Sim dávky — velikost příkazu](feedback_sim-batch-velikost.md) — watchdog zabíjí pozadí/čekací smyčky, ne výpočet; dělej malé synchronní bloky, taskkill místo kill -9 (2026-08-04)
 - [RÁMUS V-1 kontrafaktuál](ramus-v1-kontrafaktual.md) — zamítnuto: rozpočet nad aditivním součtem je pořád ceník; skrytý tax-cut Žáru vystřelil K1 na 90–96 (2026-07-30)
