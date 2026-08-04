@@ -34,7 +34,7 @@ pronasledovatele:
     rusi:
       typ: stat
       cil: hodnota
-      pravidlo: "Malone je neúplatný a hráči to vědí od startu: dokud je Malone aktivní pronásledovatel, počítá se stat HODNOTA u všech věcí jako 0 ve VŠECH hodnota-slotech CELÉHO runu (ne jen v jeho léčce a konfrontaci). Úplatky na něj ani na nikoho po trase neplatí."
+      pravidlo: "Malone nebere — a postaral se, aby po trase nebral nikdo. Jeho lidé rozeslali seznam: kdo si od téhle posádky vezme peníze nebo cokoli cenného, má na krku federály. Dokud je Malone v patách, počítá se stat HODNOTA u všech věcí jako 0 ve všech hodnota-slotech CELÉHO runu — nezabere úplatek, mýto, platba za službu ani peníze na stůl."
     flavor: "Vyšetřovatel poznamenává, že agent Malone nepije, nekouří a nebere. Nikdo na okrsku nechápe, co tu tedy dělá."
     lecka:
       nazev: Most u Poughkeepsie
