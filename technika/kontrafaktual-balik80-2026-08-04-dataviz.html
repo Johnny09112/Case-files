@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<title>Kontrafaktuál balík 80 (D59) — K1 per počet hráčů, 4 buňky</title>
+<style>
+  .viz-root {
+    color-scheme: light;
+    --surface-1:      #fcfcfb;
+    --page:           #f9f9f7;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #898781;
+    --grid:           #e1e0d9;
+    --baseline-axis:  #c3c2b7;
+    --border:         rgba(11,11,11,0.10);
+    --series-1:       #2a78d6; /* A: balík 40, ruce dnešní (dnešní baseline) */
+    --series-2:       #eb6834; /* D: balík 40 + floor ruce */
+    --series-3:       #1baf7a; /* B: balík 80, ruce dnešní */
+    --series-4:       #eda100; /* C: balík 80 + floor ruce */
+    --status-critical:#d03b3b;
+    --status-good:    #0ca30c;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root {
+      color-scheme: dark;
+      --surface-1:      #1a1a19;
+      --page:           #0d0d0d;
+      --text-primary:   #ffffff;
+      --text-secondary: #c3c2b7;
+      --text-muted:     #898781;
+      --grid:           #2c2c2a;
+      --baseline-axis:  #383835;
+      --border:         rgba(255,255,255,0.10);
+      --series-1:       #3987e5;
+      --series-2:       #d95926;
+      --series-3:       #199e70;
+      --series-4:       #c98500;
+      --status-critical:#e66767;
+      --status-good:    #0ca30c;
+    }
+  }
+  :root[data-theme="dark"] .viz-root {
+    color-scheme: dark;
+    --surface-1:      #1a1a19;
+    --page:           #0d0d0d;
+    --text-primary:   #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted:     #898781;
+    --grid:           #2c2c2a;
+    --baseline-axis:  #383835;
+    --border:         rgba(255,255,255,0.10);
+    --series-1:       #3987e5;
+    --series-2:       #d95926;
+    --series-3:       #199e70;
+    --series-4:       #c98500;
+    --status-critical:#e66767;
+    --status-good:    #0ca30c;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--page); font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .viz-root { max-width: 920px; margin: 24px auto; background:var(--surface-1); border:1px solid var(--border); border-radius:8px; padding:24px 28px; color:var(--text-primary); }
+  h1 { font-size: 16px; font-weight:600; margin: 0 0 2px; }
+  .sub { color: var(--text-secondary); font-size: 13px; margin: 0 0 20px; }
+  .toolbar { display:flex; gap:8px; margin-bottom:16px; }
+  .toolbar button { font: inherit; font-size:12px; padding:5px 10px; border-radius:6px; border:1px solid var(--border); background:transparent; color:var(--text-secondary); cursor:pointer; }
+  .toolbar button[aria-pressed="true"] { background:var(--series-1); color:#fff; border-color:transparent; }
+  svg { display:block; width:100%; height:auto; overflow: visible; }
+  .grid line { stroke: var(--grid); stroke-width:1; }
+  .axis line { stroke: var(--baseline-axis); stroke-width:1; }
+  .axis text, .tick text { fill: var(--text-muted); font-size: 11px; }
+  .cat-label { fill: var(--text-secondary); font-size: 12px; }
+  .bar { rx:4; }
+  .bar.series-1 { fill: var(--series-1); }
+  .bar.series-2 { fill: var(--series-2); }
+  .bar.series-3 { fill: var(--series-3); }
+  .bar.series-4 { fill: var(--series-4); }
+  .value-label { fill: var(--text-primary); font-size: 10px; font-variant-numeric: tabular-nums; }
+  .gate-band { fill: var(--status-good); opacity: 0.08; }
+  .gate-line { stroke: var(--status-critical); stroke-width:1; stroke-dasharray:0; }
+  .gate-label { fill: var(--status-critical); font-size: 10px; }
+  .legend { display:flex; flex-wrap:wrap; gap:18px; align-items:center; margin-top:14px; font-size:12px; color:var(--text-secondary); }
+  .legend .swatch { display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:6px; vertical-align:-1px; }
+  .s1 { background: var(--series-1); }
+  .s2 { background: var(--series-2); }
+  .s3 { background: var(--series-3); }
+  .s4 { background: var(--series-4); }
+  .tooltip { position:absolute; pointer-events:none; background:var(--text-primary); color:var(--surface-1); font-size:12px; padding:6px 9px; border-radius:6px; opacity:0; transition:opacity .1s; white-space:nowrap; z-index:5; }
+  .wrap { position:relative; }
+  table.data-table { width:100%; border-collapse:collapse; font-size:12px; margin-top:8px; }
+  table.data-table th, table.data-table td { text-align:right; padding:5px 8px; border-bottom:1px solid var(--grid); font-variant-numeric: tabular-nums; }
+  table.data-table th:first-child, table.data-table td:first-child { text-align:left; }
+  .hidden { display:none; }
+  .foot { color:var(--text-muted); font-size:11px; margin-top:14px; }
+  rect.hit { fill:transparent; }
+</style>
+</head>
+<body>
+<div class="viz-root">
+  <h1>K1 (% DORUČENO) per počet hráčů — 4 buňky kontrafaktuálu balíku 80 (D59)</h1>
+  <p class="sub">2026-08-04 · bot kompetentní · A/D z 2blok×8000 (D57/2, D58/4) · B/C nově měřeno 2blok×8000 · gate pásmo [45,70] zeleně</p>
+
+  <div class="toolbar">
+    <button id="btn-chart" aria-pressed="true">Graf</button>
+    <button id="btn-table" aria-pressed="false">Tabulka</button>
+  </div>
+
+  <div class="wrap">
+    <div id="tooltip" class="tooltip"></div>
+    <svg id="chart" viewBox="0 0 880 400" role="img" aria-label="Sloupcový graf K1 procenta doručeno pro 1 az 4 hrace, ctyri konfigurace: balik 40 dnesni ruce, balik 40 s floor rukou, balik 80 dnesni ruce, balik 80 s floor rukou, s vyznacenym gate pasmem 45 az 70 procent"></svg>
+  </div>
+
+  <div class="legend" id="legend">
+    <span><span class="swatch s1"></span>A: balík 40, ruce dnešní (dnešní baseline)</span>
+    <span><span class="swatch s2"></span>D: balík 40 + floor ruce</span>
+    <span><span class="swatch s3"></span>B: balík 80, ruce dnešní</span>
+    <span><span class="swatch s4"></span>C: balík 80 + floor ruce</span>
+  </div>
+
+  <table class="data-table hidden" id="table">
+    <thead><tr><th>počet hráčů</th><th>A (b40, ruce dnes)</th><th>D (b40+floor)</th><th>B (b80, ruce dnes)</th><th>C (b80+floor)</th><th>v pásmu [45,70]?</th></tr></thead>
+    <tbody></tbody>
+  </table>
+
+  <p class="foot">Zdroj: technika/kontrafaktual-balik80-2026-08-04.md. 1p se pákou ruka nemění (ruka 8 beze změny) — pokles A→B/C u 1p (68,35→64,0) je čistě efekt obsahu (balík 80 je v průměru „hubenější", D59 příznaná odchylka #1). K6a spread (max−min napříč 1–4p): A 19,0–19,3 · D 14,6 · B 22,1 · C 17,8 (gate ≤6 b., nesplněno ve všech čtyřech).</p>
+</div>
+
+<script>
+const data = [
+  { cat: '1p', a: 68.35, d: 68.35, b: 64.0, c: 64.0 },
+  { cat: '2p', a: 80.65, d: 78.55, b: 80.25, c: 77.05 },
+  { cat: '3p', a: 86.60, d: 81.90, b: 85.15, c: 80.20 },
+  { cat: '4p', a: 87.20, d: 82.75, b: 86.10, c: 81.35 },
+];
+
+const svg = document.getElementById('chart');
+const NS = 'http://www.w3.org/2000/svg';
+const W = 880, H = 400;
+const marginL = 40, marginR = 16, marginT = 16, marginB = 40;
+const plotW = W - marginL - marginR, plotH = H - marginT - marginB;
+const yMax = 100, yMin = 0;
+const yScale = (v) => marginT + plotH - (v - yMin) / (yMax - yMin) * plotH;
+
+function el(tag, attrs) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  return e;
+}
+
+// gate band 45-70
+svg.appendChild(el('rect', { class: 'gate-band', x: marginL, y: yScale(70), width: plotW, height: yScale(45) - yScale(70) }));
+[45, 70].forEach((g) => {
+  svg.appendChild(el('line', { class: 'gate-line', x1: marginL, x2: marginL + plotW, y1: yScale(g), y2: yScale(g) }));
+  const t = el('text', { class: 'gate-label', x: marginL + plotW - 2, y: yScale(g) - 3, 'text-anchor': 'end' });
+  t.textContent = `gate ${g}`;
+  svg.appendChild(t);
+});
+
+// gridlines + y ticks
+[0, 20, 40, 60, 80, 100].forEach((v) => {
+  svg.appendChild(el('line', { class: 'grid', x1: marginL, x2: marginL + plotW, y1: yScale(v), y2: yScale(v) }));
+  const t = el('text', { class: 'tick', x: marginL - 8, y: yScale(v) + 4, 'text-anchor': 'end' });
+  t.textContent = v;
+  svg.appendChild(t);
+});
+
+// axis baseline
+svg.appendChild(el('line', { class: 'axis', x1: marginL, x2: marginL + plotW, y1: marginT + plotH, y2: marginT + plotH }));
+
+const groupW = plotW / data.length;
+const barW = 15, gap = 3;
+const series = [
+  { key: 'a', cls: 'series-1', label: 'A: b40 ruce dnes' },
+  { key: 'd', cls: 'series-2', label: 'D: b40+floor' },
+  { key: 'b', cls: 'series-3', label: 'B: b80 ruce dnes' },
+  { key: 'c', cls: 'series-4', label: 'C: b80+floor' },
+];
+const tooltip = document.getElementById('tooltip');
+
+data.forEach((d, i) => {
+  const cx = marginL + groupW * i + groupW / 2;
+  const groupStart = cx - (series.length * barW + (series.length - 1) * gap) / 2;
+  const bBase = marginT + plotH;
+
+  series.forEach((s, si) => {
+    const x = groupStart + si * (barW + gap);
+    const val = d[s.key];
+    const y = yScale(val);
+    const rect = el('rect', { class: `bar ${s.cls}`, x, y, width: barW, height: bBase - y, rx: 3 });
+    svg.appendChild(rect);
+
+    const lbl = el('text', { class: 'value-label', x: x + barW / 2, y: y - 5, 'text-anchor': 'middle' });
+    lbl.textContent = val.toFixed(1);
+    svg.appendChild(lbl);
+
+    const hit = el('rect', { class: 'hit', x: x - 2, y: marginT, width: barW + 4, height: plotH });
+    hit.addEventListener('mousemove', (e) => {
+      const wrap = svg.parentElement.getBoundingClientRect();
+      tooltip.style.left = (e.clientX - wrap.left + 12) + 'px';
+      tooltip.style.top = (e.clientY - wrap.top - 28) + 'px';
+      tooltip.textContent = `${d.cat} · ${s.label}: ${val.toFixed(2)} %`;
+      tooltip.style.opacity = 1;
+    });
+    hit.addEventListener('mouseleave', () => { tooltip.style.opacity = 0; });
+    svg.appendChild(hit);
+  });
+
+  const cl = el('text', { class: 'cat-label', x: cx, y: marginT + plotH + 20, 'text-anchor': 'middle' });
+  cl.textContent = d.cat;
+  svg.appendChild(cl);
+});
+
+// table view
+const tbody = document.querySelector('#table tbody');
+data.forEach((d) => {
+  const tr = document.createElement('tr');
+  const inBand = (v) => (v >= 45 && v <= 70 ? 'ano' : 'ne');
+  tr.innerHTML = `<td>${d.cat}</td><td>${d.a.toFixed(2)}</td><td>${d.d.toFixed(2)}</td><td>${d.b.toFixed(2)}</td><td>${d.c.toFixed(2)}</td><td>A:${inBand(d.a)} D:${inBand(d.d)} B:${inBand(d.b)} C:${inBand(d.c)}</td>`;
+  tbody.appendChild(tr);
+});
+
+document.getElementById('btn-chart').addEventListener('click', (e) => {
+  document.getElementById('chart').closest('.wrap').classList.remove('hidden');
+  document.getElementById('legend').classList.remove('hidden');
+  document.getElementById('table').classList.add('hidden');
+  e.target.setAttribute('aria-pressed', 'true');
+  document.getElementById('btn-table').setAttribute('aria-pressed', 'false');
+});
+document.getElementById('btn-table').addEventListener('click', (e) => {
+  document.getElementById('chart').closest('.wrap').classList.add('hidden');
+  document.getElementById('legend').classList.add('hidden');
+  document.getElementById('table').classList.remove('hidden');
+  e.target.setAttribute('aria-pressed', 'true');
+  document.getElementById('btn-chart').setAttribute('aria-pressed', 'false');
+});
+</script>
+</body>
+</html>
