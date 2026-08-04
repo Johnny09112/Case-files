@@ -132,10 +132,22 @@ export const RULES = {
     hlucnyUtokPrah: 4,
     zaHlucnyUtok: 1,
     /** Prahy na trati: Zátah (nahradí příští uzel), léčka (vložený uzel),
-     *  konfrontace (finále; přežití srazí Žár). */
+     *  konfrontace (finále; přežití srazí Žár, práh se sám nikdy znovu nenabije). */
     prahy: { zatah: 4, lecka: 7, konfrontace: 10 },
-    /** Přežití konfrontace → Žár klesá na tuto hodnotu (prahy se znovu nabijí). */
-    poPrezitiKonfrontace: 3,
+    /**
+     * V3-A′ „jeden klimax za run" (D58, design-audit-2p-2026-08-02.md §4.2 +
+     * mereni-zar-malone-2026-08-02.md §3). Přežití konfrontace ODEČTE tuhle
+     * hodnotu od Žáru — NENÍ to absolutní cíl jako do D58 (`poPrezitiKonfrontace:
+     * 3` dřív dělalo `changeHeat(3 − heat)`, tj. nastavovalo Žár NA 3). Rozdíl
+     * je zásadní: absolutní cíl + přenabíjecí prahy = „pila" (Žár klesne,
+     * prahy se znovu nabijí, druhé finále je jen otázka pár uzlů — nález D57
+     * §4.1: „4–5× za run uteče problém z lopaty"). Odečet + `konfrontaceOdpalena`
+     * (`state.js` `updateThresholds`, práh konfrontace se po prvním odpálení
+     * v runu už NIKDY nezkoumá znovu) dělá z konfrontace strukturálně nejvýš
+     * jednorázovou událost — Zátah a léčka se dál přenabíjejí normálně, tlak
+     * na ně nemizí.
+     */
+    poPrezitiKonfrontaceOdecet: 3,
     /**
      * P1 (D25d/D26 bod 5): tempo Žáru per počet hráčů — JEDINÁ per-count páka,
      * která nesahá na obtížnost běžných uzlů (falzifikace kalibrace-3).

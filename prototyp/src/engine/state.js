@@ -29,7 +29,19 @@
  *   (kolo–dvě), které maže LEHKÉ postihy; těžké přetrvávají a léčí se jen
  *   v motelu.
  * - Konfrontace v pásmu PRŮŠVIH = prohra (konfrontace_prohra); jinak přežití
- *   srazí Žár na `poPrezitiKonfrontace`.
+ *   odečte `zar.poPrezitiKonfrontaceOdecet` od Žáru (V3-A′, D58) — NE nastaví
+ *   na absolutní cíl jako dřív. Práh konfrontace se navíc po prvním odpálení
+ *   v runu už NIKDY znovu nenabíjí (`konfrontaceOdpalena`, „jeden klimax za
+ *   run") — Zátah a léčka se dál nabíjejí normálně.
+ * - Run-wide rušení statu pronásledovatelem (dnes jen Malone, `rusi.typ ===
+ *   'stat'`) se aktivuje TEPRVE prvním překročením prahu Zátahu
+ *   (`zatahLimitEverCrossed`, V2-A′, D58) — do té doby úplatky/hodnota platí
+ *   normálně; od aktivace dál run-wide do konce runu. Štítkové rušení (dnes
+ *   Brody/GANGSTER) touhle branou neprochází a platí run-wide od startu
+ *   beze změny (`effectiveRusi`).
+ * - Skryté prahy se clampují supply-aware (V4-D, D58): na viditelném slotu
+ *   situace, kde GANGSTER auto-failuje, je strop nejvyšší stat dosažitelný
+ *   NON-GANGSTER věcí, ne plochý `statMax` (`resolve.js` `nonGangsterStatMax`).
  */
 
 import { createRng } from './rng.js';
@@ -40,6 +52,7 @@ import {
   bandFromHits,
   maxAchievableZasahy,
   deriveTelegrafSignal,
+  nonGangsterStatMax,
 } from './resolve.js';
 import {
   EVENT,
@@ -91,6 +104,9 @@ export function createRun({ seed, content, rules, players, pronasledovatelId }) 
   const truhly = content.mista.filter((m) => m.typ === 'truhla');
   const motely = content.mista.filter((m) => m.typ === 'motel');
   const gangsterParams = content.stitky.find((s) => s.id === 'GANGSTER')?.parametry ?? null;
+  // V4-D (D58): supply-aware clamp — spočítá se JEDNOU při načtení obsahu,
+  // nemění ani jednu kartu (resolve.js `nonGangsterStatMax`/`revealSlots`).
+  const nonGangsterMax = nonGangsterStatMax(content.veci, rules.staty);
 
   /* --- pronásledovatel --- */
   const pursuer = pronasledovatelId
@@ -147,6 +163,13 @@ export function createRun({ seed, content, rules, players, pronasledovatelId }) 
   let zatahPending = false;
   let ambushPending = false;
   let confrontationPending = false;
+  // V2-A′ (D58): jednou true, navždy true — na rozdíl od `firedThresholds` se
+  // NIKDY nemaže, i když Žár zase klesne pod práh Zátahu (na to slouží
+  // `firedThresholds`, které dál umožňuje Zátahu se opakovat).
+  let zatahLimitEverCrossed = false;
+  // V3-A′ (D58): „jeden klimax za run" — jakmile se práh konfrontace jednou
+  // odpálí, `updateThresholds` ho už nikdy znovu nezkoumá (žádné druhé finále).
+  let konfrontaceOdpalena = false;
 
   /** @type {'map'|'motel_offer'|'motel'|'commit'|'assign'|'confirm'|'ended'} */
   let phase = 'map';
@@ -257,7 +280,8 @@ export function createRun({ seed, content, rules, players, pronasledovatelId }) 
     });
     // Nikdo aktivní (všichni složení) → situace se auto-vyhodnotí (samé auto-faily).
     if (commitPlan.length === 0) {
-      situ.odhaleno = revealSlots(situ.def, rng, rules);
+      situ.odhaleno = revealSlots(situ.def, rng, rules, { stitekParams: gangsterParams, nonGangsterMax });
+      situ.rusiEfektivni = effectiveRusi();
       logSituationRevealed();
       logAssignContext();
       situ.assignment = [];
@@ -301,6 +325,11 @@ export function createRun({ seed, content, rules, players, pronasledovatelId }) 
       situace_id: situ.def.id,
       typ: situ.typ,
       typ_mista: situ.typMista,
+      // V2-A′ (D58): rušení platné PRÁVĚ V TOMHLE uzlu — na rozdíl od statického
+      // `run_started.rusi` (definice pronásledovatele) reflektuje, jestli Malone
+      // svou branu (práh Zátahu) už v runu překročil. Report/sim počítají K5/K5f/
+      // oracle nad TÍMHLE polem, ne nad `run_started.rusi`.
+      rusi_efektivni: situ.rusiEfektivni ?? null,
       sloty: situ.odhaleno.map((s) => ({
         slot_index: s.slot_index,
         role: s.role,
@@ -509,22 +538,55 @@ export function createRun({ seed, content, rules, players, pronasledovatelId }) 
     // per-count páka, která nesahá na obtížnost běžných uzlů.
     const offset = rules.zar.prahOffsetDlePoctu?.[players.length] ?? 0;
     for (const [nazev, prahBase] of Object.entries(rules.zar.prahy)) {
+      // V3-A′ (D58): jednou odpálený práh konfrontace se v tomhle runu už
+      // NIKDY znovu nezkoumá — ani kdyby Žár znovu vystoupal na jeho úroveň.
+      if (nazev === 'konfrontace' && konfrontaceOdpalena) continue;
       const prah = Math.max(1, prahBase - offset);
       if (heat >= prah && !firedThresholds.has(nazev)) {
         firedThresholds.add(nazev);
-        if (nazev === 'zatah') zatahPending = true;
-        else if (nazev === 'lecka') ambushPending = true;
-        else if (nazev === 'konfrontace') confrontationPending = true;
+        if (nazev === 'zatah') {
+          zatahPending = true;
+          zatahLimitEverCrossed = true; // V2-A′ (D58): navždy — brána pro Maloneovo rušení
+        } else if (nazev === 'lecka') {
+          ambushPending = true;
+        } else if (nazev === 'konfrontace') {
+          confrontationPending = true;
+          konfrontaceOdpalena = true;
+        }
       } else if (heat < prah) {
         firedThresholds.delete(nazev);
       }
     }
   }
 
+  /**
+   * Je run-wide rušení pronásledovatele PRÁVĚ TEĎ aktivní? (D58)
+   * Statové rušení (Malone, `rusi.typ === 'stat'`, V2-A′) se aktivuje teprve
+   * prvním překročením prahu Zátahu; do té doby úplatky/hodnota platí.
+   * Štítkové rušení (Brody, `rusi.typ === 'stitek'`) touhle branou neprochází
+   * — platí run-wide od startu, jak sliboval kanon od začátku (D20a).
+   */
+  function jeRusiAktivni() {
+    if (!rusi) return false;
+    if (rusi.typ === 'stat') return zatahLimitEverCrossed;
+    return true;
+  }
+
+  /** Rušení, které se smí předat `resolveSlot`/`maxAchievableZasahy` PRÁVĚ TEĎ. */
+  function effectiveRusi() {
+    return jeRusiAktivni() ? rusi : null;
+  }
+
   /* ================= resoluce situace ================= */
 
   function resolveSituation() {
     const sloty = situ.odhaleno;
+    // V2-A′ (D58): rušení zachycené PŘI ODHALENÍ tohohle uzlu (`situ.rusiEfektivni`)
+    // — ne přepočítané znovu, ať log (`situation_revealed.rusi_efektivni`)
+    // a skutečná resoluce vždy mluví o TÉŽE hodnotě, i kdyby se mezitím (gamble)
+    // stalo cokoli, co by teoreticky mohlo pohnout Žárem (dnes nic nehýbe, ale
+    // jednoznačnost je zadarmo).
+    const rusiUzlu = situ.rusiEfektivni ?? null;
     const assignByCard = new Map(situ.assignment.map((a) => [a.karta_id, a]));
     const kartaById = new Map(situ.committed.map((c) => [c.karta.id, c.karta]));
     /** @type {{hrac_id:string, zasah:boolean, slot_index:number, duvod?:string, prah?:number, stat_hodnota?:(number|number[]|null)}[]} */ const vysledky = [];
@@ -554,7 +616,7 @@ export function createRun({ seed, content, rules, players, pronasledovatelId }) 
       }
       const karta = kartaById.get(a.karta_id);
       const zamky = zamkyHrace(findCharacter(a.hrac_id));
-      const r = resolveSlot({ karta, slot, rusi, stitekParams: gangsterParams, typSituace: situ.typ, zamky });
+      const r = resolveSlot({ karta, slot, rusi: rusiUzlu, stitekParams: gangsterParams, typSituace: situ.typ, zamky });
       if (r.zasah) zasahy += 1;
       vysledky.push({
         hrac_id: a.hrac_id,
@@ -591,7 +653,7 @@ export function createRun({ seed, content, rules, players, pronasledovatelId }) 
       committedKarty.push(null);
       committedZamky.push(null);
     }
-    const maxZasahy = maxAchievableZasahy(committedKarty, sloty, rusi, gangsterParams, situ.typ, committedZamky);
+    const maxZasahy = maxAchievableZasahy(committedKarty, sloty, rusiUzlu, gangsterParams, situ.typ, committedZamky);
 
     // Náklad: PRŮŠVIH bere bednu.
     let naklad_ztrata = 0;
@@ -627,7 +689,11 @@ export function createRun({ seed, content, rules, players, pronasledovatelId }) 
         runOver = true;
         endCause = { vysledek: 'NEVYRESENO', pricina: END_PRICINA.KONFRONTACE_PROHRA };
       } else {
-        changeHeat(rules.zar.poPrezitiKonfrontace - heat, ZAR_DUVOD.KONFRONTACE_PREZITA);
+        // V3-A′ (D58): pevný ODEČET od Žáru, ne nastavení na absolutní cíl —
+        // `updateThresholds` navíc práh konfrontace po tomhle bodu už nikdy
+        // znovu nezkoumá (`konfrontaceOdpalena`), takže tenhle pokles nemůže
+        // otevřít druhé finále, ať skončí kdekoli.
+        changeHeat(-rules.zar.poPrezitiKonfrontaceOdecet, ZAR_DUVOD.KONFRONTACE_PREZITA);
       }
     }
 
@@ -759,7 +825,11 @@ export function createRun({ seed, content, rules, players, pronasledovatelId }) 
       return structuredClone({
         faze: phase,
         seed,
-        pronasledovatel: { id: pursuer.id, nazev: pursuer.nazev, rusi },
+        // `rusiAktivni` (D58): je run-wide rušení PRÁVĚ TEĎ v platnosti? U Malonea
+        // (typ 'stat', V2-A′) false, dokud Žár poprvé nepřekročí práh Zátahu —
+        // UI (commit.js/assign.js přeškrtnutá hodnota) na tomhle poli závisí,
+        // ať netvrdí rušení dřív, než skutečně platí.
+        pronasledovatel: { id: pursuer.id, nazev: pursuer.nazev, rusi, rusiAktivni: jeRusiAktivni() },
         zar: heat,
         zbyvaBeden: crates,
         kredity: credits,
@@ -909,7 +979,8 @@ export function createRun({ seed, content, rules, players, pronasledovatelId }) 
         drzitel_mapy: players.length === 3 ? characters[drzitelMapyIdx].id : null,
       });
       // Odhalení situace.
-      situ.odhaleno = revealSlots(situ.def, rng, rules);
+      situ.odhaleno = revealSlots(situ.def, rng, rules, { stitekParams: gangsterParams, nonGangsterMax });
+      situ.rusiEfektivni = effectiveRusi();
       logSituationRevealed();
       logAssignContext();
       phase = 'assign';

@@ -37,15 +37,62 @@ export function slotPrah(kotva, rng, rules) {
 }
 
 /**
+ * Nejvyšší hodnota KAŽDÉHO statu mezi věcmi BEZ štítku GANGSTER (V4-D, D58,
+ * design-audit-2p-2026-08-02.md §5.2). Počítá se JEDNOU při načtení obsahu
+ * (`state.js` `createRun`) — je to legální strop pro viditelné sloty v
+ * situacích, kde GANGSTER auto-failuje (`stitky.yaml` `viditelna_role_selze`):
+ * taková věc na takovém slotu propadne bez ohledu na staty, takže nesmí
+ * zvedat clamp prahu, i když by jinak byla statově nejsilnější v balíku.
+ * @param {object[]} veci obsah/veci.yaml (validovaný obsah)
+ * @param {readonly string[]} staty rules.staty
+ * @returns {Record<string, number>}
+ */
+export function nonGangsterStatMax(veci, staty) {
+  const out = {};
+  for (const stat of staty) {
+    out[stat] = veci.reduce((m, v) => (v.stitek === 'GANGSTER' ? m : Math.max(m, v.staty?.[stat] ?? 0)), 0);
+  }
+  return out;
+}
+
+/**
+ * Supply-aware strop prahu pro JEDEN slot (V4-D). Na viditelném slotu situace,
+ * kde GANGSTER auto-failuje, a bez slotové výjimky (`stitek_citlivy: GANGSTER`),
+ * se strop neb bere jako `statMax`, ale jako nejvyšší stat dosažitelný LEGÁLNÍ
+ * (non-GANGSTER) kartou — jinak mohl práh padnout na hodnotu, kterou neprojde
+ * žádná karta ve hře (design-audit-2p-2026-08-02.md §5.1, nález D57).
+ * Beze změny (vrací `statMax`), když `nonGangsterMax` není k dispozici — API
+ * je zpětně kompatibilní s voláním bez opts (testy, staré snímky).
+ * @param {{stat: string|string[], viditelnost: string, stitek_citlivy?: string|null}} slot
+ * @param {number} statMax
+ * @param {string|undefined} chovani `stitekParams.chovani_dle_typu[typSituace]`
+ * @param {Record<string, number>|null} nonGangsterMax
+ */
+function supplyAwareStatMax(slot, statMax, chovani, nonGangsterMax) {
+  if (!nonGangsterMax) return statMax;
+  if (slot.viditelnost !== 'viditelna') return statMax;
+  if (chovani !== 'viditelna_role_selze') return statMax;
+  if (slot.stitek_citlivy === 'GANGSTER') return statMax; // slotová výjimka: zbraň tu vítána
+  const staty = Array.isArray(slot.stat) ? slot.stat : [slot.stat];
+  return Math.min(statMax, ...staty.map((s) => nonGangsterMax[s] ?? statMax));
+}
+
+/**
  * Odhalí sloty situace: dorolí šum ke každé kotvě, dopočítá typ prahu.
  * @param {{sloty: object[], typ?: string}} situace definice situace (obsah)
  * @param {ReturnType<import('./rng.js').createRng>} rng
  * @param {typeof import('./rules.js').RULES} rules
+ * @param {{stitekParams?: {chovani_dle_typu: object}|null, nonGangsterMax?: Record<string, number>|null}} [opts]
+ *   V4-D (D58): `stitekParams` + `nonGangsterMax` dohromady určují supply-aware
+ *   clamp (`supplyAwareStatMax`). Nepovinné — bez nich se clampuje na `statMax`
+ *   jako dřív (zpětná kompatibilita volání bez opts).
  * @returns {object[]} odhalené sloty (s `prah`, `sum`, `typ_prahu`)
  */
-export function revealSlots(situace, rng, rules) {
+export function revealSlots(situace, rng, rules, opts = {}) {
   const offset = rules.kotvaOffset ?? 0;
   const frakce = rules.kotvaBumpFrakce ?? 0;
+  const { stitekParams = null, nonGangsterMax = null } = opts;
+  const chovani = stitekParams?.chovani_dle_typu?.[situace.typ];
   return situace.sloty.map((s, i) => {
     const kombi = Array.isArray(s.stat);
     const sum = rng.int(2 * rules.sumRozsah + 1) - rules.sumRozsah;
@@ -56,6 +103,7 @@ export function revealSlots(situace, rng, rules) {
     const bumpatelny = s.viditelnost === 'viditelna' && s.kotva < rules.kotvaMax;
     const bump = bumpatelny && stableUnit(`${situace.id ?? ''}:${i}`) < frakce ? 1 : 0;
     const kotva = Math.max(1, s.kotva + offset + bump);
+    const clampMax = supplyAwareStatMax(s, rules.statMax, chovani, nonGangsterMax);
     return {
       slot_index: i,
       role: s.role,
@@ -63,8 +111,9 @@ export function revealSlots(situace, rng, rules) {
       kombi,
       kotva,
       sum,
-      // Clamp do [0, statMax] — širší šum (kalibrace-2) nesmí dělat beznadějné sloty (K5).
-      prah: Math.max(0, Math.min(rules.statMax, kotva + sum)),
+      // Clamp do [0, clampMax] — širší šum (kalibrace-2) nesmí dělat beznadějné
+      // sloty (K5); clampMax je supply-aware (V4-D) místo plochého statMax.
+      prah: Math.max(0, Math.min(clampMax, kotva + sum)),
       typ_prahu: kombi ? 'kombi_oba' : s.stitek_citlivy ? 'stitek' : 'jednostat',
       viditelnost: s.viditelnost,
       stitek_citlivy: s.stitek_citlivy ?? null,

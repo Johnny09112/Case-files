@@ -26,6 +26,27 @@ import { estimateHitsVsKotva } from './estimate.js';
 export { decideAssignment };
 
 /**
+ * Run-wide rušení pronásledovatele, tak jak PRÁVĚ TEĎ platí (D58/V2-A′).
+ * `state.pronasledovatel.rusi` je statická DEFINICE (veřejné pravidlo od
+ * startu runu, D20a); u statového rušení (dnes Malone) se ale samotný EFEKT
+ * aktivuje až prvním překročením prahu Zátahu (`state.pronasledovatel.
+ * rusiAktivni`, engine `jeRusiAktivni`). Bez tohohle gatu by „vševědoucí"
+ * strategie (oracle/memorizacni) i běžné boty počítaly s rušením o uzly
+ * dřív, než skutečně kouše — engine samotný takhle nerozhodl (invariant
+ * `max_achievable === reálné zásahy` u oracle by pak nesouhlasil, protože bot
+ * by plánoval proti jinému pravidlu, než jaké `resolveSlot` použil).
+ * Štítkové rušení (dnes Brody) touhle branou neprochází — platí od startu.
+ * @param {object} state veřejný snapshot enginu (getState())
+ * @returns {{typ: string, cil: string}|null}
+ */
+function rusiEfektivni(state) {
+  const r = state.pronasledovatel?.rusi ?? null;
+  if (!r) return null;
+  if (r.typ === 'stat' && !state.pronasledovatel?.rusiAktivni) return null;
+  return r;
+}
+
+/**
  * @param {number} seed
  * @param {typeof RULES} [rules] pro model šumu (kalibrace-2)
  * @param {object|null} [content] obsah — POUZE pro „vševědoucí" měřicí strategie
@@ -121,7 +142,9 @@ export function createStrategy(spec, seed, rules = RULES, content = null) {
       // D34/N3: rušený stat je VEŘEJNÝ od startu runu (pronasledovatele.yaml:
       // „hráči to vědí od startu"). Přiřazení ho respektovalo, commit ne — bot
       // proti Malonovi vybíral karty podle statu, který je zaručeně 0.
-      const rusi = state.pronasledovatel?.rusi ?? null;
+      // D58/V2-A′: `rusiEfektivni()` navíc gatuje statové rušení prahem Zátahu —
+      // viz komentář u definice funkce.
+      const rusi = rusiEfektivni(state);
       // D34/N4: cena hlučné karty v Žáru. `hlucnost_zar` je v stitky.yaml, Brodyho
       // zdvojnásobení je jeho veřejné run-wide pravidlo, prahy jsou vyznačené na
       // trati (prototyp-mvp.md §Mapa). Bot dřív Žár nečetl vůbec, přestože hlučné
@@ -275,7 +298,7 @@ export function createStrategy(spec, seed, rules = RULES, content = null) {
         strat: s.assign,
         committed,
         sloty,
-        rusi: state.pronasledovatel?.rusi ?? null,
+        rusi: rusiEfektivni(state), // D58/V2-A′
         stitekParams: state.situace.stitekParams ?? null,
         typSituace: state.situace.typ,
         goalByHrac,
@@ -313,7 +336,7 @@ function odhadZeStavu(state, noise) {
   return estimateHitsVsKotva({
     committed: state.situace.committed,
     sloty: state.situace.odhaleno.sloty,
-    rusi: state.pronasledovatel?.rusi ?? null,
+    rusi: rusiEfektivni(state), // D58/V2-A′
     stitekParams: state.situace.stitekParams ?? null,
     typSituace: state.situace.typ,
     zamkyKaret: state.situace.committed.map((c) => zamkyPostavy(state, c.hrac_id)),
@@ -348,7 +371,7 @@ function nejmeneUzitecnaId(state, noise) {
   if (c.length === 0) return null;
   const spolecne = {
     sloty: state.situace.odhaleno.sloty,
-    rusi: state.pronasledovatel?.rusi ?? null,
+    rusi: rusiEfektivni(state), // D58/V2-A′
     stitekParams: state.situace.stitekParams ?? null,
     typSituace: state.situace.typ,
     ...noise,

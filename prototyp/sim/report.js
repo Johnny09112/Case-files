@@ -147,12 +147,18 @@ function verdiktyVsechCilu(events, cile) {
 export function collectRunStats(events, opts = {}) {
   const start = events.find((e) => e.type === EVENT.RUN_STARTED) ?? {};
   const konec = events[events.length - 1];
-  const rusi = start.rusi ?? null;
+  // D58/V2-A′: `start.rusi` je jen STATICKÁ definice pronásledovatele (co bude
+  // kdy platit) — od V2-A′ se run-wide statové rušení (Malone) aktivuje TEPRVE
+  // prvním překročením prahu Zátahu, takže co platí V UZLU se čte z
+  // `situation_revealed.rusi_efektivni` (logováno per uzel, `state.js`
+  // `effectiveRusi`), ne ze statického run_started. `start.rusi` zůstává jako
+  // fallback pro starší JSONL dávky bez toho pole (log před D58).
+  const rusiStaticke = start.rusi ?? null;
 
   /** nodeIndex → surová data uzlu. */
   const nodes = new Map();
   const node = (i) => {
-    if (!nodes.has(i)) nodes.set(i, { nodeIndex: i, sloty: null, commit: null, ctx: null, gamble: null, band: null, slotVysledky: [] });
+    if (!nodes.has(i)) nodes.set(i, { nodeIndex: i, sloty: null, commit: null, ctx: null, gamble: null, band: null, slotVysledky: [], rusiEfektivni: undefined });
     return nodes.get(i);
   };
 
@@ -171,6 +177,9 @@ export function collectRunStats(events, opts = {}) {
         n.situaceId = e.situace_id ?? null;
         n.typ = e.typ ?? e.typ_mista ?? null;
         n.typMista = e.typ_mista ?? null;
+        // `rusi_efektivni` chybí jen ve starých dávkách (log před D58) — fallback
+        // na statickou definici zachovává zpětnou čitelnost starých JSONL.
+        n.rusiEfektivni = 'rusi_efektivni' in e ? e.rusi_efektivni : rusiStaticke;
         break;
       }
       case EVENT.ASSIGN_CONTEXT:
@@ -207,7 +216,9 @@ export function collectRunStats(events, opts = {}) {
     // a zředila by K2 drift uzlem, který na páteři vůbec nestojí.
     const vlozene = VLOZENE_TYPY.has(n.typ);
     if (!vlozene) ordUzlu += 1;
-    uzly.push(nodeRecord(n, { rusi, ordVse, ordUzlu: vlozene ? null : ordUzlu, infoPostihy: infoVCase.get(n.nodeIndex) ?? 0 }));
+    // D58/V2-A′: rušení PLATNÉ V TOMHLE UZLU, ne statická definice — viz komentář u `rusiStaticke`.
+    const rusiUzlu = n.rusiEfektivni !== undefined ? n.rusiEfektivni : rusiStaticke;
+    uzly.push(nodeRecord(n, { rusi: rusiUzlu, ordVse, ordUzlu: vlozene ? null : ordUzlu, infoPostihy: infoVCase.get(n.nodeIndex) ?? 0 }));
   }
 
   const posledni = uzly[uzly.length - 1] ?? null;

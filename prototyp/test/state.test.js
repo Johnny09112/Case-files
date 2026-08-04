@@ -7,7 +7,7 @@
 import { describe, it, expect } from 'vitest';
 import { createRun } from '../src/engine/state.js';
 import { RULES } from '../src/engine/rules.js';
-import { EVENT, BAND } from '../src/engine/events.js';
+import { EVENT, BAND, ZAR_DUVOD } from '../src/engine/events.js';
 import { drive, syntetickyObsah, hraci } from './helpers.js';
 
 function typy(events) {
@@ -80,9 +80,17 @@ describe('pásma → důsledky', () => {
 
 describe('náklad a konec runu', () => {
   it('vyčerpání beden ukončí run jako NEVYŘEŠENO (bedny_0)', () => {
+    // Default balikVeci (helpers.js): 8 specialistů na KAŽDÝ stat, base 0 jinde.
+    // Situace míchá 4 RŮZNÉ staty do svých 4 slotů (utok/obrana/hodnota/nastroj),
+    // takže žádná jednostatová karta neprojde víc než jedním slotem najednou —
+    // PRŮŠVIH je pořád naprostá většina, bez nutnosti degenerovat celý balík na
+    // samé nuly. (V4-D, D58: plošné vynulování VŠECH karet by kolabovalo
+    // supply-aware clamp na 0 pro každý viditelný slot — „nejvyšší legální
+    // karta" by byla 0 → auto-hit na slotech, kde měl PRŮŠVIH jistě padnout.
+    // Reálný obsah/veci.yaml tenhle degenerovaný stav nikdy nemá, viz
+    // technika/design-audit-2p-2026-08-02.md §5.2/D6.)
     const content = syntetickyObsah();
-    // slabé karty → samé PRŮŠVIHy → ztráta beden
-    const run = createRun({ seed: 9, content: { ...content, veci: content.veci.map((v) => ({ ...v, staty: { utok: 0, obrana: 0, hodnota: 0, improvizace: 0, nastroj: 0 } })) }, rules: RULES, players: hraci(1), pronasledovatelId: 'agent-malone' });
+    const run = createRun({ seed: 9, content, rules: RULES, players: hraci(1), pronasledovatelId: 'agent-malone' });
     const events = drive(run);
     const konec = events[events.length - 1];
     expect(konec.vysledek).toBe('NEVYRESENO');
@@ -289,16 +297,183 @@ describe('postih — oběť = vlastník slotu s největší statovou mezerou (D5
   });
 });
 
-describe('pronásledovatel run-wide', () => {
-  it('Malone: hodnota-slot nelze splnit ani ideální hodnota-věcí', () => {
+describe('pronásledovatel run-wide — Brody (štítkové rušení, beze změny D58)', () => {
+  it('Brody run-wide zdvojnásobuje Žár za GANGSTER od první minuty (negatováno branou V2-A′)', () => {
+    // Kontrolní protějšek k Maloneově testu níže: štítkové rušení (typ 'stitek')
+    // neprochází Zátah-branou (`jeRusiAktivni` v state.js) — mělo by fungovat
+    // úplně stejně jako před D58. Ruka natažená na celý balík (42 karet)
+    // zaručuje, že obě GANGSTER karty jsou k dispozici hned od uzlu 1 —
+    // `pickCommit` je pak preferuje, ať test nezávisí na náhodě rozdání.
     const content = syntetickyObsah();
-    const run = createRun({ seed: 2, content, rules: RULES, players: hraci(1), pronasledovatelId: 'agent-malone' });
+    const rules = { ...RULES, ruce: { ...RULES.ruce, 1: { ruka: content.veci.length, commit: [4] } } };
+    const run = createRun({ seed: 8, content, rules, players: hraci(1), pronasledovatelId: 'serif-brody' });
+    // `legal` je stálý snímek ruky pro CELÝ uzel (viz drive() v helpers.js) —
+    // při kvótě 4 karet/uzel je potřeba si vybrané id pamatovat, jinak by se
+    // stejná GANGSTER karta nabídla dvakrát (a podruhé už není v ruce).
+    const vybrane = new Set();
+    const events = drive(run, {
+      pickCommit: (legal) => {
+        const gangster = legal.find((c) => c.stitek === 'GANGSTER' && !vybrane.has(c.id));
+        const karta = gangster ?? legal.find((c) => !vybrane.has(c.id));
+        vybrane.add(karta.id);
+        return karta;
+      },
+    });
+    const zdvojene = events.some((e) => e.type === EVENT.ZAR_MOVE && e.duvod === ZAR_DUVOD.HLUCNE_GANGSTER && e.delta === 2);
+    expect(zdvojene).toBe(true);
+  });
+});
+
+/** Situace se 4 viditelnými sloty na daný stat, řízená kotva (pro V2-A′/V3-A′ testy). */
+function situaceJednostat(id, stat, kotva, typ = 'npc') {
+  return {
+    id,
+    typ,
+    svet: '1930',
+    telegraf: 'test',
+    text: 'x',
+    sloty: [0, 1, 2, 3].map((i) => ({ role: `role-${i}`, stat, kotva, viditelnost: 'viditelna' })),
+    pasmove_vysledky: {
+      hladce_loot: { loot: 'karta' },
+      s_nasledky: { postih_lehky: ['lehky-info'] },
+      prusvih: { postih_tezky: ['tezky-lock'] },
+    },
+  };
+}
+
+/**
+ * Balík JEDNOHO druhu karty (unikátní id, stejné staty) — u deterministických
+ * testů na řízenou kotvu odstraní závislost výsledku na tom, KTERÁ konkrétní
+ * karta se náhodou rozdala/dolízla (na rozdíl od `balikVeci` v helpers.js).
+ */
+function uniformniVeci(staty, pocet = 40) {
+  const base = { utok: 0, obrana: 0, hodnota: 0, improvizace: 0, nastroj: 0 };
+  return Array.from({ length: pocet }, (_, i) => ({
+    id: `u${i}`, nazev: `u${i}`, staty: { ...base, ...staty }, svet: 'sdilena', premiova: false, text: 'x',
+  }));
+}
+
+describe('pronásledovatel run-wide — Malone V2-A′ (aktivace prahem Zátahu, D58)', () => {
+  // Uniformní balík (hodnota 5, vše ostatní 0) — `drive()` s výchozím (poziční)
+  // commitem/assignem je tak plně deterministický bez ohledu na to, která
+  // konkrétní karta se dolízla (žádná karta v balíku se od jiné neliší).
+  const veciHodnota5 = uniformniVeci({ hodnota: 5 });
+
+  it('PŘED prvním překročením prahu Zátahu hodnota platí normálně (rušení neaktivní)', () => {
+    // 1 hráč, 1 uzel: start heat 0 << práh zatah 4 → gating musí nechat
+    // hodnota-kartu projít stejně, jako by pronásledovatel nebyl Malone.
+    const rules = { ...RULES, sumRozsah: 0, uzluNaRun: 1 };
+    const content = syntetickyObsah({ situace: [situaceJednostat('s-hodnota', 'hodnota', 2)], veci: veciHodnota5 });
+    const run = createRun({ seed: 31, content, rules, players: hraci(1), pronasledovatelId: 'agent-malone' });
     const events = drive(run);
-    // libovolná karta v hodnota-slotu → pronásledovatel_efekt.cil === 'hodnota'
-    const vinilHodnotu = events.some(
-      (e) => e.type === EVENT.SLOT_RESOLVED && e.pronasledovatel_efekt?.cil === 'hodnota'
-    );
-    expect(vinilHodnotu).toBe(true);
+    const revealed = events.find((e) => e.type === EVENT.SITUATION_REVEALED);
+    expect(revealed.rusi_efektivni).toBeNull(); // V2-A′: rušení PRÁVĚ TEĎ neplatí
+    const resolved = events.filter((e) => e.type === EVENT.SLOT_RESOLVED);
+    expect(resolved).toHaveLength(4);
+    expect(resolved.every((e) => e.zasah)).toBe(true);
+    expect(resolved.every((e) => e.duvod === 'proslo')).toBe(true);
+    expect(resolved.every((e) => e.pronasledovatel_efekt === null)).toBe(true);
+  });
+
+  it('PO prvním překročení prahu Zátahu se rušení aktivuje a platí run-wide dál (V2-A′, D58)', () => {
+    // 2 hráči → prahOffsetDlePoctu[2]=2 → práh zatah = max(1, 4−2) = 2, takže
+    // JEDEN PRŮŠVIH (+2 Žár) uzavře bránu. Uzel 1: útok-slot s nesplnitelným
+    // prahem (5; uniformní karta má utok=0) → jistý PRŮŠVIH → Žár 0→2 → Zátah
+    // se vynutí jako uzel 2 (situace typu 'zatah') s hodnota-slotem (kotva 2)
+    // — tam už rušení musí platit i přes hodnota=5 na kartě.
+    const rules = { ...RULES, sumRozsah: 0, uzluNaRun: 2 };
+    const content = syntetickyObsah({
+      // 'lokace' (ne 'npc'): GANGSTER tam vždy projde ('vzdy_pass'), takže V4-D
+      // supply-aware clamp na tenhle slot nesahá — kotva 5 zůstává plný strop
+      // statMax i nad uniformním balíkem, kde by jinak `nonGangsterMax` kolabovalo
+      // na hodnotu jediné karty v balíku (D58 nález z ladění tohohle testu).
+      situace: [situaceJednostat('s-prusvih', 'utok', 5, 'lokace'), situaceJednostat('s-zatah-hodnota', 'hodnota', 2, 'zatah')],
+      veci: veciHodnota5,
+    });
+    const run = createRun({ seed: 32, content, rules, players: hraci(2), pronasledovatelId: 'agent-malone' });
+    const events = drive(run);
+
+    const revealedPrusvih = events.find((e) => e.type === EVENT.SITUATION_REVEALED && e.situace_id === 's-prusvih');
+    expect(revealedPrusvih.rusi_efektivni).toBeNull(); // uzel 1 ještě před branou
+    // Uzel 1 byl jistý PRŮŠVIH (kotva 5, uniformní karta utok=0) → Žár 0→2 =
+    // práh Zátahu pro 2p (offset 2) → vynucený Zátah jako uzel 2 (`byl_zatah`).
+    const zatahVynucen = events.some((e) => e.type === EVENT.MAP_MOVE && e.byl_zatah);
+    expect(zatahVynucen).toBe(true);
+
+    const revealedZatah = events.find((e) => e.type === EVENT.SITUATION_REVEALED && e.situace_id === 's-zatah-hodnota');
+    expect(revealedZatah.rusi_efektivni).toEqual({ typ: 'stat', cil: 'hodnota' });
+    const resolvedZatah = events.filter((e) => e.type === EVENT.SLOT_RESOLVED && e.stat === 'hodnota');
+    expect(resolvedZatah).toHaveLength(4);
+    expect(resolvedZatah.every((e) => !e.zasah)).toBe(true);
+    expect(resolvedZatah.every((e) => e.duvod === 'stat_zrusen')).toBe(true);
+    expect(resolvedZatah.every((e) => e.pronasledovatel_efekt?.cil === 'hodnota')).toBe(true);
+    expect(events.at(-1).vysledek).toBe('DORUCENO');
+  });
+});
+
+describe('Žár V3-A′ — jeden klimax za run (D58)', () => {
+  // Uniformní karta s utok/obrana/improvizace=3: proti běžným npc/zatah uzlům
+  // (kotva 5 níže) VŽDY propadne (3<5 → jistý PRŮŠVIH, žene Žár nahoru);
+  // proti pronásledovatelově vlastní léčce/konfrontaci (helpers.js `mkPursuer`,
+  // kotva 3 na všech slotech) VŽDY projde (3≥3 → jisté přežití/LOOT) —
+  // deterministické bez ohledu na to, která konkrétní karta se dolízla.
+  const veciStred = uniformniVeci({ utok: 3, obrana: 3, improvizace: 3 });
+
+  /**
+   * 8 běžných útok-uzlů (kotva 5, jistý PRŮŠVIH) + vynucený Zátah (stejně).
+   * 'lokace', ne 'npc': GANGSTER tam vždy projde ('vzdy_pass'), takže V4-D
+   * supply-aware clamp nesahá na kotvu — nad uniformním balíkem `veciStred`
+   * by jinak `nonGangsterMax.utok` kolabovalo na 3 (jediná hodnota v balíku)
+   * a kotva 5 by se zastropovala na 3, čímž by uniformní karta (utok 3)
+   * slot NEČEKANĚ splnila místo jistého propadu.
+   */
+  function obsahProZar() {
+    return syntetickyObsah({
+      situace: [
+        ...Array.from({ length: 8 }, (_, i) => situaceJednostat(`s${i + 1}`, 'utok', 5, 'lokace')),
+        situaceJednostat('zatah', 'utok', 5, 'zatah'),
+      ],
+      veci: veciStred,
+    });
+  }
+
+  it('přežití konfrontace ODEČTE pevnou hodnotu od Žáru (ne nastaví na absolutní cíl)', () => {
+    // 1 hráč (offset 0): PRŮŠVIH žene Žár +2 za uzel → zatah@4 (uzel 2),
+    // lecka@7 (uzel 4, přežita jako LOOT), konfrontace@10 (uzel 5) — přežita
+    // jako LOOT (uniformní karta 3 ≥ kotva 3 na všech čtyřech slotech šablony).
+    // Cap postihů vypnutý (999): opakovaný PRŮŠVIH by jinak hráče „složil" a
+    // uzel s prázdnou rukou (auto-fail) by nedeterministicky rozhodl, jestli
+    // konfrontace padne kvůli KARTÁM (co test měří), nebo kvůli SLOŽENÍ (co ne).
+    const rules = { ...RULES, sumRozsah: 0, postihy: { ...RULES.postihy, capNaHrace: 999 } };
+    const run = createRun({ seed: 33, content: obsahProZar(), rules, players: hraci(1), pronasledovatelId: 'agent-malone' });
+    const events = drive(run);
+
+    const konfrontaceUzly = events.filter((e) => e.type === EVENT.SITUATION_REVEALED && e.typ === 'konfrontace');
+    expect(konfrontaceUzly).toHaveLength(1);
+    const zarMoveKonfrontace = events.filter((e) => e.type === EVENT.ZAR_MOVE && e.duvod === ZAR_DUVOD.KONFRONTACE_PREZITA);
+    expect(zarMoveKonfrontace).toHaveLength(1);
+    const pohyb = zarMoveKonfrontace[0];
+    // V3-A′: delta je PEVNÝ odečet (−poPrezitiKonfrontaceOdecet), ne nastavení
+    // na absolutní cíl. Trasování PRŮŠVIHů po +2 dorazí na konfrontační práh
+    // (10) přesně, takže před D58 (`changeHeat(3 − heat)`) by nova_pozice bylo
+    // taky 7 — proto se ověřuje i syrová delta, ne jen výsledná pozice.
+    expect(pohyb.delta).toBe(-rules.zar.poPrezitiKonfrontaceOdecet);
+    expect(pohyb.nova_pozice).toBe(rules.zar.prahy.konfrontace - rules.zar.poPrezitiKonfrontaceOdecet);
+  });
+
+  it('práh konfrontace se po prvním odpálení v runu už NIKDY znovu nevrátí (žádné druhé finále)', () => {
+    // Víc beden, ať PRŮŠVIH sérií po konfrontaci run předčasně neukončí (bedny_0);
+    // víc uzlů (uzluNaRun 9), ať je čas Žár po poklesu znovu vyhnat na strop.
+    // Cap postihů vypnutý — stejný důvod jako v testu výš.
+    const rules = { ...RULES, sumRozsah: 0, bedenNaStartu: 20, uzluNaRun: 9, postihy: { ...RULES.postihy, capNaHrace: 999 } };
+    const run = createRun({ seed: 34, content: obsahProZar(), rules, players: hraci(1), pronasledovatelId: 'agent-malone' });
+    const events = drive(run);
+
+    const konfrontaceUzly = events.filter((e) => e.type === EVENT.SITUATION_REVEALED && e.typ === 'konfrontace');
+    expect(konfrontaceUzly).toHaveLength(1); // strukturálně nejvýš jedna za run
+    const zarMax = Math.max(...events.filter((e) => e.type === EVENT.ZAR_MOVE).map((e) => e.nova_pozice));
+    expect(zarMax).toBe(rules.zar.max); // Žár znovu vyšplhal na strop bez druhého finále
+    expect(events.at(-1).vysledek).toBe('DORUCENO'); // přežilo se, nespadlo na konfrontace_prohra
   });
 });
 

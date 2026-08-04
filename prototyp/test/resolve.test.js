@@ -14,6 +14,8 @@ import {
   bandFromHits,
   maxAchievableZasahy,
   deriveTelegrafSignal,
+  revealSlots,
+  nonGangsterStatMax,
 } from '../src/engine/resolve.js';
 
 /** Zkratka pro věc s pěti staty. */
@@ -280,5 +282,64 @@ describe('deriveTelegrafSignal — engine derivuje ze slotů', () => {
       { slot_index: 3, stat: 'obrana', kotva: 2, viditelnost: 'skryta' },
     ];
     expect(deriveTelegrafSignal(obranaSkryta, GANGSTER_PARAMS, 'npc').zbran_skryte).toBe(false);
+  });
+});
+
+/* ---------- V4-D supply-aware clamp (D58, design-audit-2p-2026-08-02.md §5.2) ---------- */
+
+describe('nonGangsterStatMax — nejvyšší stat mezi věcmi BEZ GANGSTER', () => {
+  it('vynechá GANGSTER věci, i když jsou statově nejsilnější', () => {
+    const veci = [
+      { id: 'a', staty: { utok: 4, obrana: 1, hodnota: 1, improvizace: 1, nastroj: 1 } },
+      { id: 'zbran', staty: { utok: 5, obrana: 0, hodnota: 0, improvizace: 0, nastroj: 0 }, stitek: 'GANGSTER' },
+      { id: 'b', staty: { utok: 2, obrana: 3, hodnota: 2, improvizace: 2, nastroj: 2 } },
+    ];
+    const max = nonGangsterStatMax(veci, RULES.staty);
+    expect(max.utok).toBe(4); // ne 5 — jediná útok-5 věc je GANGSTER
+    expect(max.obrana).toBe(3);
+  });
+});
+
+describe('revealSlots — V4-D supply-aware clamp', () => {
+  const GANGSTER_PARAMS = {
+    chovani_dle_typu: { npc: 'viditelna_role_selze', lecka: 'viditelna_role_selze', lokace: 'vzdy_pass', zatah: 'vzdy_pass', konfrontace: 'vzdy_pass' },
+    hlucnost_zar: 1,
+  };
+  const nonGangsterMax = { utok: 4, obrana: 5, hodnota: 5, improvizace: 5, nastroj: 5 };
+  const rules = { ...RULES, sumRozsah: 0 }; // deterministický prah = kotva
+
+  it('viditelný útok-slot v npc situaci (GANGSTER auto-failuje) se clampuje na 4, ne na statMax 5', () => {
+    const situace = { id: 'x', typ: 'npc', sloty: [{ role: 'r', stat: 'utok', kotva: 4, viditelnost: 'viditelna' }] };
+    const [slot] = revealSlots(situace, createRng(1), rules, { stitekParams: GANGSTER_PARAMS, nonGangsterMax });
+    expect(slot.prah).toBe(4); // kotva 4 + šum 0 = 4, clampMax 4 → beze změny; ověřeno níže, že strop skutečně kouše
+  });
+
+  it('kotva, která by BEZ supply-aware clampu překročila statMax, se zastropuje na legální strop (4), ne na 5', () => {
+    const rulesSum2 = { ...RULES, sumRozsah: 2, kotvaMax: 4 };
+    // Deterministický RNG mock: vrátí vždy nejvyšší šum (+2) → kotva 4 + 2 = 6.
+    const rngVzdyMax = { int: () => 2 * rulesSum2.sumRozsah, pick: () => null, shuffle: (a) => a };
+    const situace = { id: 'x', typ: 'npc', sloty: [{ role: 'r', stat: 'utok', kotva: 4, viditelnost: 'viditelna' }] };
+    const [slot] = revealSlots(situace, rngVzdyMax, rulesSum2, { stitekParams: GANGSTER_PARAMS, nonGangsterMax });
+    expect(slot.prah).toBe(4); // BEZ V4-D by to bylo 5 (statMax) — s V4-D je strop 4 (legální karta)
+  });
+
+  it('skrytý slot, jiný typ situace nebo slotová výjimka GANGSTER nejsou supply-aware dotčené (strop zůstává statMax)', () => {
+    const rulesSum2 = { ...RULES, sumRozsah: 2 };
+    const rngVzdyMax = { int: () => 2 * rulesSum2.sumRozsah, pick: () => null, shuffle: (a) => a };
+    const skryty = { id: 'x', typ: 'npc', sloty: [{ role: 'r', stat: 'utok', kotva: 4, viditelnost: 'skryta' }] };
+    const lokace = { id: 'y', typ: 'lokace', sloty: [{ role: 'r', stat: 'utok', kotva: 4, viditelnost: 'viditelna' }] };
+    const vyjimka = { id: 'z', typ: 'npc', sloty: [{ role: 'r', stat: 'utok', kotva: 4, viditelnost: 'viditelna', stitek_citlivy: 'GANGSTER' }] };
+    for (const situace of [skryty, lokace, vyjimka]) {
+      const [slot] = revealSlots(situace, rngVzdyMax, rulesSum2, { stitekParams: GANGSTER_PARAMS, nonGangsterMax });
+      expect(slot.prah).toBe(RULES.statMax); // 5 — clamp NEkouše
+    }
+  });
+
+  it('bez opts (staré volání) se chová přesně jako dřív — statMax, žádná regrese', () => {
+    const rulesSum2 = { ...RULES, sumRozsah: 2 };
+    const rngVzdyMax = { int: () => 2 * rulesSum2.sumRozsah, pick: () => null, shuffle: (a) => a };
+    const situace = { id: 'x', typ: 'npc', sloty: [{ role: 'r', stat: 'utok', kotva: 4, viditelnost: 'viditelna' }] };
+    const [slot] = revealSlots(situace, rngVzdyMax, rulesSum2);
+    expect(slot.prah).toBe(RULES.statMax);
   });
 });
