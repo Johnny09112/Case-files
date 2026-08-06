@@ -35,7 +35,7 @@ import { createLog } from '../llm/log.js';
 import { llmCtxZObsahu } from '../llm/prompt.js';
 import { obrazovkaSetup } from './screens/setup.js';
 import { obrazovkaRun } from './screens/run/index.js';
-import { aktivniSlotIndex } from './screens/run/assign.js';
+import { aktivniSlotIndex, slotyPoGamblu } from './screens/run/assign.js';
 import { obrazovkaKonec } from './screens/end.js';
 import { h } from './dom.js';
 
@@ -370,8 +370,10 @@ export function initApp(root) {
     gambluj(/** @type {string} */ hracId, /** @type {string} */ kartaId) {
       prikaz(() => {
         S.run.gamble({ handOwnerId: hracId, replacedCardId: kartaId });
-        // Vyměněná věc už ve slotech být nesmí — přiřazení se resetuje.
-        S.assignVyber = { aktivni: null, sloty: {} };
+        // Jen mezera s vyměněnou kartou se uvolní (engine `gamble()` mění jen
+        // tuhle jednu položku committu) — přiřazení ostatních karet zůstává,
+        // ať tým nepřijde o rozdělanou práci (bug z playtestu).
+        S.assignVyber.sloty = slotyPoGamblu(S.assignVyber.sloty, kartaId);
       });
     },
     vyhodnot() {

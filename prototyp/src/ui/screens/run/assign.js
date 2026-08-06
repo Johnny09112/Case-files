@@ -58,6 +58,21 @@ export function aktivniSlotIndex(sloty, assignVyber) {
 }
 
 /**
+ * Přiřazení po gamblu — engine `gamble()` (`state.js`) mění jen jednu položku
+ * `situ.committed` (vyměněnou kartu za slepý tah), ostatní committnuté věci
+ * i jejich přiřazení do slotů zůstávají netknuté. Bug z playtestu: `app.js`
+ * po gamblu resetoval CELÉ `assignVyber`, takže tým přišel o rozdělanou práci
+ * u ostatních, nedotčených karet. Oprava: uvolní se jen ta mezera, která
+ * ukazovala na kartu, co gamblem zmizela — zbytek přiřazení jede dál.
+ * @param {Record<number, string>} sloty aktuální přiřazení slot_index → karta.id
+ * @param {string} nahrazenaKartaId id committnuté karty, kterou gamble nahradil
+ * @returns {Record<number, string>} přiřazení bez mezery ukazující na zmizelou kartu
+ */
+export function slotyPoGamblu(sloty, nahrazenaKartaId) {
+  return Object.fromEntries(Object.entries(sloty).filter(([, kartaId]) => kartaId !== nahrazenaKartaId));
+}
+
+/**
  * Český název situace z obsahu (`obsah/situace.yaml` pole `nazev`) — fallback
  * na syrové id jen když v obsahu chybí. Stejný vzorec jako `nazevSituace`
  * v `commit.js` a `popisPostihu` v `okraj.js`: každá obrazovka si drží
