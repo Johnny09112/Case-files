@@ -694,6 +694,21 @@ button.karta:hover:not(:disabled) {
   background: var(--cervena);
 }
 
+/* Konfrontace po klimaxu (D58: nejvýš 1× za run) — vizuálně jinak než
+   zátah/léčka, které dál normálně nabíjí a vybíjí s hladinou Žáru. Vybledlé
+   a přeškrtnuté číslo čtou jako „tenhle práh už dohrál", ne jako „zatím pod
+   hladinou". */
+.zar-dilek.prah.prah-spotrebovany {
+  border-color: var(--inkoust-slaby);
+  background: var(--papir-tmavy);
+  opacity: 0.55;
+}
+
+.zar-dilek.prah.prah-spotrebovany .zar-prah-popisek {
+  color: var(--inkoust-slaby);
+  text-decoration: line-through;
+}
+
 .zar-prah-popisek {
   position: absolute;
   top: 100%;

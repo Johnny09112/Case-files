@@ -831,6 +831,11 @@ export function createRun({ seed, content, rules, players, pronasledovatelId }) 
         // ať netvrdí rušení dřív, než skutečně platí.
         pronasledovatel: { id: pursuer.id, nazev: pursuer.nazev, rusi, rusiAktivni: jeRusiAktivni() },
         zar: heat,
+        // V3-A′ (D58): jednou odpálený práh konfrontace se v tomhle runu už nikdy
+        // znovu nezkoumá (`konfrontaceOdpalena` výše) — okraj (okraj.js) tohle
+        // potřebuje, aby práh konfrontace po klimaxu vizuálně odlišil jako
+        // spotřebovaný, ne jen jako „zatím pod aktuální hladinou Žáru".
+        konfrontaceSpotrebovana: konfrontaceOdpalena,
         zbyvaBeden: crates,
         kredity: credits,
         dokoncenoUzlu: completedNodes,

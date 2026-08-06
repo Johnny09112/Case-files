@@ -46,6 +46,17 @@ export const PRAH_LABEL = /** @type {Record<string, string>} */ ({
   konfrontace: 'konfrontace',
 });
 
+/**
+ * Krátký mikro-popisek CO daný práh dělá, ne jen jak se jmenuje (playtest
+ * 2026-08-04: hráč viděl čísla a červené prahy na trati, ale netušil, co který
+ * spouští, a myslel si, že šerif dává postihy přímo — design-dokument §4.9).
+ */
+export const PRAH_POPIS = /** @type {Record<string, string>} */ ({
+  zatah: 'nahradí příští uzel',
+  lecka: 'vloží uzel navíc',
+  konfrontace: 'finále, nejvýš 1× za run',
+});
+
 /** Důvody pohybu kreditů (events.CREDIT_DUVOD). */
 export const CREDIT_DUVOD_LABEL = /** @type {Record<string, string>} */ ({
   truhla: 'nález v truhle',

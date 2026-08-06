@@ -17,7 +17,7 @@
  */
 import { h } from '../../dom.js';
 import { MISTO } from '../../vysvetleni.js';
-import { PRAH_LABEL, STAT_LABEL, KATEGORIE_LABEL } from '../../labels.js';
+import { PRAH_LABEL, PRAH_POPIS, STAT_LABEL, KATEGORIE_LABEL } from '../../labels.js';
 
 /** Kolik posledních okrajových anotací se ukazuje (víc = zahlcení, §9 návrhu). */
 const OKRAJ_ANOTACI = 4;
@@ -97,17 +97,41 @@ export function okrajSpisu(ctx) {
         Array.from({ length: rules.zar.max }, (_, i) => {
           const hodnota = i + 1;
           const jePrah = prahU(hodnota);
+          // Konfrontace se po prvním odpálení v runu už nikdy znovu nenabije
+          // (V3-A′, D58, `konfrontaceSpotrebovana` z enginu) — od zátahu/léčky,
+          // které dál normálně nabíjí a vybíjí s hladinou Žáru, ji proto na trati
+          // odlišujeme zvlášť, ne jen barvou vyplnění pod aktuální hladinou.
+          const spotrebovany = jePrah === 'konfrontace' && st.konfrontaceSpotrebovana;
+          const titulek = !jePrah
+            ? `Žár ${hodnota}`
+            : spotrebovany
+              ? `práh ${hodnota}: ${PRAH_LABEL[jePrah]} — spotřebováno, tenhle run se už nespustí`
+              : `práh ${hodnota}: ${PRAH_LABEL[jePrah]} — ${PRAH_POPIS[jePrah] ?? ''}`;
           return h(
             'div',
             {
-              class: `zar-dilek${hodnota <= st.zar ? ' zaplneny' : ''}${jePrah ? ' prah' : ''}`,
-              title: jePrah ? `práh ${hodnota}: ${PRAH_LABEL[jePrah] ?? jePrah}` : `Žár ${hodnota}`,
+              class: `zar-dilek${hodnota <= st.zar ? ' zaplneny' : ''}${jePrah ? ' prah' : ''}${spotrebovany ? ' prah-spotrebovany' : ''}`,
+              title: titulek,
             },
             jePrah ? h('span', { class: 'zar-prah-popisek' }, String(hodnota)) : null
           );
         })
       ),
-      h('p', { class: 'napoveda' }, `prahy: ${prahy.map(([k, p]) => `${p} ${PRAH_LABEL[k] ?? k}`).join(' · ')}`),
+      h(
+        'p',
+        { class: 'napoveda' },
+        `prahy: ${prahy
+          .map(([k, p]) => {
+            const spotrebovanyPopis = k === 'konfrontace' && st.konfrontaceSpotrebovana ? ' (spotřebováno)' : '';
+            return `${p} ${PRAH_LABEL[k] ?? k} — ${PRAH_POPIS[k] ?? ''}${spotrebovanyPopis}`;
+          })
+          .join(' · ')}`
+      ),
+      h(
+        'p',
+        { class: 'napoveda' },
+        'Šerif postihy nedává — posílá tvrdší uzly. Postihy padají z výsledků uzlu: 2/4 lehký, ≤1/4 těžký.'
+      ),
       offset > 0
         ? h('p', { class: 'napoveda' }, `Ve ${st.postavy.length} lidech je trať o ${offset} kratší — víc lidí v autě, víc hluku.`)
         : null
